@@ -5,6 +5,7 @@ before_install:
   - wget https://github.com/alexdobin/STAR/archive/2.6.0a.tar.gz
   - tar -xzf 2.6.0a.tar.gz
   - export PATH=$PATH:$PWD/STAR-2.6.0a/bin/Linux_x86_64
+  - echo $PATH
 install:
   - pip install -r requirements.txt
 
