@@ -1,0 +1,12 @@
+Threads: "2"
+Mode: "genomeGenerate"
+genomeDir: "./"
+genomeFastaFiles:
+  class: File
+  path: ./test.fa
+sjdbGTFfile:
+  class: File
+  path: ./test.gff3
+sjdbGTFtagExonParentTranscript: "exon_id"
+sjdbOverhang: "20"
+genomeSAindexNbases: "5"

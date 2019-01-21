@@ -2,7 +2,7 @@
 
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand:star
+baseCommand: star
 
 inputs:
   Threads:
@@ -40,6 +40,11 @@ inputs:
     inputBinding:
       position: 7
       prefix: --sjdbOverhang
+  genomeSAindexNbases:
+    type: string
+    inputBinding:
+      position: 8
+      prefix: --genomeSAindexNbases
   
 outputs:
   output:
