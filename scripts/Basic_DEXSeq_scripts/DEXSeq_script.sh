@@ -24,7 +24,7 @@ do
 	echo -ne "\nDir'=$dir'\n\n"
 	echo $4
 	echo $new_variable
-	python dexseq_count.py $new_variable $dir $4
+	python dexseq_count.py $new_variable $dir $3
 done
 echo "Done"
 
