@@ -1,0 +1,12 @@
+Threads: "2"
+Mode: "alignReads"
+genomeDir: "./"
+sjdbGTFfile:
+  class: File
+  path: ../../Guillardia_theta_gca_000002975.ASM297v1.42.gff3
+sjdbOverhang: "100"
+readFilesIn:
+  - {class: File, path: ./path/to/file}
+  - {class: File, path: ./path/to/file}
+outSAMtype: "BAM SortedByCoordinate"
+outFileNamePrefix: "run_accession"

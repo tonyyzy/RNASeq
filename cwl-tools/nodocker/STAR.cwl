@@ -8,44 +8,48 @@ inputs:
   Threads:
     type: string
     inputBinding:
-      position: 1
       prefix: --runThreadN
   Mode:
     type: string
     inputBinding:
-      position: 2
       prefix: --runMode
   genomeDir:
     type: string
     inputBinding:
-      position: 3
       prefix: --genomeDir
   genomeFastaFiles:
-    type: File
+    type: File?
     inputBinding:
-      position: 4
       prefix: --genomeFastaFiles
   sjdbGTFfile:
     type: File
     inputBinding:
-      position: 5
       prefix: --sjdbGTFfile
   sjdbGTFtagExonParentTranscript:
-    type: string
+    type: string?
     inputBinding:
-      position: 6
       prefix: --sjdbGTFtagExonParentTranscript
   sjdbOverhang:
-    type: string
+    type: string?
     inputBinding:
-      position: 7
       prefix: --sjdbOverhang
   genomeSAindexNbases:
-    type: string
+    type: string?
     inputBinding:
-      position: 8
       prefix: --genomeSAindexNbases
-  
+  readFilesIn:
+    type: string?
+    inputBinding:
+      prefix: --readFilesIn
+  outSAMtype:
+    type: string?
+    inputBinding:
+      prefix: --outSAMtype
+  outFileNamePrefix:
+    type: string?
+    inputBinding:
+      prefix: --outFileNamePrefix
+
 outputs:
   output:
     type: File[]
