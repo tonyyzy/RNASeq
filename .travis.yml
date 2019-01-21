@@ -12,7 +12,7 @@ before_script:
   - ls ./STAR-2.6.0a
   - ls ./STAR-2.6.0a/bin
   - ls ./STAR-2.6.0a/bin/Linux_x86_64
-  - star
+  - STAR
 install:
   - pip install -r requirements.txt
 
