@@ -1,25 +1,24 @@
 ##gff-version 3
-##sequence-region   test1 1 60000
-#!genome-build European Nucleotide Archive ASM297v1
-#!genome-version ASM297v1
-#!genome-date 2016-02
-#!genome-build-accession GCA_000002975.1
-#!genebuild-last-updated 2016-02
-test1	European Nucleotide Archive	chromosome	1	60000	.	.	.	ID=chromosome:test1;Alias=AF165818.4
+##sequence-region   test1 1 6000
+#!genome-build FakeGenome
+#!genome-version v1
+#!genome-date 2019-01
+#!genome-build-accession GCA_000002333.1
+#!genebuild-last-updated 2019-01
+test1	FakeGenome	chromosome	1	6000	.	.	.	ID=chr1
 ###
-test1	ena	ncRNA_gene	279	398	.	+	.	ID=gene:EPrG00000638696;Name=5S ribosomal RNA;biotype=rRNA;gene_id=EPrG00000638696;logic_name=ena_rna
-test1	ena	rRNA	279	398	.	+	.	ID=transcript:EPrG00000638696-1;Parent=gene:EPrG00000638696;Name=5S ribosomal RNA;biotype=rRNA;transcript_id=EPrG00000638696-1
-test1	ena	exon	279	398	.	+	.	Parent=transcript:EPrG00000638696-1;Name=EPrG00000638696-1-1;constitutive=1;ensembl_end_phase=0;ensembl_phase=0;exon_id=EPrG00000638696-1-1;rank=1;version=1
+test1	FakeGenome	ncRNA_gene	500	999	.	+	.	ID=gene1
+test1	FakeGenome	rRNA	500	999	.	+	.	Parent=gene1;ID=trans1
+test1	FakeGenome	exon	500	999	.	+	.	Parent=trans1;exon_id=exon1;
 ###
-test1	Rfam	ncRNA_gene	279	399	.	-	.	ID=gene:EPrG00000979665;Name=5S_rRNA;biotype=rRNA;gene_id=EPrG00000979665;logic_name=rfam_genes
-test1	Rfam	rRNA	279	399	.	-	.	ID=transcript:EPrG00000979665-1;Parent=gene:EPrG00000979665;Name=5S_rRNA;biotype=rRNA;transcript_id=EPrG00000979665-1
-test1	Rfam	exon	279	399	.	-	.	Parent=transcript:EPrG00000979665-1;Name=EPrG00000979665-1-1;constitutive=1;ensembl_end_phase=0;ensembl_phase=0;exon_id=EPrG00000979665-1-1;rank=1;version=1
-###
-test1	ena	ncRNA_gene	936	4934	.	-	.	ID=gene:EPrG00000638694;Name=28S ribosomal RNA;biotype=rRNA;gene_id=EPrG00000638694;logic_name=ena_rna
-test1	ena	rRNA	936	4934	.	-	.	ID=transcript:EPrG00000638694-1;Parent=gene:EPrG00000638694;Name=28S ribosomal RNA;biotype=rRNA;transcript_id=EPrG00000638694-1
-test1	ena	exon	936	4934	.	-	.	Parent=transcript:EPrG00000638694-1;Name=EPrG00000638694-1-1;constitutive=1;ensembl_end_phase=0;ensembl_phase=0;exon_id=EPrG00000638694-1-1;rank=1;version=1
-###
-test1	Rfam	ncRNA_gene	1373	4966	.	+	.	ID=gene:EPrG00000979675;Name=LSU_rRNA_bacteria;biotype=rRNA;gene_id=EPrG00000979675;logic_name=rfam_genes
-test1	Rfam	rRNA	1373	4966	.	+	.	ID=transcript:EPrG00000979675-1;Parent=gene:EPrG00000979675;Name=LSU_rRNA_bacteria;biotype=rRNA;transcript_id=EPrG00000979675-1
-test1	Rfam	exon	1373	4966	.	+	.	Parent=transcript:EPrG00000979675-1;Name=EPrG00000979675-1-1;constitutive=1;ensembl_end_phase=0;ensembl_phase=0;exon_id=EPrG00000979675-1-1;rank=1;version=1
+test1	FakeGenome	gene	3000	5299	.	-	.	ID=gene2
+test1	FakeGenome	mRNA	3000	5299	.	-	.	Parent=gene2;ID=trans2
+test1	FakeGenome	exon	3000	3299	.	-	.	Parent=trans2;exon_id=exon2
+test1	FakeGenome	CDS	3000	3299	.	-	.	ID=CDS1
+test1	FakeGenome	exon	3500	3999	.	-	.	Parent=trans2;exon_id=exon3
+test1	FakeGenome	CDS	3500	3999	.	-	.	ID=CDS2
+test1	FakeGenome	exon	4400	4999	.	-	.	Parent=trans2;exon_id=exon4
+test1	FakeGenome	CDS	4400	4999	.	-	.	ID=CDS3
+test1	FakeGenome	exon	5050	5299	.	-	.	Parent=trans2;exon_id=exon5
+test1	FakeGenome	CDS	5050	5299	.	-	.	ID=CDS4
 ###
