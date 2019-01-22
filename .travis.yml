@@ -18,7 +18,7 @@ before_script:
   - tar -vxjf samtools-1.9.tar.bz2
   - cd samtools-1.9
   - make
-  - make prefix=/usr/ install
+  - sudo make prefix=/usr install
   - cd ..
   - samtools
   - git clone https://github.com/gpertea/stringtie
