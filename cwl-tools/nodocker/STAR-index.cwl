@@ -15,10 +15,11 @@ inputs:
       prefix: --runMode
   genomeDir:
     type: string
+    default: "./"
     inputBinding:
       prefix: --genomeDir
   genomeFastaFiles:
-    type: File?
+    type: File
     inputBinding:
       prefix: --genomeFastaFiles
   sjdbGTFfile:
@@ -29,29 +30,15 @@ inputs:
     type: string?
     inputBinding:
       prefix: --sjdbGTFtagExonParentTranscript
-  sjdbOverhang:
-    type: string?
-    inputBinding:
-      prefix: --sjdbOverhang
   genomeSAindexNbases:
     type: string?
     inputBinding:
       prefix: --genomeSAindexNbases
-  readFilesIn:
-    type: string?
-    inputBinding:
-      prefix: --readFilesIn
-  outSAMtype:
-    type: string?
-    inputBinding:
-      prefix: --outSAMtype
-  outFileNamePrefix:
-    type: string?
-    inputBinding:
-      prefix: --outFileNamePrefix
 
 outputs:
   output:
     type: File[]
     outputBinding:
       glob: "*"
+    
+    
