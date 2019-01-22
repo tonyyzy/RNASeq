@@ -2,16 +2,26 @@
 import random
 
 
-def fake(exon, num):
+def fake_pairend(exon, num):
 	global sam
 	for i in range(num):
 		file1.write(f"@sample{sam}/1\n")
 		file2.write(f"@sample{sam}/2\n")
 		left_start = random.randint(0, len(exon) - 302)
-		file1.write(exon[left_start - 1:left_start + 100] + "\n+\n")
+		file1.write(exon[left_start - 1:left_start + 100] + f"\n+{left_start}\n")
 		file1.write("".join(chr(i) for i in random.choices(range(94, 110), k=101)) + "\n")
-		file2.write(exon[left_start + 200:left_start + 301] + "\n+\n")
+		file2.write(exon[left_start + 200:left_start + 301] + f"\n+{left_start}\n")
 		file2.write("".join(chr(i) for i in random.choices(range(94, 110), k=101)) + "\n")
+		sam += 1
+
+
+def fake_single(exon, num):
+	global sam
+	for i in range(num):
+		file1.write(f"@sample{sam}\n")
+		left_start = random.randint(0, len(exon) - 101)
+		file1.write(exon[left_start - 1:left_start + 100] + f"\n+{left_start}\n")
+		file1.write("".join(chr(i) for i in random.choices(range(94, 110), k=101)) + "\n")
 		sam += 1
 
 
@@ -28,11 +38,19 @@ if __name__ == "__main__":
 
 	file1 = open("./test1.1.fastq", "w")
 	file2 = open("./test1.2.fastq", "w")
-	fake(exon1, 20)
-	fake(exon2, 30)
+	fake_pairend(exon1, 20)
+	fake_pairend(exon2, 30)
 
 	file1 = open("./test2.1.fastq", "w")
 	file2 = open("./test2.2.fastq", "w")
-	fake(exon1, 40)
-	fake(exon2, 60)
+	fake_pairend(exon1, 40)
+	fake_pairend(exon2, 60)
+
+	file1 = open("./test3.fastq", "w")
+	fake_single(exon1, 20)
+	fake_single(exon2, 30)
+
+	file1 = open("./test4.fastq", "w")
+	fake_single(exon1, 40)
+	fake_single(exon2, 60)
 
