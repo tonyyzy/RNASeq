@@ -18,9 +18,8 @@ before_script:
   - tar -vxjf samtools-1.9.tar.bz2
   - cd samtools-1.9
   - make
+  - make install
   - cd ..
-  - echo $PATH
-  - ls /usr/bin
   - samtools
   - git clone https://github.com/gpertea/stringtie
   - cd stringtie
