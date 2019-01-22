@@ -7,10 +7,10 @@ def fake_pairend(exon, num):
 	for i in range(num):
 		file1.write(f"@sample{sam}/1\n")
 		file2.write(f"@sample{sam}/2\n")
-		left_start = random.randint(0, len(exon) - 302)
+		left_start = random.randint(0, len(exon) - 252)
 		file1.write(exon[left_start - 1:left_start + 100] + f"\n+{left_start}\n")
 		file1.write("".join(chr(i) for i in random.choices(range(94, 110), k=101)) + "\n")
-		file2.write(exon[left_start + 200:left_start + 301] + f"\n+{left_start}\n")
+		file2.write(exon[left_start + 251:left_start + 150:-1] + f"\n+{left_start}\n")
 		file2.write("".join(chr(i) for i in random.choices(range(94, 110), k=101)) + "\n")
 		sam += 1
 
