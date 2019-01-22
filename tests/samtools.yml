@@ -1,6 +1,6 @@
-threads: 20
+threads: 2
 samfile:
  class: File
  path: ./test1.sam
-threads2: 20
+threads2: 2
 outfilename: test1.bam
