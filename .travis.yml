@@ -21,7 +21,11 @@ before_script:
   - cd ..
   - export PATH=$PATH:/usr/bin/samtools-1.9
   - echo $PATH
+  - source ~/.profile
   - samtools
-
+  - git clone https://github.com/gpertea/stringtie
+  - cd stringtie
+  - make release
+  - cd ..
 script:
   - pytest tests
