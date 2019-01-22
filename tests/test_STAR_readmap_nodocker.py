@@ -7,8 +7,8 @@ def test_STAR_readmap_nodocker():
                     "--outdir=./test1",
                     "./cwl-tools/nodocker/STAR-readmap.cwl",
                     "./tests/STAR-readmap.yml"])
-
-    assert filecmp.cmp("./test1/test1Aligned.out.sam", "./tests/test1.sam")
+    subprocess.run(["tail -n +5 ./test1/test1Aligned.out.sam > ./test1/test1.tail.sam"], shell=True)
+    assert filecmp.cmp("./test1/test1.tail.sam", "./tests/test1.tail.sam")
 
 
 if __name__ == "__main__":
