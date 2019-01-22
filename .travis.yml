@@ -19,9 +19,8 @@ before_script:
   - cd samtools-1.9
   - make
   - cd ..
-  - export PATH=$PATH:/usr/bin/samtools-1.9
   - echo $PATH
-  - cd /usr/bin/samtools-1.9
+  - ls /usr/bin
   - samtools
   - git clone https://github.com/gpertea/stringtie
   - cd stringtie
