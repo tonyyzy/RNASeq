@@ -1,6 +1,6 @@
 threads: 4
 samfile:
  class: File
- path: /data/Plasmodium_yoelii/SRR3584106/SRR3584106Aligned.out.sam
+ path: ./tests/test1.sam
 threads2: 4
 outfilename: SRR3584106Aligned.out.bam
