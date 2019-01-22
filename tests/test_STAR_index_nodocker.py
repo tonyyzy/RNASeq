@@ -5,7 +5,7 @@ def test_STAR_index_nodocker():
     """test_STAR_index_nodocker"""
     subprocess.run(["cwl-runner",
                     "--outdir=./STARIndex",
-                    "./cwl-tools/nodocker/STAR.cwl",
+                    "./cwl-tools/nodocker/STAR-index.cwl",
                     "./tests/STAR-index.yml"])
 
     assert filecmp.cmp("./tests/SA", "./STARIndex/SA")
