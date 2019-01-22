@@ -19,7 +19,9 @@ before_script:
   - cd samtools-1.9
   - make
   - cd ..
-  - export PATH="$PATH:/usr/bin/samtools-1.9"
+  - export PATH=$PATH:/usr/bin/samtools-1.9
+  - echo $PATH
+  - samtools
 
 script:
   - pytest tests
