@@ -8,7 +8,7 @@ def test_samtools_nodocker():
                     "./cwl-tools/nodocker/samtools.cwl",
                     "./tests/samtools.yml"])
 
-    assert filecmp.cmp("./tests/SRR3584106Aligned.original.sorted.bam", "./test_samtools_out/SRR3584106Aligned.out.bam")
+    assert filecmp.cmp("./tests/test1.bam", "./test_samtools_out/test1.bam")
 
 
 if __name__ == "__main__":

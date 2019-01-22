@@ -1,6 +1,6 @@
-threads: 4
+threads: 20
 samfile:
  class: File
- path: ./tests/test1.sam
-threads2: 4
-outfilename: SRR3584106Aligned.out.bam
+ path: ./test1.sam
+threads2: 20
+outfilename: test1.bam
