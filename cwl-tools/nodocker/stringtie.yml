@@ -1,0 +1,8 @@
+input_bam:
+  class: File
+  path: /data/rnaseq/Plasmodium_yoelii/SRR3584106/SRR3584106Aligned.out.sorted.bam
+threads: 20
+annotation:
+  class: File
+  path: /data/rnaseq/Plasmodium_yoelii/SRR3584106/SRR3584106.gtf
+outfilename: stringtie.out.gtf

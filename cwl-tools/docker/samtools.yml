@@ -1,0 +1,6 @@
+threads: 4
+samfile:
+ class: File
+ path: /project/home18/apg3718/scratch/test.sam
+threads2: 4
+outfilename: SRR3584106Aligned.out.bam
