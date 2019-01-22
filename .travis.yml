@@ -14,6 +14,13 @@ before_script:
   - wget https://github.com/alexdobin/STAR/archive/2.6.0a.tar.gz
   - tar -xzf 2.6.0a.tar.gz
   - export PATH=$PATH:$PWD/STAR-2.6.0a/bin/Linux_x86_64
+  - wget https://github.com/samtools/samtools/releases/download/1.3.1/samtools-1.3.1.tar.bz2 -O samtools.tar.bz2
+  - tar -xjvf samtools.tar.bz2
+  - cd samtools-1.3.1
+  - make
+  - sudo make prefix=/usr/local/bin install
+  - sudo ln -s /usr/local/bin/bin/samtoos /usr/bin/samtools
+
 
 script:
   - pytest tests
