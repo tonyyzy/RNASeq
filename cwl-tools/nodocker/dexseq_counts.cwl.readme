@@ -1,4 +1,4 @@
-miust supply a path for the directory containing python file as using a python file.
+must supply a path for the directory containing python file as using a python file.
 Docker will be easier to run.
 
 command: PATH=$PATH:/project/home18/fmj18/Documents/cwl_practice/dexseq_counts cwltool --preserve-environment PATH dexseq_counts.cwl dexseq_counts_input.yml 
