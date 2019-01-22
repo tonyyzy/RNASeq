@@ -1,3 +1,5 @@
 __pycache__
 STARIndex
+test_stringtie_out
+test_samtools_out
 .pytest_cache

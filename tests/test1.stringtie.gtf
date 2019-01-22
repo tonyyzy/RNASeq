@@ -1,0 +1,10 @@
+test1	StringTie	transcript	500	999	1000	+	.	gene_id "STRG.1"; transcript_id "STRG.1.1"; reference_id "trans1"; ref_gene_id "gene1"; cov "8.080000"; FPKM "894745.562500"; TPM "419529.593750";
+test1	StringTie	exon	500	999	1000	+	.	gene_id "STRG.1"; transcript_id "STRG.1.1"; exon_number "1"; reference_id "trans1"; ref_gene_id "gene1"; cov "8.080000";
+test1	StringTie	transcript	3000	3299	1000	-	.	gene_id "STRG.2"; transcript_id "STRG.2.1"; reference_id "CDS1"; cov "2.680000"; FPKM "296772.062500"; TPM "139150.906250";
+test1	StringTie	exon	3000	3299	1000	-	.	gene_id "STRG.2"; transcript_id "STRG.2.1"; exon_number "1"; reference_id "CDS1"; cov "2.680000";
+test1	StringTie	transcript	3500	3999	1000	-	.	gene_id "STRG.3"; transcript_id "STRG.3.1"; reference_id "CDS2"; cov "3.517000"; FPKM "389457.937500"; TPM "182609.593750";
+test1	StringTie	exon	3500	3999	1000	-	.	gene_id "STRG.3"; transcript_id "STRG.3.1"; exon_number "1"; reference_id "CDS2"; cov "3.517000";
+test1	StringTie	transcript	4400	4999	1000	-	.	gene_id "STRG.4"; transcript_id "STRG.4.1"; reference_id "CDS3"; cov "3.366667"; FPKM "372810.687500"; TPM "174804.015625";
+test1	StringTie	exon	4400	4999	1000	-	.	gene_id "STRG.4"; transcript_id "STRG.4.1"; exon_number "1"; reference_id "CDS3"; cov "3.366667";
+test1	StringTie	transcript	5050	5299	1000	-	.	gene_id "STRG.5"; transcript_id "STRG.5.1"; reference_id "CDS4"; cov "1.616000"; FPKM "178949.109375"; TPM "83905.914062";
+test1	StringTie	exon	5050	5299	1000	-	.	gene_id "STRG.5"; transcript_id "STRG.5.1"; exon_number "1"; reference_id "CDS4"; cov "1.616000";
