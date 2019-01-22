@@ -23,6 +23,7 @@ before_script:
   - git clone https://github.com/gpertea/stringtie
   - cd stringtie
   - make release
+  - sudo cp stringtie /usr/bin/
   - cd ..
 script:
   - pytest tests
