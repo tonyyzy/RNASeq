@@ -5,7 +5,11 @@ dist: trusty
 python:
   - "3.6"
 
-cache: pip
+cache:
+  pip: true
+  directories:
+    - ./samtools-1.9
+    - ./stringtie
 
 install:
   - pip install -r requirements.txt
