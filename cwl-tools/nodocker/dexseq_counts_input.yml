@@ -1,0 +1,7 @@
+gff_input:
+   class: File
+   path:  /path/to/file
+sam_input:
+   class: File
+   path: /path/to/file
+count_file_name: "example.csv"

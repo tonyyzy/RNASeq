@@ -1,0 +1,7 @@
+gff:
+   class: File
+   path: /path/to/file
+sam: "/path/to/sam/dir"
+metadata:
+   class: File
+   path: /path/to/file

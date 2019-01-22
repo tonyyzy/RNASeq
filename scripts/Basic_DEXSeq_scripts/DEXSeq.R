@@ -1,3 +1,5 @@
+#/usr/bin/env RScript
+
 # Rscript ./DEXSeq.R --count_matrix_dir PATH --gff_file_dir PATH --metadata PATH
 
 args <- commandArgs( trailingOnly=TRUE )

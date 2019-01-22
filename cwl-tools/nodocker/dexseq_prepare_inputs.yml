@@ -1,0 +1,4 @@
+GTF_input:
+   class: File
+   path: Plasmodium_yoelii_yoelii.ASM308v2.42.gtf
+GFF_output_name: "Plasmodium_yoelii.dexseq_prepare.gff"
