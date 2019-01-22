@@ -1,7 +1,7 @@
 language: python
 
 sudo: required
-dist: xenial
+dist: trusty
 python:
   - "3.6"
 
@@ -18,7 +18,7 @@ before_script:
   - tar -vxjf samtools-1.9.tar.bz2
   - cd samtools-1.9
   - make
-  - make install
+  - make prefix=/usr/ install
   - cd ..
   - samtools
   - git clone https://github.com/gpertea/stringtie
