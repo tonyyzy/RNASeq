@@ -20,7 +20,6 @@ before_script:
   - make
   - sudo make prefix=/usr install
   - cd ..
-  - samtools
   - git clone https://github.com/gpertea/stringtie
   - cd stringtie
   - make release
