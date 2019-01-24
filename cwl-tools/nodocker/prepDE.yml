@@ -1,0 +1,6 @@
+program:
+  /data/rnaseq/Plasmodium_yoelii/prepDE.py
+gtfDir:
+  class: Directory
+  path: /data/rnaseq/Plasmodium_yoelii/SRR3584106
+
