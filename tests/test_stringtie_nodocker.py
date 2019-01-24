@@ -7,12 +7,14 @@ def test_stringtie_nodocker():
                     "--outdir=./test_stringtie_out",
                     "./cwl-tools/nodocker/stringtie.cwl",
                     "./tests/stringtie.yml"])
-    subprocess.run(["less", "./test_stringtie_out/test1.stringtie.gtf"])
 
     with open('./test_stringtie_out/test1.stringtie.gtf', 'r') as fin:
         data = fin.read().splitlines(True)
     with open('./test_stringtie_out/test1.stringtie.gtf', 'w') as fout:
         fout.writelines(data[2:])
+
+    subprocess.run(["less", "./test_stringtie_out/test1.stringtie.gtf"])
+
     assert filecmp.cmp("./tests/test1.stringtie.gtf", "./test_stringtie_out/test1.stringtie.gtf")
 
 
