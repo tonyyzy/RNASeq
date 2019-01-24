@@ -25,11 +25,12 @@ before_script:
   - make
   - sudo make prefix=/usr install
   - cd ..
-  - git clone -n https://github.com/gpertea/stringtie
+#   - git clone -n https://github.com/gpertea/stringtie
   - cd stringtie
   - git checkout 2584c142d7e636f3a9ce3f0546511a0974dc0609
   - make release
-  - sudo cp stringtie /usr/bin/
+#  - sudo cp stringtie /usr/bin/
+  - export PATH=$PATH:$PWD/stringtie
   - cd ..
 script:
   - pytest tests
