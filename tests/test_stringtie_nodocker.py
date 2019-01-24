@@ -7,6 +7,7 @@ def test_stringtie_nodocker():
                     "--outdir=./test_stringtie_out",
                     "./cwl-tools/nodocker/stringtie.cwl",
                     "./tests/stringtie.yml"])
+    subprocess.run(["less", "./test_stringtie_out"])
 
     with open('./test_stringtie_out/test1.stringtie.gtf', 'r') as fin:
         data = fin.read().splitlines(True)
