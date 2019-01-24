@@ -12,9 +12,7 @@ def test_stringtie_nodocker():
         data = fin.read().splitlines(True)
     with open('./test_stringtie_out/test1.stringtie.gtf', 'w') as fout:
         fout.writelines(data[2:])
-
-    subprocess.run(["less", "./test_stringtie_out/test1.stringtie.gtf"])
-
+        
     assert filecmp.cmp("./tests/test1.stringtie.gtf", "./test_stringtie_out/test1.stringtie.gtf")
 
 
