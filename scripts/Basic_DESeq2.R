@@ -1,13 +1,8 @@
 # Rscript ./Basic_DESeq2.R --count_matrix PATH --metadata PATH --column name
 
-suppressMessages(library("dplyr"))
+#suppressMessages(library("dplyr"))
 
 args <- commandArgs( trailingOnly=TRUE )
-
-if(installed.packages() %>% .[,1] %>% any(grepl("DESeq2",.)) == FALSE){
-  source("https://bioconductor.org/biocLite.R")
-  biocLite("DESeq2")  
-}
 
 suppressMessages(library("DESeq2"))
 
@@ -16,8 +11,10 @@ metadata <- read.table(args[grep("--metadata", args)+1],header = TRUE, row.names
 
 metadata <- metadata[colnames(data),]
 
-dds <- DESeqDataSetFromMatrix(countData=data, colData=metadata, design= ~condition) %>% DESeq(.)
+dds <- DESeqDataSetFromMatrix(countData=data, colData=metadata, design= ~condition)
+dds <- DESeq(dds)
 
-res <- results(dds) %>% as.data.frame(.)
+res <- results(dds) 
+res <- as.data.frame(res)
 
 write.csv(res,"DGE_results.csv")
