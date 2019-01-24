@@ -1,6 +1,0 @@
-must supply a path for the directory containing python file as using a python file.
-Docker will be easier to run.
-
-command: PATH=$PATH:/project/home18/fmj18/Documents/cwl_practice/prepare_script cwltool --preserve-environment PATH dexseq_prepare.cwl dexseq_prepare_inputs.yml 
-
-change path for your local directory
