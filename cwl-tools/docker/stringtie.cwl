@@ -28,8 +28,6 @@ inputs:
     prefix: -o
 
 outputs:
- stringtie
-
  stringtie_out:
   type: File
   outputBinding:
