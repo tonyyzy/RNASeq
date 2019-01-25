@@ -60,7 +60,7 @@ print(head(tmp))
 
 print("step 3")
 
-gsea.Results <- fgsea::fgsea(Gene_Sets,tmp, 500, minSize = 10)
+gsea.Results <- fgsea::fgsea(Gene_Sets,tmp, 500, minSize = 1)
 
 print("step 4")
 
