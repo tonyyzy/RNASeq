@@ -13,7 +13,7 @@ suppressPackageStartupMessages(library("DEXSeq"))
 suppressPackageStartupMessages(library("dplyr"))
 
 #load files
-countFiles <- list.files(args[grep("--count_matrix_dir", args)+1], pattern = "fb.txt$", full.names = TRUE)
+countFiles <- list.files(args[grep("--count_matrix_dir", args)+1], pattern = "htseq_count.csv$", full.names = TRUE)
 flattenedFile <- list.files(args[grep("--gff_file_dir", args)+1], pattern = "gff$", full.names = TRUE)
 sampleTable <- read.table(args[grep("--metadata", args)+1], row.names = 1, header = TRUE, sep = ",")
 
