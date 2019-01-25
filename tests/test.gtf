@@ -1,17 +1,17 @@
 ##gff-version 2
 ##source-version rtracklayer 1.38.3
 ##date 2019-01-23
-test1	FakeGenome	chromosome	1	6000	.	.	.	ID "chr1";
-test1	FakeGenome	ncRNA_gene	500	999	.	+	.	ID "gene1";
-test1	FakeGenome	rRNA	500	999	.	+	.	ID "trans1"; Parent "gene1";
-test1	FakeGenome	exon	500	999	.	+	.	 Parent "trans1"; exon_id "exon1"
-test1	FakeGenome	gene	3000	5299	.	-	.	ID "gene2";
-test1	FakeGenome	mRNA	3000	5299	.	-	.	ID "trans2"; Parent "gene2";
-test1	FakeGenome	exon	3000	3299	.	-	.	 Parent "trans2"; exon_id "exon2"
-test1	FakeGenome	CDS	3000	3299	.	-	.	ID "CDS1";
-test1	FakeGenome	exon	3500	3999	.	-	.	 Parent "trans2"; exon_id "exon3"
-test1	FakeGenome	CDS	3500	3999	.	-	.	ID "CDS2";
-test1	FakeGenome	exon	4400	4999	.	-	.	 Parent "trans2"; exon_id "exon4"
-test1	FakeGenome	CDS	4400	4999	.	-	.	ID "CDS3";
-test1	FakeGenome	exon	5050	5299	.	-	.	 Parent "trans2"; exon_id "exon5"
-test1	FakeGenome	CDS	5050	5299	.	-	.	ID "CDS4";
+test1	FakeGenome	chromosome	1	6000	.	.	.	gene_id "gene1"; transcript_id "gene1"; ID "chr1";
+test1	FakeGenome	ncRNA_gene	500	999	.	+	.	gene_id "gene1"; transcript_id "gene1"; ID "gene1";
+test1	FakeGenome	rRNA	500	999	.	+	.	gene_id "gene1"; transcript_id "gene1"; ID "trans1"; Parent "gene1";
+test1	FakeGenome	exon	500	999	.	+	.	gene_id "gene1"; transcript_id "gene1"; Parent "trans1"; exon_id "exon1"
+test1	FakeGenome	gene	3000	5299	.	-	.	gene_id "gene2"; transcript_id "gene1"; ID "gene2";
+test1	FakeGenome	mRNA	3000	5299	.	-	.	gene_id "gene2"; transcript_id "gene1"; ID "trans2"; Parent "gene2";
+test1	FakeGenome	exon	3000	3299	.	-	.	gene_id "gene2"; transcript_id "gene1"; Parent "trans2"; exon_id "exon2"
+test1	FakeGenome	CDS	3000	3299	.	-	.	gene_id "gene2"; transcript_id "gene1"; ID "CDS1";
+test1	FakeGenome	exon	3500	3999	.	-	.	gene_id "gene2"; transcript_id "gene1"; Parent "trans2"; exon_id "exon3"
+test1	FakeGenome	CDS	3500	3999	.	-	.	gene_id "gene2"; transcript_id "gene1"; ID "CDS2";
+test1	FakeGenome	exon	4400	4999	.	-	.	gene_id "gene2"; transcript_id "gene1"; Parent "trans2"; exon_id "exon4"
+test1	FakeGenome	CDS	4400	4999	.	-	.	gene_id "gene2"; transcript_id "gene1"; ID "CDS3";
+test1	FakeGenome	exon	5050	5299	.	-	.	gene_id "gene2"; transcript_id "gene1"; Parent "trans2"; exon_id "exon5"
+test1	FakeGenome	CDS	5050	5299	.	-	.	gene_id "gene2"; transcript_id "gene1"; ID "CDS4";

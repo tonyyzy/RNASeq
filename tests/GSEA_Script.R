@@ -59,12 +59,8 @@ names(tmp) <- rownames(stats)
 print(head(tmp))
 
 print("step 3")
-<<<<<<< HEAD
+set.seed(1)
 gsea.Results <- fgsea::fgsea(Gene_Sets,tmp, 500, minSize = 10)
-=======
-
-gsea.Results <- fgsea::fgsea(Gene_Sets,tmp, 500, minSize = 1)
->>>>>>> 1e15af497829e5092c0f7b9f0c8305666c66de64
 
 print("step 4")
 

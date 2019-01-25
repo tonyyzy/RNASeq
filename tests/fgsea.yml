@@ -1,0 +1,10 @@
+input_scripts:
+   class: File
+   path: ./GSEA_Script.R
+de_results:
+   class: File
+   path: ./test_dge_results.csv
+gene_set:
+   class: File
+   path: ./reactome.tsv
+doc_name: "test_gsea_res.csv"

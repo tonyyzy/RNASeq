@@ -6,6 +6,7 @@ args <- commandArgs( trailingOnly=TRUE )
 
 suppressPackageStartupMessages(library("DEXSeq"))
 
+set.seed(1)
 #load files
 countFiles <- list.files(args[grep("--count_matrix_dir", args)+1], pattern = "htseq_count.csv$", full.names = TRUE)
 flattenedFile <- list.files(args[grep("--gff_file_dir", args)+1], pattern = "gff$", full.names = TRUE)

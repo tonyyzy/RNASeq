@@ -1,0 +1,12 @@
+input_script:
+   class: File
+   path: ./DEXSeq.R
+counts_matrix:
+   class: Directory
+   path: ./
+gff:
+   class: Directory
+   path: ./
+metadata:
+   class: File
+   path: ./test_meta.csv
