@@ -8,7 +8,7 @@ def test_STAR_index_nodocker():
                     "./cwl-tools/nodocker/STAR_index.cwl",
                     "./tests/STAR_index.yml"])
 
-    assert filecmp.cmp("./tests/SA", "./STARIndex/SA")
+    assert filecmp.cmp("./tests/STARIndex/SA", "./STARIndex/SA")
 
 
 if __name__ == "__main__":

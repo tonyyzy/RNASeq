@@ -1,7 +1,7 @@
 @HD	VN:1.4
 @SQ	SN:test1	LN:6000
-@PG	ID:STAR	PN:STAR	VN:STAR_2.6.0c	CL:STAR   --genomeDir ./STARIndex   --readFilesIn test1.1.fastq   test1.2.fastq   
-@CO	user command line: STAR --genomeDir ./STARIndex --readFilesIn test1.1.fastq test1.2.fastq
+@PG	ID:STAR	PN:STAR	VN:STAR_2.6.0c	CL:star   --genomeDir ./tests/STARIndex   --readFilesIn ./tests/test1.1.fastq   ./tests/test1.2.fastq      --outFileNamePrefix ./test1/test1
+@CO	user command line: star --genomeDir ./tests/STARIndex --readFilesIn ./tests/test1.1.fastq ./tests/test1.2.fastq --outFileNamePrefix ./test1/test1
 sample1	99	test1	641	255	101M	=	762	222	GCCATTACAGTTGGTTTATATCCCGTAACGACCAAGTATACCGATAGGGTTGCTTTGTATTAGGAAGTAATGTTGCCAATTCGGATTTTAGATTTCGCGCC	a^e^mbi^mbie`ijd^mfejmbi^bjd^kkdjmkh^^mfkij_ikkae^hjdb_ihiech^g``e_aaebfbb_lil^edm^jbim^`chdicailaced	NH:i:1	HI:i:1	AS:i:200	nM:i:0
 sample1	147	test1	762	255	101M	=	641	-222	ACGAAAAGGGGGTTTGAAAGGAGTGGAATGAGCTATGACGGATTACATCCCCGTAGAACGTCATTTCTTATGGAGTACTGCGACACACCGTAAATCAGCAA	ahadakadl_ccm^ieag`mfaich^fhgfhkli_^mkb`j`kfima__g^ek``jm`geamm_aclgjehgg^idejgad_mcageceb`klk^jh^gkl	NH:i:1	HI:i:1	AS:i:200	nM:i:0
 sample2	99	test1	733	255	101M	=	854	222	TTTCGCGCCTACGGTTATGATCAACTAACACGAAAAGGGGGTTTGAAAGGAGTGGAATGAGCTATGACGGATTACATCCCCGTAGAACGTCATTTCTTATG	ikbjkimdg^dikadlkk`mg_^`b`ajbdieaf_iha^^kjkmmbaid``hj^cdia_mjlek^fl`cfmcj`lbeblhg^lb_^^i`ikiljjlkdge`	NH:i:1	HI:i:1	AS:i:200	nM:i:0
