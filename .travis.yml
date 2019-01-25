@@ -8,7 +8,7 @@ python:
 cache:
   pip: true
   directories:
-    - ./software
+#     - ./software
 install:
   - pip install -r requirements.txt
 
