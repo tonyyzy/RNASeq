@@ -4,32 +4,17 @@ sudo: required
 dist: trusty
 python:
   - "3.6"
-
-cache:
-  pip: true
-  directories:
-    - ./samtools-1.9
-    - ./stringtie
-    - ./STAR-2.6.0a
-
+  
 install:
   - pip install -r requirements.txt
 
 before_script:
-#  - wget https://github.com/alexdobin/STAR/archive/2.6.0a.tar.gz
-#  - tar -xzf 2.6.0a.tar.gz
-  - export PATH=$PATH:$PWD/STAR-2.6.0a/bin/Linux_x86_64
-#  - wget https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2
-#  - tar -vxjf samtools-1.9.tar.bz2
-  - cd samtools-1.9
-#  - make
-  - sudo make prefix=/usr install
-  - cd ..
-#   - git clone -n https://github.com/gpertea/stringtie
-  - cd stringtie
-  - git checkout 2584c142d7e636f3a9ce3f0546511a0974dc0609
-  - make release
-  - sudo cp stringtie /usr/bin/
-  - cd ..
+  - bash ./install_dependency.sh
+  - export PATH=$PATH:$PWD/software
 script:
   - pytest tests
+
+cache:
+  pip: true
+  directories:
+  - ./software
