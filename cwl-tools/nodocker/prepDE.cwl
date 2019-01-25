@@ -16,8 +16,11 @@ inputs:
     prefix: -i
 
 outputs:
-  output:
-    type: File[]
+  gene_output:
+    type: File
     outputBinding:
-      glob: "*"
-
+      glob: "*gene_count_matrix*"
+  transcript_output:
+    type: File
+    outputBinding:
+      glob: "*transcript_count_matrix*"
