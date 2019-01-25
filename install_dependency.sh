@@ -1,3 +1,8 @@
+# check if directory already exist
+if [ ! -d "./software" ]; then
+    mkdir software
+fi
+
 # install STAR
 if [ ! -f "./software/STAR" ]; then
     wget https://github.com/alexdobin/STAR/archive/2.6.0a.tar.gz
