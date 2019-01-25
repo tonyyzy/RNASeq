@@ -1,14 +1,6 @@
 # Rscript ./GSEA_Script.R --de_res PATH --gene_set PATH
 
-suppressMessages(library("dplyr"))
-
 args <- commandArgs( trailingOnly=TRUE )
-args
-
-if(installed.packages() %>% .[,1] %>% any(grepl("fgsea",.)) == FALSE){
-  source("https://bioconductor.org/biocLite.R")
-  biocLite("fgsea")  
-}
 
 if ("--gene_set" %in% args) {
   gene_set.file.idx  <- grep("--gene_set", args)
