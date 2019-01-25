@@ -1,4 +1,4 @@
-# Rscript ./GSEA_Script.R --de_res PATH --gene_set PATH
+# Rscript ./GSEA_Script.R --de_res PATH --gene_set PATH --doc_name STRING
 
 args <- commandArgs( trailingOnly=TRUE )
 
@@ -14,6 +14,11 @@ if ("--gene_set" %in% args) {
     cat("\nLocation of file containing 'Gene Set': \"",gene_set.file.path,"\"\n", sep="")
     stop("File **DOES NOT EXIST**")
   }
+}
+
+if ("--doc_name" %in% args) {
+  doc_name.file.idx  <- grep("--doc_name", args)
+  res_name <- args[ doc_name.file.idx+1 ]
 }
 
 ## Read file containing the **serialised** 'SummarizedExperiment' object & check its class is correct ##
@@ -60,4 +65,4 @@ gsea.Results <- fgsea::fgsea(Gene_Sets,tmp, 10000, minSize = 10)
 print("step 4")
 
 Results <- data.frame(gsea.Results[,2:7], row.names = gsea.Results$pathway)
-write.csv(Results, "GSEA_output.csv")
+write.csv(Results, res_name)
