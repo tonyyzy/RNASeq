@@ -1,4 +1,0 @@
-GTF_input:
-   class: File
-   path: test.gtf
-GFF_output_name: "test_dexseq_prepare.gff"
