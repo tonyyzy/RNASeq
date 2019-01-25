@@ -1,3 +1,6 @@
+script:
+  class: File
+  path: "/project/home18/apg3718/RNASeq/scripts/Basic_DESeq2.R"
 count_matrix:
   class: File
   path: /project/home18/apg3718/scratch/pasilla_count_table.csv
