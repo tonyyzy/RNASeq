@@ -14,7 +14,7 @@ inputs:
     inputBinding:
       prefix: --genomeDir
   readFilesIn:
-    type: File[]?
+    type: File[]
     inputBinding:
       prefix: --readFilesIn
   outFileNamePrefix:
@@ -23,9 +23,17 @@ inputs:
       prefix: --outFileNamePrefix
 
 outputs:
-  output:
+  sam_output:
+    type: File
+    outputBinding:
+      glob: "*.sam"
+  log_outputs:
     type: File[]
     outputBinding:
-      glob: "*"
+      glob: "*.out"
+  tab_output:
+    type: File
+    outputBinding:
+      glob: "*.tab"
     
     
