@@ -59,7 +59,7 @@ inputs:
      shellQuote: False
 
 outputs:
-  example_out:
+  samtools_out:
    type: File
    outputBinding:
     glob: $(inputs.outfilename)

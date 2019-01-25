@@ -25,7 +25,7 @@ inputs:
     prefix: -o
 
 outputs:
- example_out:
+ stringtie_out:
   type: File
   outputBinding:
    glob: $(inputs.outfilename)

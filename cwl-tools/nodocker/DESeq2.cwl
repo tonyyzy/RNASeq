@@ -20,7 +20,7 @@ inputs:
      position: 3
      prefix: --metadata
 outputs:
-  example_out:
+  DESeq2_out:
    type: File
    outputBinding:
     glob: DGE_results.csv
