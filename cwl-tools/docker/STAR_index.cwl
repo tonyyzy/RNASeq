@@ -2,54 +2,47 @@
 
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand:
+baseCommand: STAR
+
 hints:
   DockerRequirement:
-    dockerPull: dceoy/star
-requirements:
-  ResourceRequirement:
-    tmpdirMin: 100000
-    outdirMin: 100000
+    dockerPull: quay.io/biocontainers/star:2.6.0c--0
 
 inputs:
   Threads:
     type: string
     inputBinding:
-      position: 1
       prefix: --runThreadN
   Mode:
     type: string
     inputBinding:
-      position: 2
       prefix: --runMode
   genomeDir:
     type: string
+    default: "./"
     inputBinding:
-      position: 3
       prefix: --genomeDir
   genomeFastaFiles:
     type: File
     inputBinding:
-      position: 4
       prefix: --genomeFastaFiles
   sjdbGTFfile:
     type: File
     inputBinding:
-      position: 5
       prefix: --sjdbGTFfile
   sjdbGTFtagExonParentTranscript:
-    type: string
+    type: string?
     inputBinding:
-      position: 6
       prefix: --sjdbGTFtagExonParentTranscript
-  sjdbOverhang:
-    type: string
+  genomeSAindexNbases:
+    type: string?
     inputBinding:
-      position: 7
-      prefix: --sjdbOverhang
-  
+      prefix: --genomeSAindexNbases
+
 outputs:
   output:
     type: File[]
     outputBinding:
       glob: "*"
+    
+    
