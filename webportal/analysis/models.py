@@ -1,5 +1,5 @@
 from django.db import models
-import
+import uuid
 
 # Create your models here.
 class Session(models.Model):
@@ -9,7 +9,7 @@ class Session(models.Model):
         ("OwnGFF", "User_Provided_Annotation"),
         ("OwnFASTA", "User_Provided_Genome"),
     )
-    genome = models.CharField(choices=GENOME_CHOICES)
+    genome = models.CharField(max_length=200, choices=GENOME_CHOICES)
     organism = models.CharField(max_length=200)
     status = models.BooleanField(default=False, null=False)
 
@@ -23,9 +23,9 @@ class Workflow(models.Model):
         ("HISAT2", "HISAT2"),
     )
     session = models.ForeignKey(Session, on_delete=models.PROTECT)
-    index = models.CharField(choices=INDEX_CHOICES)
-    mapper = models.CharField(choices=MAPPER_CHOICES)
-    analysis = models.CharField()
+    index = models.CharField(max_length=200, choices=INDEX_CHOICES)
+    mapper = models.CharField(max_length=200, choices=MAPPER_CHOICES)
+    analysis = models.CharField(max_length=200)
     status = models.BooleanField(default=False, null=False)
 
 class Samples(models.Model):
@@ -41,5 +41,5 @@ class Samples(models.Model):
     condition = models.CharField(max_length=200)
     replicate = models.PositiveSmallIntegerField()
     path = models.FileField()
-    libtype = models.CharField(choices=LIBTYPE_CHOICES)
+    libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES)
     read = models.PositiveSmallIntegerField(choices=READ_CHOICES, default=1)

@@ -7,3 +7,4 @@ test_stringtie_out
 test_samtools_out
 .pytest_cache
 db.sqlite3
+migrations
