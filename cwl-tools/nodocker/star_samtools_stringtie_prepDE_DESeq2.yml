@@ -1,12 +1,12 @@
-Threads: "2"
+Threads: 2
 genomeDir:
   class: Directory
   path: ../../tests/GenomeIndex
 readFilesIn:
   - {class: File, path: ../../tests/test1.1.fastq}
   - {class: File, path: ../../tests/test1.2.fastq}
+
 outFileNamePrefix: "test1"
-threads: 2
 samfile:
   class: File
   path: ../../tests/test1.sam
@@ -18,3 +18,7 @@ annotation:
 program: /project/home18/apg3718/RNASeq/scripts/prepDE.py
 input_name: test1
 name:  "1"
+script: "~/RNASeq/scripts/Basic_DESeq2.R"
+metadata:
+  class: File
+  path: /project/home18/apg3718/scratch/pasilla_design_table.csv

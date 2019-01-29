@@ -2,12 +2,12 @@
 
 cwlVersion: v1.0
 class: Workflow
+
 inputs:
-  Threads: string
+  Threads: int
   genomeDir: Directory
   readFilesIn: File[]
   outFileNamePrefix: string?
-  threads: int
   samfile: File
   outfilename_samtools: string
   annotation: File
@@ -15,13 +15,13 @@ inputs:
   program: string
   input_name: string
   name: string
-
-
+  script: string
+  metadata: File
 
 outputs:
-  prepDE_out:
+  final_out:
     type: File
-    outputSource: prepDE/gene_output
+    outputSource: DESeq2/DESeq2_out
 
 steps:
   star_readmap:
@@ -37,8 +37,8 @@ steps:
     run: samtools.cwl
     in:
       samfile: star_readmap/sam_output
-      threads: threads
-      threads2: threads
+      threads: Threads
+      threads2: Threads
       outfilename: outfilename_samtools
     out: [samtools_out]
 
@@ -46,7 +46,7 @@ steps:
     run: stringtie.cwl
     in:
       input_bam: samtools/samtools_out
-      threads: threads
+      threads: Threads
       annotation: annotation
       outfilename: outfilename_stringtie
     out: [stringtie_out]
@@ -71,3 +71,11 @@ steps:
      program: program
      gtfDir: parenting/parenting_out
     out: [gene_output]
+
+  DESeq2:
+    run: DESeq2.cwl
+    in:
+      script: script
+      count_matrix: prepDE/gene_output
+      metadata: metadata
+    out: [DESeq2_out]
