@@ -1,5 +1,12 @@
 from django.db import models
 import uuid
+from django.contrib.auth.models import User
+
+
+class Post(models.Model):
+    post = models.CharField(max_length=500)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+
 
 # Create your models here.
 class Session(models.Model):
