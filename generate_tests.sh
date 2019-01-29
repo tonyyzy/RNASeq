@@ -59,15 +59,14 @@ tail -n +3 ./test2.stringtie.gtf > ./tests/test2.stringtie.gtf
 rm ./test2.stringtie.gtf
 
 # test for htseq prepare
-python2.7 ./scripts/Basic_DEXSeq_scripts/dexseq_prepare.py ./tests/test1.gtf ./tests/test1.gff
+python2.7 ./scripts/Basic_DEXSeq_scripts/dexseq_prepare.py ./tests/test.gtf ./tests/test.gff
 
 # test for htseq counts
-python2.7 ./scripts/Basic_DEXSeq_scripts/dexseq_count.py ./tests/test1.gff ./tests/test1.sam ./tests/test1_htseq_count.csv
+python2.7 ./scripts/Basic_DEXSeq_scripts/dexseq_count.py ./tests/test.gff ./tests/test1.sam ./tests/test1_htseq_count.csv
 
 # test for dexseq
-RScript ./tests/DEXSeq.R --counts_matrix_dir ./tests --gff_file_dir ./tests --metadata ./tests/test_meta.csv
-mv DEE_results.csv ./tests/test_DEE_results.csv
+Rscript ./tests/DEXSeq.R --count_matrix_dir ./tests --gff_file_dir ./tests --metadata ./tests/test_meta.csv
+mv DEE_results.csv ./tests/
 
 # test for fgsea for dexseq
-RScript ./tests/GSEA_Script.R --de_res ./tests/test_dge_results.csv --gene_set ./tests/reactome.tsv --doc_name /tests/test_gsea_res.csv
->>>>>>> 41d1100c4f6a457b46f750e5d2f93194d78e0034
+Rscript ./tests/GSEA_Script.R --de_res ./tests/test_dge_results.csv --gene_set ./tests/reactome.tsv --doc_name ./tests/test_gsea_res.csv
