@@ -1,0 +1,3 @@
+files:
+  - {class: File, path: ../../../gene_count_matrix.csv}
+input_name: testale

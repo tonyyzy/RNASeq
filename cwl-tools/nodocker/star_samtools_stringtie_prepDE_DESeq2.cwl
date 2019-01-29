@@ -13,7 +13,9 @@ inputs:
   annotation: File
   outfilename_stringtie: string
   program: string
-  gtfDir: Directory
+  input_name: string
+  out_location: string
+
 
 
 outputs:
@@ -49,9 +51,23 @@ steps:
       outfilename: outfilename_stringtie
     out: [stringtie_out]
 
+  foldering:
+    run: sort_files.cwl
+    in:
+      files: stringtie/stringtie_out
+      input_name: input_name
+    out: [foldering_out]
+
+  parenting:
+    run: parent_generator.cwl
+    in:
+      sub_directory: foldering/foldering_out
+      out_location: out_location
+    out: [parenting_out]
+
   prepDE:
     run: prepDE.cwl
     in:
-      program: program
-      gtfDir: gtfDir
+     program: program
+     gtfDir: parenting/parenting_out
     out: [gene_output]

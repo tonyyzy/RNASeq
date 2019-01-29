@@ -1,0 +1,4 @@
+sub_directory:
+ class: Directory
+ path: ../../../Documents
+out_location: RNASeq/tests/prepDE_annotation/gtfDir/
