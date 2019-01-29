@@ -4,6 +4,3 @@ program:
 textSampleFile:
   class: File
   path: /project/home18/ph2417/scratch/Plasmodium_yoelii/sample_1st.txt
-  # path: /project/home18/ph2417/scratch/Plasmodium_yoelii/SRR3584110/gtfDir
-
-# /project/home18/ph2417/gitWorkspace/RNASeq/cwl-tools/nodocker/prepDE.yml

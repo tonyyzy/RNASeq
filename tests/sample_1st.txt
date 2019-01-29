@@ -1,0 +1,1 @@
+test1.stringtie	/project/home18/ph2417/gitWorkspace/RNASeq/tests/test1.stringtie.gtf

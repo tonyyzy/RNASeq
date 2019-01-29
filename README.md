@@ -12,7 +12,7 @@ run `$ pytest ./tests`
 
 You should see something similar to the following:
 
-```python
+```
 $ pytest tests
 ============================= test session starts ==============================
 platform linux -- Python 3.6.3, pytest-3.3.0, py-1.5.2, pluggy-0.6.0
