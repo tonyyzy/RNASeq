@@ -4,5 +4,5 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('upload', views.fileUpload, name='upload')
+    path('fastq/', views.get_fastq, name='fastq')
 ]

@@ -12,6 +12,8 @@ class Session(models.Model):
     genome = models.CharField(max_length=200, choices=GENOME_CHOICES)
     organism = models.CharField(max_length=200)
     status = models.BooleanField(default=False, null=False)
+    no_conditions = models.PositiveSmallIntegerField()
+    no_replicates = models.PositiveSmallIntegerField()
 
 class Workflow(models.Model):
     INDEX_CHOICES = (
