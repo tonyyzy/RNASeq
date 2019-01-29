@@ -1,19 +1,33 @@
 #!/usr/bin/env cwl-runner
 
-
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: python2
-inputs:
- program:
-  type: string
-  inputBinding:
-    position: 1
- gtfDir:
-  type: Directory
-  inputBinding:
+requirements:
+  InlineJavascriptRequirement: {}
+  InitialWorkDirRequirement:
+    listing: |
+      ${
+        var paths = [];
+        for (var i = 0; i < inputs.gtfs.length; i ++) {
+          paths.push({
+          "class": "Directory",
+          "basename": inputs.gtfs[i].nameroot,
+          "listing": [inputs.gtfs[i]]
+          });
+        }return paths;
+      }
+arguments:
+  - prefix: -i
     position: 2
-    prefix: -i
+    valueFrom: $(runtime.outdir)
+inputs:
+  program:
+    type: File
+    inputBinding:
+      position: 1
+  gtfs:
+    type: File[]
 
 outputs:
   gene_output:

@@ -1,6 +1,6 @@
 program:
-  /data/rnaseq/Plasmodium_yoelii/prepDE.py
-gtfDir:
-  class: Directory
-  path: /data/rnaseq/Plasmodium_yoelii/SRR3584106
-
+  class: File
+  path: ../../scripts/prepDE.py
+gtfs:
+  - {class: File, path: ../../tests/test1.stringtie.gtf}
+  - {class: File, path: ../../tests/test2.stringtie.gtf}
