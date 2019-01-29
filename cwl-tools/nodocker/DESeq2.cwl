@@ -5,8 +5,7 @@ class: CommandLineTool
 baseCommand: Rscript
 inputs:
  script:
-  type: string
-  default: "/project/home18/apg3718/RNASeq/scripts/Basic_DESeq2.R"
+  type: File
   inputBinding:
     position: 1
  count_matrix:

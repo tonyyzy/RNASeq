@@ -14,11 +14,14 @@ samfile:
   class: File
   path: ../../tests/test1.sam
 outfilename_samtools: test1.bam
-outfilename_stringtie: test1.stringtie.gtf
+outfilename_stringtie_1: test1.stringtie.gtf
+outfilename_stringtie_2: test2.stringtie.gtf
 annotation:
   class: File
   path: ../../tests/test.gff3
-program: /project/home18/apg3718/RNASeq/scripts/prepDE.py
+program:
+  class: File
+  path: ../../scripts/prepDE.py
 input_name: test1
 input_name_2: test2
 name:  "1"

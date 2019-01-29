@@ -5,6 +5,7 @@ class: CommandLineTool
 baseCommand:
 requirements:
   - class: ShellCommandRequirement
+  - class: InlineJavascriptRequirement
 arguments: ["mkdir", $(inputs.outFileNamePrefix), "&&", "cd", $(inputs.outFileNamePrefix), "&&", "STAR"]
 
 inputs:
@@ -26,7 +27,12 @@ inputs:
       prefix: --outFileNamePrefix
 
 outputs:
-  out:
+  star_read_out:
     type: Directory
     outputBinding:
       glob: $(inputs.outFileNamePrefix)
+
+  sam_output:
+    type: File
+    outputBinding:
+      glob: $(inputs.outFileNamePrefix + "/*.sam")

@@ -4,6 +4,7 @@ cwlVersion: v1.0
 class: Workflow
 requirements:
   ScatterFeatureRequirement: {}
+  MultipleInputFeatureRequirement: {}
 
 inputs:
   Threads: int
@@ -15,8 +16,9 @@ inputs:
   samfile: File
   outfilename_samtools: string
   annotation: File
-  outfilename_stringtie: string
-  program: string
+  outfilename_stringtie_1: string
+  outfilename_stringtie_2: string
+  program: File
   input_name: string
   input_name_2: string
   name: string
@@ -71,7 +73,7 @@ steps:
       input_bam: samtools_1/samtools_out
       threads: Threads
       annotation: annotation
-      outfilename: outfilename_stringtie
+      outfilename: outfilename_stringtie_1
     out: [stringtie_out]
 
   stringtie_2:
@@ -80,48 +82,20 @@ steps:
       input_bam: samtools_2/samtools_out
       threads: Threads
       annotation: annotation
-      outfilename: outfilename_stringtie
+      outfilename: outfilename_stringtie_2
     out: [stringtie_out]
-
-  foldering_1:
-    run: sort_files.cwl
-    in:
-      files: stringtie_1/stringtie_out
-      input_name: input_name
-    out: [foldering_out]
-
-  foldering_2:
-    run: sort_files.cwl
-    in:
-      files: stringtie_2/stringtie_out
-      input_name: input_name_2
-    out: [foldering_out]
-
-  parenting:
-    run: parent_generator.cwl
-    in:
-      sub_directory: foldering_1/foldering_out
-      name: name
-    out: [parenting_out]
-
-  parenting_2:
-    run: parent_generator.cwl
-    in:
-      sub_directory: foldering_2/foldering_out
-      name: name
-    out: [parenting_out]
 
   prepDE:
     run: prepDE.cwl
     in:
      program: program
-     gtfDir: [parenting/parenting_out, parenting_2/parenting_out]
+     gtfs: [stringtie_1/stringtie_out, stringtie_2/stringtie_out]
     out: [gene_output]
 
-#  DESeq2:
-#    run: DESeq2.cwl
-#    in:
-#      script: script
-#      count_matrix: prepDE/gene_output
-#      metadata: metadata
-#    out: [DESeq2_out]
+  DESeq2:
+    run: DESeq2.cwl
+    in:
+      script: script
+      count_matrix: prepDE/gene_output
+      metadata: metadata
+    out: [DESeq2_out]
