@@ -1,4 +1,3 @@
 sub_directory:
- class: Directory
- path: ../../../Documents
-out_location: RNASeq/tests/prepDE_annotation/gtfDir/
+ - {class: Directory,  path: ../../../Music}
+name: ale

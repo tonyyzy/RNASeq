@@ -14,12 +14,12 @@ inputs:
   outfilename_stringtie: string
   program: string
   input_name: string
-  out_location: string
+  name: string
 
 
 
 outputs:
-  example_out:
+  prepDE_out:
     type: File
     outputSource: prepDE/gene_output
 
@@ -62,7 +62,7 @@ steps:
     run: parent_generator.cwl
     in:
       sub_directory: foldering/foldering_out
-      out_location: out_location
+      name: name
     out: [parenting_out]
 
   prepDE:

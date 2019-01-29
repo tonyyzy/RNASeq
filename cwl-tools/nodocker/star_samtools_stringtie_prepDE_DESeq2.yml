@@ -17,4 +17,4 @@ annotation:
   path: ../../tests/test.gff3
 program: /project/home18/apg3718/RNASeq/scripts/prepDE.py
 input_name: test1
-out_location:  RNASeq/tests/prepDE_annotation/gtfDir/
+name:  "1"

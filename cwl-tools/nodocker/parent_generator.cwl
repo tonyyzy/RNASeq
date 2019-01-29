@@ -4,14 +4,14 @@ requirements:
   InlineJavascriptRequirement: {}
 inputs:
   sub_directory: Directory[]
-  out_location: string
+  name: string
 outputs:
-  parenting_out: Directory
+  parenting_out: Directory[]
 expression: |
   ${
       var dirs = [];
       dirs.push({"class": "Directory",
-                 "basename": inputs.out_location,
+                 "basename": "sample_" + inputs.name,
                  "listing": inputs.sub_directory});
       return {"parenting_out": dirs};
       }

@@ -10,7 +10,7 @@ inputs:
   inputBinding:
     position: 1
  gtfDir:
-  type: Directory
+  type: Directory[]
   inputBinding:
     position: 2
     prefix: -i
