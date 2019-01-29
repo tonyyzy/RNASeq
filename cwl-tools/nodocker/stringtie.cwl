@@ -26,6 +26,6 @@ inputs:
 
 outputs:
  stringtie_out:
-  type: File
+  type: File[]
   outputBinding:
    glob: $(inputs.outfilename)
