@@ -1,5 +1,5 @@
-Threads: "2"
-genomeDir: 
+Threads: 2
+genomeDir:
   class: Directory
   path: ./GenomeIndex
 readFilesIn:

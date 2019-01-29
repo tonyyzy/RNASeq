@@ -1,0 +1,4 @@
+sub_directory:
+ - {class: Directory,  path: ../../../Music}
+ - {class: Directory,  path: ../../../Documents}
+name: ale

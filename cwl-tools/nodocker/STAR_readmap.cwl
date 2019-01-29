@@ -9,7 +9,7 @@ arguments: ["mkdir", $(inputs.outFileNamePrefix), "&&", "cd", $(inputs.outFileNa
 
 inputs:
   Threads:
-    type: string
+    type: int
     inputBinding:
       prefix: --runThreadN
   genomeDir:
@@ -29,6 +29,7 @@ outputs:
   out:
     type: Directory
     outputBinding:
+<<<<<<< HEAD
       glob: $(inputs.outFileNamePrefix)
 #  sam_output:
 #    type: File
@@ -42,3 +43,6 @@ outputs:
 #    type: File
 #    outputBinding:
 #      glob: "*.tab"
+=======
+      glob: "*.tab"
+>>>>>>> 41d1100c4f6a457b46f750e5d2f93194d78e0034

@@ -1,6 +1,16 @@
 program:
   class: File
+<<<<<<< HEAD
   path: ../../scripts/prepDE.py
 gtfs:
   - {class: File, path: ../../tests/test1.stringtie.gtf}
   - {class: File, path: ../../tests/test2.stringtie.gtf}
+=======
+  path: /project/home18/ph2417/gitWorkspace/RNASeq/scripts/prepDE.py
+textSampleFile:
+  class: File
+  path: /project/home18/ph2417/scratch/Plasmodium_yoelii/sample_1st.txt
+  # path: /project/home18/ph2417/scratch/Plasmodium_yoelii/SRR3584110/gtfDir
+
+# /project/home18/ph2417/gitWorkspace/RNASeq/cwl-tools/nodocker/prepDE.yml
+>>>>>>> 41d1100c4f6a457b46f750e5d2f93194d78e0034

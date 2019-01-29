@@ -1,0 +1,6 @@
+program:
+  class: File
+  path: /project/home18/ph2417/gitWorkspace/RNASeq/scripts/prepDE.py
+textSampleFile:
+  class: File
+  path: /project/home18/ph2417/scratch/Plasmodium_yoelii/sample_1st.txt

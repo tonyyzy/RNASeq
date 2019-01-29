@@ -1,5 +1,5 @@
 module purge
-module load python star stringtie samtools
+module load python star stringtie samtools R
 
 # test for star index
 if [ -d "./STARIndex" ]; then
@@ -54,6 +54,22 @@ samtools view -Su ./tests/test2.sam | samtools sort -o ./tests/test2.bam
 stringtie ./tests/test1.bam -G ./tests/test.gff3 -o ./test1.stringtie.gtf
 tail -n +3 ./test1.stringtie.gtf > ./tests/test1.stringtie.gtf
 rm ./test1.stringtie.gtf
+<<<<<<< HEAD
 stringtie ./tests/test2.bam -G ./tests/test.gff3 -o ./test2.stringtie.gtf
 tail -n +3 ./test2.stringtie.gtf > ./tests/test2.stringtie.gtf
 rm ./test2.stringtie.gtf
+=======
+
+# test for htseq prepare
+python2.7 ./scripts/Basic_DEXSeq_scripts/dexseq_prepare.py ./tests/test1.gtf ./tests/test1.gff
+
+# test for htseq counts
+python2.7 ./scripts/Basic_DEXSeq_scripts/dexseq_count.py ./tests/test1.gff ./tests/test1.sam ./tests/test1_htseq_count.csv
+
+# test for dexseq
+RScript ./tests/DEXSeq.R --counts_matrix_dir ./tests --gff_file_dir ./tests --metadata ./tests/test_meta.csv
+mv DEE_results.csv ./tests/test_DEE_results.csv
+
+# test for fgsea for dexseq
+RScript ./tests/GSEA_Script.R --de_res ./tests/test_dge_results.csv --gene_set ./tests/reactome.tsv --doc_name /tests/test_gsea_res.csv
+>>>>>>> 41d1100c4f6a457b46f750e5d2f93194d78e0034
