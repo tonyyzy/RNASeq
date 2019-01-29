@@ -1,0 +1,4 @@
+reference:
+   class: File
+   path: test.fa
+basename: "test_index"
