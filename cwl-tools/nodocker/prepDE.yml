@@ -1,6 +1,9 @@
 program:
-  /data/rnaseq/Plasmodium_yoelii/prepDE.py
-gtfDir:
-  class: Directory
-  path: /data/rnaseq/Plasmodium_yoelii/SRR3584106
+  class: File
+  path: /project/home18/ph2417/gitWorkspace/RNASeq/scripts/prepDE.py
+textSampleFile:
+  class: File
+  path: /project/home18/ph2417/scratch/Plasmodium_yoelii/sample_1st.txt
+  # path: /project/home18/ph2417/scratch/Plasmodium_yoelii/SRR3584110/gtfDir
 
+# /project/home18/ph2417/gitWorkspace/RNASeq/cwl-tools/nodocker/prepDE.yml
