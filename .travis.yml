@@ -4,7 +4,9 @@ sudo: required
 dist: trusty
 python:
   - "3.6"
-  
+
+if: branch != tony_django
+
 install:
   - pip install -r requirements.txt
 
