@@ -1,4 +1,4 @@
-Threads: "2"
+Threads: 2
 Mode: "genomeGenerate"
 genomeFastaFiles:
   class: File

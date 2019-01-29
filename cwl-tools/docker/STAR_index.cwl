@@ -10,7 +10,7 @@ hints:
 
 inputs:
   Threads:
-    type: string
+    type: int
     inputBinding:
       prefix: --runThreadN
   Mode:
@@ -44,5 +44,3 @@ outputs:
     type: File[]
     outputBinding:
       glob: "*"
-    
-    
