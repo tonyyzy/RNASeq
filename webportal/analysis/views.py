@@ -25,9 +25,13 @@ def get_files(request):
         # create a form instance and populate it with data from the request:
         form = FileSubmission(request.POST, request.FILES) # check whether it's valid:
         if form.is_valid():
+            user = request.user
+            # post = form.save(commit=False)
+            # post.user = request.user
+            # post.save()
             text = form.cleaned_data['post'] # assign clean data to text variable
 
-        args = {'form': form, 'text': text}
+        args = {'form': form, 'text': text, 'user': user}
         return render(request, 'file_submit.html', args)
 
     # if a GET (or any other method) we'll create a blank form
