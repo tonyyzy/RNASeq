@@ -2,7 +2,10 @@
 
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: STAR
+baseCommand:
+requirements:
+  - class: ShellCommandRequirement
+arguments: ["mkdir", $(inputs.outFileNamePrefix), "&&", "cd", $(inputs.outFileNamePrefix), "&&", "STAR"]
 
 inputs:
   Threads:
@@ -23,17 +26,19 @@ inputs:
       prefix: --outFileNamePrefix
 
 outputs:
-  sam_output:
-    type: File
+  out:
+    type: Directory
     outputBinding:
-      glob: "*.sam"
-  log_outputs:
-    type: File[]
-    outputBinding:
-      glob: "*.out"
-  tab_output:
-    type: File
-    outputBinding:
-      glob: "*.tab"
-    
-    
+      glob: $(inputs.outFileNamePrefix)
+#  sam_output:
+#    type: File
+#    outputBinding:
+#      glob: "*.sam"
+#  log_outputs:
+#    type: File[]
+#    outputBinding:
+#      glob: "*.out"
+#  tab_output:
+#    type: File
+#    outputBinding:
+#      glob: "*.tab"
