@@ -48,8 +48,12 @@ rm -r test1 test2 test3 test4
 
 # test for samtools
 samtools view -Su ./tests/test1.sam | samtools sort -o ./tests/test1.bam
+samtools view -Su ./tests/test2.sam | samtools sort -o ./tests/test2.bam
 
 # test for stringtie
 stringtie ./tests/test1.bam -G ./tests/test.gff3 -o ./test1.stringtie.gtf
 tail -n +3 ./test1.stringtie.gtf > ./tests/test1.stringtie.gtf
 rm ./test1.stringtie.gtf
+stringtie ./tests/test2.bam -G ./tests/test.gff3 -o ./test2.stringtie.gtf
+tail -n +3 ./test2.stringtie.gtf > ./tests/test2.stringtie.gtf
+rm ./test2.stringtie.gtf
