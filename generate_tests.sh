@@ -66,7 +66,7 @@ python2.7 ./scripts/Basic_DEXSeq_scripts/dexseq_count.py ./tests/test.gff ./test
 
 # test for dexseq
 Rscript ./tests/DEXSeq.R --count_matrix_dir ./tests --gff_file_dir ./tests --metadata ./tests/test_meta.csv
-mv DEE_results.csv ./tests/
+mv DEE_results.csv ./tests/test_DEE_results.csv
 
 # test for fgsea for dexseq
 Rscript ./tests/GSEA_Script.R --de_res ./tests/test_dge_results.csv --gene_set ./tests/reactome.tsv --doc_name ./tests/test_gsea_res.csv
