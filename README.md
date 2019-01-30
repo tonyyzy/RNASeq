@@ -2,6 +2,11 @@
 
 [![Build Status](https://travis-ci.com/tonyyzy/RNASeq.svg?token=5Fwptxoz1iaezXoMzRSd&branch=master)](https://travis-ci.com/tonyyzy/RNASeq)
 
+
+## Notes
+DESeq2 requires metadata sample name to match gene_count_matrix sample name
+will handle this in workflow to make things consistent
+
 ## Testing
 
 We use `python` and `pytest` as the testing framework. All the tests are stored in `./tests`. Before committing a new test, you should test your test locally first.
