@@ -13,7 +13,6 @@ inputs:
   readFilesIn_2: File[]
   outFileNamePrefix_1: string?
   outFileNamePrefix_2: string?
-  samfile: File
   outfilename_samtools: string
   annotation: File
   outfilename_stringtie_1: string
@@ -22,7 +21,7 @@ inputs:
   input_name: string
   input_name_2: string
   name: string
-  script: string
+  script: File
   metadata: File
 
 outputs:
@@ -93,7 +92,7 @@ steps:
     out: [gene_output]
 
   DESeq2:
-    run: ../../cwl-tools/nodocker/DESeq2.cwl
+    run: ../../cwl-tools/docker/DESeq2.cwl
     in:
       script: script
       count_matrix: prepDE/gene_output
