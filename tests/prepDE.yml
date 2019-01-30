@@ -1,0 +1,6 @@
+program:
+  class: File
+  path: ../scripts/prepDE.py
+gtfs:
+  - {class: File, path: ./test1.stringtie.gtf}
+  - {class: File, path: ./test2.stringtie.gtf}
