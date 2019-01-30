@@ -1,3 +1,4 @@
+{%extends 'base.html'%}
 <!DOCTYPE html>
 <html>
   <head>
@@ -6,7 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   </head>
   <body>
-
+    {% block body %}
     <br><br>
     <form action="/analysis/file_submit/" method="post" nctype="multipart/form-data">
         {% csrf_token %}
@@ -15,6 +16,14 @@
     </form>
     <h1>{{ text }}</h1>
     <h3> {{ user }} </h3>
+    <h1>{{ post.post }}</h1>
 
+    {% for post in posts %}
+    <h3>{{ post.post }}</h3>
+    <p>{{ post.date }}</p>
+
+    {% endfor %}
+
+    {%  endblock %}
   </body>
 </html>

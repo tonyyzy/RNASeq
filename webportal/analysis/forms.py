@@ -1,16 +1,12 @@
 from django import forms
-from analysis.models import Session, Workflow, Samples, Post
+from analysis.models import Session, Workflow, Samples, Product
 
 
 class FileSubmission(forms.ModelForm):
-    post = forms.CharField()
+    product = forms.CharField()
     class Meta:
-        model = Post
-        fields = ('post',)
+        model = Product
+        fields = ('product',)
 
-
-
-class SessionForm(forms.ModelForm):
-    class Meta:
-        model = Session
-        fields = ('genome', 'organism')
+class homeForm(forms.Form):
+    product = forms.CharField()

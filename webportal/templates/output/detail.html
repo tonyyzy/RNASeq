@@ -1,0 +1,36 @@
+{%extends 'base.html'%}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+
+    {% block head %}
+      <title>details</title>
+    {% endblock %}
+
+
+  </head>
+  <body>
+    {% block body %}
+      <p>detail.html in templates/output</p>
+
+      <!-- for loop version -->
+      <!-- {{ args }}
+      <h3>trying alt way</h3>
+      <ul>
+        {% for key, value in args.items %}
+          <li>{{ value }}</li>
+        {% endfor %}
+      </ul> -->
+
+      <!-- explicit version -->
+      <p>{{ object.title }}</p>
+      <p>{{ object.description }}</p>
+      <p>{{ object.price }}</p>
+      <p>{{ object.summary }}</p>
+      <p>{{ object.featured }}</p>
+
+    {% endblock %}
+  </body>
+</html>
