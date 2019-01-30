@@ -1,12 +1,12 @@
 input_script:
    class: File
-   path: /project/home18/fmj18/Documents/docker_practice/dexseq/DEXSeq.R
+   path: ./DEXSeq.R
 counts_matrix:
    class: Directory
-   path: /project/home18/fmj18/Documents/docker_practice/htseq_docker_
+   path: ./
 gff:
    class: Directory
-   path: /project/home18/fmj18/Documents/cwl_docker
+   path: ./
 metadata:
    class: File
-   path: /project/home18/fmj18/Documents/docker_practice/dexseq/meta.csv
+   path: ./test_meta.csv

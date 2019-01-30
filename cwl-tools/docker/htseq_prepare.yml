@@ -1,7 +1,7 @@
 input_script: 
    class: File
-   path: /project/home18/fmj18/Documents/docker_practice/htseq_docker_/dexseq_prepare.py
+   path: ../scripts/Basic_DEXSeq_scripts/dexseq_prepare.py
 gtf:
    class: File
-   path: /project/home18/fmj18/Documents/docker_practice/htseq_docker_/test.gtf
+   path: ./test.gtf
 gff_name: "test.gff"
