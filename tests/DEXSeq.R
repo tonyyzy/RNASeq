@@ -6,11 +6,17 @@ args <- commandArgs( trailingOnly=TRUE )
 
 suppressPackageStartupMessages(library("DEXSeq"))
 
+print(1)
+
 set.seed(1)
 #load files
 countFiles <- list.files(args[grep("--count_matrix_dir", args)+1], pattern = "htseq_count.csv$", full.names = TRUE)
 flattenedFile <- list.files(args[grep("--gff_file_dir", args)+1], pattern = "gff$", full.names = TRUE)
 sampleTable <- read.table(args[grep("--metadata", args)+1], row.names = 1, header = TRUE, sep = ",")
+
+print(countFiles)
+
+print(2)
 
 #construct an DEXSeqDataSet object
 dxd <- DEXSeqDataSetFromHTSeq(countfiles = countFiles, sampleData = sampleTable, design = ~ sample + exon + condition:exon, flattenedfile = flattenedFile)
@@ -31,5 +37,7 @@ dxd = estimateExonFoldChanges(dxd, fitExpToVar="condition")
 dxr = DEXSeqResults( dxd )
 
 dxr_dataframe = as.data.frame(dxr)
+
+dxr_dataframe[,c(3,4,5,6,7,8,9,10)]<-round(dxr_dataframe[,c(3,4,5,6,7,8,9,10)],3)
 
 write.csv(dxr_dataframe, "DEE_results.csv")
