@@ -2,6 +2,8 @@
 
 args <- commandArgs( trailingOnly=TRUE )
 
+set.seed(1)
+
 if ("--gene_set" %in% args) {
   gene_set.file.idx  <- grep("--gene_set", args)
   gene_set.file.path <- args[ gene_set.file.idx+1 ]
@@ -65,4 +67,5 @@ gsea.Results <- fgsea::fgsea(Gene_Sets,tmp, 500, minSize = 10)
 print("step 4")
 
 Results <- data.frame(gsea.Results[,2:7], row.names = gsea.Results$pathway)
+Results <- round(Results, 2)
 write.csv(Results, res_name)

@@ -70,3 +70,8 @@ mv DEE_results.csv ./tests/test_DEE_results.csv
 
 # test for fgsea for dexseq
 Rscript ./tests/GSEA_Script.R --de_res ./tests/test_dge_results.csv --gene_set ./tests/reactome.tsv --doc_name ./tests/test_gsea_res.csv
+
+# test for hisat_align
+cwl-runner cwl-tools/docker/hisat2_align.cwl tests/hisat2_align.yml
+tail -n +5 ./test1.sam > ./tests/test1.hisat2.tail.sam
+rm ./test1.sam
