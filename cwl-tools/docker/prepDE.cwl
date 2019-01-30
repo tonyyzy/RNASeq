@@ -8,28 +8,36 @@ hints:
       dockerPull: python:2.7.15-slim
 
 requirements:
-  InlineJavascriptRequirement: {}
+  ShellCommandRequirement: {}
   InitialWorkDirRequirement:
-    listing: |
-      ${
-        var paths = [];
-        for (var i = 0; i < inputs.gtfs.length; i ++) {
-          paths.push({
-          "class": "Directory",
-          "basename": inputs.gtfs[i].nameroot,
-          "listing": [inputs.gtfs[i]]
-          });
-        }return paths;
-      }
+    listing:
+      - entry: '{"inputs": $(inputs.gtfs)}'
+        entryname: inputs.json
+
 arguments:
-  - prefix: -i
+  - prefix: -c
     position: 2
-    valueFrom: $(runtime.outdir)
+    valueFrom: |
+      import json
+      with open("inputs.json") as file:
+          inputs = json.load(file)
+      with open("sample_lst.txt", "w") as txt:
+          for i in range(len(inputs["inputs"])):
+              txt.write(inputs["inputs"][i]["nameroot"]
+                        + " "
+                        + inputs["inputs"][i]["path"]
+                        + "\n")
+  - prefix: "&&"
+    position: 3
+    valueFrom: "python2"
+  - prefix: -i
+    position: 5
+    valueFrom: sample_lst.txt
 inputs:
   program:
     type: File
     inputBinding:
-      position: 1
+      position: 4
   gtfs:
     type: File[]
 
