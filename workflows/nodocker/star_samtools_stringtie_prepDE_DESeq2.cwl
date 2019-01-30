@@ -32,7 +32,7 @@ outputs:
 
 steps:
   star_readmap_1:
-    run: STAR_readmap.cwl
+    run: ../../cwl-tools/nodocker/STAR_readmap.cwl
     in:
       Threads: Threads
       genomeDir: genomeDir
@@ -41,7 +41,7 @@ steps:
     out: [sam_output]
 
   star_readmap_2:
-    run: STAR_readmap.cwl
+    run: ../../cwl-tools/nodocker/STAR_readmap.cwl
     in:
       Threads: Threads
       genomeDir: genomeDir
@@ -50,7 +50,7 @@ steps:
     out: [sam_output]
 
   samtools_1:
-    run: samtools.cwl
+    run: ../../cwl-tools/nodocker/samtools.cwl
     in:
       samfile: star_readmap_1/sam_output
       threads: Threads
@@ -59,7 +59,7 @@ steps:
     out: [samtools_out]
 
   samtools_2:
-    run: samtools.cwl
+    run: ../../cwl-tools/nodocker/samtools.cwl
     in:
       samfile: star_readmap_2/sam_output
       threads: Threads
@@ -68,7 +68,7 @@ steps:
     out: [samtools_out]
 
   stringtie_1:
-    run: stringtie.cwl
+    run: ../../cwl-tools/nodocker/stringtie.cwl
     in:
       input_bam: samtools_1/samtools_out
       threads: Threads
@@ -77,7 +77,7 @@ steps:
     out: [stringtie_out]
 
   stringtie_2:
-    run: stringtie.cwl
+    run: ../../cwl-tools/nodocker/stringtie.cwl
     in:
       input_bam: samtools_2/samtools_out
       threads: Threads
@@ -86,14 +86,14 @@ steps:
     out: [stringtie_out]
 
   prepDE:
-    run: prepDE.cwl
+    run: ../../cwl-tools/nodocker/prepDE.cwl
     in:
      program: program
      gtfs: [stringtie_1/stringtie_out, stringtie_2/stringtie_out]
     out: [gene_output]
 
   DESeq2:
-    run: DESeq2.cwl
+    run: ../../cwl-tools/nodocker/DESeq2.cwl
     in:
       script: script
       count_matrix: prepDE/gene_output

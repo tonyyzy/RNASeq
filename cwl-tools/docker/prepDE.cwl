@@ -3,7 +3,9 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: python2
-
+hints:
+   DockerRequirement:
+      dockerPull: python:2.7.15-slim
 
 requirements:
   InlineJavascriptRequirement: {}
