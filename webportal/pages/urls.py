@@ -15,4 +15,7 @@ urlpatterns = [
     path('analysis/', views.analysis_view, name='analysis'),
     path('detail/', views.detail_view, name='detail'),
     path('db_view/', views.db_view, name='db'),
+    path('create/', views.create_view, name='create'),
+    path('thanks/', views.thanks_view, name='thanks'),
+    # path('create/', views.create_factory, name='factory'),
 ]

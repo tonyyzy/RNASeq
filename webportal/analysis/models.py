@@ -9,17 +9,28 @@ class Product(models.Model):
     description = models.TextField(blank=True)
     price = models.DecimalField(decimal_places=2, max_digits=100)
     summary = models.TextField(blank=False)
-    featured = models.BooleanField()
+    featured = models.BooleanField(default=True)
 
+lib_type = (
+    ("PE", "Paired_end"),
+    ("SG", "Single"),
+)
 
-# class Post(models.Model):
-#     post_1 = models.CharField(max_length=100, default=1)
-#     post_2 = models.CharField(max_length=100, default=1)
-#     post_3 = models.CharField(max_length=100, default=1)
-#     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.PROTECT)
-#     date = models.DateTimeField(auto_now=True) # date object created
-    # def __str__(self):
-    #     return self.post
+condition_type = (
+    ("NM", "Normal"),
+    ("DE", "Diseased"),
+)
+
+class Fastq(models.Model):
+    # identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    # test = models.CharField(max_length=30)
+    name = models.CharField(max_length=100)
+    fastq = models.FileField(upload_to='data/fastq', default=True)
+    library = models.CharField(max_length=50, choices=lib_type, default=True)
+    condition = models.CharField(max_length=50, choices=condition_type, default=True)
+    # description = models.TextField(blank=True)
+    # date = models.DateTimeField(auto_now=True, auto_now_add=False, blank=True)
+
 
 
 class Session(models.Model):
@@ -68,4 +79,4 @@ class Samples(models.Model):
 
 
 # inspect available object methods
-# dir(Product.objects.get(id=1)) 
+# dir(Product.objects.get(id=1))
