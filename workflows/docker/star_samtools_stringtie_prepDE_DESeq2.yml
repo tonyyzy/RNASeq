@@ -8,26 +8,21 @@ readFilesIn_1:
 readFilesIn_2:
   - {class: File, path: ../../tests/test2.1.fastq}
   - {class: File, path: ../../tests/test2.2.fastq}
-outFileNamePrefix_1: "test1"
-outFileNamePrefix_2: "test2"
-samfile:
-  class: File
-  path: ../../tests/test1.sam
-outfilename_samtools: test1.bam
-outfilename_stringtie_1: test1.stringtie.gtf
-outfilename_stringtie_2: test2.stringtie.gtf
+outFileNamePrefix_1: test1
+outFileNamePrefix_2: test2
+outfilename_samtools_1: test1.bam
+outfilename_samtools_2: test2.bam
 annotation:
   class: File
   path: ../../tests/test.gff3
+outfilename_stringtie_1: test1.gtf
+outfilename_stringtie_2: test2.gtf
 program:
   class: File
   path: ../../scripts/prepDE.py
-input_name: test1
-input_name_2: test2
-name:  "1"
 script:
   class: File
-  path: /project/home18/apg3718/RNASeq/scripts/Basic_DESeq2.R
+  path: ../../scripts/Basic_DESeq2.R
 metadata:
   class: File
-  path: /project/home18/apg3718/RNASeq/tests/metadata.csv
+  path: ../../tests/metadata.csv
