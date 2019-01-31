@@ -3,10 +3,6 @@ from . import views
 # from analysis.views import analysisView
 from django.views.generic import TemplateView
 
-# urlpatterns = [
-#     path('', views.index, name='index'),
-#     # path('fastq/', views.get_fastq, name='fastq')
-# ]
 
 urlpatterns = [
     # path('', TemplateView.as_view(template_name="about.html")),

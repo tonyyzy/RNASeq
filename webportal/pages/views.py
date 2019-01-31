@@ -56,7 +56,7 @@ def db_view(request):
 
 # create with form factory
 def create_view(request):
-    fastq_formset = modelformset_factory(Fastq, fields=('name', 'fastq', 'library', 'condition'), extra=2)
+    fastq_formset = modelformset_factory(Fastq, fields=('name', 'fastq', 'library', 'condition'), extra=4)
 
     if request.method == 'POST':
         form = fastq_formset(request.POST, request.FILES)
