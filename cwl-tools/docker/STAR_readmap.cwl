@@ -2,7 +2,11 @@
 
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: STAR
+baseCommand:
+requirements:
+  - class: ShellCommandRequirement
+  - class: InlineJavascriptRequirement
+arguments: ["mkdir", $(inputs.outFileNamePrefix), "&&", "cd", $(inputs.outFileNamePrefix), "&&", "STAR"]
 
 hints:
   DockerRequirement:
@@ -27,15 +31,12 @@ inputs:
       prefix: --outFileNamePrefix
 
 outputs:
+  star_read_out:
+    type: Directory
+    outputBinding:
+      glob: $(inputs.outFileNamePrefix)
+
   sam_output:
     type: File
     outputBinding:
-      glob: "*.sam"
-  log_outputs:
-    type: File[]
-    outputBinding:
-      glob: "*.out"
-  tab_output:
-    type: File
-    outputBinding:
-      glob: "*.tab"
+      glob: $(inputs.outFileNamePrefix + "/*.sam")

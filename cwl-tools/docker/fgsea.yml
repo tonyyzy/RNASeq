@@ -1,10 +1,10 @@
 input_scripts:
    class: File
-   path: /project/home18/fmj18/Documents/RNASeq/scripts/GSEA_Script.R
+   path: ./GSEA_Script.R
 de_results:
    class: File
-   path: /project/home18/fmj18/Documents/cwl_docker/DGE_results.csv
+   path: ./test_dge_results.csv
 gene_set:
    class: File
-   path: /project/home18/fmj18/Documents/reactome.tsv
-doc_name: "string.csv"
+   path: ./reactome.tsv
+doc_name: "test_gsea_res.csv"
