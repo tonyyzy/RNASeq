@@ -1,7 +1,5 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from analysis.models import Product, Fastq
-from .form import ProductForm, FastqForm
 from django.forms import modelformset_factory
 
 # Create your views here.
@@ -54,19 +52,20 @@ def db_view(request):
 #     args = {'form': form}
 #     return render(request, 'create.html', args)
 
-# create with form factory
-def create_view(request):
-    fastq_formset = modelformset_factory(Fastq, fields=('name', 'fastq', 'library', 'condition'), extra=4)
 
-    if request.method == 'POST':
-        form = fastq_formset(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('/thanks')
-    else:
-        form = fastq_formset(queryset=Product.objects.none())
-    args = {'form': form}
-    return render(request, 'create.html', args)
+# create with form factory
+# def create_view(request):
+#     fastq_formset = modelformset_factory(Fastq, fields=('name', 'fastq', 'library', 'condition'), extra=4)
+#
+#     if request.method == 'POST':
+#         form = fastq_formset(request.POST, request.FILES)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('/thanks')
+#     else:
+#         form = fastq_formset(queryset=Product.objects.none())
+#     args = {'form': form}
+#     return render(request, 'create.html', args)
 
 
 

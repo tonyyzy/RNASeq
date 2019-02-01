@@ -2,7 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
+    {% load static %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block head %}
     <title>base</title>
     {% endblock %}
@@ -16,10 +18,10 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'create' %}">Upload</a>
+            <a class="nav-link" href="{#}">Upload</a>
           </li>
         </ul>
         <ul class="navbar-nav ml-auto">
@@ -27,7 +29,7 @@
             <a class="nav-link" href="http://127.0.0.1:8000/register/">Login</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'detail' %}">Register</a>
+            <a class="nav-link" href="#">Register</a>
           </li>
         </ul>
       </div>

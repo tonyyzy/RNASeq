@@ -1,0 +1,20 @@
+body{
+  background-color: #bac9e2;
+}
+
+p {
+  color: #1b2433;
+}
+
+.debug{
+  /* border-style: solid; */
+  border-radius: 15px;
+  border: 2px solid #8e1332;
+  padding: 10px;
+}
+
+.form{
+  border-radius: 10px;
+  border: 2px solid #044c7c;
+  padding: 10px;
+}

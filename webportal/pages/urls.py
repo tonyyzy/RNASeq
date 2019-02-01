@@ -8,14 +8,12 @@ from . import views
 # ]
 
 urlpatterns = [
-    # path('', TemplateView.as_view(template_name="about.html")),
     path('', views.home_view, name='home_view'),
-    path('test/', views.test_view, name='test'),
+    # path('test/', views.test_view, name='test'),
     path('about/', views.about_view, name='about'),
     path('analysis/', views.analysis_view, name='analysis'),
     path('detail/', views.detail_view, name='detail'),
     path('db_view/', views.db_view, name='db'),
-    path('create/', views.create_view, name='create'),
     path('thanks/', views.thanks_view, name='thanks'),
     # path('create/', views.create_factory, name='factory'),
 ]

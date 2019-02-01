@@ -12,32 +12,8 @@ class Product(models.Model):
     featured = models.BooleanField(default=True)
     models.ForeignKey(User, on_delete=models.CASCADE)
 
-
-
     def __str__(self):
         return self.title
-
-
-lib_type = (
-    ("PE", "Paired_end"),
-    ("SG", "Single"),
-)
-
-condition_type = (
-    ("NM", "Normal"),
-    ("DE", "Diseased"),
-)
-
-class Fastq(models.Model):
-    # identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    # test = models.CharField(max_length=30)
-    name = models.CharField(max_length=100)
-    fastq = models.FileField(upload_to='data/fastq', default=True)
-    library = models.CharField(max_length=50, choices=lib_type, default=True)
-    condition = models.CharField(max_length=50, choices=condition_type, default=True)
-    # description = models.TextField(blank=True)
-    # date = models.DateTimeField(auto_now=True, auto_now_add=False, blank=True)
-
 
 
 class Session(models.Model):
@@ -52,6 +28,9 @@ class Session(models.Model):
     status = models.BooleanField(default=False, null=False)
     no_conditions = models.PositiveSmallIntegerField()
     no_replicates = models.PositiveSmallIntegerField()
+
+    def __str__(self):
+        return self.organism
 
 class Workflow(models.Model):
     INDEX_CHOICES = (

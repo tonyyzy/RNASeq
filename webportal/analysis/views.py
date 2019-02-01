@@ -1,10 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from analysis.forms import homeForm
-from .forms import FileSubmission
-from .models import Product
+from .forms import SessionForm, SamplesForm, WorkflowForm
 # from django.views.generic import TemplateView
 
+
+
+def test_view(request):
+    # return HttpResponse("what hath god wrought")
+    my_dict = {'insert': 'content rendered from analysis/views.py'}
+    return render(request, 'analysis/index.html', context=my_dict) # renders page from templates dir
 
 
 def my_view(request):
@@ -20,23 +25,38 @@ def my_view(request):
     # return render(request, {'form': form})
 
 
-# class analysisView(TemplateView):
-#     template_name = 'analysis/templates/analysis'
+# def session_view(request):
+#     if request.method == 'POST':
+#         form = SessionForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return render(request, 'thanks.html', {})
+#     else:
+#         form = SessionForm()
+#     return render(request, 'analysis/upload.html', {'form': form})
 #
-#     def get(self, request):
-#         form = homeForm()
-#         return render(request, self.template_name, {'form': form})
+#
 
+def samples_view(request):
+    if request.method == 'POST':
+        form = SamplesForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save('/data/fastq')
+            return render(request, 'thanks.html', {})
+    else:
+        form = SamplesForm()
+    return render(request, 'analysis/upload.html', {'form': form})
 
-def index(request):
-    # return HttpResponse("you should not be reading this. it means something broke")
-    my_dict = {'insert': 'content rendered from view.py'}
-    return render(request, 'analysis/index.html', context=my_dict) # renders page from templates dir
+# def samples_view(request):
+#     if request.method == 'POST':
+#         form = WorkflowForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return render(request, 'thanks.html', {})
+#     else:
+#         form = WorkflowForm()
+#     return render(request, 'analysis/upload.html', {'form': form})
 
-def test(request):
-    return HttpResponse("testing page for debug")
-    # my_dict = {'insert': 'inserted from analysis'}
-    # return render(request, 'templates/test.html', context=my_dict)
 
 
 def get_files(request):
