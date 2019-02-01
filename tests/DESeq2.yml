@@ -1,0 +1,9 @@
+script:
+  class: File
+  path: ../scripts/Basic_DESeq2.R
+count_matrix:
+  class: File
+  path: ./gene_count_matrix.csv
+metadata:
+  class: File
+  path: ./metadata.csv
