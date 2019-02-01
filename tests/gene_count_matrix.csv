@@ -1,6 +1,6 @@
-gene_id,test1.stringtie,test2.stringtie
-STRG.4,25,29
-STRG.5,17,13
-STRG.1,54,162
-STRG.2,10,11
-STRG.3,18,30
+gene_id,test1,test2
+STRG.4,39,55
+STRG.5,14,14
+STRG.1,54,108
+STRG.2,7,13
+STRG.3,22,56
