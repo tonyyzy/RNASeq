@@ -3,7 +3,7 @@ script:
   path: ../scripts/Basic_DESeq2.R
 count_matrix:
   class: File
-  path: ./gene_count_matrix.csv
+  path: ./gene_count_matrix_DESeq2_version.csv
 metadata:
   class: File
   path: ./metadata.csv
