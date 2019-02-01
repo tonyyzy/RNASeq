@@ -59,9 +59,12 @@ class Samples(models.Model):
     session = models.ForeignKey(Session, on_delete=models.PROTECT)
     condition = models.CharField(max_length=200)
     replicate = models.PositiveSmallIntegerField()
-    path = models.FileField()
     libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES)
-    read = models.PositiveSmallIntegerField(choices=READ_CHOICES, default=1)
+    strand_1 = models.PositiveSmallIntegerField(choices=READ_CHOICES, default=1)
+    read_1 = models.FileField(blank=False)
+    strand = models.PositiveSmallIntegerField(choices=READ_CHOICES, blank=True)
+    read_2 = models.FileField(blank=True)
+
 
 
 # inspect available object methods

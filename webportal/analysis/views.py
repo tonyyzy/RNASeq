@@ -12,30 +12,15 @@ def test_view(request):
     return render(request, 'analysis/index.html', context=my_dict) # renders page from templates dir
 
 
-def my_view(request):
-    # form = Product()
-    obj = Product.objects.get(id=1)
-    # print(posts)
-    args = {
-        'title': obj.title,
-        'description': obj.description,
-        'price': obj.price}
-    # args = {'object': obj}
-    return render(request, 'output/detail.html', args)
-    # return render(request, {'form': form})
-
-
-# def session_view(request):
-#     if request.method == 'POST':
-#         form = SessionForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return render(request, 'thanks.html', {})
-#     else:
-#         form = SessionForm()
-#     return render(request, 'analysis/upload.html', {'form': form})
-#
-#
+def session_view(request):
+    if request.method == 'POST':
+        form = SessionForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save('/data/fastq')
+            return render(request, 'thanks.html', {})
+    else:
+        form = SessionForm()
+    return render(request, 'analysis/upload.html', {'form': form})
 
 def samples_view(request):
     if request.method == 'POST':
@@ -47,15 +32,16 @@ def samples_view(request):
         form = SamplesForm()
     return render(request, 'analysis/upload.html', {'form': form})
 
-# def samples_view(request):
-#     if request.method == 'POST':
-#         form = WorkflowForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return render(request, 'thanks.html', {})
-#     else:
-#         form = WorkflowForm()
-#     return render(request, 'analysis/upload.html', {'form': form})
+def workflow_view(request):
+    if request.method == 'POST':
+        form = WorkflowForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save('/data/fastq')
+            return render(request, 'thanks.html', {})
+    else:
+        form = WorkflowForm()
+    return render(request, 'analysis/upload.html', {'form': form})
+
 
 
 
