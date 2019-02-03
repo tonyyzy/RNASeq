@@ -36,6 +36,7 @@ fi
 mkdir test3
 star --genomeDir ./tests/GenomeIndex --readFilesIn ./tests/test3.fastq --outFileNamePrefix ./test3/test3
 cp ./test3/test3Aligned.out.sam ./tests/test3.sam
+tail -n +5 ./test3/test3Aligned.out.sam > ./tests/test3.tail.sam
 # test4
 if [ -d "./test4" ]; then
         rm -r ./test4
@@ -49,14 +50,20 @@ rm -r test1 test2 test3 test4
 # test for samtools
 samtools view -Su ./tests/test1.sam | samtools sort -o ./tests/test1.bam
 samtools view -Su ./tests/test2.sam | samtools sort -o ./tests/test2.bam
+samtools view -Su ./tests/test3.sam | samtools sort -o ./tests/test3.bam
+samtools view -Su ./tests/test4.sam | samtools sort -o ./tests/test4.bam
 
 # test for stringtie
+if [ -d "./tests/stringtie" ]; then
+    rm -r ./tests/stringtie
+fi
+mkdir ./tests/stringtie
 stringtie ./tests/test1.bam -G ./tests/test.gff3 -o ./test1.stringtie.gtf
 tail -n +3 ./test1.stringtie.gtf > ./tests/test1.stringtie.gtf
-rm ./test1.stringtie.gtf
-stringtie ./tests/test2.bam -G ./tests/test.gff3 -o ./test2.stringtie.gtf
-tail -n +3 ./test2.stringtie.gtf > ./tests/test2.stringtie.gtf
-rm ./test2.stringtie.gtf
+mv ./test1.stringtie.gtf ./tests/stringtie/test1.gtf
+stringtie ./tests/test2.bam -G ./tests/test.gff3 -o ./tests/stringtie/test2.gtf
+stringtie ./tests/test3.bam -G ./tests/test.gff3 -o ./tests/stringtie/test3.gtf
+stringtie ./tests/test4.bam -G ./tests/test.gff3 -o ./tests/stringtie/test4.gtf
 
 # test for htseq prepare
 python2.7 ./scripts/Basic_DEXSeq_scripts/dexseq_prepare.py ./tests/test.gtf ./tests/test.gff

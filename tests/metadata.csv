@@ -1,3 +1,5 @@
 "","condition","libType"
 "test1","untreated","paired-end"
 "test2","treated","paired-end"
+"test3","untreated","single"
+"test4","treated","single"
