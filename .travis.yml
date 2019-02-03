@@ -14,7 +14,7 @@ before_script:
   - bash ./install_dependency.sh
   - export PATH=$PATH:$PWD/software
 script:
-  - pytest tests
+  - pytest ./tests/test_workflow*
 
 cache:
   pip: true
