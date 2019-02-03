@@ -6,7 +6,7 @@ baseCommand:
 requirements:
   - class: ShellCommandRequirement
   - class: InlineJavascriptRequirement
-arguments: ["mkdir", $(inputs.outFileNamePrefix), "&&", "cd", $(inputs.outFileNamePrefix), "&&", "STAR"]
+arguments: ["mkdir", $(inputs.outFileNamePrefix + "_STARAligner"), "&&", "cd", $(inputs.outFileNamePrefix + "_STARAligner"), "&&", "STAR"]
 
 inputs:
   Threads:
@@ -30,9 +30,9 @@ outputs:
   star_read_out:
     type: Directory
     outputBinding:
-      glob: $(inputs.outFileNamePrefix)
+      glob: $(inputs.outFileNamePrefix + "_STARAligner")
 
   sam_output:
     type: File
     outputBinding:
-      glob: $(inputs.outFileNamePrefix + "/*.sam")
+      glob: $(inputs.outFileNamePrefix + "_STARAligner/*.sam")

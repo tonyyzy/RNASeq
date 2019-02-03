@@ -7,6 +7,14 @@
 DESeq2 requires metadata sample name to match gene_count_matrix sample name
 will handle this in workflow to make things consistent
 
+## Some libraries needed to setup local dependencies
+```bash
+sudo apt-get install zlib1g-dev
+sudo apt-get install libncurses5-dev
+sudo apt-get install libbz2-dev
+sudo apt-get install liblzma-dev
+```
+
 ## Testing
 
 We use `python` and `pytest` as the testing framework. All the tests are stored in `./tests`. Before committing a new test, you should test your test locally first.
