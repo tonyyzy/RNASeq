@@ -129,3 +129,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]
+
+DATA_ROOT = os.path.join(BASE_DIR,'data')
+# print(DATA_ROOT)
+DATA_URL = '/data/'

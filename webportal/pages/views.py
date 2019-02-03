@@ -1,26 +1,49 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.forms import modelformset_factory
+# from django.forms import modelformset_factory
+from .forms import UserCreationForm, BookFormset
+from .models import Book
 
-# Create your views here.
-def home_view(request):
-    # return HttpResponse("pages/views homes_view return.")
-    return render(request, 'index.html', {})
+
+def create_book_normal(request):
+    template_name = 'create_normal.html'
+    heading_message = 'Formset Demo'
+    if request.method == 'GET':
+        formset = BookFormset(request.GET or None)
+    elif request.method == 'POST':
+        formset = BookFormset(request.POST)
+        if formset.is_valid():
+            for form in formset:
+                # extract name from each form and save
+                name = form.cleaned_data.get('name')
+                # save book instance
+                if name:
+                    Book(name=name).save()
+            # once all books are saved, redirect to book list view
+            return render(request, 'thanks.html', {})
+    context = {
+        'formset': formset,
+        'heading': heading_message,
+        }
+    return render(request, template_name, context)
+
 
 def test_view(request):
     return HttpResponse("pages/views.py test_view return")
 
-def about_view(request):
-    # return HttpResponse("pages/views homes_view return.")
-    return render(request, 'about.html', {})
 
-def analysis_view(request):
-    # return HttpResponse("pages/views homes_view return.")
-    return render(request, 'analysis.html', {})
+def profile_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            # form.save()
+            form_data = form.objects.all()
+            return render(request, 'thanks.html', {})
+    else:
+        form = UserCreationForm()
+    args = {'form': form}
+    return render(request, 'profile.html', args)
 
-def detail_view(request):
-    # return HttpResponse("pages/views homes_view return.")
-    return render(request, 'detail.html', {})
 
 def thanks_view(request):
     # return HttpResponse("pages/views homes_view return.")
@@ -66,9 +89,9 @@ def db_view(request):
 #         form = fastq_formset(queryset=Product.objects.none())
 #     args = {'form': form}
 #     return render(request, 'create.html', args)
-
-
-
+#
+#
+#
 # def create_factory(request):
 #     formSet = modelformset_factory(Product, fields=('title', 'description', 'price', 'summary', 'featured'), extra=4)
 #

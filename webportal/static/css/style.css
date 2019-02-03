@@ -8,9 +8,10 @@ p {
 
 .debug{
   /* border-style: solid; */
-  border-radius: 15px;
+  border-radius: 5px;
   border: 2px solid #8e1332;
-  padding: 10px;
+  padding: 5px;
+  margin: 10px;
 }
 
 .form{

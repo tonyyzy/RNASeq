@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from analysis.forms import homeForm
-from .forms import SessionForm, SamplesForm, WorkflowForm
+from .forms import SessionForm, WorkflowForm
+from analysis.models import Session, Workflow, Samples
+from django.forms import modelformset_factory
 # from django.views.generic import TemplateView
+from django.core.files.storage import FileSystemStorage
 
 
 
@@ -13,38 +15,51 @@ def test_view(request):
 
 
 def session_view(request):
+    # return HttpResponse("what hath god wrought")
     if request.method == 'POST':
         form = SessionForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save('/data/fastq')
-            return render(request, 'thanks.html', {})
+            print('bound session form posted \n')
+            form.save()
+            # return render(request, 'analysis/upload_samples.html', {})
+            return redirect('analysis:upload_samples')
     else:
         form = SessionForm()
-    return render(request, 'analysis/upload.html', {'form': form})
+    return render(request, 'analysis/upload_session.html', {'form': form})
+
 
 def samples_view(request):
+    sample_formset = modelformset_factory(Samples, fields=('__all__'), extra=1)
     if request.method == 'POST':
-        form = SamplesForm(request.POST, request.FILES)
+        form = sample_formset(request.POST, request.FILES)
         if form.is_valid():
-            form.save('/data/fastq')
-            return render(request, 'thanks.html', {})
+            form.save() # not able to specify path to save directory yet.
+            print('bound form posted \n')
+            # context = {'form': form}
+            # return render(request, 'analysis/upload_workflow.html', context)
+            return redirect('analysis:upload_workflow')
     else:
-        form = SamplesForm()
-    return render(request, 'analysis/upload.html', {'form': form})
+        # form = sample_formset()
+        # form = sample_formset(queryset=Samples.objects.filter(session=7))
+        form = sample_formset(queryset=Samples.objects.none())
+        args = {'form': form}
+    return render(request, 'analysis/upload_samples.html', args)
+
+
 
 def workflow_view(request):
     if request.method == 'POST':
         form = WorkflowForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save('/data/fastq')
+            form.save()
             return render(request, 'thanks.html', {})
     else:
         form = WorkflowForm()
-    return render(request, 'analysis/upload.html', {'form': form})
+    return render(request, 'analysis/upload_workflow.html', {'form': form})
 
 
 
-
+# FILE SUBMISSION EXAMPLE
 def get_files(request):
     # return HttpResponse("post me post me post me post me post me post me")
     if request.method == 'POST':
@@ -65,16 +80,3 @@ def get_files(request):
     else:
         form = FileSubmission()
     return render(request, 'analysis/file_submit.html', {'form': form})
-
-#
-# def session_form_upload(request):
-#     if request.method == 'POST':
-#         form = SessionForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('home')
-#     else:
-#         form = SessionForm()
-#     return render(request, 'session.html', {
-#         'form': form
-#     })

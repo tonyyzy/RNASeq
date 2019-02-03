@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from analysis.models import Session, Workflow, Samples, Product
+from analysis.models import Session, Workflow, Samples
 
 
 class SessionForm(forms.ModelForm):
@@ -21,14 +21,3 @@ class WorkflowForm(forms.ModelForm):
         model = Workflow
         # fields = ['GENOME_CHOICES', 'genome', 'organism', 'status', 'no_conditions', 'no_replicates']
         fields='__all__'
-
-
-
-class FileSubmission(forms.ModelForm):
-    product = forms.CharField()
-    class Meta:
-        model = Product
-        fields = ('product',)
-
-class homeForm(forms.Form):
-    product = forms.CharField()

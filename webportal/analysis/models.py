@@ -4,18 +4,6 @@ from django.contrib.auth.models import User
 from django.conf import settings
 
 
-class Product(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
-    price = models.DecimalField(decimal_places=2, max_digits=100)
-    summary = models.TextField(blank=False)
-    featured = models.BooleanField(default=True)
-    models.ForeignKey(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.title
-
-
 class Session(models.Model):
     identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     GENOME_CHOICES = (
@@ -58,14 +46,15 @@ class Samples(models.Model):
     )
     session = models.ForeignKey(Session, on_delete=models.PROTECT)
     condition = models.CharField(max_length=200)
-    replicate = models.PositiveSmallIntegerField()
-    libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES)
-    strand_1 = models.PositiveSmallIntegerField(choices=READ_CHOICES, default=1)
+    # replicate = models.PositiveSmallIntegerField()
+    # libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES)
+    # strand_1 = models.PositiveSmallIntegerField(choices=READ_CHOICES, default=1)
     read_1 = models.FileField(blank=False)
-    strand = models.PositiveSmallIntegerField(choices=READ_CHOICES, blank=True)
+    # strand = models.PositiveSmallIntegerField(choices=READ_CHOICES, blank=True)
     read_2 = models.FileField(blank=True)
 
-
+    def __str__(self):
+        return self.sessions
 
 # inspect available object methods
 # dir(Product.objects.get(id=1))

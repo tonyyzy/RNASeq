@@ -1,0 +1,26 @@
+{%extends 'base.html'%}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+      <title>Sign up</title>
+    {% endblock %}
+  </head>
+    <body>
+      {% block body %}
+      <h1 class='debug'> loaded from templates/users</h1><br>
+        <div class="row">
+          <div class="container col jumbotron">
+            <h3>sign up please</h3>
+            <form enctype="multipart/form-data" method=POST action="" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn-success" name="button">submit</button>
+                <!-- <a class="nav-link" href="{% url 'analysis:upload_session' %}">Upload</a> -->
+            </form>
+          </div>
+        </div>
+      {% endblock %}
+    </body>
+</html>
