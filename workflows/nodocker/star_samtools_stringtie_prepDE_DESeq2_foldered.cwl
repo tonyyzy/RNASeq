@@ -23,26 +23,29 @@ inputs:
   metadata: File
 
 outputs:
-  star_readmap_1:
+  star_readmap_1_out:
     type: Directory
     outputSource: star_readmap_1/star_read_out
-  star_readmap_2:
+  star_readmap_2_out:
     type: Directory
     outputSource: star_readmap_2/star_read_out
-  samtools_1:
+  samtools_1_out:
     type: File
     outputSource: samtools_1/samtools_out
-  samtools_2:
+  samtools_2_out:
     type: File
     outputSource: samtools_2/samtools_out
-  DESeq2:
+  DESeq2_out:
     type: File
     outputSource: DESeq2/DESeq2_out
-  folder:
+  samtools_out:
     type: Directory
     outputSource: samtools_folder/out
-
-
+  prepDE_out:
+    type: File[]
+    outputSource: 
+      - prepDE/gene_output
+      - prepDE/transcript_output
 steps:
   star_readmap_1:
     run: ../../cwl-tools/nodocker/STAR_readmap.cwl
@@ -93,13 +96,13 @@ steps:
         ${
           return {"out": {
             "class": "Directory",
-            "basename": "my_directory_name",
+            "basename": "samtools",
             "listing": [inputs.file1, inputs.file2]
             } };
           }
     in:
-      file1: stringtie_1/stringtie_out
-      file2: stringtie_2/stringtie_out
+      file1: samtools_1/samtools_out
+      file2: samtools_2/samtools_out
     out: [out]
 
   stringtie_1:
@@ -125,7 +128,7 @@ steps:
     in:
      program: program
      gtfs: [stringtie_1/stringtie_out, stringtie_2/stringtie_out]
-    out: [gene_output]
+    out: [gene_output, transcript_output]
 
   DESeq2:
     run: ../../cwl-tools/docker/DESeq2.cwl
