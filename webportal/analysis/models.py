@@ -29,9 +29,13 @@ class Workflow(models.Model):
         ("STAR", "STARAligner"),
         ("HISAT2", "HISAT2"),
     )
+    ASSEMLBER_CHOICES = (
+        ("STRINGTIE", "STRINGTIE"),
+    )
     session = models.ForeignKey(Session, on_delete=models.PROTECT)
     index = models.CharField(max_length=200, choices=INDEX_CHOICES)
     mapper = models.CharField(max_length=200, choices=MAPPER_CHOICES)
+    assembler = models.CharField(max_length=200, choices=ASSEMLBER_CHOICES)
     analysis = models.CharField(max_length=200)
     status = models.BooleanField(default=False, null=False)
 
