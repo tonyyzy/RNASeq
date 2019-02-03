@@ -5,7 +5,6 @@ dist: trusty
 python:
   - "3.6"
 
-if: branch != tony_django
 
 install:
   - pip install -r requirements.txt
@@ -14,7 +13,7 @@ before_script:
   - bash ./install_dependency.sh
   - export PATH=$PATH:$PWD/software
 script:
-  - pytest ./tests/test_workflow*
+  - pytest ./tests
 
 cache:
   pip: true
