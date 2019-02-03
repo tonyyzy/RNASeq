@@ -41,7 +41,7 @@ outputs:
 steps:
 # STAR
   star_readmap_1:
-    run: ../../cwl-tools/nodocker/STAR_readmap.cwl
+    run: ../../cwl-tools/docker/STAR_readmap.cwl
     in:
       Threads: Threads
       genomeDir: genomeDir
@@ -50,7 +50,7 @@ steps:
     out: [sam_output, star_read_out]
 
   star_readmap_2:
-    run: ../../cwl-tools/nodocker/STAR_readmap.cwl
+    run: ../../cwl-tools/docker/STAR_readmap.cwl
     in:
       Threads: Threads
       genomeDir: genomeDir
@@ -83,7 +83,7 @@ steps:
 
 # Samtools
   samtools_1:
-    run: ../../cwl-tools/nodocker/samtools.cwl
+    run: ../../cwl-tools/docker/samtools.cwl
     in:
       samfile: star_readmap_1/sam_output
       threads: Threads
@@ -92,7 +92,7 @@ steps:
     out: [samtools_out]
 
   samtools_2:
-    run: ../../cwl-tools/nodocker/samtools.cwl
+    run: ../../cwl-tools/docker/samtools.cwl
     in:
       samfile: star_readmap_2/sam_output
       threads: Threads
@@ -124,7 +124,7 @@ steps:
 
 #Stringtie
   stringtie_1:
-    run: ../../cwl-tools/nodocker/stringtie.cwl
+    run: ../../cwl-tools/docker/stringtie.cwl
     in:
       input_bam: samtools_1/samtools_out
       threads: Threads
@@ -133,7 +133,7 @@ steps:
     out: [stringtie_out]
 
   stringtie_2:
-    run: ../../cwl-tools/nodocker/stringtie.cwl
+    run: ../../cwl-tools/docker/stringtie.cwl
     in:
       input_bam: samtools_2/samtools_out
       threads: Threads
@@ -164,7 +164,7 @@ steps:
     out: [out]
   
   prepDE:
-    run: ../../cwl-tools/nodocker/prepDE.cwl
+    run: ../../cwl-tools/docker/prepDE.cwl
     in:
      program: program
      gtfs: [stringtie_1/stringtie_out, stringtie_2/stringtie_out]
