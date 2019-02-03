@@ -22,15 +22,15 @@ inputs:
     position: 2
     shellQuote: False
  bamfiles:
-  type: File
+  type: File?
   inputBinding:
     position: 2
  fastafiles:
-  type: File
+  type: File?
   inputBinding:
     position: 2
  samfile:
-   type: File
+   type: File?
    inputBinding:
     position: 3
     prefix: -Su
