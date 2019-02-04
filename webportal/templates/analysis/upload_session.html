@@ -12,12 +12,13 @@
       <p>upload session.html loaded from tempaltes/analysis/</p><br>
       <div class="row">
         <div class="container col jumbotron">
-          <h3>session</h3>
-          <form enctype="multipart/form-data" method=POST action="" method="post">
-              {% csrf_token %}
-              {{ form.as_p }}
-              <button type="submit" class="btn btn-primary" name="button">SUBMIT</button>
-          </form>
+          <div class="form-inline_1">
+            <form enctype="multipart/form-data" method=POST action="" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary" name="button">SUBMIT</button>
+            </form>
+          </div>
         </div>
       </div>
     {% endblock %}

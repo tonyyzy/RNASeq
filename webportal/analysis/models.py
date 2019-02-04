@@ -35,7 +35,7 @@ class Workflow(models.Model):
     session = models.ForeignKey(Session, on_delete=models.PROTECT)
     index = models.CharField(max_length=200, choices=INDEX_CHOICES)
     mapper = models.CharField(max_length=200, choices=MAPPER_CHOICES)
-    assembler = models.CharField(max_length=200, choices=ASSEMLBER_CHOICES)
+    assembler = models.CharField(max_length=200, choices=ASSEMLBER_CHOICES, blank=True)
     analysis = models.CharField(max_length=200)
     status = models.BooleanField(default=False, null=False)
 
@@ -51,14 +51,14 @@ class Samples(models.Model):
     session = models.ForeignKey(Session, on_delete=models.PROTECT)
     condition = models.CharField(max_length=200)
     # replicate = models.PositiveSmallIntegerField()
-    # libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES)
+    libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES, blank=True, null=True)
+    read_1 = models.FileField(upload_to='data/', blank=False)
     # strand_1 = models.PositiveSmallIntegerField(choices=READ_CHOICES, default=1)
-    read_1 = models.FileField(blank=False)
+    read_2 = models.FileField(upload_to='data/', blank=True, null=True)
     # strand = models.PositiveSmallIntegerField(choices=READ_CHOICES, blank=True)
-    read_2 = models.FileField(blank=True)
 
-    def __str__(self):
-        return self.sessions
+    # def __str__(self):
+    #     return self.sessions
 
 # inspect available object methods
 # dir(Product.objects.get(id=1))

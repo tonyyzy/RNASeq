@@ -7,8 +7,9 @@ app_name = 'analysis'
 
 urlpatterns = [
     # path('', TemplateView.as_view(template_name="about.html")),
-    path('', views.test_view, name='test_view'),
+    path('', views.home_view, name='home'),
     path('upload_session', views.session_view, name='upload_session'),
     path('upload_samples', views.samples_view, name='upload_samples'),
     path('upload_workflow', views.workflow_view, name='upload_workflow'),
+    path('samples_list', views.samples_list_view, name='samples_list'),
 ]

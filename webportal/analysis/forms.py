@@ -21,3 +21,8 @@ class WorkflowForm(forms.ModelForm):
         model = Workflow
         # fields = ['GENOME_CHOICES', 'genome', 'organism', 'status', 'no_conditions', 'no_replicates']
         fields='__all__'
+
+
+
+# NEED TO GET FROM SUHAIL
+# pip install --upgrade django-crispy-forms

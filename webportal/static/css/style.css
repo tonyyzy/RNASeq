@@ -1,5 +1,5 @@
 html,body{
-  background-color: #bac9e2;
+  background-color: #e5e8e7;
   margin:0;
   padding:0;
   height: 100%;
@@ -82,3 +82,25 @@ p {
     font-size: 250%;
   }
 }
+
+/* FORM STYLE */
+/* Style the form - display items horizontally */
+.form-inline_1 {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+/* Add some margins for each label */
+.form-inline_1 label {
+  margin: 5px 10px 5px 0;
+}
+
+/* Style the input fields */
+/* .form-inline_1 input {
+  vertical-align: middle;
+  margin: 5px 10px 5px 0;
+  padding: 5px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+} */
