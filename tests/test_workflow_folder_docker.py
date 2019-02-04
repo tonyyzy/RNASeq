@@ -12,4 +12,4 @@ def test_workflow_folder_docker():
 
 
 if __name__ == "__main__":
-    test_workflow_docker()
+    test_workflow_folder_docker()
