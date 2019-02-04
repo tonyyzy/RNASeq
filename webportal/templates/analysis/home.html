@@ -1,0 +1,32 @@
+{%extends 'base.html'%}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+      <title>home</title>
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    <section class="intro">
+      <div class="inner">
+        <div class="content">
+          <h2 class='sans_serif'>PIPELINE IN PROGRESS</h2>
+            <a href={% url 'analysis:upload_session' %} id="upload_btn" class='btn'>Upload</a>
+        </div>
+      </div>
+    </section>
+    <p class="text_body_1">Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts and visual mockups. Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts and visual mockups
+    Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts and visual mockups</p>
+    <p></p>
+
+    <div class="debug">
+      <p>index.html loaded from tempaltes/analysis/</p>
+      <p>User: {{ request.user }}</p>
+    </div>
+
+    {% endblock %}
+  </body>
+</html>
