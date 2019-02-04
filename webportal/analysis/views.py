@@ -9,9 +9,8 @@ from django.core.files.storage import FileSystemStorage
 
 
 def test_view(request):
-    # return HttpResponse("what hath god wrought")
-    my_dict = {'insert': 'content rendered from analysis/views.py'}
-    return render(request, 'analysis/index.html', context=my_dict) # renders page from templates dir
+    return HttpResponse("what hath god wrought")
+    return redirect('')
 
 
 def session_view(request):

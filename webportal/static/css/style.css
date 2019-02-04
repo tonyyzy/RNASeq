@@ -1,5 +1,9 @@
-body{
+html,body{
   background-color: #bac9e2;
+  margin:0;
+  padding:0;
+  height: 100%;
+  width: 100%;
 }
 
 p {
@@ -12,10 +16,69 @@ p {
   border: 2px solid #8e1332;
   padding: 5px;
   margin: 10px;
+  /* background: blue; */
 }
 
 .form{
   border-radius: 10px;
   border: 2px solid #044c7c;
   padding: 10px;
+}
+
+.sans_serif{
+    font-family: 'Open Sans', sans-serif;
+}
+
+.intro{
+  width:100%;
+  height:100%;
+  margin:auto;
+  background-image: url('../images/dna.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: table;
+}
+
+.intro .inner{
+  display: table-cell;
+  vertical-align: middle;
+  width: 100%;
+  max-width: none;
+}
+
+.content{
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+  margin-bottom: 230px;
+  font-size: 140%;
+  color: #686793;
+  font-family: 'Open Sans', sans-serif;
+}
+
+#upload_btn{
+  border-radius: 9px;
+  font-size: 80%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border: solid;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+#upload_btn:hover{
+  color: gray;
+  border: solid gray 3px;
+}
+
+
+.text_body_1{
+  font-size: 130%;
+  line-height: 150%;
+  text-align: justify;
+}
+
+@media screen and (max-width:760px){
+  .content h1{
+    font-size: 250%;
+  }
 }
