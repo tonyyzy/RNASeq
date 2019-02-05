@@ -1,4 +1,5 @@
 {%extends 'base.html'%}
+{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -12,18 +13,16 @@
       <p>upload conditions.html loaded from tempaltes/analysis/</p><br>
       <div class="row">
         <div class="container col jumbotron">
-          <div class="">
+          <div class="form-inline_1">
             <form enctype="multipart/form-data" method=POST action="" method="post">
                 {% csrf_token %}
-                {{ form.as_p }}
+                {{ form | crispy }}
                 <button type="submit" class="btn btn-primary" name="button">SUBMIT</button>
             </form>
-
-              <a class="nav-link" href="{% url 'analysis:upload_samples' %}"><button type="submit" class="btn btn-success" name="button">upload samples</button></a>
-
           </div>
         </div>
       </div>
     {% endblock %}
   </body>
 </html>
+<!-- <a class="nav-link" href="{% url 'analysis:upload_samples' %}"><button type="submit" class="btn btn-success" name="button">upload samples</button></a> -->

@@ -16,7 +16,7 @@
           <div class="form-inline_1">
             <form enctype="multipart/form-data" method=POST action="" method="post">
                 {% csrf_token %}
-                {{ form. | crispy }}
+                {{ form | crispy }}
                 <button type="submit" class="btn btn-primary" name="button">SUBMIT</button>
             </form>
           </div>

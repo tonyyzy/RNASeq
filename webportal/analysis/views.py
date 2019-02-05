@@ -7,7 +7,6 @@ from django.forms import modelformset_factory
 from django.core.files.storage import FileSystemStorage
 
 
-
 def home_view(request):
     # return HttpResponse("what hath god wrought")
     return render(request, 'analysis/home.html', {})

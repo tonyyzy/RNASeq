@@ -89,11 +89,12 @@ p {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
+  /* border: solid blue 10px; */
 }
 
 /* Add some margins for each label */
 .form-inline_1 label {
-  margin: 5px 10px 5px 0;
+  margin: 5px 10px 5px 10;
 }
 
 /* Style the input fields */
