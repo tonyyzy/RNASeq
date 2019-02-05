@@ -1,0 +1,4 @@
+Threads: 2
+genomeDir:
+  class: Directory
+  path: ../../tests/ht_index
