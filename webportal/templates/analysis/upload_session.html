@@ -3,21 +3,16 @@
 <html>
   <head>
     <meta charset="utf-8">
-
-
     {% block head %}
-      <title>create</title>
+      <title>upload session</title>
     {% endblock %}
-
-
   </head>
   <body>
     {% block body %}
-      <!-- <h3>templates/pages/create.html</h3> -->
-      <br>
-      <h4>FastQ file submission</h4>
+      <p>upload session.html loaded from tempaltes/analysis/</p><br>
       <div class="row">
         <div class="container col jumbotron">
+          <h3>session</h3>
           <form enctype="multipart/form-data" method=POST action="" method="post">
               {% csrf_token %}
               {{ form.as_p }}
@@ -25,19 +20,6 @@
           </form>
         </div>
       </div>
-
     {% endblock %}
   </body>
 </html>
-
-
-<form>
-  <div class="row">
-    <div class="col">
-      <input type="text" class="form-control" placeholder="First name">
-    </div>
-    <div class="col">
-      <input type="text" class="form-control" placeholder="Last name">
-    </div>
-  </div>
-</form>
