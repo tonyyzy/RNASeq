@@ -2,13 +2,17 @@
 
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: hisat2
+baseCommand: 
 hints:
+   ShellCommandRequirement: {}
    DockerRequirement:
       dockerPull: quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2
 requirements:
    InlineJavascriptRequirement: {}
-
+arguments: 
+   -  position: 0
+      shellQuote: False
+      valueFrom: $("mkdir " + inputs.sam_name.split(".")[0] + " && cd " + inputs.sam_name.split(".")[0] + " && hisat2")
 inputs:
    input_type:
       type: string
@@ -46,9 +50,24 @@ inputs:
       type: string
       inputBinding: 
          prefix: -S
+   threads:
+      type: int
+      inputBinding:
+         prefix: -p
+   log:
+      type: string
+      default: "log.txt"
+      inputBinding:
+         prefix: --summary-file
 
 outputs:
-   output:
-      type: File[]
+   hisat2_align_out:
+      type: Directory
       outputBinding:
-         glob: $(input.sam_name)
+         glob: $(inputs.sam_name.split(".")[0])
+   
+   sam_output:
+      type: File
+      outputBinding:
+         glob: $(inputs.sam_name.split(".")[0] + "/" + inputs.sam_name)
+
