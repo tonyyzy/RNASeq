@@ -5,6 +5,8 @@ class: Workflow
 requirements:
   ScatterFeatureRequirement: {}
   MultipleInputFeatureRequirement: {}
+  StepInputExpressionRequirement: {}
+  InlineJavascriptRequirement: {}
 
 inputs:
   Threads: int
@@ -13,11 +15,7 @@ inputs:
   readFilesIn_2: File[]
   outFileNamePrefix_1: string
   outFileNamePrefix_2: string
-  outfilename_samtools_1: string
-  outfilename_samtools_2: string
   annotation: File
-  outfilename_stringtie_1: string
-  outfilename_stringtie_2: string
   program: File
   script: File
   metadata: File
@@ -76,7 +74,9 @@ steps:
       samfile: star_readmap_1/sam_output
       threads: Threads
       threads2: Threads
-      outfilename: outfilename_samtools_1
+      outfilename:
+        source: [outFileNamePrefix_1]
+        valueFrom: $(self + ".bam")
     out: [samtools_out]
 
   samtools_2:
@@ -85,7 +85,9 @@ steps:
       samfile: star_readmap_2/sam_output
       threads: Threads
       threads2: Threads
-      outfilename: outfilename_samtools_2
+      outfilename:
+        source: [outFileNamePrefix_2]
+        valueFrom: $(self + ".bam")
     out: [samtools_out]
 
   stringtie_1:
@@ -94,7 +96,9 @@ steps:
       input_bam: samtools_1/samtools_out
       threads: Threads
       annotation: annotation
-      outfilename: outfilename_stringtie_1
+      outfilename:
+        source: [outFileNamePrefix_1]
+        valueFrom: $(self + ".gtf")
     out: [stringtie_out]
 
   stringtie_2:
@@ -103,7 +107,9 @@ steps:
       input_bam: samtools_2/samtools_out
       threads: Threads
       annotation: annotation
-      outfilename: outfilename_stringtie_2
+      outfilename:
+        source: [outFileNamePrefix_2]
+        valueFrom: $(self + ".gtf")
     out: [stringtie_out]
 
   prepDE:
