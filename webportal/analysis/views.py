@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .forms import SessionForm, WorkflowForm, SamplesForm
+from .forms import SessionForm, WorkflowForm, SamplesForm, ConditionsForm
 from analysis.models import Session, Workflow, Samples
 from django.forms import modelformset_factory
 # from django.views.generic import TemplateView
@@ -21,10 +21,24 @@ def session_view(request):
             print('bound session form posted \n')
             form.save()
             # return render(request, 'analysis/upload_samples.html', {})
-            return redirect('analysis:upload_samples')
+            return redirect('analysis:upload_session')
     else:
         form = SessionForm()
     return render(request, 'analysis/upload_session.html', {'form': form})
+
+
+def conditions_view(request):
+    # return HttpResponse("what hath god wrought")
+    if request.method == 'POST':
+        form = ConditionsForm(request.POST, request.FILES)
+        if form.is_valid():
+            print('bound conditions form posted \n')
+            form.save()
+            # return render(request, 'analysis/upload_samples.html', {})
+            return redirect('analysis:upload_conditions')
+    else:
+        form = ConditionsForm()
+    return render(request, 'analysis/upload_conditions.html', {'form': form})
 
 
 def samples_view(request):
@@ -34,7 +48,7 @@ def samples_view(request):
         form = SamplesForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            print('bound form posted \n')
+            print('bound samples form posted \n')
             # context = {'form': form}
             # return render(request, 'analysis/upload_workflow.html', context)
             return redirect('analysis:upload_samples')

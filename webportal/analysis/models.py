@@ -11,14 +11,42 @@ class Session(models.Model):
         ("OwnGFF", "User_Provided_Annotation"),
         ("OwnFASTA", "User_Provided_Genome"),
     )
+    upload_name = models.CharField(max_length=200, blank=False)
     genome = models.CharField(max_length=200, choices=GENOME_CHOICES)
     organism = models.CharField(max_length=200)
-    status = models.BooleanField(default=False, null=False)
-    no_conditions = models.PositiveSmallIntegerField()
-    no_replicates = models.PositiveSmallIntegerField()
+    # conditions = models.CharField(max_length=50, blank=True, null=True)
+    # no_replicates = models.PositiveSmallIntegerField()
+
+    # def __str__(self):
+    #     return self.upload_name
+
+
+class Conditions(models.Model):
+    session = models.ForeignKey(Session, on_delete=models.PROTECT)
+    conditions = models.CharField(max_length=50, blank=False)
+    no_replicates = models.PositiveSmallIntegerField(blank=False, default=1)
 
     def __str__(self):
-        return self.organism
+        return self.conditions
+
+
+class Samples(models.Model):
+    LIBTYPE_CHOICES = (
+        ("PE", "Paired_end"),
+        ("SG", "Single")
+    )
+
+    session = models.ForeignKey(Session, on_delete=models.PROTECT)
+    condition = models.ForeignKey(Conditions, on_delete=models.PROTECT)
+    # replicate = models.PositiveSmallIntegerField()
+    libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES, blank=True, null=True)
+    read_1 = models.FileField(upload_to='data/', blank=False)
+    read_2 = models.FileField(upload_to='data/', blank=True, null=True)
+
+    # def __str__(self):
+    #     return self.sessions
+
+
 
 class Workflow(models.Model):
     INDEX_CHOICES = (
@@ -38,27 +66,6 @@ class Workflow(models.Model):
     assembler = models.CharField(max_length=200, choices=ASSEMLBER_CHOICES, blank=True)
     analysis = models.CharField(max_length=200)
     status = models.BooleanField(default=False, null=False)
-
-class Samples(models.Model):
-    LIBTYPE_CHOICES = (
-        ("PE", "Paired_end"),
-        ("SG", "Single")
-    )
-    READ_CHOICES = (
-        (1, "First"),
-        (2, "Second")
-    )
-    session = models.ForeignKey(Session, on_delete=models.PROTECT)
-    condition = models.CharField(max_length=200)
-    # replicate = models.PositiveSmallIntegerField()
-    libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES, blank=True, null=True)
-    read_1 = models.FileField(upload_to='data/', blank=False)
-    # strand_1 = models.PositiveSmallIntegerField(choices=READ_CHOICES, default=1)
-    read_2 = models.FileField(upload_to='data/', blank=True, null=True)
-    # strand = models.PositiveSmallIntegerField(choices=READ_CHOICES, blank=True)
-
-    # def __str__(self):
-    #     return self.sessions
 
 # inspect available object methods
 # dir(Product.objects.get(id=1))

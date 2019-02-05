@@ -1,19 +1,26 @@
 from django import forms
 from django.forms import ModelForm
-from analysis.models import Session, Workflow, Samples
+from analysis.models import Session, Workflow, Samples, Conditions
 
 
 class SessionForm(forms.ModelForm):
     class Meta:
         model = Session
-        # fields = ['GENOME_CHOICES', 'genome', 'organism', 'status', 'no_conditions', 'no_replicates']
-        fields='__all__'
+        fields = ['upload_name', 'genome', 'organism']
+        # fields='__all__'
+
+class ConditionsForm(forms.ModelForm):
+    class Meta:
+        model = Conditions
+        fields = ['session', 'conditions', 'no_replicates']
+        # fields='__all__'
+
 
 class SamplesForm(forms.ModelForm):
     class Meta:
         model = Samples
-        # fields = ['GENOME_CHOICES', 'genome', 'organism', 'status', 'no_conditions', 'no_replicates']
-        fields='__all__'
+        fields = ['session', 'condition', 'libtype', 'read_1', 'read_2']
+        # fields='__all__'
 
 
 class WorkflowForm(forms.ModelForm):
