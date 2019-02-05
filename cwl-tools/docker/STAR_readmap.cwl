@@ -6,7 +6,17 @@ baseCommand:
 requirements:
   - class: ShellCommandRequirement
   - class: InlineJavascriptRequirement
-arguments: ["mkdir", $(inputs.outFileNamePrefix + "_STARAligner"), "&&", "cd", $(inputs.outFileNamePrefix + "_STARAligner"), "&&", "STAR"]
+arguments:
+  - position: 0
+    shellQuote: False
+    valueFrom: $("mkdir " + inputs.outFileNamePrefix + "_STARAligner" + " && cd " + inputs.outFileNamePrefix + "_STARAligner" + " && STAR ")
+  - position: 5
+    valueFrom: |
+      ${
+        if (inputs.readFilesIn[0].nameext == ".gz"){
+          return "--readFilesCommand gunzip -c";}
+          return "";
+      }
 
 hints:
   DockerRequirement:
@@ -16,18 +26,22 @@ inputs:
   Threads:
     type: int
     inputBinding:
+      position: 1
       prefix: --runThreadN
   genomeDir:
     type: Directory
     inputBinding:
+      position: 2
       prefix: --genomeDir
   readFilesIn:
     type: File[]
     inputBinding:
+      position: 3
       prefix: --readFilesIn
   outFileNamePrefix:
-    type: string?
+    type: string
     inputBinding:
+      position: 4
       prefix: --outFileNamePrefix
 
 outputs:
