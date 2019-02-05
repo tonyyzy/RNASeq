@@ -7,9 +7,7 @@ hints:
    DockerRequirement:
       dockerPull: quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2
 requirements:
-  InitialWorkDirRequirement:
-    listing:
-      - $(inputs.index_directory)
+   InlineJavascriptRequirement: {}
 
 inputs:
    input_type:
@@ -19,11 +17,11 @@ inputs:
          position: 1
    index_directory:
       type: Directory
-   index_basename:
-      type: string
       inputBinding:
          position: 2
          prefix: "-x"
+         valueFrom: $(inputs.index_directory.path + "/" +
+            inputs.index_directory.listing[0].nameroot.split(".")[0])
    first_pair:
       type: File?
       inputBinding:
@@ -53,4 +51,4 @@ outputs:
    output:
       type: File[]
       outputBinding:
-         glob: "*.sam"
+         glob: $(input.sam_name)
