@@ -17,3 +17,29 @@ e.g.
           ${return(self + ".bam")}
     out: [samtools_out]
 ```
+
+## Group into directory
+```cwl
+samtools_folder:
+  run:
+    class: ExpressionTool
+    requirements:
+      InlineJavascriptRequirement: {}
+    inputs:
+      file1: File
+      file2: File
+    outputs:
+      out: Directory
+    expression: |
+      ${
+        return {"out": {
+          "class": "Directory",
+          "basename": "samtools",
+          "listing": [inputs.file1, inputs.file2]
+          } };
+        }
+  in:
+    file1: samtools_1/samtools_out
+    file2: samtools_2/samtools_out
+  out: [out]
+```
