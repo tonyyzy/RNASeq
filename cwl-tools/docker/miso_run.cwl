@@ -29,22 +29,26 @@ arguments:
    - position: 6
      valueFrom: sh /complete_run.sh
      shellQuote: False
-   - position: 8
+   - position: 9
      valueFrom: $(runtime.outdir+"/"+inputs.index.basename)
      shellQuote: False
-   - position: 9
+   - position: 10
      valueFrom: $(runtime.outdir+"/"+inputs.bam.basename)
      shellQuote: False
-   - position: 11
+   - position: 12
      valueFrom: $(runtime.outdir+"/"+inputs.out_dir)
      shellQuote: False
 
 
 inputs:
-   lib_type:
+   cores:
       type: string
       inputBinding:
          position: 7
+   lib_type:
+      type: string
+      inputBinding:
+         position: 8
    index:
       type: Directory
    bam:
@@ -54,17 +58,17 @@ inputs:
    read_len:
       type: string
       inputBinding:
-         position: 10
+         position: 11
    out_dir:
       type: string
    annotation_file:
       type: File?
       inputBinding:
-         position: 12
+         position: 13
    exon_size:
       type: string?
       inputBinding:
-         position: 13
+         position: 14
 
 outputs:
    output:
