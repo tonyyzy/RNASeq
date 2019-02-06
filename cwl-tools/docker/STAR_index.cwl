@@ -38,6 +38,10 @@ inputs:
     type: string?
     inputBinding:
       prefix: --genomeSAindexNbases
+  RAMlimit:
+    type: string?
+    inputBinding:
+      prefix: --limitGenomeGenerateRAM
 
 outputs:
   output:
