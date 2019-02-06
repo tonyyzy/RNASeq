@@ -12,3 +12,7 @@ bam_bai:
    path: ./test1.bam.bai
 read_len: "101"
 out_dir: "miso_out"
+annotation_file:
+   class: File
+   path: ./test.gff3
+exon_size: "50"
