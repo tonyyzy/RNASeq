@@ -39,7 +39,8 @@ inputs:
     inputBinding:
       prefix: --genomeSAindexNbases
   RAMlimit:
-    type: string?
+    type: string
+    default: 400000000000
     inputBinding:
       prefix: --limitGenomeGenerateRAM
 
