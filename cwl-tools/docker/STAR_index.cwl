@@ -23,11 +23,11 @@ inputs:
     inputBinding:
       prefix: --genomeDir
   genomeFastaFiles:
-    type: File
+    type: File[]
     inputBinding:
       prefix: --genomeFastaFiles
   sjdbGTFfile:
-    type: File
+    type: File[]
     inputBinding:
       prefix: --sjdbGTFfile
   sjdbGTFtagExonParentTranscript:
