@@ -1,4 +1,5 @@
 # important things to remember
+# non-docker version of workflows are deprecated, primary focus is on dockered version
 ## use inlinejavascript in workflow's step in
 1. do `source: [file]` to put files into the step
 2. use `self` to refer to the file in `source`

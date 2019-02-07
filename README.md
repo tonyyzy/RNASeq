@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.com/tonyyzy/RNASeq.svg?token=5Fwptxoz1iaezXoMzRSd&branch=master)](https://travis-ci.com/tonyyzy/RNASeq)
 
+# We will probably drop nodocker support soon...it's becoming harder to account for both versions
 
 ## Notes
 DESeq2 requires metadata sample name to match gene_count_matrix sample name
