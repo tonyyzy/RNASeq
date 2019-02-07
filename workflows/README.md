@@ -10,8 +10,8 @@ e.g.
     run: ../../cwl-tools/docker/samtools.cwl
     in:
       samfile: star_readmap_1/sam_output
-      threads: Threads
-      threads2: Threads
+      threads: threads
+      threads2: threads
       outfilename:
         source: [outFileNamePrefix_1]
         valueFrom: |
