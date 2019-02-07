@@ -1,3 +1,4 @@
+threads: 2
 reference:
    class: File
    path: /data/rnaseq/GenomeIndex/Plasmodium_Yoelii/Plasmodium_yoelii_gca_900002395.PYYM01.dna.toplevel.fa

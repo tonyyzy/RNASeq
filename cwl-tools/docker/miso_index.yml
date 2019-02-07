@@ -1,0 +1,4 @@
+annotation:
+   class: File
+   path: test.gff3 
+index_dir: "indexed_test"
