@@ -1,3 +1,4 @@
+threads: 2
 reference:
    class: File
    path: ./path/to/.fa/file
