@@ -9,7 +9,7 @@ hints:
     dockerPull: quay.io/biocontainers/star:2.6.0c--0
 
 inputs:
-  Threads:
+  threads:
     type: int
     inputBinding:
       prefix: --runThreadN

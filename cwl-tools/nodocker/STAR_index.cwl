@@ -5,7 +5,7 @@ class: CommandLineTool
 baseCommand: STAR
 
 inputs:
-  Threads:
+  threads:
     type: int
     inputBinding:
       prefix: --runThreadN

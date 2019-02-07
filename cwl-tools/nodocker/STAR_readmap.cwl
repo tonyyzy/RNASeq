@@ -18,7 +18,7 @@ arguments:
           return "";
       }
 inputs:
-  Threads:
+  threads:
     type: int
     inputBinding:
       position: 1
