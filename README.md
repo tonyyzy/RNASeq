@@ -35,3 +35,26 @@ tests/test_STAR_index_nodocker.py .                                      [100%]
 =========================== 1 passed in 2.01 seconds ===========================
 The command "pytest tests" exited with 0.
 ```
+## Webportal structure
+RNASeq
+|
+|-- Genome_Index
+|               |-- H. Sapiens
+|               |             |-- fasta
+|               |             |-- annotation
+|               |-- P. Yoelii
+|-- data
+|       |
+|       |-- Session ID
+|                     |-- workflow
+|                     |           |-- cwl files
+|                     |           |-- yml files
+|                     |-- fastq
+|                     |        |-- file1.fastq
+|                     |        |-- file2.fastq
+|                     |
+|                     |-- genome
+|                              |-- fasta
+|                              |-- annotation
+|
+|-- RNASeq (repository)
