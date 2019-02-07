@@ -6,7 +6,7 @@ from analysis.models import Session, Workflow, Samples, Conditions
 class SessionForm(forms.ModelForm):
     class Meta:
         model = Session
-        fields = ['upload_name', 'genome', 'organism']
+        fields = ['organism','genome','fasta_file', 'annotation_file']
         # fields='__all__'
 
 class ConditionsForm(forms.ModelForm):
@@ -19,7 +19,7 @@ class ConditionsForm(forms.ModelForm):
 class SamplesForm(forms.ModelForm):
     class Meta:
         model = Samples
-        fields = ['session', 'condition', 'libtype', 'read_1', 'read_2']
+        fields = ['condition', 'libtype', 'read_1', 'read_2']
         # fields='__all__'
 
 

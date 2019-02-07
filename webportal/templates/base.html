@@ -35,10 +35,6 @@
       </ul>
     </div>
   </nav>
-  <form class="" action="{% url 'users:logout_view' %}" method="post">
-    {% csrf_token %}
-    <input type="submit" name="" value="log out">
-  </form>
   <h4 class="debug">Current user: {{ request.user }}</h4>
 <body>
 

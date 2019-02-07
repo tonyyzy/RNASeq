@@ -2,6 +2,7 @@ from django.db import models
 import uuid
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.urls import reverse
 
 
 class Session(models.Model):
@@ -11,14 +12,16 @@ class Session(models.Model):
         ("OwnGFF", "User_Provided_Annotation"),
         ("OwnFASTA", "User_Provided_Genome"),
     )
-    upload_name = models.CharField(max_length=200, blank=False)
-    genome = models.CharField(max_length=200, choices=GENOME_CHOICES)
     organism = models.CharField(max_length=200)
-    # conditions = models.CharField(max_length=50, blank=True, null=True)
-    # no_replicates = models.PositiveSmallIntegerField()
+    genome = models.CharField(max_length=200, choices=GENOME_CHOICES)
+    fasta_file = models.FileField(upload_to='data/', blank=True, null=True)
+    annotation_file = models.FileField(upload_to='data/', blank=True, null=True)
+
+    def get_absolute_url(self):
+        return reverse('analysis:session_detail', kwargs={'pk':self.pk})
 
     # def __str__(self):
-    #     return self.upload_name
+        # return str(self.pk)
 
 
 class Conditions(models.Model):
@@ -26,8 +29,8 @@ class Conditions(models.Model):
     conditions = models.CharField(max_length=50, blank=False)
     no_replicates = models.PositiveSmallIntegerField(blank=False, default=1)
 
-    def __str__(self):
-        return self.conditions
+    # def __str__(self):
+        # return self.conditions
 
 
 class Samples(models.Model):
@@ -35,10 +38,7 @@ class Samples(models.Model):
         ("PE", "Paired_end"),
         ("SG", "Single")
     )
-
-    session = models.ForeignKey(Session, on_delete=models.PROTECT)
     condition = models.ForeignKey(Conditions, on_delete=models.PROTECT)
-    # replicate = models.PositiveSmallIntegerField()
     libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES, blank=True, null=True)
     read_1 = models.FileField(upload_to='data/', blank=False)
     read_2 = models.FileField(upload_to='data/', blank=True, null=True)

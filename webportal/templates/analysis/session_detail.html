@@ -1,0 +1,32 @@
+{%extends 'base.html'%}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+      <title>Session Detail</title>
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    <div class="jumbotron">
+      <h3> session {{ session_details.pk}} details </h3>
+        <p>{{session_details.identifier}}</p>
+        <p>{{session_details.organism}}</p>
+        <p>{{session_details.genome}}</p>
+        <p>{{session_details.fasta_file}}</p>
+        <p>{{session_details.annotation_file}}</p>
+    </div>
+  {% endblock %}
+  </body>
+</html>
+
+
+<!--
+session1Cond = session.conditions_set.all()
+<p>sesison1Cond</p>
+{% for condition in session1Cond %}
+  <p>{{ condition.session }}</p>
+  <p>{{ condition.conditions }}</p>
+  <p>{{ condition.no_replicates }}</p>
+{% endfor %} -->
