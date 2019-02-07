@@ -8,6 +8,7 @@ inputs:
   type: File
   inputBinding:
    position: 1
+   prefix: -eB
  threads:
    type: int
    inputBinding:
