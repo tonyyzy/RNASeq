@@ -1,4 +1,4 @@
 reference:
    class: File
-   path: ./path/to/.fa/file
-basename: "test_index"
+   path: /data/rnaseq/GenomeIndex/Plasmodium_Yoelii/Plasmodium_yoelii_gca_900002395.PYYM01.dna.toplevel.fa
+basename: "P.yoelii"

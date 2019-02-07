@@ -294,4 +294,4 @@ steps:
           }
     in:
       file1: DESeq2/DESeq2_out
-out: [out]
+    out: [out]

@@ -43,6 +43,12 @@ inputs:
     inputBinding:
       position: 4
       prefix: --outFileNamePrefix
+  XSTag:
+    type: string?
+    default: intronMotif
+    inputBinding:
+      position: 5
+      prefix: --outSAMstrandField
 
 outputs:
   star_read_out:

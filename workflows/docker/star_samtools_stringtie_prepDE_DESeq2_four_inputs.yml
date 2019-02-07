@@ -1,0 +1,41 @@
+Threads: 48
+genomeDir:
+  class: Directory
+  path: /project/home18/zy2414/scratch/human_workflow/Index
+readFilesIn_1:
+  - {class: File, path: /project/home18/zy2414/scratch/human_workflow/fastq/normal_1_1.fastq}
+  - {class: File, path: /project/home18/zy2414/scratch/human_workflow/fastq/normal_1_2.fastq}
+readFilesIn_2:
+  - {class: File, path: /project/home18/zy2414/scratch/human_workflow/fastq/normal_2_1.fastq}
+  - {class: File, path: /project/home18/zy2414/scratch/human_workflow/fastq/normal_2_2.fastq}
+readFilesIn_3:
+  - {class: File, path: /project/home18/zy2414/scratch/human_workflow/fastq/tumour_1_1.fastq}
+  - {class: File, path: /project/home18/zy2414/scratch/human_workflow/fastq/tumour_1_2.fastq}
+readFilesIn_4:
+    - {class: File, path: /project/home18/zy2414/scratch/human_workflow/fastq/tumour_2_1.fastq}
+    - {class: File, path: /project/home18/zy2414/scratch/human_workflow/fastq/tumour_2_2.fastq}
+outFileNamePrefix_1: normal1
+outFileNamePrefix_2: normal2
+outFileNamePrefix_3: tumour1
+outFileNamePrefix_4: tumour2
+outfilename_samtools_1: normal1.bam
+outfilename_samtools_2: normal2.bam
+outfilename_samtools_3: tumour1.bam
+outfilename_samtools_4: tumour2.bam
+annotation:
+  class: File
+  path: /project/home18/zy2414/scratch/human_workflow/Homo_sapiens.GRCh38.95.gtf
+outfilename_stringtie_1: normal1.gtf
+outfilename_stringtie_2: normal2.gtf
+outfilename_stringtie_3: tumour1.gtf
+outfilename_stringtie_4: tumout2.gtf
+program:
+  class: File
+  path: ../../scripts/prepDE.py
+script:
+  class: File
+  path: ../../Basic_DESeq2.R
+metadata:
+  class: File
+  path: /project/home18/zy2414/scratch/human_workflow/metadata.csv
+
