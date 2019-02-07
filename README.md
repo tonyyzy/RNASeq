@@ -38,6 +38,7 @@ tests/test_STAR_index_nodocker.py .                                      [100%]
 The command "pytest tests" exited with 0.
 ```
 ## Webportal structure  
+<pre>
 RNASeq  
 |  
 |-- Genome_Index  
@@ -60,4 +61,4 @@ RNASeq
 |                              |-- annotation  
 |  
 |-- RNASeq (repository)  
-
+</pre>
