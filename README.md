@@ -45,13 +45,17 @@ RNASeq
 |               |-- H. Sapiens  
 |               |             |-- fasta  
 |               |             |-- annotation  
+|               |             |-- STAR_index  
+|               |             |-- HISAT2_index  
+|               |              
 |               |-- P. Yoelii  
 |-- data  
 |       |  
 |       |-- Session ID  
 |                     |-- workflow  
-|                     |           |-- cwl files  
-|                     |           |-- yml files  
+|                     |           |-- workflow 1
+|                     |                         |-- cwl files  
+|                     |                         |-- yml files  
 |                     |-- fastq  
 |                     |        |-- file1.fastq  
 |                     |        |-- file2.fastq  
