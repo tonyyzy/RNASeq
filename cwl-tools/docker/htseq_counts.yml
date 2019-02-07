@@ -1,10 +1,10 @@
 input_script: 
    class: File
-   path: /project/home18/fmj18/Documents/docker_practice/htseq_docker_/dexseq_count.py
+   path: ../../scripts/Basic_DEXSeq_scripts/dexseq_count.py
 gff:
    class: File
-   path: /project/home18/fmj18/Documents/cwl_docker/test.gff
+   path: ../../tests/test.gff
 sam: 
    class: File
-   path: /project/home18/fmj18/Documents/docker_practice/htseq_docker_/test1.sam
+   path: ../../tests/test1.sam
 outname: "test1_counts.csv"
