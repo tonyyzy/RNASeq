@@ -52,10 +52,10 @@ RNASeq
 |-- data  
 |       |  
 |       |-- Session ID  
-|                     |-- workflow  
-|                     |           |-- workflow 1
-|                     |                         |-- cwl files  
-|                     |                         |-- yml files  
+|                     |-- workflow1  
+|                     |            |-- cwl file  
+|                     |            |-- yml file
+|                     |            |-- analysis result directories
 |                     |-- fastq  
 |                     |        |-- file1.fastq  
 |                     |        |-- file2.fastq  
