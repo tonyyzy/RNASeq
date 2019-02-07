@@ -37,9 +37,9 @@ tests/test_STAR_index_nodocker.py .                                      [100%]
 =========================== 1 passed in 2.01 seconds ===========================
 The command "pytest tests" exited with 0.
 ```
-## Webportal structure  
+## Backend data structure  
 <pre>
-RNASeq  
+rnaseq  
 |  
 |-- Genome_Index  
 |               |-- H. Sapiens  
