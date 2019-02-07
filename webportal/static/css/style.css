@@ -105,3 +105,13 @@ p {
   background-color: #fff;
   border: 1px solid #ddd;
 } */
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #c2d0f9;
+  color: white;
+  text-align: center;
+}

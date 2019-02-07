@@ -24,8 +24,10 @@ class Session(models.Model):
         # return str(self.pk)
 
 
+
+
 class Conditions(models.Model):
-    session = models.ForeignKey(Session, on_delete=models.PROTECT)
+    session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='conditions')
     conditions = models.CharField(max_length=50, blank=False)
     no_replicates = models.PositiveSmallIntegerField(blank=False, default=1)
 

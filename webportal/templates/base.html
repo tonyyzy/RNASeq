@@ -17,10 +17,10 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="{% url 'analysis:home' %}">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="{% url 'analysis:session_list' %}">Home <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'analysis:upload_session' %}">Upload</a>
+          <a class="nav-link" href="{% url 'analysis:session_create' %}">New Session</a>
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
@@ -35,7 +35,7 @@
       </ul>
     </div>
   </nav>
-  <h4 class="debug">Current user: {{ request.user }}</h4>
+  <h4 class="debug footer">Current user: {{ request.user }}</h4>
 <body>
 
   {% block body %}

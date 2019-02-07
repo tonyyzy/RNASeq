@@ -10,13 +10,23 @@
   <body>
     {% block body %}
     <div class="jumbotron">
-      <h3> session {{ session_details.pk}} details </h3>
-        <p>{{session_details.identifier}}</p>
-        <p>{{session_details.organism}}</p>
-        <p>{{session_details.genome}}</p>
-        <p>{{session_details.fasta_file}}</p>
-        <p>{{session_details.annotation_file}}</p>
+      <h3> session {{ session_detail.pk}} details </h3>
+        <p>{{session_detail.identifier}}</p>
+        <p>{{session_detail.organism}}</p>
+        <p>{{session_detail.genome}}</p>
+        <p>{{session_detail.fasta_file}}</p>
+        <p>{{session_detail.annotation_file}}</p>
+        <h4>sample Conditions</h4>
+        {% for condition in session_detail.conditions.all %}
+        <p>{{condition.conditions}}: {{condition.no_replicates}}</p>
+        {% endfor %}
+      <p>
+        <a class='btn btn-warning' href="{% url 'analysis:session_update' pk=session_detail.pk %}">Update</a>
+        <a class='btn btn-danger' href="{% url 'analysis:session_delete' pk=session_detail.pk %}">Delete</a>
+      </p>
     </div>
+
+
   {% endblock %}
   </body>
 </html>

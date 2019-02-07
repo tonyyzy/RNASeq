@@ -1,0 +1,22 @@
+{%extends 'base.html'%}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+      <title>Session Detail</title>
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    <div class="jumbotron">
+      <h1>Delete Session: {{session.id }}?</h1>
+      <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" class="btn btn-danger" value="Delete">
+        <a href="{% url 'analysis:session_detail' pk=session.pk%} ">Cancel</a>
+      </form>
+  {% endblock %}
+  </body>
+</html>

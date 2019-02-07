@@ -12,7 +12,8 @@ from django.views.generic import (View,TemplateView,
                                 CreateView,DeleteView,
                                 UpdateView)
 
-# Class based views
+###### Class based views ######
+# Session
 class cbv_view(View):
     def get(self, request):
             return HttpResponse('im not sure about these new fangled class views...')
@@ -24,7 +25,7 @@ class SessionListView(ListView):
     model = models.Session
 
 class SessionDetailView(DetailView):
-    context_object_name = 'session_details'
+    context_object_name = 'session_detail'
     model = models.Session
     template_name = 'analysis/session_detail.html'
 
@@ -42,6 +43,14 @@ class SessionUpdateView(UpdateView):
 class SessionDeleteView(DeleteView):
     model = models.Session
     success_url = reverse_lazy("analysis:session_list")
+
+
+# Conditions
+class ConditionsListView(ListView):
+    # context_object_name = 'conditions'
+    model = models.Conditions
+
+
 
 
 # Function based views
