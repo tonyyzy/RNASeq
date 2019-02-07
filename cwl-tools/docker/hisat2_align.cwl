@@ -37,7 +37,7 @@ inputs:
          position: 4
          prefix: "-2"
    single_file:
-      type: File?
+      type: File[]?
       inputBinding:
          position: 3
          prefix: "-U"
