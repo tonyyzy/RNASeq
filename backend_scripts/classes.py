@@ -25,10 +25,10 @@ class database_reader():
         cur.execute("SELECT * FROM analysis_workflow WHERE Session_ID = {0}".format(self.Session_ID))
         query_result = cur.fetchall()
 
-        self.Index = [i[1].upper() for i in query_result]
-        self.Mapper = [i[2].upper() for i in query_result]
-        self.Assembler = [i[3].upper()  for i in query_result]
-        self.Analysis = [i[4].upper()  for i in query_result]
+        self.Index = [str(i[1]).upper() for i in query_result]
+        self.Mapper = [str(i[2]).upper() for i in query_result]
+        self.Assembler = [str(i[3]).upper()  for i in query_result]
+        self.Analysis = [str(i[4]).upper()  for i in query_result]
 
         cur.execute("SELECT * FROM analysis_session WHERE ID = {0}".format(self.Session_ID))
         query_result = cur.fetchall()
