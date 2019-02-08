@@ -5,29 +5,23 @@ class: Workflow
 requirements:
   ScatterFeatureRequirement: {}
   MultipleInputFeatureRequirement: {}
+  StepInputExpressionRequirement: {}
+  InlineJavascriptRequirement: {}
 
 inputs:
-  Threads: int
+  threads: int
   genomeDir: Directory
-  readFilesIn_1: File[]
-  readFilesIn_2: File[]
-  readFilesIn_3: File[]
-  readFilesIn_4: File[]
-  outFileNamePrefix_1: string
-  outFileNamePrefix_2: string
-  outFileNamePrefix_3: string
-  outFileNamePrefix_4: string
-  outfilename_samtools_1: string
-  outfilename_samtools_2: string
-  outfilename_samtools_3: string
-  outfilename_samtools_4: string
   annotation: File
-  outfilename_stringtie_1: string
-  outfilename_stringtie_2: string
-  outfilename_stringtie_3: string
-  outfilename_stringtie_4: string
-  program: File
-  script: File
+  subject_name1: string
+  subject_name2: string
+  subject_name3: string
+  subject_name4: string
+  fastq1: File[]
+  fastq2: File[]
+  fastq3: File[]
+  fastq4: File[]
+  prepDE_script: File
+  DESeq2_script: File
   metadata: File
 
 outputs:
@@ -49,37 +43,37 @@ outputs:
 steps:
 # STAR
   star_readmap_1:
-    run: ../../cwl-tools/nodocker/STAR_readmap.cwl
+    run: ../../cwl-tools/docker/STAR_readmap.cwl
     in:
-      Threads: Threads
+      threads: threads
       genomeDir: genomeDir
-      readFilesIn: readFilesIn_1
-      outFileNamePrefix: outFileNamePrefix_1
+      readFilesIn: fastq1
+      outFileNamePrefix: subject_name1
     out: [sam_output, star_read_out]
 
   star_readmap_2:
-    run: ../../cwl-tools/nodocker/STAR_readmap.cwl
+    run: ../../cwl-tools/docker/STAR_readmap.cwl
     in:
-      Threads: Threads
+      threads: threads
       genomeDir: genomeDir
-      readFilesIn: readFilesIn_2
-      outFileNamePrefix: outFileNamePrefix_2
+      readFilesIn: fastq2
+      outFileNamePrefix: subject_name2
     out: [sam_output, star_read_out]
   star_readmap_3:
-    run: ../../cwl-tools/nodocker/STAR_readmap.cwl
+    run: ../../cwl-tools/docker/STAR_readmap.cwl
     in:
-      Threads: Threads
+      threads: threads
       genomeDir: genomeDir
-      readFilesIn: readFilesIn_3
-      outFileNamePrefix: outFileNamePrefix_3
+      readFilesIn: fastq3
+      outFileNamePrefix: subject_name3
     out: [sam_output, star_read_out]
   star_readmap_4:
-    run: ../../cwl-tools/nodocker/STAR_readmap.cwl
+    run: ../../cwl-tools/docker/STAR_readmap.cwl
     in:
-      Threads: Threads
+      threads: threads
       genomeDir: genomeDir
-      readFilesIn: readFilesIn_4
-      outFileNamePrefix: outFileNamePrefix_4
+      readFilesIn: fastq4
+      outFileNamePrefix: subject_name4
     out: [sam_output, star_read_out]
 
   star_folder:
@@ -112,39 +106,47 @@ steps:
 
 # Samtools
   samtools_1:
-    run: ../../cwl-tools/nodocker/samtools.cwl
+    run: ../../cwl-tools/docker/samtools.cwl
     in:
       samfile: star_readmap_1/sam_output
-      threads: Threads
-      threads2: Threads
-      outfilename: outfilename_samtools_1
+      threads: threads
+      threads2: threads
+      outfilename:
+        source: [subject_name1]
+        valueFrom: $(self + ".bam")
     out: [samtools_out]
 
   samtools_2:
-    run: ../../cwl-tools/nodocker/samtools.cwl
+    run: ../../cwl-tools/docker/samtools.cwl
     in:
       samfile: star_readmap_2/sam_output
-      threads: Threads
-      threads2: Threads
-      outfilename: outfilename_samtools_2
+      threads: threads
+      threads2: threads
+      outfilename:
+        source: [subject_name2]
+        valueFrom: $(self + ".bam")
     out: [samtools_out]
 
   samtools_3:
-    run: ../../cwl-tools/nodocker/samtools.cwl
+    run: ../../cwl-tools/docker/samtools.cwl
     in:
       samfile: star_readmap_3/sam_output
-      threads: Threads
-      threads2: Threads
-      outfilename: outfilename_samtools_3
+      threads: threads
+      threads2: threads
+      outfilename:
+        source: [subject_name3]
+        valueFrom: $(self + ".bam")
     out: [samtools_out]
 
   samtools_4:
-    run: ../../cwl-tools/nodocker/samtools.cwl
+    run: ../../cwl-tools/docker/samtools.cwl
     in:
       samfile: star_readmap_4/sam_output
-      threads: Threads
-      threads2: Threads
-      outfilename: outfilename_samtools_4
+      threads: threads
+      threads2: threads
+      outfilename:
+        source: [subject_name4]
+        valueFrom: $(self + ".bam")
     out: [samtools_out]
 
   samtools_folder:
@@ -176,39 +178,47 @@ steps:
 
 #Stringtie
   stringtie_1:
-    run: ../../cwl-tools/nodocker/stringtie.cwl
+    run: ../../cwl-tools/docker/stringtie.cwl
     in:
       input_bam: samtools_1/samtools_out
-      threads: Threads
+      threads: threads
       annotation: annotation
-      outfilename: outfilename_stringtie_1
+      outfilename:
+        source: [subject_name1]
+        valueFrom: $(self + ".gtf")
     out: [stringtie_out]
 
   stringtie_2:
-    run: ../../cwl-tools/nodocker/stringtie.cwl
+    run: ../../cwl-tools/docker/stringtie.cwl
     in:
       input_bam: samtools_2/samtools_out
-      threads: Threads
+      threads: threads
       annotation: annotation
-      outfilename: outfilename_stringtie_2
+      outfilename:
+        source: [subject_name2]
+        valueFrom: $(self + ".gtf")
     out: [stringtie_out]
 
   stringtie_3:
-    run: ../../cwl-tools/nodocker/stringtie.cwl
+    run: ../../cwl-tools/docker/stringtie.cwl
     in:
       input_bam: samtools_3/samtools_out
-      threads: Threads
+      threads: threads
       annotation: annotation
-      outfilename: outfilename_stringtie_3
+      outfilename:
+        source: [subject_name3]
+        valueFrom: $(self + ".gtf")
     out: [stringtie_out]
 
   stringtie_4:
-    run: ../../cwl-tools/nodocker/stringtie.cwl
+    run: ../../cwl-tools/docker/stringtie.cwl
     in:
       input_bam: samtools_4/samtools_out
-      threads: Threads
+      threads: threads
       annotation: annotation
-      outfilename: outfilename_stringtie_4
+      outfilename:
+        source: [subject_name4]
+        valueFrom: $(self + ".gtf")
     out: [stringtie_out]
   stringtie_folder:
     run:
@@ -238,9 +248,9 @@ steps:
     out: [out]
   
   prepDE:
-    run: ../../cwl-tools/nodocker/prepDE.cwl
+    run: ../../cwl-tools/docker/prepDE.cwl
     in:
-     program: program
+     program: prepDE_script
      gtfs: [stringtie_1/stringtie_out, stringtie_2/stringtie_out, stringtie_3/stringtie_out, stringtie_4/stringtie_out]
     out: [gene_output, transcript_output]
   
@@ -270,7 +280,7 @@ steps:
   DESeq2:
     run: ../../cwl-tools/docker/DESeq2.cwl
     in:
-      script: script
+      script: DESeq2_script
       count_matrix: prepDE/gene_output
       metadata: metadata
     out: [DESeq2_out]

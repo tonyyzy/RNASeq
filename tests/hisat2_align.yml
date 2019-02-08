@@ -1,7 +1,7 @@
+threads: 1
 index_directory: 
    class: Directory
    path: ./ht2_index
-index_basename: "./ht2_index/test_index"
 first_pair:
    class: File
    path: test1.1.fastq

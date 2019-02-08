@@ -5,7 +5,7 @@ class: CommandLineTool
 baseCommand: STAR
 
 inputs:
-  Threads:
+  threads:
     type: int
     inputBinding:
       prefix: --runThreadN
@@ -19,11 +19,11 @@ inputs:
     inputBinding:
       prefix: --genomeDir
   genomeFastaFiles:
-    type: File
+    type: File[]
     inputBinding:
       prefix: --genomeFastaFiles
   sjdbGTFfile:
-    type: File
+    type: File[]
     inputBinding:
       prefix: --sjdbGTFfile
   sjdbGTFtagExonParentTranscript:
@@ -34,6 +34,11 @@ inputs:
     type: string?
     inputBinding:
       prefix: --genomeSAindexNbases
+  RAMlimit:
+    type: long
+    default: 400000000000
+    inputBinding:
+      prefix: --limitGenomeGenerateRAM
 
 outputs:
   output:

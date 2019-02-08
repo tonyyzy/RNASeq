@@ -1,4 +1,4 @@
-Threads: 2
+threads: 2
 Mode: "alignReads"
 genomeDir: "./"
 sjdbGTFfile:
