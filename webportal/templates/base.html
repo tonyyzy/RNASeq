@@ -20,7 +20,10 @@
           <a class="nav-link" href="{% url 'analysis:session_list' %}">Home <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'analysis:session_create' %}">New Session</a>
+          <a class="nav-link" href="{% url 'analysis:session_list' %}">Sessions</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'analysis:conditions_list' %}">Conditions</a>
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">

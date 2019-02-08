@@ -18,7 +18,7 @@
         <p>{{session_detail.annotation_file}}</p>
         <h4>sample Conditions</h4>
         {% for condition in session_detail.conditions.all %}
-        <p>{{condition.conditions}}: {{condition.no_replicates}}</p>
+        <p>{{condition.conditions}}: {{condition.no_replicates}} replicates</p>
         {% endfor %}
       <p>
         <a class='btn btn-warning' href="{% url 'analysis:session_update' pk=session_detail.pk %}">Update</a>

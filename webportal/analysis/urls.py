@@ -17,7 +17,7 @@ urlpatterns = [
     path('upload_workflow', views.workflow_view, name='upload_workflow'),
     path('samples_list', views.samples_list_view, name='samples_list'),
     # path('conditions_list/<int:first>/', views.conditions_list_view, name='conditions_list'),
-    path('conditions_list/<int:session_id>', views.conditions_list_view, name='conditions_list'),
+    # path('conditions_list/<int:session_id>', views.conditions_list_view, name='conditions_list'),
     # re_path('^condition_list\/(?P<year>[0-9]{4})$', views.conditions_list_view,  name='conditions_list'),
 
     # url(r'^cbv$', views.cbv_view.as_view()),
@@ -29,6 +29,13 @@ urlpatterns = [
     path('session_delete/<int:pk>', views.SessionDeleteView.as_view(), name='session_delete'),
 
     path('conditions_list', views.ConditionsListView.as_view(), name='conditions_list'),
-    # path('conditions_list', views.conditions_list_view, name='conditions_list'),
+    path('conditions_detail/<int:pk>', views.ConditionsDetailView.as_view(), name='conditions_detail'),
+    path('conditions_create', views.ConditionsCreateView.as_view(), name='conditions_create'),
+    path('conditions_update/<int:pk>', views.ConditionsUpdateView.as_view(), name='conditions_update'),
+    path('conditions_delete/<int:pk>', views.ConditionsDeleteView.as_view(), name='conditions_delete'),
+
+    #
+    # path('session_update/<int:pk>', views.SessionUpdateView.as_view(), name='session_update'),
+    # path('session_delete/<int:pk>', views.SessionDeleteView.as_view(), name='session_delete'),
+
 ]
-# url(r'^update/(?P<pk>\d+)/$',views.SessionUpdateView.as_view(),name='update'),

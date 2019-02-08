@@ -50,6 +50,23 @@ class ConditionsListView(ListView):
     # context_object_name = 'conditions'
     model = models.Conditions
 
+class ConditionsDetailView(DetailView):
+    context_object_name = 'conditions_detail'
+    model = models.Conditions
+    template_name = 'analysis/conditions_detail.html'
+
+class ConditionsCreateView(CreateView):
+    fields = ('session','conditions', 'no_replicates',)
+    model = models.Conditions
+
+class ConditionsUpdateView(UpdateView):
+    fields = ('conditions','no_replicates',)
+    model = models.Conditions
+
+class ConditionsDeleteView(DeleteView):
+    model = models.Conditions
+    success_url = reverse_lazy("analysis:session_list")
+
 
 
 
