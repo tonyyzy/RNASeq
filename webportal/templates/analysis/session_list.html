@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     {% block head %}
-      <title>Session upload list</title>
+      <title>Session list</title>
     {% endblock %}
   </head>
   <body>
@@ -37,7 +37,7 @@
           {% endfor %}
         </tbody>
     </table>
-
+    <a href="{% url 'analysis:session_create' %}"><button type="submit" class="btn btn-primary" name="button">New Session</button><a>
 
     </div>
   {% endblock %}

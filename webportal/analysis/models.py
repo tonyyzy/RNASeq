@@ -29,7 +29,8 @@ class Conditions(models.Model):
     conditions = models.CharField(max_length=50, blank=False)
     no_replicates = models.PositiveSmallIntegerField(blank=False, default=1)
 
-
+    def get_absolute_url(self):
+        return reverse('analysis:conditions_detail', kwargs={'pk':self.pk})
 
     # def __str__(self):
         # return self.conditions

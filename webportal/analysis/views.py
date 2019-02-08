@@ -55,8 +55,11 @@ class ConditionsDetailView(DetailView):
     model = models.Conditions
     template_name = 'analysis/conditions_detail.html'
 
+# removing the session field from conditions create and using primary key defined by session
+# in the url to pass to the conditions model. not working yet.
+# NOT NULL constraint failed: analysis_conditions.session_id
 class ConditionsCreateView(CreateView):
-    fields = ('session','conditions', 'no_replicates',)
+    fields = ('conditions', 'no_replicates',)
     model = models.Conditions
 
 class ConditionsUpdateView(UpdateView):
@@ -64,13 +67,10 @@ class ConditionsUpdateView(UpdateView):
     model = models.Conditions
 
 class ConditionsDeleteView(DeleteView):
+    context_object_name = 'condition'
     model = models.Conditions
-    success_url = reverse_lazy("analysis:conditions_list")
+    success_url = reverse_lazy("analysis:session_list")
 
-
-# class ConditionsDeleteView(DeleteView):
-#     model = models.Conditions
-#     success_url = reverse_lazy("analysis:session_list")
 
 
 

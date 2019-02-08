@@ -14,7 +14,7 @@
         <p>condition: {{conditions_detail.conditions}}</p>
         <p>number replicates: {{conditions_detail.no_replicates}}</p>
         <a class='btn btn-warning' href="{% url 'analysis:conditions_update' pk=conditions_detail.pk %}">Update</a>
-        <a class='btn btn-danger' href="{% url 'analysis:conditions_delete' pk=conditions_detail.pk %}">delete</a>
+        <a class='btn btn-danger' href="{% url 'analysis:conditions_delete' pk=conditions_detail.pk %}">Delete</a>
       </p>
     </div>
 
