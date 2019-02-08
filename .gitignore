@@ -11,9 +11,10 @@ test_fgsea_out
 test_dexseq_out
 STARIndexd
 test1d
-.pytest_cache
 db.sqlite3
+.pytest_cache
 migrations
 test_DESeq2_out
 hisat2_align
 hisat2_build
+software

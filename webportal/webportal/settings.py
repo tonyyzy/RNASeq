@@ -41,10 +41,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # third party
+    'crispy_forms',
+    #local
     'analysis',
     'pages',
     'users',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -129,3 +134,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]
+
+DATA_ROOT = os.path.join(BASE_DIR,'data')
+# print(DATA_ROOT)
+DATA_URL = '/data/'

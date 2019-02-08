@@ -1,0 +1,25 @@
+{%extends 'base.html'%}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+      <title>Login</title>
+    {% endblock %}
+  </head>
+    <body>
+      {% block body %}
+      <h1 class='debug'> templates/users/login.html</h1><br>
+        <div class="row">
+          <div class="container col jumbotron">
+            <h3>login</h3>
+            <form enctype="multipart/form-data" method=POST action="" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn-success" name="button">login</button>
+              </form>
+          </div>
+        </div>
+      {% endblock %}
+    </body>
+</html>

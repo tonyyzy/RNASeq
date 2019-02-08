@@ -16,7 +16,7 @@ inputs:
    position: 1
    shellQuote: False
  threads:
-  type: int?
+  type: int
   inputBinding:
     prefix: -@
     position: 2
@@ -36,31 +36,31 @@ inputs:
     prefix: -Su
     shellQuote: False
  pipe:
-    type: string?
+    type: string
     default: "|"
     inputBinding:
       position: 4
       shellQuote: False
  samtools:
-  type: string?
+  type: string
   default: "samtools"
   inputBinding:
    position: 5
    shellQuote: False
  action2:
-   type: string?
+   type: string
    default: "sort"
    inputBinding:
     position: 6
     shellQuote: False
  threads2:
-   type: int?
+   type: int
    inputBinding:
      prefix: -@
      position: 7
      shellQuote: False
  outfilename:
-   type: string?
+   type: string
    inputBinding:
      prefix: -o
      position: 8

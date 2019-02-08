@@ -1,0 +1,42 @@
+{%extends 'base.html'%}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+      <title>Session Detail</title>
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    <div class="jumbotron">
+      <h3> session {{ session_detail.pk}} details </h3>
+        <p>{{session_detail.identifier}}</p>
+        <p>{{session_detail.organism}}</p>
+        <p>{{session_detail.genome}}</p>
+        <p>{{session_detail.fasta_file}}</p>
+        <p>{{session_detail.annotation_file}}</p>
+        <h4>sample Conditions</h4>
+        {% for condition in session_detail.conditions.all %}
+        <p>{{condition.conditions}}: {{condition.no_replicates}} replicates</p>
+        {% endfor %}
+      <p>
+        <a class='btn btn-warning' href="{% url 'analysis:session_update' pk=session_detail.pk %}">Update</a>
+        <a class='btn btn-danger' href="{% url 'analysis:session_delete' pk=session_detail.pk %}">Delete</a>
+      </p>
+    </div>
+
+
+  {% endblock %}
+  </body>
+</html>
+
+
+<!--
+session1Cond = session.conditions_set.all()
+<p>sesison1Cond</p>
+{% for condition in session1Cond %}
+  <p>{{ condition.session }}</p>
+  <p>{{ condition.conditions }}</p>
+  <p>{{ condition.no_replicates }}</p>
+{% endfor %} -->
