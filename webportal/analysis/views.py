@@ -65,7 +65,12 @@ class ConditionsUpdateView(UpdateView):
 
 class ConditionsDeleteView(DeleteView):
     model = models.Conditions
-    success_url = reverse_lazy("analysis:session_list")
+    success_url = reverse_lazy("analysis:conditions_list")
+
+
+# class ConditionsDeleteView(DeleteView):
+#     model = models.Conditions
+#     success_url = reverse_lazy("analysis:session_list")
 
 
 
