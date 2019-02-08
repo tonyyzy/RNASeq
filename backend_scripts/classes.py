@@ -28,13 +28,13 @@ class database_reader():
         self.Index = [str(i[1]).upper() for i in query_result]
         self.Mapper = [str(i[2]).upper() for i in query_result]
         self.Assembler = [str(i[3]).upper()  for i in query_result]
-        self.Analysis = [str(i[4]).upper()  for i in query_result]
+        self.Analysis = [str(i[6]).upper()  for i in query_result]
 
         cur.execute("SELECT * FROM analysis_session WHERE ID = {0}".format(self.Session_ID))
         query_result = cur.fetchall()
 
-        self.Genome_file = [i[5]  for i in query_result]
-        self.Annotation_file = [i[6]  for i in query_result]
+        self.Genome_file = [i[4]  for i in query_result]
+        self.Annotation_file = [i[5]  for i in query_result]
 
 
     def __repr__(self):
@@ -72,10 +72,8 @@ class logic_builder():
         if self.workflow_index[0] == 8:
             print("Creating STAR Index workflow")
 
-            yaml_file = open("./tests/STAR_index.yml")
+            yaml_file = open("./cwl-tools/docker/STAR_index.yml")
             yaml_file = yaml.load(yaml_file)
-
-            del yaml_file["genomeSAindexNbases"]
 
             yaml_file["genomeFastaFiles"]["path"] = database_reader_object.Genome_file[0]
             yaml_file["sjdbGTFfile"]["path"] = database_reader_object.Annotation_file[0]
@@ -83,4 +81,13 @@ class logic_builder():
             with open("STAR_index_{0}.yml".format(database_reader_object.Session_ID), "w+") as outfile:
                 yaml.dump(yaml_file, outfile, default_flow_style=False)
 
-        # elif self.workflow_index[0] == 8:
+        elif self.workflow_index[0] == 4:
+            pritn("Creating HISAT 2 Index workflow")
+            yaml_file = open("./cwl-tools/docker/hisat2_build.yml")
+            yaml_file = yaml.load(yaml_file)
+
+            yaml_file["reference"]["path"] = database_reader_object.Genome_file[0]
+            yaml_file["basename"] = database_reader_object.Genome_file[0]
+
+            with open("HISAT2_index_{0}.yml".format(database_reader_object.Session_ID), "w+") as outfile:
+                yaml.dump(yaml_file, outfile, default_flow_style=False)
