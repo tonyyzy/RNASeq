@@ -18,3 +18,4 @@ test_DESeq2_out
 hisat2_align
 hisat2_build
 software
+data
