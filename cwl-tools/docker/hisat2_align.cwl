@@ -25,7 +25,7 @@ inputs:
          position: 2
          prefix: "-x"
          valueFrom: $(inputs.index_directory.path + "/" +
-            inputs.index_directory.listing[0].nameroot.split(".")[0])
+            inputs.index_directory.listing[0].nameroot.split(".").slice(0,-1).join("."))
    first_pair:
       type: File?
       inputBinding:
