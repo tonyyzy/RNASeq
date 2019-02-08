@@ -9,7 +9,7 @@ requirements:
 arguments:
   - position: 0
     shellQuote: False
-    valueFrom: $("mkdir " + inputs.outFileNamePrefix + "_STARAligner" + " && cd " + inputs.outFileNamePrefix + "_STARAligner" + " && STAR ")
+    valueFrom: $("mkdir " + inputs.outFileNamePrefix + " && cd " + inputs.outFileNamePrefix + " && STAR ")
   - position: 5
     valueFrom: |
       ${
@@ -54,9 +54,9 @@ outputs:
   star_read_out:
     type: Directory
     outputBinding:
-      glob: $(inputs.outFileNamePrefix + "_STARAligner")
+      glob: $(inputs.outFileNamePrefix)
 
   sam_output:
     type: File
     outputBinding:
-      glob: $(inputs.outFileNamePrefix + "_STARAligner/*.sam")
+      glob: $(inputs.outFileNamePrefix + "/*.sam")

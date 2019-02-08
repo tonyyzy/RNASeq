@@ -2,5 +2,5 @@ program:
   class: File
   path: ../scripts/prepDE.py
 gtfs:
-  - {class: File, path: ./test1.stringtie.gtf}
-  - {class: File, path: ./test2.stringtie.gtf}
+  - {class: File, path: ./stringtie/test1.gtf}
+  - {class: File, path: ./stringtie/test2.gtf}
