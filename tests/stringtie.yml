@@ -1,6 +1,6 @@
 input_bam:
   class: File
-  path: ./test1.bam
+  path: ./test1.coord.bam
 threads: 2
 annotation:
   class: File
