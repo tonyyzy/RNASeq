@@ -18,3 +18,5 @@ test_DESeq2_out
 hisat2_align
 hisat2_build
 software
+gene_count_matrix.csv
+transcript_count_matrix.csv
