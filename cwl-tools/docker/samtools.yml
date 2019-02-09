@@ -1,6 +1,6 @@
 threads: 2
+outfilename: test1.bam
+sortby: "-n"
 samfile:
  class: File
  path: ./test1.sam
-threads2: 2
-outfilename: test1.bam
