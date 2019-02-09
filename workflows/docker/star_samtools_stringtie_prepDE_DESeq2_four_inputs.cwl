@@ -110,7 +110,6 @@ steps:
     in:
       samfile: star_readmap_1/sam_output
       threads: threads
-      threads2: threads
       outfilename:
         source: [subject_name1]
         valueFrom: $(self + ".bam")
@@ -121,7 +120,6 @@ steps:
     in:
       samfile: star_readmap_2/sam_output
       threads: threads
-      threads2: threads
       outfilename:
         source: [subject_name2]
         valueFrom: $(self + ".bam")
@@ -132,7 +130,6 @@ steps:
     in:
       samfile: star_readmap_3/sam_output
       threads: threads
-      threads2: threads
       outfilename:
         source: [subject_name3]
         valueFrom: $(self + ".bam")
@@ -143,7 +140,6 @@ steps:
     in:
       samfile: star_readmap_4/sam_output
       threads: threads
-      threads2: threads
       outfilename:
         source: [subject_name4]
         valueFrom: $(self + ".bam")

@@ -86,7 +86,6 @@ steps:
     in:
       samfile: star_readmap_1/sam_output
       threads: threads
-      threads2: threads
       outfilename:
         source: [subject_name1]
         valueFrom: $(self + ".bam")
@@ -97,7 +96,6 @@ steps:
     in:
       samfile: star_readmap_2/sam_output
       threads: threads
-      threads2: threads
       outfilename:
         source: [subject_name2]
         valueFrom: $(self + ".bam")
