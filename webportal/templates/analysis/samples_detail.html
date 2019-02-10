@@ -1,0 +1,26 @@
+{%extends 'base.html'%}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+      <title>Samples Detail</title>
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    <div class="jumbotron">
+      <h3> Sample {{ samples_detail.pk}} details </h3>
+        <p>Sample: {{samples_detail.libtype}}</p>
+        <p>Sample: {{samples_detail.read_1}}</p>
+        <p>Sample: {{samples_detail.read_2}}</p>
+        <a class='btn btn-warning' href="{% url 'analysis:samples_update' pk=samples_detail.pk %}">Update</a>
+        <a class='btn btn-danger' href="{% url 'analysis:samples_delete' pk=samples_detail.pk %}">Delete</a>
+    </div>
+  {% endblock %}
+  </body>
+</html>
+
+
+<!-- <a class='btn btn-warning' href="{% url 'analysis:conditions_update' pk=conditions_detail.pk %}">Update</a>
+<a class='btn btn-danger' href="{% url 'analysis:conditions_delete' pk=conditions_detail.pk %}">Delete</a> -->

@@ -12,6 +12,7 @@ from django.views.generic import (View,TemplateView,
                                 CreateView,DeleteView,
                                 UpdateView)
 
+
 ###### Class based views ######
 # Session
 class cbv_view(View):
@@ -27,7 +28,14 @@ class SessionListView(ListView):
 class SessionDetailView(DetailView):
     context_object_name = 'session_detail'
     model = models.Session
-    template_name = 'analysis/session_detail.html'
+    queryset = Session.objects.all()
+    # template_name = 'analysis/session_detail.html'
+    # defining custom grouping field in urls.py we must then manually extract the key from self.kwargs
+    def get_object(self):
+        print(f'\nself.kwargs: {self.kwargs}')
+        pk = self.kwargs.get('pk') # passes key 'pk' into kwargs dict to extract value
+        print(f'pk: {pk}')
+        return get_object_or_404(Session, pk=pk)
 
 
 class SessionCreateView(CreateView):
@@ -59,7 +67,7 @@ class ConditionsDetailView(DetailView):
 # in the url to pass to the conditions model. not working yet.
 # NOT NULL constraint failed: analysis_conditions.session_id
 class ConditionsCreateView(CreateView):
-    fields = ('conditions', 'no_replicates',)
+    fields = ('session','conditions', 'no_replicates',)
     model = models.Conditions
 
 class ConditionsUpdateView(UpdateView):
@@ -70,6 +78,42 @@ class ConditionsDeleteView(DeleteView):
     context_object_name = 'condition'
     model = models.Conditions
     success_url = reverse_lazy("analysis:session_list")
+
+
+
+
+# Samples
+class SamplesListView(ListView):
+    # context_object_name = 'conditions'
+    model = models.Samples
+
+class SamplesDetailView(DetailView):
+    context_object_name = 'samples_detail'
+    model = models.Samples
+    template_name = 'analysis/samples_detail.html'
+
+class SamplesCreateView(CreateView):
+    # fields = ('condition','libtype', 'read_1','read_2',)
+    # model = models.Samples
+    template_name = 'analysis/samples_form.html'
+    form_class = SamplesForm
+    queryset = Samples.objects.all()
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form)
+
+class SamplesUpdateView(UpdateView):
+    fields = ('libtype','read_1','read_2',)
+    model = models.Samples
+
+class SamplesDeleteView(DeleteView):
+    context_object_name = 'sample'
+    model = models.Samples
+    success_url = reverse_lazy("analysis:samples_list")
+
+
+
 
 
 

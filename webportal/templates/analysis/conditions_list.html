@@ -9,11 +9,12 @@
   </head>
   <body>
       {% block body %}
+      <div class="jumbotron">
       <h3>current conditions in db</h3>
       <table class="table mb-0">
         <thead>
           <tr>
-            <td>Primary Key</td>
+            <th>Key</th>
             <th>Condition</th>
             <th>Number Replicates</th>
             <th>Session</th>
@@ -30,6 +31,7 @@
           {% endfor %}
         </tbody>
     </table>
+  </div>
     {% endblock %}
   </body>
 </html>
