@@ -68,8 +68,8 @@ rm ./tests/stringtie/test*/*.ctab
 # test for prepDE
 # cwl-runner --outdir=./tests ./cwl-tools/nodocker/prepDE.cwl ./tests/prepDE.yml
 python2.7 ./scripts/prepDE.py -i tests/stringtie/
-cp ./gene_count_matrix.csv ./tests/
-cp ./transcript_count_matrix.csv ./tests/
+mv ./gene_count_matrix.csv ./tests/
+mv ./transcript_count_matrix.csv ./tests/
 
 # test for DESeq2
 cwl-runner --outdir=./test_DESeq2 ./cwl-tools/docker/DESeq2.cwl ./tests/DESeq2.yml
@@ -80,7 +80,7 @@ rm -r ./test_DESeq2
 python2.7 ./scripts/Basic_DEXSeq_scripts/dexseq_prepare.py ./tests/test.gtf ./tests/test.gff
 
 # test for htseq counts
-python2.7 ./scripts/Basic_DEXSeq_scripts/dexseq_count.py ./tests/test.gff ./tests/test1.sam ./tests/test1_htseq_count.csv
+python2.7 ./scripts/Basic_DEXSeq_scripts/dexseq_count_modified.py -p yes -s no -f bam -r pos ./tests/test.gff ./tests/test1.coord.bam ./tests/test1_htseq_count.csv
 
 # test for dexseq
 Rscript ./tests/DEXSeq.R --count_matrix_dir ./tests --gff_file_dir ./tests --metadata ./tests/test_meta.csv
