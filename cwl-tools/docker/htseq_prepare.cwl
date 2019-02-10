@@ -16,22 +16,10 @@ inputs:
       type: File?
       inputBinding:
          position: 2
-   sam:
-      type: File?
-      inputBinding:
-         position: 3
-   gff:
-      type: File?
-      inputBinding:
-         position: 2
    gff_name:
       type: string?
       inputBinding:
          position: 3
-   outname:
-      type: string?
-      inputBinding:
-         position: 4
 
 
 outputs:

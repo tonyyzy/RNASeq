@@ -1,10 +1,14 @@
 input_script: 
    class: File
    path: ../../scripts/Basic_DEXSeq_scripts/dexseq_count.py
+pairedend: "yes"
+stranded: "no"
+input_format: "bam"
+sorted_by: "pos"
 gff:
    class: File
    path: ../../tests/test.gff
 sam: 
    class: File
-   path: ../../tests/test1.sam
-outname: "test1_counts.csv"
+   path: ../../tests/test1.coord.bam
+outname: "test1_htseq_count.csv"
