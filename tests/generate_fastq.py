@@ -35,23 +35,25 @@ if __name__ == "__main__":
 			seq += i.strip()
 
 	exon1 = seq[499:999]
-	exon2 = seq[2999:3299] + seq[3499:3999] + seq[4399:4999] + seq[5049:5299]
+	# exon2 = seq[2999:3299] + seq[3499:3999] + seq[4399:4999] + seq[5049:5299]
+	exon2_1 = seq[2999:3299] + seq[4399:4999] + seq[5049:5299]
+	exon2_2 = seq[2999:3299] + seq[3499:3999] + seq[5049:5299]
 
 	file1 = open("./test1.1.fastq", "w")
 	file2 = open("./test1.2.fastq", "w")
 	fake_pairend(exon1, 20)
-	fake_pairend(exon2, 30)
+	fake_pairend(exon2_1, 30)
 
 	file1 = open("./test2.1.fastq", "w")
 	file2 = open("./test2.2.fastq", "w")
 	fake_pairend(exon1, 60)
-	fake_pairend(exon2, 40)
+	fake_pairend(exon2_2, 40)
 
 	file1 = open("./test3.fastq", "w")
 	fake_single(exon1, 20)
-	fake_single(exon2, 30)
+	fake_single(exon2_1, 30)
 
 	file1 = open("./test4.fastq", "w")
 	fake_single(exon1, 60)
-	fake_single(exon2, 40)
+	fake_single(exon2_2, 40)
 
