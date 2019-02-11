@@ -10,5 +10,5 @@ gff:
    path: ../../tests/test.gff
 sam: 
    class: File
-   path: ../../tests/test1.coord.bam
+   path: ../../tests/test1.bam
 outname: "test1_htseq_count.csv"

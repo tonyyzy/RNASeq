@@ -1,8 +1,8 @@
 input_bam:
   class: File
-  path: ./test1.coord.bam
+  path: ./test1.bam
 threads: 2
 annotation:
   class: File
-  path: ./test.gff3
+  path: ./test.gtf
 outfilename: test1.stringtie.gtf
