@@ -2,11 +2,6 @@
 # StringTie version 1.3.4c
 test1	StringTie	transcript	500	999	1000	+	.	gene_id "gene1"; transcript_id "trans1"; cov "3.030000"; FPKM "310737.343750"; TPM "377870.625000";
 test1	StringTie	exon	500	999	1000	+	.	gene_id "gene1"; transcript_id "trans1"; exon_number "1"; cov "3.030000";
-test1	FakeGenome	transcript	3000	5299	.	-	.	gene_id "gene2"; transcript_id "gene2"; cov "0.0"; FPKM "0.000000"; TPM "0.000000";
-test1	FakeGenome	exon	3000	3299	.	-	.	gene_id "gene2"; transcript_id "gene2"; exon_number "1"; cov "0.0";
-test1	FakeGenome	exon	3500	3999	.	-	.	gene_id "gene2"; transcript_id "gene2"; exon_number "2"; cov "0.0";
-test1	FakeGenome	exon	4400	4999	.	-	.	gene_id "gene2"; transcript_id "gene2"; exon_number "3"; cov "0.0";
-test1	FakeGenome	exon	5050	5299	.	-	.	gene_id "gene2"; transcript_id "gene2"; exon_number "4"; cov "0.0";
 test1	StringTie	transcript	3000	5299	1000	-	.	gene_id "gene2"; transcript_id "trans2"; cov "4.988617"; FPKM "511600.531250"; TPM "622129.312500";
 test1	StringTie	exon	3000	3299	1000	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "1"; cov "4.637397";
 test1	StringTie	exon	3500	3999	1000	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "2"; cov "0.000000";
