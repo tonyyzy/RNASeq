@@ -12,6 +12,7 @@ class SessionForm(forms.ModelForm):
 class ConditionsForm(forms.ModelForm):
     class Meta:
         model = Conditions
+        # fields = ['conditions', 'no_replicates']
         fields = ['session', 'conditions', 'no_replicates']
         # fields='__all__'
 

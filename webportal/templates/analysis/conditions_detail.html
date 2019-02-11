@@ -18,6 +18,7 @@
         <a class='btn btn-danger' href="{% url 'analysis:conditions_delete' pk=conditions_detail.pk %}">Delete</a>
         <br><br>
     {% if conditions_detail.samples.all %}
+
       <p class='lead'>{{ conditions_detail.conditions}} Samples:</p>
         {% for sample in conditions_detail.samples.all %}
           <p>Library Type: {{sample.libtype}}</p>
@@ -25,14 +26,17 @@
           <p>Read 2: {{sample.read_1}}</p>
         {% endfor %}<p>
       {% endif %}
-
       {% if not conditions_detail.samples.all %}
-        <div class="jumbotron">
           <p class='lead'>{{ conditions_detail.conditions}} Samples:</p>
           <p>No samples associated with this condition.</p>
       {% endif %}
-      <a class='btn btn-success' href="{% url 'analysis:samples_create' pk=conditions_detail.pk %}">Add Condition</a>
+      <a class='btn btn-success' href="{% url 'analysis:samples_create' pk=conditions_detail.pk %}">Add Sample</a>
     </div>
   {% endblock %}
   </body>
 </html>
+
+
+
+<!-- # iterate over no_replicates, create a table for user to add samples each row -->
+<!-- {{conditions_detail.no_replicates}} -->

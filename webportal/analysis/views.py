@@ -67,8 +67,35 @@ class ConditionsDetailView(DetailView):
 # in the url to pass to the conditions model. not working yet.
 # NOT NULL constraint failed: analysis_conditions.session_id
 class ConditionsCreateView(CreateView):
-    fields = ('session','conditions', 'no_replicates',)
+    template_name = 'analysis/conditions_form.html'
+    # queryset = Conditions.objects.all()
     model = models.Conditions
+    fields = ('session', 'conditions', 'no_replicates',)
+
+    # def get(self, request, pk):
+    #     form = ConditionsForm
+    #     pk = self.kwargs.get('pk')
+    #     print(f'\nPrimary Key: {pk}')
+    #     return render(request, self.template_name, {'form':form})
+    #
+    # def post(self, request, pk):
+    #     form = ConditionsForm(request.POST)
+    #     if form.is_valid():
+    #         print(form.cleaned_data['session'])
+    #
+    #         pk = self.kwargs.get('pk')
+    #         post = form.save(commit=False)
+    #         post.session = 'session' + str(pk)
+    #         print(post.session)
+    #         post.save()
+    #         # print(f'\nRaw Post Obj: {post}')
+    #         con = form.cleaned_data['conditions']
+    #         no_rep = form.cleaned_data['no_replicates']
+    #         # print(no_rep)
+    #         return redirect('analysis:session_list')
+
+# Cannot assign "'session1'": "Conditions.session" must be a "Session" instance.
+
 
 class ConditionsUpdateView(UpdateView):
     fields = ('conditions','no_replicates',)
@@ -78,8 +105,6 @@ class ConditionsDeleteView(DeleteView):
     context_object_name = 'condition'
     model = models.Conditions
     success_url = reverse_lazy("analysis:session_list")
-
-
 
 
 # Samples
@@ -114,109 +139,66 @@ class SamplesDeleteView(DeleteView):
 
 
 
+# Workflow
+class WorkflowListView(ListView):
+    # context_object_name = 'conditions'
+    model = models.Workflow
+
+class ConditionsDetailView(DetailView):
+    context_object_name = 'conditions_detail'
+    model = models.Conditions
+    template_name = 'analysis/conditions_detail.html'
+
+# removing the session field from conditions create and using primary key defined by session
+# in the url to pass to the conditions model. not working yet.
+# NOT NULL constraint failed: analysis_conditions.session_id
+class ConditionsCreateView(CreateView):
+    template_name = 'analysis/conditions_form.html'
+    # queryset = Conditions.objects.all()
+    model = models.Conditions
+    fields = ('session', 'conditions', 'no_replicates',)
+
+    # def get(self, request, pk):
+    #     form = ConditionsForm
+    #     pk = self.kwargs.get('pk')
+    #     print(f'\nPrimary Key: {pk}')
+    #     return render(request, self.template_name, {'form':form})
+    #
+    # def post(self, request, pk):
+    #     form = ConditionsForm(request.POST)
+    #     if form.is_valid():
+    #         print(form.cleaned_data['session'])
+    #
+    #         pk = self.kwargs.get('pk')
+    #         post = form.save(commit=False)
+    #         post.session = 'session' + str(pk)
+    #         print(post.session)
+    #         post.save()
+    #         # print(f'\nRaw Post Obj: {post}')
+    #         con = form.cleaned_data['conditions']
+    #         no_rep = form.cleaned_data['no_replicates']
+    #         # print(no_rep)
+    #         return redirect('analysis:session_list')
+
+# Cannot assign "'session1'": "Conditions.session" must be a "Session" instance.
+
+
+class ConditionsUpdateView(UpdateView):
+    fields = ('conditions','no_replicates',)
+    model = models.Conditions
+
+class ConditionsDeleteView(DeleteView):
+    context_object_name = 'condition'
+    model = models.Conditions
+    success_url = reverse_lazy("analysis:session_list")
 
 
 
 
 
-# Function based views
-def home_view(request):
-    # return HttpResponse("what hath god wrought")
-    return render(request, 'analysis/home.html', {})
-
-
-def session_view(request):
-    return HttpResponse("what hath god wrought")
-    if request.method == 'POST':
-        form = SessionForm(request.POST, request.FILES)
-        if form.is_valid():
-            print('bound session form posted \n')
-            form.save()
-            # return render(request, 'analysis/upload_samples.html', {})
-            return redirect('analysis:upload_session')
-    else:
-        form = SessionForm()
-    return render(request, 'analysis/upload_session.html', {'form': form})
 
 
 
-def session_list_view(request):
-    return HttpResponse("post me post me post me post me post me post me")
-    sessions = Session.objects.all()
-    context = {'sessions': sessions}
-    return render(request, 'analysis/session_list.html', context)
-
-
-def session_detail_view(request, session_id):
-    # return HttpResponse(f"session id {session_id}")
-    session = Session.objects.get(pk=session_id)
-    context = {'session': session}
-    return render(request, 'analysis/session_detail.html', context)
-
-
-# CONDITIONS
-def conditions_list_view(request):
-    # return HttpResponse("post me post me post me post me post me post me")
-    sessions = Session.objects.all()
-    conditions = Conditions.objects.all()
-    context = {'conditions': conditions, 'sessions': sessions}
-    return render(request, 'analysis/conditions_list.html', context)
-#
-# def condition_list_view(request):
-#     # return HttpResponse("what hath god wrought")
-#     if request.method == 'POST':
-#         form = ConditionsForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             print('bound conditions form posted \n')
-#             form.save()
-#             # return render(request, 'analysis/upload_samples.html', {})
-#             return redirect('analysis:upload_conditions')
-#     else:
-#         form = ConditionsForm()
-#     return render(request, 'analysis/upload_conditions.html', {'form': form})
-
-
-def samples_view(request):
-    # return HttpResponse("what hath god wrought")
-    # sample_formset = modelformset_factory(Samples, fields=('__all__'), extra=1)
-    if request.method == 'POST':
-        # form = sample_formset(request.POST, request.FILES)
-        form = SamplesForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            print('bound samples form posted \n')
-            # context = {'form': form}
-            # return render(request, 'analysis/upload_workflow.html', context)
-            return redirect('analysis:upload_samples')
-    else:
-        # form = sample_formset()
-        # form = sample_formset(queryset=Samples.objects.filter(session=7))
-        # form = sample_formset(queryset=Samples.objects.none())
-        # form = SamplesForm()
-        # samples = Samples.objects.all()
-        conditions_list = Conditions.objects.all()
-        context = {'conditions_list': conditions_list}
-    return render(request, 'analysis/upload_samples.html', {'conditions_list': conditions_list})
-
-
-
-
-def workflow_view(request):
-    if request.method == 'POST':
-        form = WorkflowForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return render(request, 'thanks.html', {})
-    else:
-        form = WorkflowForm()
-    return render(request, 'analysis/upload_workflow.html', {'form': form})
-
-
-def samples_list_view(request):
-    # return HttpResponse("post me post me post me post me post me post me")
-    samples = Samples.objects.all()
-    context = {'samples': samples}
-    return render(request, 'analysis/samples_list.html', context)
 
 
 
