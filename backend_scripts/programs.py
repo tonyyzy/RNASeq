@@ -198,7 +198,7 @@ def deseq2(input_files, yaml, output_string, prev):
           },
         "in": {"file1": "DESeq2/DESeq2_out"},
         "out": ["out"]
-    },
+    }
     yaml["yml"]["DESeq2_script"] = {
         "class": "File",
         "path": conf["DESeq2_script"]
@@ -216,8 +216,8 @@ inputs = {"test1": {"type": "paired_end", "path": {1: "test.fastq", 2: "test.fas
 cwl_workflow = star_readmap(inputs, cwl_workflow)
 cwl_workflow = stringtie(inputs, cwl_workflow, output_string, "samtools")
 cwl_workflow = deseq2(inputs, cwl_workflow, output_string, "prepDE")
-cwl_workflow = samtools(input_file, ale)
-cwl_workflow = prepDE(input_file, ale)
+cwl_workflow = samtools(inputs, cwl_workflow)
+cwl_workflow = prepDE(inputs, cwl_workflow)
 with open("test.cwl", "w+") as outfile:
     yaml.dump(cwl_workflow["cwl"], outfile, default_flow_style=False)
 with open("test.yml", "w+") as outfile:
