@@ -1,0 +1,45 @@
+{%extends 'base.html'%}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+      <title>workflow list</title>
+    {% endblock %}
+  </head>
+  <body>
+      {% block body %}
+      <div class="jumbotron">
+      <h3>current workflows in db</h3>
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th>Session</th>
+            <th>Identifier</th>
+            <th>Index</th>
+            <th>Mapper</th>
+            <th>Assembler</th>
+            <th>Analysis</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for workflow in workflows_list %}
+            <tr>
+              <td>{{ workflow.session }}</td>
+              <td>{{ workflow.session.identifier }}</td>
+              <td>{{ workflow.index }}</td>
+              <td>{{ workflow.mapper }}</td>
+              <td>{{ workflow.assembler }}</td>
+              <td>{{ workflow.analysis }}</td>
+              <td>{{ workflow.status }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+  </div>
+    {% endblock %}
+  </body>
+</html>
+
+<!-- <td><a href="workflows_detail/{{ workflow.pk }}">{{ workflow.workflows }}</a></td> -->

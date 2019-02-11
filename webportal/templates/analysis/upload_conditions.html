@@ -1,28 +1,29 @@
 {%extends 'base.html'%}
 {% load crispy_forms_tags %}
 <!DOCTYPE html>
+
 <html>
   <head>
     <meta charset="utf-8">
     {% block head %}
-      <title>workflow upload</title>
+      <title>upload conditions</title>
     {% endblock %}
   </head>
-    <body>
-      {% block body %}
-      <h1> loaded from upload_workflow in temp/analysis</h1><br>
-        <div class="row">
-          <div class="container col jumbotron">
-            <h3>workflow</h3>
-            <div class="form-inline_1">
+  <body>
+    {% block body %}
+      <p>upload conditions.html loaded from tempaltes/analysis/</p><br>
+      <div class="row">
+        <div class="container col jumbotron">
+          <div class="form-inline_1">
             <form enctype="multipart/form-data" method=POST action="" method="post">
                 {% csrf_token %}
                 {{ form | crispy }}
                 <button type="submit" class="btn btn-primary" name="button">SUBMIT</button>
             </form>
-            </div>
           </div>
         </div>
-      {% endblock %}
-    </body>
+      </div>
+    {% endblock %}
+  </body>
 </html>
+<!-- <a class="nav-link" href="{% url 'analysis:upload_samples' %}"><button type="submit" class="btn btn-success" name="button">upload samples</button></a> -->

@@ -1,5 +1,5 @@
 html,body{
-  background-color: #bac9e2;
+  background-color: #e5e8e7;
   margin:0;
   padding:0;
   height: 100%;
@@ -81,4 +81,42 @@ p {
   .content h1{
     font-size: 250%;
   }
+}
+
+/* FORM STYLE */
+/* Style the form - display items horizontally */
+.form-inline_1 {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  /* border: solid blue 10px; */
+}
+
+/* Add some margins for each label */
+.form-inline_1 label {
+  margin: 5px 10px 5px 10;
+}
+
+/* Style the input fields */
+/* .form-inline_1 input {
+  vertical-align: middle;
+  margin: 5px 10px 5px 0;
+  padding: 5px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+} */
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #c2d0f9;
+  color: white;
+  text-align: center;
+}
+
+.condition_table{
+  /* width: 400px; */
+   width: auto !important;
 }

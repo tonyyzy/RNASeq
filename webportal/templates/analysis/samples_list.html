@@ -1,0 +1,40 @@
+{%extends 'base.html'%}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+      <title>Samples list</title>
+    {% endblock %}
+  </head>
+  <body>
+      {% block body %}
+      <div class="jumbotron">
+      <h3>current samples in db</h3>
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th>Sample Key</th>
+            <th>Library Type</th>
+            <th>Read One</th>
+            <th>Read Two</th>
+            <td>Condition</td>
+          </tr>
+        </thead>
+        <tbody>
+            {% for sample in samples_list %}
+            <tr>
+              <td><a href="samples_detail/{{ sample.pk }}">Sample: {{ sample.pk }}</td></a>
+              <td>{{ sample.libtype }}</td>
+              <td>{{ sample.read_1 }}</td>
+              <td>{{ sample.read_2 }}</td>
+              <td>{{ sample.condition }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+  </div>
+    {% endblock %}
+  </body>
+</html>
+<!-- <td><a href="conditions_detail/{{ condition.pk }}">Condition: {{ condition.pk }}</a></td> -->

@@ -1,0 +1,52 @@
+{%extends 'base.html'%}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+      <title>Session Detail</title>
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    <div class="jumbotron">
+      <h3> Session {{ session_detail.pk}} Details </h3>
+      <hr class="my-4">
+        <!-- <p>{{session_detail.identifier}}</p> -->
+        <p>Organism: {{session_detail.organism}}</p>
+        <p>Genome: {{session_detail.genome}}</p>
+        <p>Genome File: {{session_detail.fasta_file}}</p>
+        <p>Annotation File: {{session_detail.annotation_file}}</p>
+        <a class='btn btn-warning' href="{% url 'analysis:session_update' pk=session_detail.pk %}">Update</a>
+        <a class='btn btn-danger' href="{% url 'analysis:session_delete' pk=session_detail.pk %}">Delete</a>
+      </p>
+      <br>
+      {% if session_detail.conditions.all %}
+        <p class='lead'>Session Conditions:</p>
+        <table class="table mb-1 condition_table">
+          <thead>
+            <tr>
+              <th>Condition</th>
+              <th>Replicates</th>
+            </tr>
+          </thead>
+          <tbody>
+              {% for condition in session_detail.conditions.all %}
+              <tr>
+                <td>{{ condition.conditions }}</td>
+                <td>{{ condition.no_replicates }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+
+      {% if not session_detail.conditions.all %}
+        <h2>No conditions defined.</h2>
+      {% endif %}
+      <a class='btn btn-success' href="{% url 'analysis:conditions_create' pk=session_detail.pk %}">Add Condition</a>
+
+    </div>
+  {% endblock %}
+  </body>
+</html>
