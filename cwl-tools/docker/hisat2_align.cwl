@@ -53,7 +53,11 @@ inputs:
    threads:
       type: int
       inputBinding:
-         prefix: -p
+         prefix: -pi
+   XSTag:
+      type: string?
+      inputBinding:
+         position: 5
    log:
       type: string
       default: "log.txt"
