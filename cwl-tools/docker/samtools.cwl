@@ -2,72 +2,39 @@
 
 cwlVersion: v1.0
 class: CommandLineTool
-requirements:
-  - class: ShellCommandRequirement
 hints:
   DockerRequirement:
     dockerPull: genomicpariscentre/samtools
 baseCommand: samtools
+
 inputs:
- action:
-  type: string
-  default: "view"
-  inputBinding:
-   position: 1
-   shellQuote: False
- threads:
-  type: int
-  inputBinding:
-    prefix: -@
-    position: 2
-    shellQuote: False
- bamfiles:
-  type: File?
-  inputBinding:
-    position: 2
- fastafiles:
-  type: File?
-  inputBinding:
-    position: 2
- samfile:
-   type: File?
-   inputBinding:
-    position: 3
-    prefix: -Su
-    shellQuote: False
- pipe:
+  action:
     type: string
-    default: "|"
+    default: "sort"
     inputBinding:
+      position: 1
+  sortby:
+    type: string
+    default:
+    inputBinding:
+      position: 2
+  threads:
+    type: int
+    inputBinding:
+      prefix: -@
+      position: 3
+  outfilename:
+    type: string
+    inputBinding:
+      prefix: -o
       position: 4
-      shellQuote: False
- samtools:
-  type: string
-  default: "samtools"
-  inputBinding:
-   position: 5
-   shellQuote: False
- action2:
-   type: string
-   default: "sort"
-   inputBinding:
-    position: 6
-    shellQuote: False
- threads2:
-   type: int
-   inputBinding:
-     prefix: -@
-     position: 7
-     shellQuote: False
- outfilename:
-   type: string
-   inputBinding:
-     prefix: -o
-     position: 8
-     shellQuote: False
+  samfile:
+    type: File
+    inputBinding:
+      position: 5
 
 outputs:
   samtools_out:
-   type: File
-   outputBinding:
-    glob: "*"
+    type: File
+    outputBinding:
+      glob: $(inputs.outfilename)

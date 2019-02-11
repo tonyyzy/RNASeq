@@ -2,21 +2,27 @@ threads: 2
 genomeDir:
   class: Directory
   path: ../../tests/GenomeIndex
-readFilesIn_1:
+subject_name1: test1
+subject_name2: test2
+subject_name3: test3
+subject_name4: test4
+fastq1:
   - {class: File, path: ../../tests/test1.1.fastq}
   - {class: File, path: ../../tests/test1.2.fastq}
-readFilesIn_2:
+fastq2:
   - {class: File, path: ../../tests/test2.1.fastq}
   - {class: File, path: ../../tests/test2.2.fastq}
-outFileNamePrefix_1: test1
-outFileNamePrefix_2: test2
+fastq3:
+  - {class: File, path: ../../tests/test3.fastq}
+fastq4:
+  - {class: File, path: ../../tests/test4.fastq}
 annotation:
   class: File
-  path: ../../tests/test.gff3
-program:
+  path: ../../tests/test.gtf
+prepDE_script:
   class: File
   path: ../../scripts/prepDE.py
-script:
+DESeq2_script:
   class: File
   path: ../../scripts/Basic_DESeq2.R
 metadata:

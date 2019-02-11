@@ -9,11 +9,15 @@ if [ -d "./tests/GenomeIndex" ]; then
     rm -r ./tests/GenomeIndex
 fi
 mkdir STARIndex
-star --runMode genomeGenerate --genomeFastaFiles ./tests/test.fa --sjdbGTFfile ./tests/test.gff3 --sjdbGTFtagExonParentTranscript exon_id --genomeDir ./STARIndex --genomeSAindexNbases 5
+# star --runMode genomeGenerate --genomeFastaFiles ./tests/test.fa --sjdbGTFfile ./tests/test.gtf --sjdbGTFtagExonParentTranscript exon_id --genomeDir ./STARIndex --genomeSAindexNbases 5
+star --runMode genomeGenerate --genomeFastaFiles ./tests/test.fa --sjdbGTFfile ./tests/test.gtf --genomeDir ./STARIndex --genomeSAindexNbases 5
 mv ./STARIndex ./tests/GenomeIndex
 rm ./Log.out
 
 # test for star readmap
+# gz test
+gzip -c ./tests/test1.1.fastq > ./tests/test1.1.fastq.gz
+gzip -c ./tests/test1.2.fastq > ./tests/test1.2.fastq.gz
 # test1
 if [ -d "./test1" ]; then
         rm -r ./test1
@@ -48,28 +52,28 @@ cp ./test4/test4Aligned.out.sam ./tests/test4.sam
 rm -r test1 test2 test3 test4
 
 # test for samtools
-samtools view -Su ./tests/test1.sam | samtools sort -o ./tests/test1.bam
-samtools view -Su ./tests/test2.sam | samtools sort -o ./tests/test2.bam
-samtools view -Su ./tests/test3.sam | samtools sort -o ./tests/test3.bam
-samtools view -Su ./tests/test4.sam | samtools sort -o ./tests/test4.bam
+samtools sort -o ./tests/test1.bam ./tests/test1.sam
+samtools sort -o ./tests/test2.bam ./tests/test2.sam
+samtools sort -o ./tests/test3.bam ./tests/test3.sam
+samtools sort -o ./tests/test4.bam ./tests/test4.sam
 
 # test for stringtie
 if [ -d "./tests/stringtie" ]; then
     rm -r ./tests/stringtie
 fi
 mkdir ./tests/stringtie
-stringtie -eB ./tests/test1.bam -G ./tests/test.gff3 -o ./tests/stringtie/test1/test1.gtf
+stringtie -eB ./tests/test1.bam -G ./tests/test.gtf -o ./tests/stringtie/test1/test1.gtf
 tail -n +3 ./tests/stringtie/test1/test1.gtf > ./tests/test1.stringtie.gtf
-stringtie -eB ./tests/test2.bam -G ./tests/test.gff3 -o ./tests/stringtie/test2/test2.gtf
-#stringtie -eB ./tests/test3.bam -G ./tests/test.gff3 -o ./tests/stringtie/test3/test3.gtf
-#stringtie -eB ./tests/test4.bam -G ./tests/test.gff3 -o ./tests/stringtie/test4/test4.gtf
+stringtie -eB ./tests/test2.bam -G ./tests/test.gtf -o ./tests/stringtie/test2/test2.gtf
+stringtie -eB ./tests/test3.bam -G ./tests/test.gtf -o ./tests/stringtie/test3/test3.gtf
+stringtie -eB ./tests/test4.bam -G ./tests/test.gtf -o ./tests/stringtie/test4/test4.gtf
 rm ./tests/stringtie/test*/*.ctab
 
 # test for prepDE
 # cwl-runner --outdir=./tests ./cwl-tools/nodocker/prepDE.cwl ./tests/prepDE.yml
 python2.7 ./scripts/prepDE.py -i tests/stringtie/
-cp ./gene_count_matrix.csv ./tests/
-cp ./transcript_count_matrix.csv ./tests/
+mv ./gene_count_matrix.csv ./tests/
+mv ./transcript_count_matrix.csv ./tests/
 
 # test for DESeq2
 cwl-runner --outdir=./test_DESeq2 ./cwl-tools/docker/DESeq2.cwl ./tests/DESeq2.yml
@@ -80,13 +84,15 @@ rm -r ./test_DESeq2
 python2.7 ./scripts/Basic_DEXSeq_scripts/dexseq_prepare.py ./tests/test.gtf ./tests/test.gff
 
 # test for htseq counts
-python2.7 ./scripts/Basic_DEXSeq_scripts/dexseq_count.py ./tests/test.gff ./tests/test1.sam ./tests/test1_htseq_count.csv
-
+python2.7 ./scripts/Basic_DEXSeq_scripts/dexseq_count_modified.py -p yes -s no -f bam -r pos ./tests/test.gff ./tests/test1.bam ./tests/test1_htseq_count.csv
+python2.7 ./scripts/Basic_DEXSeq_scripts/dexseq_count_modified.py -p yes -s no -f bam -r pos ./tests/test.gff ./tests/test2.bam ./tests/test2_htseq_count.csv
+python2.7 ./scripts/Basic_DEXSeq_scripts/dexseq_count_modified.py -p no -s no -f bam -r pos ./tests/test.gff ./tests/test3.bam ./tests/test3_htseq_count.csv
+python2.7 ./scripts/Basic_DEXSeq_scripts/dexseq_count_modified.py -p no -s no -f bam -r pos ./tests/test.gff ./tests/test4.bam ./tests/test4_htseq_count.csv
 # test for dexseq
-Rscript ./tests/DEXSeq.R --count_matrix_dir ./tests --gff_file_dir ./tests --metadata ./tests/test_meta.csv
+Rscript ./tests/DEXSeq.R --count_matrix_dir ./tests --gff_file_dir ./tests --metadata ./tests/metadata.csv
 mv DEE_results.csv ./tests/test_DEE_results.csv
 
-# test for fgsea for dexseq
+# test for fgsea
 Rscript ./tests/GSEA_Script.R --de_res ./tests/test_dge_results.csv --gene_set ./tests/reactome.tsv --doc_name ./tests/test_gsea_res.csv
 
 # test for hisat_align

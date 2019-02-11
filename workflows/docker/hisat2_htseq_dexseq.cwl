@@ -32,6 +32,9 @@ outputs:
   htseq_prepare_out:
     type: Directory
     outputSource: htseq_prepare_folder/out
+  samtools_out:
+    type: Directory
+    outputSource: samtools_folder/out
   htseq_count_out:
     type: Directory
     outputSource: htseq_count_folder/out
@@ -133,8 +136,76 @@ steps:
       dir4: hisat2_align_4/hisat2_align_out
     out: [out]
 
+# Samtools
+  samtools_1:
+    run: ../../cwl-tools/docker/samtools.cwl
+    in:
+      samfile: hisat2_align_1/sam_output
+      threads: threads
+      outfilename:
+        source: [subject_name1]
+        valueFrom: $(self + ".bam")
+    out: [samtools_out]
+
+  samtools_2:
+    run: ../../cwl-tools/docker/samtools.cwl
+    in:
+      samfile: hisat2_align_2/sam_output
+      threads: threads
+      outfilename:
+        source: [subject_name2]
+        valueFrom: $(self + ".bam")
+    out: [samtools_out]
+
+  samtools_3:
+    run: ../../cwl-tools/docker/samtools.cwl
+    in:
+      samfile: hisat2_align_3/sam_output
+      threads: threads
+      outfilename:
+        source: [subject_name3]
+        valueFrom: $(self + ".bam")
+    out: [samtools_out]
+
+  samtools_4:
+    run: ../../cwl-tools/docker/samtools.cwl
+    in:
+      samfile: hisat2_align_4/sam_output
+      threads: threads
+      outfilename:
+        source: [subject_name4]
+        valueFrom: $(self + ".bam")
+    out: [samtools_out]
+
+  samtools_folder:
+    run:
+      class: ExpressionTool
+      requirements:
+        InlineJavascriptRequirement: {}
+      inputs:
+        file1: File
+        file2: File
+        file3: File
+        file4: File
+      outputs:
+        out: Directory
+      expression: |
+        ${
+          return {"out": {
+            "class": "Directory",
+            "basename": "samtools",
+            "listing": [inputs.file1, inputs.file2, inputs.file3, inputs.file4]
+            } };
+          }
+    in:
+      file1: samtools_1/samtools_out
+      file2: samtools_2/samtools_out
+      file3: samtools_3/samtools_out
+      file4: samtools_4/samtools_out
+    out: [out]
+
   htseq_prepare:
-    run: ../../cwl-tools/docker/htseq.cwl
+    run: ../../cwl-tools/docker/htseq_prepare.cwl
     in:
       input_script: htseq_prepare_script
       gtf: annotation
@@ -165,44 +236,77 @@ steps:
     out: [out]
 
   htseq_count_1:
-    run: ../../cwl-tools/docker/htseq.cwl
+    run: ../../cwl-tools/docker/htseq_count.cwl
     in:
       input_script: htseq_count_script
+      pairedend:
+        valueFrom: "yes"
+      stranded:
+        valueFrom: "no"
+      input_format:
+        valueFrom: "bam"
+      sorted_by:
+        valueFrom: "pos"
       gff: htseq_prepare/output
-      sam: hisat2_align_1/sam_output
+      sam: samtools_1/samtools_out
       outname:
         source: [subject_name1]
         valueFrom: $(self + "_htseq_count.csv")
     out: [output]
 
+
   htseq_count_2:
-    run: ../../cwl-tools/docker/htseq.cwl
+    run: ../../cwl-tools/docker/htseq_count.cwl
     in:
       input_script: htseq_count_script
+      pairedend:
+        valueFrom: "yes"
+      stranded:
+        valueFrom: "no"
+      input_format:
+        valueFrom: "bam"
+      sorted_by:
+        valueFrom: "pos"
       gff: htseq_prepare/output
-      sam: hisat2_align_2/sam_output
+      sam: samtools_2/samtools_out
       outname:
         source: [subject_name2]
         valueFrom: $(self + "_htseq_count.csv")
     out: [output]
 
   htseq_count_3:
-    run: ../../cwl-tools/docker/htseq.cwl
+    run: ../../cwl-tools/docker/htseq_count.cwl
     in:
       input_script: htseq_count_script
+      pairedend:
+        valueFrom: "no"
+      stranded:
+        valueFrom: "no"
+      input_format:
+        valueFrom: "bam"
+      sorted_by:
+        valueFrom: "pos"
       gff: htseq_prepare/output
-      sam: hisat2_align_3/sam_output
+      sam: samtools_3/samtools_out
       outname:
         source: [subject_name3]
         valueFrom: $(self + "_htseq_count.csv")
     out: [output]
   
   htseq_count_4:
-    run: ../../cwl-tools/docker/htseq.cwl
+    run: ../../cwl-tools/docker/htseq_count.cwl
     in:
       input_script: htseq_count_script
+      pairedend:
+        valueFrom: "no"
+      stranded:
+        valueFrom: "no"
+      input_format:
+        valueFrom: "bam"
+      sorted_by:
+        valueFrom: "pos"
       gff: htseq_prepare/output
-      sam: hisat2_align_4/sam_output
+      sam: samtools_4/samtools_out
       outname:
         source: [subject_name4]
         valueFrom: $(self + "_htseq_count.csv")

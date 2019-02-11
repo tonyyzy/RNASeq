@@ -9,4 +9,4 @@ gff:
    path: ./
 metadata:
    class: File
-   path: ./test_meta.csv
+   path: ./metadata.csv

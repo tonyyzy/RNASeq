@@ -1,1 +1,3 @@
 cwlref-runner
+pytest-xdist
+pytest-sugar
