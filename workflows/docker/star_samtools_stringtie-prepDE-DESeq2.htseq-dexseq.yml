@@ -6,6 +6,8 @@ subject_name1: test1
 subject_name2: test2
 subject_name3: test3
 subject_name4: test4
+subject_name5: test5
+subject_name6: test6
 fastq1:
   - {class: File, path: ../../tests/test1.1.fastq}
   - {class: File, path: ../../tests/test1.2.fastq}
@@ -13,9 +15,17 @@ fastq2:
   - {class: File, path: ../../tests/test2.1.fastq}
   - {class: File, path: ../../tests/test2.2.fastq}
 fastq3:
-  - {class: File, path: ../../tests/test3.fastq}
+  - {class: File, path: ../../tests/test2.1.fastq}
+  - {class: File, path: ../../tests/test2.2.fastq}
 fastq4:
-  - {class: File, path: ../../tests/test4.fastq}
+  - {class: File, path: ../../tests/test2.1.fastq}
+  - {class: File, path: ../../tests/test2.2.fastq}
+fastq5:
+  - {class: File, path: ../../tests/test2.1.fastq}
+  - {class: File, path: ../../tests/test2.2.fastq}
+fastq6:
+  - {class: File, path: ../../tests/test2.1.fastq}
+  - {class: File, path: ../../tests/test2.2.fastq}
 annotation:
   class: File
   path: ../../tests/test.gtf
