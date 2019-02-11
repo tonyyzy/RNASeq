@@ -1,29 +1,72 @@
+# ./salmon_R_script.R --gtf FILE --metadata FILE --salmon_dir PATH
+
 library(tximport)
 library(GenomicAlignments)
 library(GenomicFeatures)
 library(dplyr)
 
-TxDb <- makeTxDbFromGFF(file,format=c("auto", "gff3", "gtf"))
+args <- commandArgs( trailingOnly=TRUE )
 
-samples <- read.table(metadata, header=TRUE, row.names = 1, sep = ",")
-files <- file.path(salmon_dir, rownames(samples), "quant.sf")
-names(files) <- rownames(samples)
-tmp4 <- data.frame("WithVersion"=NA,"TXNAME"=NA)
-for(x in 1:length(files)){
-  tmp2 <- read.table(files[x], header=TRUE)
-  tmp3 <- data.frame("WithVersion"=tmp2$Name,"TXNAME"=gsub("..$", "", tmp2$Name))
-  tmp4 <- rbind(tmp4,tmp3)
-  tmp4 <- tmp4[!duplicated(tmp4$WithVersion),]
+if ("--gtf" %in% args) {
+  gtf.file.idx  <- grep("--gtf", args)
+  gtf.file.path <- args[ gtf.file.idx+1 ]
+  if (file.exists(gtf.file.path)) {
+    cat("\nLoading _serialised_ 'gtf' from \"",gtf.file.path,"\" ... ", sep="")
+    TxDb <- makeTxDbFromGFF(file,format="gtf")
+    cat("done\n")
+  } else {
+    cat("\nLocation of file containing 'gtf': \"",gtf.file.path,"\"\n", sep="")
+    stop("File **DOES NOT EXIST**")
+  }
 }
-tmp4 <- tmp4[!is.na(tmp4$WithVersion),]
 
-TxDb <- makeTxDbFromGFF(gtf_file,format=c("gtf"))
-k <- keys(TxDb, keytype = "TXNAME")
-tx2gene <- AnnotationDbi::select(TxDb, k,"GENEID", "TXNAME")
-tx2gene <- left_join(tmp4,tx2gene, by = "TXNAME")
-tx2gene <- tx2gene[!is.na(tx2gene$GENEID),]
-tx2gene$TXNAME <- NULL
-colnames(tx2gene) <- c("TXNAME", "GENEID")
+if ("--metadata" %in% args) {
+  metadata.file.idx  <- grep("--metadata", args)
+  metadata.file.path <- args[ metadata.file.idx+1 ]
+  if (file.exists(metadata.file.path)) {
+    cat("\nLoading _serialised_ 'metadata' from \"",metadata.file.path,"\" ... ", sep="")
+    samples <- read.table(metadata, header=TRUE, row.names = 1, sep = ",")
+    cat("done\n")
+  } else {
+    cat("\nLocation of file containing 'metadata': \"",metadata.file.path,"\"\n", sep="")
+    stop("File **DOES NOT EXIST**")
+  }
+}
 
-txi <- tximport(files, type="salmon", tx2gene=tx2gene, dropInfReps=TRUE)
-write.csv(txi$counts, paste0(salmon_dir,"/count_matrix.csv"))
+if ("--salmon_dir" %in% args) {
+  salmon_dir.file.idx  <- grep("--salmon_dir", args)
+  salmon_dir.file.path <- args[ salmon_dir.file.idx+1 ]
+  if (file.exists(salmon_dir.file.path)) {
+    cat("\nLoading _serialised_ 'salmon_dir' from \"",salmon_dir.file.path,"\" ... ", sep="")
+    files <- file.path(salmon_dir, rownames(samples), "quant.sf")
+    cat("done\n")
+  } else {
+    cat("\nLocation of file containing 'salmon_dir': \"",salmon_dir.file.path,"\"\n", sep="")
+    stop("File **DOES NOT EXIST**")
+  }
+}
+
+if(nrow(samples) == length(files)){
+  names(files) <- rownames(samples)
+  exon_version_df <- data.frame("WithVersion"=NA,"TXNAME"=NA)
+  for(x in 1:length(files)){
+    sf_table <- read.table(files[x], header=TRUE)
+    exon_df <- data.frame("WithVersion"=sf_table$Name,"TXNAME"=gsub("..$", "", sf_table$Name))
+    exon_version_df <- rbind(exon_version_df,exon_df)
+    exon_version_df <- exon_version_df[!duplicated(exon_version_df$WithVersion),]
+  }
+  exon_version_df <- exon_version_df[!is.na(exon_version_df$WithVersion),]
+  
+  TxDb <- makeTxDbFromGFF(gtf_file,format=c("gtf"))
+  k <- keys(TxDb, keytype = "TXNAME")
+  tx2gene <- AnnotationDbi::select(TxDb, k,"GENEID", "TXNAME")
+  tx2gene <- left_join(exon_version_df,tx2gene, by = "TXNAME")
+  tx2gene <- tx2gene[!is.na(tx2gene$GENEID),]
+  tx2gene$TXNAME <- NULL
+  colnames(tx2gene) <- c("TXNAME", "GENEID")
+  
+  txi <- tximport(files, type="salmon", tx2gene=tx2gene, dropInfReps=TRUE)
+  write.csv(txi$counts, paste0(salmon_dir,"/gene_count_matrix.csv"))
+} else {
+  stop("Different number of samples, should be same number of salmon directories to samples in metadata")
+}
