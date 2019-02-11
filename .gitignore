@@ -18,3 +18,8 @@ hisat2_build
 software
 gene_count_matrix.csv
 transcript_count_matrix.csv
+test1gz
+test3
+test_workflow1_docker
+test_workflow2_docker
+data
