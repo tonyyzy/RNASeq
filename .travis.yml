@@ -13,7 +13,7 @@ before_script:
   - bash ./install_dependency.sh
   - export PATH=$PATH:$PWD/software
 script:
-  - pytest ./tests
+  - pytest -n 2 ./tests
 
 cache:
   pip: true
