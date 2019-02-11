@@ -29,12 +29,12 @@ outputs:
   hisat2_align_out:
     type: Directory
     outputSource: hisat2_align_folder/out
-  htseq_prepare_out:
-    type: Directory
-    outputSource: htseq_prepare_folder/out
   samtools_out:
     type: Directory
     outputSource: samtools_folder/out
+  htseq_prepare_out:
+    type: Directory
+    outputSource: htseq_prepare_folder/out
   htseq_count_out:
     type: Directory
     outputSource: htseq_count_folder/out
