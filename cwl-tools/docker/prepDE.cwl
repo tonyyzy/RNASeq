@@ -64,7 +64,7 @@ inputs:
     type: string?
     inputBinding:
       prefix: --legend
-      position
+      position: 10
 
 # if clutering genes that overlap with different gene IDs use "cluster", "cluster_prefix" and "transcript_2_gene_if_clustering" parameters.
 
