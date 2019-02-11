@@ -41,6 +41,12 @@ output_string = {
     "prepDE": "gene_count"
 }
 
+conf = {
+    "DESeq2_script": "path/to/script",
+    "metadata": "path/to/metadata",
+    "annotation": "path/to/annotation"
+}
+
 
 def star_readmap(input_files, yaml):
     for i in range(len(input_files)):
@@ -95,7 +101,10 @@ def stringtie(input_files, yaml, output_string, prev):
         "in": {f"file{j+1}": f"stringtie_{j+1}/stringtie_out" for j in range(len(input_files))},
         "out": ["out"]
         }
-        
+    yaml["yml"]["annotation"] = {
+        "class": "File",
+        "path": conf["annotation"]
+    }
         
     return yaml
 
@@ -125,7 +134,16 @@ def deseq2(input_files, yaml, output_string, prev):
           },
         "in": {"file1": "DESeq2/DESeq2_out"},
         "out": ["out"]
+    },
+    yaml["yml"]["DESeq2_script"] = {
+        "class": "File",
+        "path": conf["DESeq2_script"]
     }
+    yaml["yml"]["metadata"] = {
+        "class": "File",
+        "path": conf["metadata"]
+    }
+
     return yaml
 
 
@@ -137,5 +155,8 @@ cwl_workflow = deseq2(inputs, cwl_workflow, output_string, "prepDE")
 
 with open("test.cwl", "w+") as outfile:
     yaml.dump(cwl_workflow["cwl"], outfile, default_flow_style=False)
+with open("test.yml", "w+") as outfile:
+    yaml.dump(cwl_workflow["yml"], outfile, default_flow_style=False)
+
 
 
