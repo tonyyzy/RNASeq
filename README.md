@@ -7,6 +7,8 @@ Death to no docker !!!!!!!!!!
 
 Ah you think docker is your ally? You merely adopted the docker. I was born in it, molded by it.
 
+Sure but the docker is strong in me !!!!!!!!
+
 ## Notes
 DESeq2 requires metadata sample name to match gene_count_matrix sample name
 will handle this in workflow to make things consistent
