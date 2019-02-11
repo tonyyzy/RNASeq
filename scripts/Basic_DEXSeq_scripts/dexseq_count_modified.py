@@ -285,5 +285,6 @@ else: # paired-end
 
 fout = open( out_file, "w" )
 for fn in sorted( counts.keys() ):
-   fout.write( "%s\t%d\n" % ( fn, counts[fn] ) )
+   if counts[fn] != 0 or fn[0] == "_":
+      fout.write( "%s\t%d\n" % ( fn, counts[fn] ) )
 fout.close()

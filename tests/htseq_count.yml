@@ -1,6 +1,6 @@
 input_script: 
    class: File
-   path: ../scripts/Basic_DEXSeq_scripts/dexseq_count.py
+   path: ../scripts/Basic_DEXSeq_scripts/dexseq_count_modified.py
 pairedend: "yes"
 stranded: "no"
 input_format: "bam"
@@ -10,5 +10,5 @@ gff:
    path: ./test.gff
 sam: 
    class: File
-   path: ./test1.coord.bam
+   path: ./test1.bam
 outname: "test1_htseq_count.csv"
