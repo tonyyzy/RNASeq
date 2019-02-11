@@ -3,6 +3,6 @@ Mode: "genomeGenerate"
 genomeFastaFiles:
   - {class: File, path: ./test.fa}
 sjdbGTFfile:
-  - {class: File, path: ./test.gff3}
-sjdbGTFtagExonParentTranscript: "exon_id"
+  - {class: File, path: ./test.gtf}
+# sjdbGTFtagExonParentTranscript: "exon_id"
 genomeSAindexNbases: "5"

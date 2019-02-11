@@ -4,3 +4,5 @@ program:
 gtfs:
   - {class: File, path: ./stringtie/test1/test1.gtf}
   - {class: File, path: ./stringtie/test2/test2.gtf}
+  - {class: File, path: ./stringtie/test3/test3.gtf}
+  - {class: File, path: ./stringtie/test4/test4.gtf}
