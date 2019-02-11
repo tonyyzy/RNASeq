@@ -53,7 +53,7 @@ inputs:
    threads:
       type: int
       inputBinding:
-         prefix: -pi
+         prefix: -p
    XSTag:
       type: string?
       inputBinding:
