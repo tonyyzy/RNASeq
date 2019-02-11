@@ -66,7 +66,7 @@ if(nrow(samples) == length(files)){
   colnames(tx2gene) <- c("TXNAME", "GENEID")
   
   txi <- tximport(files, type="salmon", tx2gene=tx2gene, dropInfReps=TRUE)
-  write.csv(txi$counts, paste0(salmon_dir.path,"/gene_count_matrix.csv"))
+  write.csv(txi$counts, "gene_count_matrix.csv")
 } else {
   stop("Different number of samples, should be same number of salmon directories to samples in metadata")
 }
