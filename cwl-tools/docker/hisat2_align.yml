@@ -1,7 +1,7 @@
+threads: 2
 index_directory: 
    class: Directory
    path: ./path/to/index
-index_basename: "./path/to/index/index_basename"
 first_pair:
    class: File
    path: test1.1.fastq
@@ -9,3 +9,5 @@ second_pair:
    class: File
    path: test1.2.fastq
 sam_name: "test1.sam"
+# dta for stringtie while dta-cufflinks for cufflinks
+XSTag: "--dta"

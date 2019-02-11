@@ -1,0 +1,18 @@
+cores: "2"
+#options are "Single" or "Paired_end"
+lib_type: "Paired_end"
+index:
+   class: Directory
+   path: ./indexed_test
+bam:
+   class: File
+   path: ./test1.bam
+bam_bai:
+   class: File
+   path: ./test1.bam.bai
+read_len: "101"
+out_dir: "miso_out"
+annotation_file:
+   class: File
+   path: ./test.gff3
+exon_size: "50"

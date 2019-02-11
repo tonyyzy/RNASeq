@@ -29,7 +29,7 @@ inputs:
          prefix: --metadata
 
 outputs:
-   example_out:
+   output:
       type: File
       outputBinding:
          glob: "*"

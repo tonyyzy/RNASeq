@@ -1,0 +1,9 @@
+# stringtie -eB ./tests/test1.bam -G ./tests/test.gtf -o ./tests/stringtie/test1/test1.gtf
+# StringTie version 1.3.4c
+test1	StringTie	transcript	500	999	1000	+	.	gene_id "gene1"; transcript_id "trans1"; cov "4.040000"; FPKM "203198.875000"; TPM "271934.062500";
+test1	StringTie	exon	500	999	1000	+	.	gene_id "gene1"; transcript_id "trans1"; exon_number "1"; cov "4.040000";
+test1	StringTie	transcript	3000	5299	1000	-	.	gene_id "gene2"; transcript_id "trans2"; cov "10.816542"; FPKM "544036.875000"; TPM "728065.937500";
+test1	StringTie	exon	3000	3299	1000	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "1"; cov "14.410983";
+test1	StringTie	exon	3500	3999	1000	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "2"; cov "0.000000";
+test1	StringTie	exon	4400	4999	1000	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "3"; cov "17.635000";
+test1	StringTie	exon	5050	5299	1000	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "4"; cov "11.772000";
