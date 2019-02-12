@@ -32,5 +32,4 @@ class WorkflowForm(forms.ModelForm):
 
 
 
-# NEED TO GET FROM SUHAIL
 # pip install --upgrade django-crispy-forms

@@ -43,7 +43,7 @@ class Samples(models.Model):
     )
     condition = models.ForeignKey(Conditions, on_delete=models.PROTECT, related_name='samples')
     libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES, blank=True, null=True)
-    read_1 = models.FileField(upload_to='data/', blank=False)
+    read_1 = models.FileField(upload_to='data/', blank=False, null=False, default=1)
     read_2 = models.FileField(upload_to='data/', blank=True, null=True)
 
     def get_absolute_url(self):

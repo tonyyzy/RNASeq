@@ -63,36 +63,38 @@ class ConditionsDetailView(DetailView):
     model = models.Conditions
     template_name = 'analysis/conditions_detail.html'
 
-# removing the session field from conditions create and using primary key defined by session
-# in the url to pass to the conditions model. not working yet.
-# NOT NULL constraint failed: analysis_conditions.session_id
+
 class ConditionsCreateView(CreateView):
     template_name = 'analysis/conditions_form.html'
     # queryset = Conditions.objects.all()
-    model = models.Conditions
-    fields = ('session', 'conditions', 'no_replicates',)
 
-    # def get(self, request, pk):
-    #     form = ConditionsForm
-    #     pk = self.kwargs.get('pk')
-    #     print(f'\nPrimary Key: {pk}')
-    #     return render(request, self.template_name, {'form':form})
-    #
-    # def post(self, request, pk):
-    #     form = ConditionsForm(request.POST)
-    #     if form.is_valid():
-    #         print(form.cleaned_data['session'])
-    #
-    #         pk = self.kwargs.get('pk')
-    #         post = form.save(commit=False)
-    #         post.session = 'session' + str(pk)
-    #         print(post.session)
-    #         post.save()
-    #         # print(f'\nRaw Post Obj: {post}')
-    #         con = form.cleaned_data['conditions']
-    #         no_rep = form.cleaned_data['no_replicates']
-    #         # print(no_rep)
-    #         return redirect('analysis:session_list')
+    def get(self, request, pk):
+        form = ConditionsForm
+        conditions = Conditions.objects.all() # interface to grab database objects!
+        session1 = conditions.filter(session=1) # filters conditioins to only return conditions under session1
+        print(conditions)
+        context = {'form':form, 'session1':session1}
+        return render(request, self.template_name, context)
+
+
+    def post(self, request, pk):
+        form = ConditionsForm(request.POST)
+        if form.is_valid():
+            # print(form.cleaned_data['session'])
+            # pk = self.kwargs.get('pk')
+            post = form.save(commit=False)
+            print('\nFORM WAS VALID: POST.SESSION:')
+            print(post)
+            # print(post.conditions)
+            # print(post.no_replicates)
+            post.save()
+            # print(f'\nRaw Post Obj: {post}')
+            # con = form.cleaned_data['conditions']
+            # no_rep = form.cleaned_data['no_replicates']
+            # print(no_rep)
+            return redirect('analysis:session_list')
+
+        return render(request, self.template_name, {'form':form})
 
 # Cannot assign "'session1'": "Conditions.session" must be a "Session" instance.
 
@@ -144,53 +146,31 @@ class WorkflowListView(ListView):
     # context_object_name = 'conditions'
     model = models.Workflow
 
-class ConditionsDetailView(DetailView):
-    context_object_name = 'conditions_detail'
-    model = models.Conditions
-    template_name = 'analysis/conditions_detail.html'
-
-# removing the session field from conditions create and using primary key defined by session
-# in the url to pass to the conditions model. not working yet.
-# NOT NULL constraint failed: analysis_conditions.session_id
-class ConditionsCreateView(CreateView):
-    template_name = 'analysis/conditions_form.html'
-    # queryset = Conditions.objects.all()
-    model = models.Conditions
-    fields = ('session', 'conditions', 'no_replicates',)
-
-    # def get(self, request, pk):
-    #     form = ConditionsForm
-    #     pk = self.kwargs.get('pk')
-    #     print(f'\nPrimary Key: {pk}')
-    #     return render(request, self.template_name, {'form':form})
-    #
-    # def post(self, request, pk):
-    #     form = ConditionsForm(request.POST)
-    #     if form.is_valid():
-    #         print(form.cleaned_data['session'])
-    #
-    #         pk = self.kwargs.get('pk')
-    #         post = form.save(commit=False)
-    #         post.session = 'session' + str(pk)
-    #         print(post.session)
-    #         post.save()
-    #         # print(f'\nRaw Post Obj: {post}')
-    #         con = form.cleaned_data['conditions']
-    #         no_rep = form.cleaned_data['no_replicates']
-    #         # print(no_rep)
-    #         return redirect('analysis:session_list')
-
-# Cannot assign "'session1'": "Conditions.session" must be a "Session" instance.
-
-
-class ConditionsUpdateView(UpdateView):
-    fields = ('conditions','no_replicates',)
-    model = models.Conditions
-
-class ConditionsDeleteView(DeleteView):
-    context_object_name = 'condition'
-    model = models.Conditions
-    success_url = reverse_lazy("analysis:session_list")
+# class ConditionsDetailView(DetailView):
+#     context_object_name = 'conditions_detail'
+#     model = models.Conditions
+#     template_name = 'analysis/conditions_detail.html'
+#
+# # removing the session field from conditions create and using primary key defined by session
+# # in the url to pass to the conditions model. not working yet.
+# # NOT NULL constraint failed: analysis_conditions.session_id
+# class ConditionsCreateView(CreateView):
+#     template_name = 'analysis/conditions_form.html'
+#     # queryset = Conditions.objects.all()
+#     model = models.Conditions
+#     fields = ('session', 'conditions', 'no_replicates',)
+#
+#
+#
+#
+# class ConditionsUpdateView(UpdateView):
+#     fields = ('conditions','no_replicates',)
+#     model = models.Conditions
+#
+# class ConditionsDeleteView(DeleteView):
+#     context_object_name = 'condition'
+#     model = models.Conditions
+#     success_url = reverse_lazy("analysis:session_list")
 
 
 
