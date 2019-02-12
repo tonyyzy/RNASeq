@@ -310,7 +310,7 @@ steps:
     in:
       input_script: htseq_count_script
       pairedend:
-        valueFrom: "yes"
+        valueFrom: "no"
       stranded:
         valueFrom: "no"
       input_format:
@@ -329,7 +329,7 @@ steps:
     in:
       input_script: htseq_count_script
       pairedend:
-        valueFrom: "yes"
+        valueFrom: "no"
       stranded:
         valueFrom: "no"
       input_format:
