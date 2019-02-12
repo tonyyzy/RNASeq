@@ -77,30 +77,15 @@ steps:
     out: [sam_output, star_read_out]
 
   star_folder:
-    run:
-      class: ExpressionTool
-      requirements:
-        InlineJavascriptRequirement: {}
-      inputs:
-        dir1: Directory
-        dir2: Directory
-        dir3: Directory
-        dir4: Directory
-      outputs:
-        out: Directory
-      expression: |
-        ${
-          return {"out": {
-            "class": "Directory",
-            "basename": "star",
-            "listing": [inputs.dir1, inputs.dir2, inputs.dir3, inputs.dir4]
-            } };
-          }
+    run: ../../cwl-tools/folder.cwl
     in:
-      dir1: star_readmap_1/star_read_out
-      dir2: star_readmap_2/star_read_out
-      dir3: star_readmap_3/star_read_out
-      dir4: star_readmap_4/star_read_out
+      item:
+      - star_readmap_1/star_read_out
+      - star_readmap_2/star_read_out
+      - star_readmap_3/star_read_out
+      - star_readmap_4/star_read_out
+      name:
+        valueFrom: "star"
     out: [out]
   
 
@@ -146,30 +131,15 @@ steps:
     out: [samtools_out]
 
   samtools_folder:
-    run:
-      class: ExpressionTool
-      requirements:
-        InlineJavascriptRequirement: {}
-      inputs:
-        file1: File
-        file2: File
-        file3: File
-        file4: File
-      outputs:
-        out: Directory
-      expression: |
-        ${
-          return {"out": {
-            "class": "Directory",
-            "basename": "samtools",
-            "listing": [inputs.file1, inputs.file2, inputs.file3, inputs.file4]
-            } };
-          }
+    run: ../../cwl-tools/folder.cwl
     in:
-      file1: samtools_1/samtools_out
-      file2: samtools_2/samtools_out
-      file3: samtools_3/samtools_out
-      file4: samtools_4/samtools_out
+      item:
+      - samtools_1/samtools_out
+      - samtools_2/samtools_out
+      - samtools_3/samtools_out
+      - samtools_4/samtools_out
+      name:
+        valueFrom: "samtools"
     out: [out]
 
 #Stringtie
@@ -216,61 +186,38 @@ steps:
         source: [subject_name4]
         valueFrom: $(self + ".gtf")
     out: [stringtie_out]
+
   stringtie_folder:
-    run:
-      class: ExpressionTool
-      requirements:
-        InlineJavascriptRequirement: {}
-      inputs:
-        file1: File
-        file2: File
-        file3: File
-        file4: File
-      outputs:
-        out: Directory
-      expression: |
-        ${
-          return {"out": {
-            "class": "Directory",
-            "basename": "stringtie",
-            "listing": [inputs.file1, inputs.file2, inputs.file3, inputs.file4]
-            } };
-          }
+    run: ../../cwl-tools/folder.cwl
     in:
-      file1: stringtie_1/stringtie_out
-      file2: stringtie_2/stringtie_out
-      file3: stringtie_3/stringtie_out
-      file4: stringtie_4/stringtie_out
+      item:
+      - stringtie_1/stringtie_out
+      - stringtie_2/stringtie_out
+      - stringtie_3/stringtie_out
+      - stringtie_4/stringtie_out
+      name:
+        valueFrom: "stringtie"
     out: [out]
   
   prepDE:
     run: ../../cwl-tools/docker/prepDE.cwl
     in:
      program: prepDE_script
-     gtfs: [stringtie_1/stringtie_out, stringtie_2/stringtie_out, stringtie_3/stringtie_out, stringtie_4/stringtie_out]
+     gtfs:
+     - stringtie_1/stringtie_out
+     - stringtie_2/stringtie_out
+     - stringtie_3/stringtie_out
+     - stringtie_4/stringtie_out
     out: [gene_output, transcript_output]
   
   prepDE_folder:
-    run:
-      class: ExpressionTool
-      requirements:
-        InlineJavascriptRequirement: {}
-      inputs:
-        file1: File
-        file2: File
-      outputs:
-        out: Directory
-      expression: |
-        ${
-          return {"out": {
-            "class": "Directory",
-            "basename": "prepDE",
-            "listing": [inputs.file1, inputs.file2]
-            } };
-          }
+    run: ../../cwl-tools/folder.cwl
     in:
-      file1: prepDE/gene_output
-      file2: prepDE/transcript_output
+      item:
+      - prepDE/gene_output
+      - prepDE/transcript_output
+      name: 
+        valueFrom: "prepDE"
     out: [out]
 
   DESeq2:
@@ -282,22 +229,9 @@ steps:
     out: [DESeq2_out]
   
   DESeq2_folder:
-    run:
-      class: ExpressionTool
-      requirements:
-        InlineJavascriptRequirement: {}
-      inputs:
-        file1: File
-      outputs:
-        out: Directory
-      expression: |
-        ${
-          return {"out": {
-            "class": "Directory",
-            "basename": "DESeq2",
-            "listing": [inputs.file1]
-            } };
-          }
+    run: ../../cwl-tools/folder.cwl
     in:
-      file1: DESeq2/DESeq2_out
+      item: DESeq2/DESeq2_out
+      name:
+        valueFrom: "DESeq2"
     out: [out]

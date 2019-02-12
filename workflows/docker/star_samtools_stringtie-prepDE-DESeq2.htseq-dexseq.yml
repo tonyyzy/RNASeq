@@ -15,17 +15,9 @@ fastq2:
   - {class: File, path: ../../tests/test2.1.fastq}
   - {class: File, path: ../../tests/test2.2.fastq}
 fastq3:
-  - {class: File, path: ../../tests/test2.1.fastq}
-  - {class: File, path: ../../tests/test2.2.fastq}
+  - {class: File, path: ../../tests/test3.fastq}
 fastq4:
-  - {class: File, path: ../../tests/test2.1.fastq}
-  - {class: File, path: ../../tests/test2.2.fastq}
-fastq5:
-  - {class: File, path: ../../tests/test2.1.fastq}
-  - {class: File, path: ../../tests/test2.2.fastq}
-fastq6:
-  - {class: File, path: ../../tests/test2.1.fastq}
-  - {class: File, path: ../../tests/test2.2.fastq}
+  - {class: File, path: ../../tests/test4.fastq}
 annotation:
   class: File
   path: ../../tests/test.gtf
