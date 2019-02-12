@@ -47,7 +47,7 @@ inputs:
     type: string?
     default: intronMotif
     inputBinding:
-      position: 5
+      position: 6
       prefix: --outSAMstrandField
 
 outputs:
