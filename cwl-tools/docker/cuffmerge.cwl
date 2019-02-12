@@ -1,8 +1,6 @@
-#!usr/bin/env cwl-runner
-
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: cuffmerge
+baseCommand: python2
 
 hints:
     DockerRequirement:
@@ -10,21 +8,35 @@ hints:
 
 requirements:
     ShellCommandRequirement: {}
+    InlineJavascriptRequirement: {}
     InitialWorkDirRequirement:
         listing:
-            - entry: '{"inputs": $(inputs.cufflinks_output)'
+            - entry: '{"inputs": $(inputs.cufflinks_output)}'
               entryname: inputs.json
 
 arguments:
-    - position: 4
+    - position: -3
+      prefix: -c
       valueFrom: |
         import json
         with open("inputs.json") as file:
             inputs = json.load(file)
-        with open("assembly_GTF_list.txt") as txt:
+        with open("assembly_GTF_list.txt", "w") as txt:
             for i in range(len(inputs["inputs"])):
-                txt.write(inputs["inputs"][i]["path"] + " \n")
-
+                txt.write(inputs["inputs"][i]["path"]
+                    + "\n")
+    - prefix: "&&"
+      position: -2
+      shellQuote: False
+      valueFrom: $("cp "+ inputs.ref_fasta.path + " " + runtime.outdir)
+    - prefix: "&&"
+      position: -1
+      valueFrom: "cuffmerge"
+    - position: 5
+      valueFrom: assembly_GTF_list.txt
+    - position: 4
+      prefix: -s
+      valueFrom: $(runtime.outdir+"/"+inputs.ref_fasta.basename)
 inputs:
     output:
         type: string
@@ -37,15 +49,20 @@ inputs:
             position: 2
             prefix: -g
     threads:
-        type: File
+        type: string
         inputBinding:
             position: 3
             prefix: -p
+    ref_fasta:
+        type: File
+#        inputBinding:
+#            position: 4
+#            prefix: -s
     cufflinks_output:
         type: File[]
 
 outputs:
     output:
-        type: File
+        type: Directory
         outputBinding:
             glob: $(inputs.output)
