@@ -69,5 +69,5 @@ class Workflow(models.Model):
     analysis = models.CharField(max_length=200)
     status = models.BooleanField(default=False, null=False)
 
-# inspect available object methods
-# dir(Product.objects.get(id=1))
+    def get_absolute_url(self):
+        return reverse('analysis:workflow_list')

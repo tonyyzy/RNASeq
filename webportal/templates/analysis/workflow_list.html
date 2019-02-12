@@ -16,6 +16,7 @@
           <tr>
             <th>Session</th>
             <th>Identifier</th>
+            <th>Key</th>
             <th>Index</th>
             <th>Mapper</th>
             <th>Assembler</th>
@@ -24,10 +25,11 @@
           </tr>
         </thead>
         <tbody>
-            {% for workflow in workflows_list %}
+            {% for workflow in workflow_list %}
             <tr>
               <td>{{ workflow.session }}</td>
               <td>{{ workflow.session.identifier }}</td>
+              <td><a href="workflow_detail/{{ workflow.pk }}">workflow ID: {{ workflow.id }}</a></td>
               <td>{{ workflow.index }}</td>
               <td>{{ workflow.mapper }}</td>
               <td>{{ workflow.assembler }}</td>

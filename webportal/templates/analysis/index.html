@@ -1,0 +1,31 @@
+{%extends 'base.html'%}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+    <title>Index</title>
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+      <div class="content">
+        <form action="" method="GET">
+          <input type="text" name="q" placeholder="search", value={{ request.GET.q }}>
+          <br>
+          <input type="submit" id='upload_btn' name="">
+        </form>
+
+        {% if query_set_list.first %}
+        <div class="jumbotron">
+        <h4>{{query_set_list.first}}</h4>
+        <p>{{query_set_list.first.organism}}</p>
+        <p>{{query_set_list.first.genome}}</p>
+          <a class='btn btn-success' href="{% url 'analysis:session_detail' pk=query_set_list.first.pk %}">Details</a>
+        </div>
+        {% endif %}
+      </div>
+    {% endblock %}
+  </body>
+</html>
+<!-- <input type="submit" name="user_data" value="Search"> -->

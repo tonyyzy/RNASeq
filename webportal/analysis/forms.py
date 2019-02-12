@@ -3,6 +3,9 @@ from django.forms import ModelForm
 from analysis.models import Session, Workflow, Samples, Conditions
 
 
+class SessionSearchForm(forms.Form):
+    user_session = forms.CharField(max_length=100)
+
 class SessionForm(forms.ModelForm):
     class Meta:
         model = Session

@@ -1,0 +1,27 @@
+{%extends 'base.html'%}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+      <title>Workflow Detail</title>
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    <div class="jumbotron">
+      <h3> workflow {{ workflow_detail.pk}} details </h3>
+      <hr class="my-4">
+        <p>session: {{ workflow_detail.session}}</p>
+        <p>index: {{ workflow_detail.index}}</p>
+        <p>mapper: {{ workflow_detail.mapper}}</p>
+        <p>assembler: {{ workflow_detail.assembler}}</p>
+        <p>analysis: {{ workflow_detail.analysis}}</p>
+        <p>status: {{ workflow_detail.status}}</p>
+        <a class='btn btn-warning' href="{% url 'analysis:workflow_update' pk=workflow_detail.pk %}">Update</a>
+        <a class='btn btn-danger' href="{% url 'analysis:workflow_delete' pk=workflow_detail.pk %}">Delete</a>
+    </div>
+  {% endblock %}
+  </body>
+</html>
+<!-- <a class='btn btn-success' href="{% url 'analysis:samples_create' pk=conditions_detail.pk %}">Add Sample</a> -->
