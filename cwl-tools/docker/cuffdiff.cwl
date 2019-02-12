@@ -24,7 +24,6 @@ inputs:
       inputBinding:
          position: 3
          itemSeparator: ","
-         separate: false
          prefix: -L
    use_all:
       type: string?
@@ -61,16 +60,22 @@ inputs:
       inputBinding:
          position: 10
          prefix: –library-norm-method
+   gtf_file:
+      type: File
+      inputBinding:
+         position: 11
    condition1_files:
       type: File[]
       inputBinding:
          itemSeparator: ","
          separate: false
+         position: 12
    condition2_files:
       type: File[]
       inputBinding:
          itemSeparator: ","
          separate: false
+         position: 13
 
 outputs:
    output:
