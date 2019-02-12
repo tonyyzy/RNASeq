@@ -68,7 +68,7 @@ class SessionDetailView(DetailView):
 
 
 class SessionCreateView(CreateView):
-    fields = ('session_name','organism','genome','fasta_file', 'annotation_file',)
+    fields = ('organism','genome','fasta_file', 'annotation_file',)
     model = models.Session
 
 
@@ -99,34 +99,22 @@ class ConditionsCreateView(CreateView):
 
     def get(self, request, pk):
         form = ConditionsForm
-        conditions = Conditions.objects.all() # interface to grab database objects!
-        session1 = conditions.filter(session=1) # filters conditioins to only return conditions under session1
-        print(conditions)
-        # context = {'form':form, 'session1':session1}
-        context = {'form':form, 'session1':conditions}
+        context = {'form':form}
         return render(request, self.template_name, context)
-
+        print('\nFORM WAS VALID: POST.SESSION:')
 
     def post(self, request, pk):
         form = ConditionsForm(request.POST)
         if form.is_valid():
-            # print(form.cleaned_data['session'])
-            # pk = self.kwargs.get('pk')
             post = form.save(commit=False)
-            print('\nFORM WAS VALID: POST.SESSION:')
-            print(post)
-            # print(post.conditions)
-            # print(post.no_replicates)
+            sessions = Session.objects.all()
+            adjusted_pk = self.kwargs.get('pk')-1 # python index 1st session from 0
+            # print(f'\n{sessions[adjusted_pk]}') # returns a session object NOT a string!
+            post.session = sessions[adjusted_pk]
             post.save()
-            # print(f'\nRaw Post Obj: {post}')
-            # con = form.cleaned_data['conditions']
-            # no_rep = form.cleaned_data['no_replicates']
-            # print(no_rep)
-            return redirect('analysis:session_list')
-
+            return redirect('analysis:conditions_detail', pk)
         return render(request, self.template_name, {'form':form})
 
-# Cannot assign "'session1'": "Conditions.session" must be a "Session" instance.
 
 
 class ConditionsUpdateView(UpdateView):

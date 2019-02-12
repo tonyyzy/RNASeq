@@ -18,7 +18,6 @@ urlpatterns = [
     path('conditions_list', views.ConditionsListView.as_view(), name='conditions_list'),
     path('conditions_detail/<int:pk>/', views.ConditionsDetailView.as_view(), name='conditions_detail'),
     path('conditions_create/<int:pk>/', views.ConditionsCreateView.as_view(), name='conditions_create'),
-    # path('conditions_create/<int:session_id>/', views.ConditionsCreateView.as_view(), name='conditions_create'),
     path('conditions_update/<int:pk>/', views.ConditionsUpdateView.as_view(), name='conditions_update'),
     path('conditions_delete/<int:pk>/', views.ConditionsDeleteView.as_view(), name='conditions_delete'),
 
