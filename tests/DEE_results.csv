@@ -1,6 +1,6 @@
 "","groupID","featureID","exonBaseMean","dispersion","stat","pvalue","padj","treated","untreated","log2fold_untreated_treated","genomicData.seqnames","genomicData.start","genomicData.end","genomicData.width","genomicData.strand","countData.test1","countData.test2","countData.test3","countData.test4","transcripts"
-"gene1:E001","gene1","E001",41.334,NA,NA,NA,NA,NA,NA,NA,"test1",500,999,500,"+",10,70,15,77,trans1
-"gene2:E001","gene2","E001",25.406,0.123,0.844,0.358,0.478,1.498,1.346,-0.528,"test1",3000,3299,300,"-",28,24,20,31,trans2
-"gene2:E002","gene2","E002",22.196,0.149,47.134,0,0,1.733,0,-17.201,"test1",3500,3999,500,"-",0,56,0,36,trans2
-"gene2:E003","gene2","E003",35.07,0,198.914,0,0,0,1.769,16.797,"test1",4400,4999,600,"-",72,0,59,0,trans2
-"gene2:E004","gene2","E004",20.439,0.046,0.285,0.593,0.593,1.281,1.355,0.258,"test1",5050,5299,250,"-",28,11,21,22,trans2
+"gene1:E001","gene1","E001",42.328,NA,NA,NA,NA,NA,NA,NA,"test1",500,999,500,"+",10,70,15,77,trans1
+"gene2:E001","gene2","E001",36.997,0.01,0.03,0.861,0.861,1.511,1.649,0.47,"test1",3000,3299,300,"-",34,37,42,35,c("trans2", "trans3")
+"gene2:E002","gene2","E002",32.964,0,70.683,0,0,1.67,1.232,-1.514,"test1",3500,3999,500,"-",15,56,13,49,trans3
+"gene2:E003","gene2","E003",43.648,0.163,5.347,0.021,0.042,1.297,1.876,1.98,"test1",4400,4999,600,"-",74,25,54,18,trans2
+"gene2:E004","gene2","E004",24.671,0.001,0.712,0.399,0.532,1.296,1.512,0.749,"test1",5050,5299,250,"-",30,18,25,25,c("trans2", "trans3")
