@@ -2,6 +2,42 @@ import sqlite3 as sql
 import pandas as pd
 import numpy as np
 import yaml
+import time
+import threading
+
+class database_checker():
+
+    waiting_time = 10
+
+    def __init__(self, database_link):
+        self.Database = database_link
+
+    def foo(self):
+        database = sql.connect(self.Database)
+        cur = database.cursor()
+        cur.execute("SELECT Session_ID FROM analysis_workflow WHERE Status = 1")
+        query_result = cur.fetchall()
+        if len(query_result) > 0:
+            unique_Session_ID = [i[0] for i in set(query_result)]
+            for i in unique_Session_ID:
+                self.create_workflow(i)
+        threading.Timer(self.waiting_time, self.foo).start()
+
+    def create_workflow(self, Session_ID):
+        reader = database_reader(Session_ID)
+        reader.extract_from_database()
+        # print(reader.Index)
+        # print(reader.Mapper[0])
+        # print(reader.Assembler)
+        # print(reader.Analysis)
+        # print(reader)
+        logic = logic_builder()
+        logic.create_workflow_logic(reader)
+        print(logic.Workflow)
+        print(logic.Workflow_index)
+
+
+
 
 class database_reader():
 
@@ -12,64 +48,68 @@ class database_reader():
     Annotation_file = []
 
 
-    def __init__(self, Session_ID, Identifier):
+    def __init__(self, Session_ID):
         self.Session_ID = int(Session_ID)
-        self.Identifier = str(Identifier)
-        print("test")
+
 
     def extract_from_database(self):
 
-        database = sql.connect("/project/home18/apg3718/RNASeq/webportal/db.sqlite3")
+        database = sql.connect("./webportal/db.sqlite3")
 
         cur = database.cursor()
         cur.execute("SELECT * FROM analysis_workflow WHERE Session_ID = {0}".format(self.Session_ID))
+        column_names = [i[0] for i in cur.description]
         query_result = cur.fetchall()
 
-        self.Index = [str(i[1]).upper() for i in query_result]
-        self.Mapper = [str(i[2]).upper() for i in query_result]
-        self.Assembler = [str(i[3]).upper()  for i in query_result]
-        self.Analysis = [str(i[6]).upper()  for i in query_result]
+        self.Index = [str(i[column_names.index("index")]).upper() for i in query_result]
+        self.Mapper = [str(i[column_names.index("mapper")]).upper() for i in query_result]
+        self.Assembler = [str(i[column_names.index("assembler")]).upper()  for i in query_result]
+        self.Analysis = [str(i[column_names.index("analysis")]).upper()  for i in query_result]
 
         cur.execute("SELECT * FROM analysis_session WHERE ID = {0}".format(self.Session_ID))
+        column_names = [i[0] for i in cur.description]
         query_result = cur.fetchall()
 
-        self.Genome_file = [i[4]  for i in query_result]
-        self.Annotation_file = [i[5]  for i in query_result]
+        self.Genome_file = [i[column_names.index("fasta_file")]  for i in query_result]
+        self.Annotation_file = [i[column_names.index("annotation_file")]  for i in query_result]
 
 
     def __repr__(self):
-        return "Session_ID :%d \nIdentifier: %s" % (self.Session_ID, self.Identifier)
+        return "Session_ID :{0}".format(self.Session_ID)
 
 class logic_builder():
 
-    workflow = []
-    workflow_index = []
+    Workflow = []
+    Workflow_index = []
 
     def __init__(self):
-        self.programs_index = pd.read_csv("/project/home18/apg3718/RNASeq/backend_scripts/logic/programs_index.csv")
-        self.programs_connections = pd.read_csv("/project/home18/apg3718/RNASeq/backend_scripts/logic/programs_connections.csv")
+        self.programs_index = pd.read_csv("./backend_scripts/logic/programs_index.csv")
+        self.programs_connections = pd.read_csv("./backend_scripts/logic/programs_connections.csv")
 
     def create_workflow_logic(self, database_reader_object):
-        result = []
-        result_index = []
 
-        if (database_reader_object.Index) != 0:
-            for i in database_reader_object.Index:
-                result_index.extend(self.programs_index.loc[self.programs_index.Program == i,"Index"])
-        for i in database_reader_object.Mapper:
-            result.extend(self.programs_index.loc[self.programs_index.Program == i,"Index"])
-        for i in database_reader_object.Assembler:
-            result.extend(self.programs_index.loc[self.programs_index.Program == i,"Index"])
-        for i in database_reader_object.Analysis:
-            result.extend(self.programs_index.loc[self.programs_index.Program == i,"Index"])
+        result = [[]] * len(database_reader_object.Mapper)
+        result_index = [[]] * len(database_reader_object.Mapper)
 
-        self.workflow.extend(result)
-        self.workflow_index.extend(result_index)
+        if (database_reader_object.Index) != []:
+            for i in range(len(database_reader_object.Index)):
+                result_index[i]= list(self.programs_index.loc[self.programs_index.Program == database_reader_object.Index[i],"Index"])
+        for j in range(len(database_reader_object.Mapper)):
+            print(j)
+            print(database_reader_object.Mapper[j])
+            result[j] = list(self.programs_index.loc[self.programs_index.Program == database_reader_object.Mapper[j],"Index"])
+            result[j].extend(list(self.programs_index.loc[self.programs_index.Program == database_reader_object.Assembler[j],"Index"]))
+            result[j].extend(list(self.programs_index.loc[self.programs_index.Program == database_reader_object.Analysis[j],"Index"]))
+            print(self.programs_connections.iloc[8 - 1,1])
+        #for e in range(len(result)):
+
+        self.Workflow = result
+        self.Workflow_index = result_index
 
     def create_indexing(self, database_reader_object):
         print("Reading program index")
 
-        if self.workflow_index[0] == 8:
+        if self.Workflow_index[0] == 8:
             print("Creating STAR Index workflow")
 
             yaml_file = open("./cwl-tools/docker/STAR_index.yml")
@@ -81,7 +121,7 @@ class logic_builder():
             with open("STAR_index_{0}.yml".format(database_reader_object.Session_ID), "w+") as outfile:
                 yaml.dump(yaml_file, outfile, default_flow_style=False)
 
-        elif self.workflow_index[0] == 4:
+        elif self.Workflow_index[0] == 4:
             pritn("Creating HISAT 2 Index workflow")
             yaml_file = open("./cwl-tools/docker/hisat2_build.yml")
             yaml_file = yaml.load(yaml_file)
