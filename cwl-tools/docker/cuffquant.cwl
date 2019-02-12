@@ -13,27 +13,27 @@ inputs:
         type: string
         inputBinding:
             position: 1
-            prefix: -o 
+            prefix: -o
     threads:
         type: string
         inputBinding:
             position: 2
-            prefix: -p 
+            prefix: -p
     bias_correction:
         type: File?
         inputBinding:
             position: 3
-            prefix: -b 
+            prefix: -b
     multi_read_correct:
         type: string?
         inputBinding:
             position: 4
-            prefix: -u 
+            prefix: -u
     libType:
         type: string?
         inputBinding:
             prefix: –library-type
-            position: 5 
+            position: 5
     frag_mean_len:
         type: string?
         inputBinding:
@@ -57,3 +57,18 @@ inputs:
         type: File
         inputBinding:
             position: 10
+
+outputs:
+   output:
+      type: Directory
+      outputBinding:
+         glob: $(inputs.output)
+   cxb_out:
+      type: File
+      outputBinding:
+         glob: $(inputs.output+"/abundances.cxb")
+         outputEval: |
+          ${
+            self[0].basename = inputs.output + '.cxb';
+            return self[0]
+          }
