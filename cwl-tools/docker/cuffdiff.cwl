@@ -2,11 +2,22 @@
 
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: cuffdiff
+baseCommand: mkdir
+
+requirements:
+    ShellCommandRequirement: {}
 
 hints:
-   DockerRequirement:
-       dockerPull: machalen/cufflinksdocker:latest
+    DockerRequirement:
+        dockerPull: machalen/cufflinksdocker:latest
+
+arguments:
+   - position: -4
+     valueFrom: $(inputs.output)
+   - position: -3
+     prefix: "&&"
+     valueFrom: "cuffdiff"
+     shellQuote: false
 
 inputs:
    output:
@@ -29,12 +40,12 @@ inputs:
       type: string?
       inputBinding:
          position: 4
-         prefix: –total-hits-norm
+         prefix: --total-hits-norm
    compatible_only:
       type: string?
       inputBinding:
          position: 5
-         prefix: –compatible-hits-norm
+         prefix: --compatible-hits-norm
    bias_correction:
       type: File?
       inputBinding:
@@ -49,17 +60,17 @@ inputs:
       type: string
       inputBinding:
          position: 8
-         prefix: –FDR
+         prefix: --FDR
    libType:
       type: string
       inputBinding:
          position: 9
-         prefix: –library-type
+         prefix: --library-type
    libNorm:
       type: string
       inputBinding:
          position: 10
-         prefix: –library-norm-method
+         prefix: --library-norm-method
    gtf_file:
       type: File
       inputBinding:
@@ -70,12 +81,14 @@ inputs:
          itemSeparator: ","
          separate: false
          position: 12
+         prefix: ""
    condition2_files:
       type: File[]
       inputBinding:
          itemSeparator: ","
          separate: false
          position: 13
+         prefix: ""
 
 outputs:
    output:

@@ -1,0 +1,9 @@
+output: "cuffdiff_out"
+threads: "12"
+gtf_file:
+    class: File
+    path: ./merged/merged.gtf
+condition1_files:
+   - {class: File, path: ./normal1/abundances.cxb}
+condition2_files:
+   - {class: File, path: ./tumour1/abundances.cxb}
