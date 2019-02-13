@@ -13,4 +13,4 @@ sjdbGTFfeatureExon	exon
 sjdbGTFtagExonParentTranscript	transcript_id
 sjdbGTFtagExonParentGene	gene_id
 sjdbInsertSave	Basic
-genomeFileSizes	262747 54453
+genomeFileSizes	262948 56103

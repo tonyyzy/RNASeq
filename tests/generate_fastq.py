@@ -41,19 +41,23 @@ if __name__ == "__main__":
 
 	file1 = open("./test1.1.fastq", "w")
 	file2 = open("./test1.2.fastq", "w")
-	fake_pairend(exon1, 10)
-	fake_pairend(exon2_1, 90)
+	fake_pairend(exon1, 70)
+	fake_pairend(exon2_1, 1000)
+	fake_pairend(exon2_2, 50)
 
 	file1 = open("./test2.1.fastq", "w")
 	file2 = open("./test2.2.fastq", "w")
-	fake_pairend(exon1, 70)
-	fake_pairend(exon2_2, 91)
+	fake_pairend(exon1, 400)
+	fake_pairend(exon2_2, 50)
+	fake_pairend(exon2_1, 10)
 
 	file1 = open("./test3.fastq", "w")
-	fake_single(exon1, 15)
-	fake_single(exon2_1, 87)
+	fake_single(exon1, 50)
+	fake_single(exon2_1, 1550)
+	fake_single(exon2_2, 30)
 
 	file1 = open("./test4.fastq", "w")
-	fake_single(exon1, 77)
-	fake_single(exon2_2, 93)
+	fake_single(exon1, 300)
+	fake_single(exon2_2, 70)
+	fake_single(exon2_1, 20)
 

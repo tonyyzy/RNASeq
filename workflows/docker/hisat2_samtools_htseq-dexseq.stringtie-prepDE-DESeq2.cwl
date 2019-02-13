@@ -23,6 +23,8 @@ inputs:
   htseq_prepare_script: File
   htseq_count_script: File
   dexseq_script: File
+  prepDE_script: File
+  DESeq2_script: File
   metadata: File
 
 outputs:
@@ -41,6 +43,15 @@ outputs:
   dexseq_out:
     type: Directory
     outputSource: dexseq_folder/out
+  stringtie_out:
+    type: Directory
+    outputSource: stringtie_folder/out
+  prepDE_out:
+    type: Directory
+    outputSource: prepDE_folder/out
+  DESeq2_out:
+    type: Directory
+    outputSource: DESeq2_folder/out
 
 steps:
   hisat2_align_1:
@@ -296,4 +307,98 @@ steps:
       item: dexseq/output
       name:
         valueFrom: "DEXSeq"
+    out: [out]
+
+#Stringtie
+  stringtie_1:
+    run: ../../cwl-tools/docker/stringtie.cwl
+    in:
+      input_bam: samtools_1/samtools_out
+      threads: threads
+      annotation: annotation
+      outfilename:
+        source: [subject_name1]
+        valueFrom: $(self + '.gtf')
+    out: [stringtie_out]
+
+  stringtie_2:
+    run: ../../cwl-tools/docker/stringtie.cwl
+    in:
+      input_bam: samtools_2/samtools_out
+      threads: threads
+      annotation: annotation
+      outfilename:
+        source: [subject_name2]
+        valueFrom: $(self + '.gtf')
+    out: [stringtie_out]
+
+  stringtie_3:
+    run: ../../cwl-tools/docker/stringtie.cwl
+    in:
+      input_bam: samtools_3/samtools_out
+      threads: threads
+      annotation: annotation
+      outfilename:
+        source: [subject_name3]
+        valueFrom: $(self + '.gtf')
+    out: [stringtie_out]
+
+  stringtie_4:
+    run: ../../cwl-tools/docker/stringtie.cwl
+    in:
+      input_bam: samtools_4/samtools_out
+      threads: threads
+      annotation: annotation
+      outfilename:
+        source: [subject_name4]
+        valueFrom: $(self + '.gtf')
+    out: [stringtie_out]
+
+  stringtie_folder:
+    run: ../../cwl-tools/folder.cwl
+    in:
+      item:
+      - stringtie_1/stringtie_out
+      - stringtie_2/stringtie_out
+      - stringtie_3/stringtie_out
+      - stringtie_4/stringtie_out
+      name:
+        valueFrom: "stringtie"
+    out: [out]
+  
+  prepDE:
+    run: ../../cwl-tools/docker/prepDE.cwl
+    in:
+     program: prepDE_script
+     gtfs: 
+     - stringtie_1/stringtie_out
+     - stringtie_2/stringtie_out
+     - stringtie_3/stringtie_out
+     - stringtie_4/stringtie_out
+    out: [gene_output, transcript_output]
+  
+  prepDE_folder:
+    run: ../../cwl-tools/folder.cwl
+    in:
+      item:
+      - prepDE/gene_output
+      - prepDE/transcript_output
+      name: 
+        valueFrom: "prepDE"
+    out: [out]
+
+  DESeq2:
+    run: ../../cwl-tools/docker/DESeq2.cwl
+    in:
+      script: DESeq2_script
+      count_matrix: prepDE/gene_output
+      metadata: metadata
+    out: [DESeq2_out]
+  
+  DESeq2_folder:
+    run: ../../cwl-tools/folder.cwl
+    in:
+      item: DESeq2/DESeq2_out
+      name:
+        valueFrom: "DESeq2"
     out: [out]

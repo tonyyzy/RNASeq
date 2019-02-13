@@ -20,18 +20,29 @@ inputs:
   fastq2: File[]
   fastq3: File[]
   fastq4: File[]
+  prepDE_script: File
+  DESeq2_script: File
   htseq_prepare_script: File
   htseq_count_script: File
   dexseq_script: File
   metadata: File
 
 outputs:
-  hisat2_align_out:
+  star_readmap_out:
     type: Directory
-    outputSource: hisat2_align_folder/out
+    outputSource: star_folder/out
   samtools_out:
     type: Directory
     outputSource: samtools_folder/out
+  stringtie_out:
+    type: Directory
+    outputSource: stringtie_folder/out
+  prepDE_out:
+    type: Directory
+    outputSource: prepDE_folder/out
+  DESeq2_out:
+    type: Directory
+    outputSource: DESeq2_folder/out
   htseq_prepare_out:
     type: Directory
     outputSource: htseq_prepare_folder/out
@@ -41,125 +52,94 @@ outputs:
   dexseq_out:
     type: Directory
     outputSource: dexseq_folder/out
-
 steps:
-  hisat2_align_1:
-    run: ../../cwl-tools/docker/hisat2_align.cwl
+# STAR
+  star_readmap_1:
+    run: ../../cwl-tools/docker/STAR_readmap.cwl
     in:
       threads: threads
-      index_directory: genomeDir
-      first_pair:
-        source: fastq1
-        valueFrom: $(self[0])
-      second_pair:
-        source: fastq1
-        valueFrom: $(self[1])
-      sam_name:
-        source: subject_name1
-        valueFrom: $(self + '.sam')
-    out: [sam_output, hisat2_align_out]
-  
-  hisat2_align_2:
-    run: ../../cwl-tools/docker/hisat2_align.cwl
+      genomeDir: genomeDir
+      readFilesIn: fastq1
+      outFileNamePrefix: subject_name1
+    out: [sam_output, star_read_out]
+
+  star_readmap_2:
+    run: ../../cwl-tools/docker/STAR_readmap.cwl
     in:
       threads: threads
-      index_directory: genomeDir
-      first_pair:
-        source: fastq2
-        valueFrom: $(self[0])
-      second_pair:
-        source: fastq2
-        valueFrom: $(self[1])
-      sam_name:
-        source: subject_name2
-        valueFrom: $(self + '.sam')
-    out: [sam_output, hisat2_align_out]
-  
-  hisat2_align_3:
-    run: ../../cwl-tools/docker/hisat2_align.cwl
+      genomeDir: genomeDir
+      readFilesIn: fastq2
+      outFileNamePrefix: subject_name2
+    out: [sam_output, star_read_out]
+  star_readmap_3:
+    run: ../../cwl-tools/docker/STAR_readmap.cwl
     in:
       threads: threads
-      index_directory: genomeDir
-      # first_pair:
-      #   source: fastq2
-      #   valueFrom: $(self[0])
-      # second_pair:
-      #   source: fastq2
-      #   valueFrom: $(self[1])
-      single_file: fastq3
-      sam_name:
-        source: subject_name3
-        valueFrom: $(self + '.sam')
-    out: [sam_output, hisat2_align_out]
-  
-  hisat2_align_4:
-    run: ../../cwl-tools/docker/hisat2_align.cwl
+      genomeDir: genomeDir
+      readFilesIn: fastq3
+      outFileNamePrefix: subject_name3
+    out: [sam_output, star_read_out]
+  star_readmap_4:
+    run: ../../cwl-tools/docker/STAR_readmap.cwl
     in:
       threads: threads
-      index_directory: genomeDir
-      # first_pair:
-      #   source: fastq2
-      #   valueFrom: $(self[0])
-      # second_pair:
-      #   source: fastq2
-      #   valueFrom: $(self[1])
-      single_file: fastq4
-      sam_name:
-        source: subject_name4
-        valueFrom: $(self + '.sam')
-    out: [sam_output, hisat2_align_out]
-  
-  hisat2_align_folder:
+      genomeDir: genomeDir
+      readFilesIn: fastq4
+      outFileNamePrefix: subject_name4
+    out: [sam_output, star_read_out]
+
+  star_folder:
     run: ../../cwl-tools/folder.cwl
     in:
       item:
-      - hisat2_align_1/hisat2_align_out
-      - hisat2_align_2/hisat2_align_out
-      - hisat2_align_3/hisat2_align_out
-      - hisat2_align_4/hisat2_align_out
+      - star_readmap_1/star_read_out
+      - star_readmap_2/star_read_out
+      - star_readmap_3/star_read_out
+      - star_readmap_4/star_read_out
       name:
-        valueFrom: "hisat2"
+        valueFrom: "star"
     out: [out]
+  
 
 # Samtools
   samtools_1:
     run: ../../cwl-tools/docker/samtools.cwl
     in:
-      samfile: hisat2_align_1/sam_output
+      samfile: star_readmap_1/sam_output
       threads: threads
       outfilename:
         source: [subject_name1]
-        valueFrom: $(self + '.bam')
+        valueFrom: $(self + ".bam")
     out: [samtools_out]
 
   samtools_2:
     run: ../../cwl-tools/docker/samtools.cwl
     in:
-      samfile: hisat2_align_2/sam_output
+      samfile: star_readmap_2/sam_output
       threads: threads
       outfilename:
         source: [subject_name2]
-        valueFrom: $(self + '.bam')
+        valueFrom: $(self + ".bam")
     out: [samtools_out]
 
   samtools_3:
     run: ../../cwl-tools/docker/samtools.cwl
     in:
-      samfile: hisat2_align_3/sam_output
+      samfile: star_readmap_3/sam_output
       threads: threads
       outfilename:
         source: [subject_name3]
-        valueFrom: $(self + '.bam')
+        valueFrom: $(self + ".bam")
     out: [samtools_out]
 
   samtools_4:
     run: ../../cwl-tools/docker/samtools.cwl
     in:
-      samfile: hisat2_align_4/sam_output
+      samfile: star_readmap_4/sam_output
       threads: threads
       outfilename:
         source: [subject_name4]
-        valueFrom: $(self + '.bam')
+        valueFrom: $(self + ".bam")
     out: [samtools_out]
 
   samtools_folder:
@@ -174,6 +154,100 @@ steps:
         valueFrom: "samtools"
     out: [out]
 
+#Stringtie
+  stringtie_1:
+    run: ../../cwl-tools/docker/stringtie.cwl
+    in:
+      input_bam: samtools_1/samtools_out
+      threads: threads
+      annotation: annotation
+      outfilename:
+        source: [subject_name1]
+        valueFrom: $(self + ".gtf")
+    out: [stringtie_out]
+
+  stringtie_2:
+    run: ../../cwl-tools/docker/stringtie.cwl
+    in:
+      input_bam: samtools_2/samtools_out
+      threads: threads
+      annotation: annotation
+      outfilename:
+        source: [subject_name2]
+        valueFrom: $(self + ".gtf")
+    out: [stringtie_out]
+
+  stringtie_3:
+    run: ../../cwl-tools/docker/stringtie.cwl
+    in:
+      input_bam: samtools_3/samtools_out
+      threads: threads
+      annotation: annotation
+      outfilename:
+        source: [subject_name3]
+        valueFrom: $(self + ".gtf")
+    out: [stringtie_out]
+
+  stringtie_4:
+    run: ../../cwl-tools/docker/stringtie.cwl
+    in:
+      input_bam: samtools_4/samtools_out
+      threads: threads
+      annotation: annotation
+      outfilename:
+        source: [subject_name4]
+        valueFrom: $(self + ".gtf")
+    out: [stringtie_out]
+
+  stringtie_folder:
+    run: ../../cwl-tools/folder.cwl
+    in:
+      item:
+      - stringtie_1/stringtie_out
+      - stringtie_2/stringtie_out
+      - stringtie_3/stringtie_out
+      - stringtie_4/stringtie_out
+      name:
+        valueFrom: "stringtie"
+    out: [out]
+  
+  prepDE:
+    run: ../../cwl-tools/docker/prepDE.cwl
+    in:
+      program: prepDE_script
+      gtfs:
+      - stringtie_1/stringtie_out
+      - stringtie_2/stringtie_out
+      - stringtie_3/stringtie_out
+      - stringtie_4/stringtie_out
+    out: [gene_output, transcript_output]
+  
+  prepDE_folder:
+    run: ../../cwl-tools/folder.cwl
+    in:
+      item:
+      - prepDE/gene_output
+      - prepDE/transcript_output
+      name: 
+        valueFrom: "prepDE"
+    out: [out]
+
+  DESeq2:
+    run: ../../cwl-tools/docker/DESeq2.cwl
+    in:
+      script: DESeq2_script
+      count_matrix: prepDE/gene_output
+      metadata: metadata
+    out: [DESeq2_out]
+  
+  DESeq2_folder:
+    run: ../../cwl-tools/folder.cwl
+    in:
+      item: DESeq2/DESeq2_out
+      name:
+        valueFrom: "DESeq2"
+    out: [out]
+
   htseq_prepare:
     run: ../../cwl-tools/docker/htseq_prepare.cwl
     in:
@@ -181,7 +255,7 @@ steps:
       gtf: annotation
       gff_name:
         source: [annotation]
-        valueFrom: $(self.nameroot + '.gff')
+        valueFrom: $(self.nameroot + ".gff")
     out: [output]
   
   htseq_prepare_folder:
@@ -208,7 +282,7 @@ steps:
       sam: samtools_1/samtools_out
       outname:
         source: [subject_name1]
-        valueFrom: $(self + '_htseq_count.csv')
+        valueFrom: $(self + "_htseq_count.csv")
     out: [output]
 
 
@@ -228,7 +302,7 @@ steps:
       sam: samtools_2/samtools_out
       outname:
         source: [subject_name2]
-        valueFrom: $(self + '_htseq_count.csv')
+        valueFrom: $(self + "_htseq_count.csv")
     out: [output]
 
   htseq_count_3:
@@ -247,7 +321,7 @@ steps:
       sam: samtools_3/samtools_out
       outname:
         source: [subject_name3]
-        valueFrom: $(self + '_htseq_count.csv')
+        valueFrom: $(self + "_htseq_count.csv")
     out: [output]
   
   htseq_count_4:
@@ -266,7 +340,7 @@ steps:
       sam: samtools_4/samtools_out
       outname:
         source: [subject_name4]
-        valueFrom: $(self + '_htseq_count.csv')
+        valueFrom: $(self + "_htseq_count.csv")
     out: [output]
 
   htseq_count_folder:
@@ -280,7 +354,7 @@ steps:
       name:
         valueFrom: "htseq_count"
     out: [out]
-  
+
   dexseq:
     run: ../../cwl-tools/docker/dexseq.cwl
     in:
