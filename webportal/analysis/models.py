@@ -30,7 +30,7 @@ class Conditions(models.Model):
     no_replicates = models.PositiveSmallIntegerField(blank=False, default=1)
 
     def get_absolute_url(self):
-        return reverse('analysis:conditions_detail', kwargs={'pk':self.pk})
+        return reverse('analysis:session_detail', kwargs={'pk':self.pk})
 
     # def __str__(self):
         # return self.conditions
@@ -62,7 +62,7 @@ class Workflow(models.Model):
     ASSEMLBER_CHOICES = (
         ("STRINGTIE", "STRINGTIE"),
     )
-    session = models.ForeignKey(Session, on_delete=models.PROTECT)
+    session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='workflow')
     index = models.CharField(max_length=200, choices=INDEX_CHOICES)
     mapper = models.CharField(max_length=200, choices=MAPPER_CHOICES)
     assembler = models.CharField(max_length=200, choices=ASSEMLBER_CHOICES, blank=True)
@@ -70,4 +70,4 @@ class Workflow(models.Model):
     status = models.BooleanField(default=False, null=False)
 
     def get_absolute_url(self):
-        return reverse('analysis:workflow_list')
+        return reverse('analysis:session_detail', kwargs={'pk':self.pk})

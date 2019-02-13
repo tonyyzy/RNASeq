@@ -11,30 +11,36 @@
     {% block body %}
     <div class="jumbotron">
       <h3> Session {{ session_detail.pk}} Details </h3>
-      <hr class="my-4">
+      <hr class="my-1">
         <!-- <p>{{session_detail.identifier}}</p> -->
         <p>Organism: {{session_detail.organism}}</p>
         <p>Genome: {{session_detail.genome}}</p>
         <p>Genome File: {{session_detail.fasta_file}}</p>
         <p>Annotation File: {{session_detail.annotation_file}}</p>
-        <a class='btn btn-warning' href="{% url 'analysis:session_update' pk=session_detail.pk %}">Update</a>
-        <a class='btn btn-danger' href="{% url 'analysis:session_delete' pk=session_detail.pk %}">Delete</a>
+
       </p>
       <br>
+      <!-- CONDITIONS -->
       {% if session_detail.conditions.all %}
         <p class='lead'>Session Conditions:</p>
         <table class="table mb-1 condition_table">
           <thead>
             <tr>
+              <th>Con Obj</th>
               <th>Condition</th>
               <th>Replicates</th>
+              <th>Update</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
               {% for condition in session_detail.conditions.all %}
               <tr>
+                <td>{{ condition }}</td>
                 <td>{{ condition.conditions }}</td>
                 <td>{{ condition.no_replicates }}</td>
+                <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:conditions_update' pk=condition.pk %}">Update</a></td>
+                <td><a class='btn btn-sm btn-danger' href="{% url 'analysis:conditions_delete' pk=condition.pk %}">Delete</a></td>
               </tr>
             {% endfor %}
           </tbody>
@@ -42,11 +48,84 @@
       {% endif %}
 
       {% if not session_detail.conditions.all %}
-        <h2>No conditions defined.</h2>
+        <h3>No conditions defined.</h3>
       {% endif %}
       <a class='btn btn-success' href="{% url 'analysis:conditions_create' pk=session_detail.pk %}">Add Condition</a>
+      <br><br>
+
+      <!-- SAMPLES -->
+      {% if samples %}
+      <p class='lead'>Session Samples:</p>
+      <table class="table mb-1 condition_table">
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Condition Obj</th>
+            <th>Condition</th>
+            <th>Library</th>
+            <th>Read 1</th>
+            <th>Read 2</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sample in samples %}
+          <tr>
+            <td>{{sample.pk}}</td>
+            <td>{{ sample.condition }}</td>
+            <td>{{ sample.condition.conditions }}</td>
+            <td>{{ sample.libtype }}</td>
+            <td>{{ sample.read_1 }}</td>
+            <td>{{ sample.read_2 }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+
+      {% if not samples %}
+        <p>No Current Samples</p>
+      {% endif %}
+
+<br><br>
+        <!-- WORKFLOW -->
+        {% if session_detail.workflow.all %}
+        <p class='lead'>Session Workflow:</p>
+        <table class="table mb-1 condition_table">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Index</th>
+              <th>Mapper</th>
+              <th>Assembler</th>
+              <th>Analysis</th>
+              <th>Status</th>
+              <th>Update</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for workflow in session_detail.workflow.all %}
+            <tr>
+              <td>{{workflow.pk}}</td>
+              <td>{{ workflow.index }}</td>
+              <td>{{ workflow.mapper }}</td>
+              <td>{{ workflow.assembler }}</td>
+              <td>{{ workflow.analysis }}</td>
+              <td>{{ workflow.status }}</td>
+              <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:workflow_update' pk=workflow.pk %}">Update</a></td>
+              <td><a class='btn btn-sm btn-danger' href="{% url 'analysis:workflow_delete' pk=workflow.pk %}">Delete</a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+        {% if not session_detail.workflow.all %}
+          <h3>No Workflows defined.</h3>
+        {% endif %}
+        <a class='btn btn-success' href="{% url 'analysis:workflow_create' pk=session_detail.pk %}">Add Workflow</a>
 
     </div>
   {% endblock %}
   </body>
 </html>
+<td><a class='btn btn-success btn-sm' href="{% url 'analysis:workflow_create' pk=session_detail.pk %}">upload</a></td>
