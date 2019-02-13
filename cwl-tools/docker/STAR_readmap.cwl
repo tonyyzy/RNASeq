@@ -9,14 +9,13 @@ requirements:
 arguments:
   - position: 0
     shellQuote: False
-    valueFrom: $("mkdir " + inputs.outFileNamePrefix + " && cd " + inputs.outFileNamePrefix + " && STAR ")
+    valueFrom: "$('mkdir ' + inputs.outFileNamePrefix + ' && cd ' + inputs.outFileNamePrefix + ' && STAR ')"
   - position: 5
-    valueFrom: |
-      ${
-        if (inputs.readFilesIn[0].nameext == ".gz"){
-          return "--readFilesCommand gunzip -c";}
-          return "";
-      }
+    valueFrom: "${
+        if (inputs.readFilesIn[0].nameext == '.gz'){
+          return '--readFilesCommand gunzip -c'}
+          return '';
+      }"
 
 hints:
   DockerRequirement:
