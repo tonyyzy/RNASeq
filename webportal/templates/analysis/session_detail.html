@@ -27,6 +27,7 @@
           <thead>
             <tr>
               <th>Con Obj</th>
+              <th>Key</th>
               <th>Condition</th>
               <th>Replicates</th>
               <th>Update</th>
@@ -37,9 +38,10 @@
               {% for condition in session_detail.conditions.all %}
               <tr>
                 <td>{{ condition }}</td>
+                <td>{{ condition.pk }}</td>
                 <td>{{ condition.conditions }}</td>
                 <td>{{ condition.no_replicates }}</td>
-                <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:conditions_update' pk=condition.pk %}">Update</a></td>
+                <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:conditions_update' pk=condition.session.pk id=condition.pk %}">Update</a></td>
                 <td><a class='btn btn-sm btn-danger' href="{% url 'analysis:conditions_delete' pk=condition.pk %}">Delete</a></td>
               </tr>
             {% endfor %}

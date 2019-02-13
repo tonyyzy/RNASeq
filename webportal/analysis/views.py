@@ -14,7 +14,6 @@ from django.views.generic import (View,TemplateView,
                                 UpdateView)
 
 
-###### Class based views ######
 # Session
 class SessionIndexView(View):
     def get(self, request):
@@ -108,7 +107,6 @@ class ConditionsCreateView(CreateView):
         form = ConditionsForm
         context = {'form':form}
         return render(request, self.template_name, context)
-        print('\nFORM WAS VALID: POST.SESSION:')
 
     def post(self, request, pk):
         form = ConditionsForm(request.POST)
@@ -116,8 +114,8 @@ class ConditionsCreateView(CreateView):
         if form.is_valid():
             post = form.save(commit=False)
             sessions = Session.objects.all()
-            adjusted_pk = self.kwargs.get('pk')-1 # python index 1st session from 0
-            # print(f'\n{sessions[adjusted_pk]}') # returns a session object NOT a string!
+            adjusted_pk = self.kwargs.get('pk')-1 # database object starts index from 1 not 0
+            # print(f'\n{sessions[adjusted_pk]}') # returns a session object NOT a string
             post.session = sessions[adjusted_pk]
             post.save()
             return redirect('analysis:session_detail', pk)
@@ -126,8 +124,33 @@ class ConditionsCreateView(CreateView):
 
 
 class ConditionsUpdateView(UpdateView):
-    fields = ('conditions','no_replicates',)
-    model = models.Conditions
+    # fields = ('conditions','no_replicates',)
+    # model = models.Conditions
+    template_name = 'analysis/conditions_form.html'
+    # queryset = Conditions.objects.all()
+
+    def get(self, request, pk, id):
+        form = ConditionsForm
+        context = {'form':form, 'pk':pk, 'id':id}
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk, id):
+        form = ConditionsForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            conditions = Conditions.objects.all()
+            # pk = self.kwargs.get('id') # database object starts index from 1 not 0
+            print(f'\n{id}')
+            # print(f'\n{conditions[adjusted_pk]}') # returns a session object NOT a string
+            # post.session = conditions[adjusted_pk]
+            # post.save()
+            return redirect('analysis:session_detail', pk)
+        return render(request, self.template_name, {'form':form})
+# in the old version we moved from session_detai/1 page to conditions_update/31 and then could not reverse to sesison-detail/1
+# we need to define a pk and an id (perheps better label them to avoid confusion), use the id to adjust the update and the pk to define the reverse
+# good luck
+
+
 
 class ConditionsDeleteView(DeleteView):
     context_object_name = 'condition'
