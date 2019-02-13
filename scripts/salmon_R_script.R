@@ -57,16 +57,19 @@ if(nrow(samples) == length(files)){
     exon_version_df <- exon_version_df[!duplicated(exon_version_df$WithVersion),]
   }
   exon_version_df <- exon_version_df[!is.na(exon_version_df$WithVersion),]
-  
+
   k <- keys(TxDb, keytype = "TXNAME")
   tx2gene <- AnnotationDbi::select(TxDb, k,"GENEID", "TXNAME")
   tx2gene <- left_join(exon_version_df,tx2gene, by = "TXNAME")
   tx2gene <- tx2gene[!is.na(tx2gene$GENEID),]
   tx2gene$TXNAME <- NULL
   colnames(tx2gene) <- c("TXNAME", "GENEID")
-  
+
   txi <- tximport(files, type="salmon", tx2gene=tx2gene, dropInfReps=TRUE)
-  write.csv(txi$counts, "gene_count_matrix.csv")
+  counts <- round(txi$counts,0)
+  write.csv(counts, "gene_count_matrix.csv")
+  write.csv(txi$length, "gene_length_matrix.csv")
+  write.csv(txi$abundance, "gene_abundance_matrix.csv")
 } else {
   stop("Different number of samples, should be same number of salmon directories to samples in metadata")
 }

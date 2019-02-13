@@ -2,14 +2,21 @@
 
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: cuffnorm
+baseCommand: mkdir
+
+requirements:
+    ShellCommandRequirement: {}
+
+hints:
+    DockerRequirement:
+        dockerPull: machalen/cufflinksdocker:latest
 
 arguments:
   - position: -4
     valueFrom: $(inputs.output)
   - position: -3
     prefix: "&&"
-    valueFrom: "cuffdiff"
+    valueFrom: "cuffnorm"
     shellQuote: false
 
 inputs:
@@ -34,13 +41,6 @@ inputs:
         separate: false
         position: 4
         prefix: ""
-        arguments:
-           - position: -4
-             valueFrom: $(inputs.output)
-           - position: -3
-             prefix: "&&"
-             valueFrom: "cuffdiff"
-             shellQuote: false
   condition2_files:
      type: File[]
      inputBinding:
