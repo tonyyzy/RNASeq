@@ -12,7 +12,7 @@ class database_checker():
     def __init__(self, database_link):
         self.Database = database_link
 
-    def foo(self):
+    def check_and_run(self):
         database = sql.connect(self.Database)
         cur = database.cursor()
         cur.execute("SELECT Session_ID FROM analysis_workflow WHERE Status = 1")
@@ -21,7 +21,7 @@ class database_checker():
             unique_Session_ID = [i[0] for i in set(query_result)]
             for i in unique_Session_ID:
                 self.create_workflow(i)
-        threading.Timer(self.waiting_time, self.foo).start()
+        threading.Timer(self.waiting_time, self.check_and_run).start()
 
     def create_workflow(self, Session_ID):
         reader = database_reader(Session_ID)
@@ -95,13 +95,30 @@ class logic_builder():
             for i in range(len(database_reader_object.Index)):
                 result_index[i]= list(self.programs_index.loc[self.programs_index.Program == database_reader_object.Index[i],"Index"])
         for j in range(len(database_reader_object.Mapper)):
-            print(j)
-            print(database_reader_object.Mapper[j])
             result[j] = list(self.programs_index.loc[self.programs_index.Program == database_reader_object.Mapper[j],"Index"])
             result[j].extend(list(self.programs_index.loc[self.programs_index.Program == database_reader_object.Assembler[j],"Index"]))
             result[j].extend(list(self.programs_index.loc[self.programs_index.Program == database_reader_object.Analysis[j],"Index"]))
-            print(self.programs_connections.iloc[8 - 1,1])
-        #for e in range(len(result)):
+            #print(self.programs_connections.iloc[8 - 1,1][0])
+
+        print(result)
+
+        for e in range(len(result)):
+            for i in range(len(result[e])):
+                values = []
+                pos = []
+                try:
+                    print([result[e][i], result[e][i + 1]])
+                    value = int(self.programs_connections.iloc[result[e][i] - 1, result[e][i + 1]])
+                except:
+                    value = int(self.programs_connections.iloc[result[e][i] - 1, result[e][i + 1]][0])
+                if value == 0:
+                    continue
+                elif value > 0:
+                    print("inserting step")
+                    values.append(value)
+                    pos.append(i)
+                    result[e].insert(i + 1, value)
+
 
         self.Workflow = result
         self.Workflow_index = result_index
