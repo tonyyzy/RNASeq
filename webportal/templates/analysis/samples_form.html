@@ -5,11 +5,12 @@
   <head>
     <meta charset="utf-8">
     {% block head %}
-      <title>Session Form</title>
+      <title>Samples Detail</title>
     {% endblock %}
   </head>
   <body>
     {% block body %}
+    <h1>samples form data entry</h1>
     <div class="jumbotron">
       <form method="POST"  enctype="multipart/form-data">
         {% csrf_token %}

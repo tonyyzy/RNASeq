@@ -9,17 +9,34 @@
   </head>
   <body>
       {% block body %}
-      <h3>current conditions in db</h3>
-
-      {% for condition in conditions_list %}
       <div class="jumbotron">
-        <p>pk: {{ condition.pk }}</p>
-        <p>{{ condition.session }}</p>
-        <p>condition: {{ condition.conditions }}</p>
-        <p>replicates: {{ condition.no_replicates }}</p>
-      </div>
-      {% endfor %}
-
-  {% endblock %}
+      <h3>current conditions in db</h3>
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th>Session</th>
+            <th>identifier</th>
+            <th>Condition</th>
+            <th>Number Replicates</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for condition in conditions_list %}
+            <tr>
+              <td>{{ condition.session }}</td>
+              <td>{{ condition.session.identifier }}</td>
+              <td><a href="conditions_detail/{{ condition.pk }}">{{ condition.conditions }}</a></td>
+              <td>{{ condition.no_replicates }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+  </div>
+    {% endblock %}
   </body>
 </html>
+
+
+<!-- filtering the list view by foreign key -->
+<!-- session1 = Session.objects.get(pk=1) -->
+<!-- session1_conditions = Conditions.objects.filter(session=session1) -->

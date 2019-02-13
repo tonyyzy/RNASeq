@@ -4,13 +4,11 @@
   <head>
     <meta charset="utf-8">
     {% block head %}
-      <title>Session upload list</title>
+      <title>Session list</title>
     {% endblock %}
   </head>
   <body>
     {% block body %}
-
-    <h1>{{ session.organism }}</h1>
     <div class="jumbotron">
       <h3>current sessions in db</h3>
       <table class="table mb-0">
@@ -21,6 +19,8 @@
             <th>Genome</th>
             <th>fasta_file</th>
             <th>annotaiton_file</th>
+            <th>identifier</th>
+
           </tr>
         </thead>
         <tbody>
@@ -31,13 +31,14 @@
               <td>{{ session.genome }}</td>
               <td>{{ session.fasta_file }}</td>
               <td>{{ session.annotation_file }}</td>
+              <td>{{ session.identifier }}</td>
               <td>
               </td>
             </tr>
           {% endfor %}
         </tbody>
     </table>
-
+    <a href="{% url 'analysis:session_create' %}"><button type="submit" class="btn btn-primary" name="button">New Session</button><a>
 
     </div>
   {% endblock %}

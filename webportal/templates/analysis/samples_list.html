@@ -4,36 +4,37 @@
   <head>
     <meta charset="utf-8">
     {% block head %}
-      <title>sample upload list</title>
+      <title>Samples list</title>
     {% endblock %}
   </head>
   <body>
-    {% block body %}
-    <h3>current samples in db</h3>
-    <table class="table mb-0">
-      <thead>
-        <tr>
-          <!-- <th>Cover</th> -->
-          <th>Session</th>
-          <th>condition</th>
-          <th>read_1</th>
-          <th>read_2</th>
-          <!-- <th>Delete</th> -->
-        </tr>
-      </thead>
-      <tbody>
-        {% for sample in samples %}
+      {% block body %}
+      <div class="jumbotron">
+      <h3>current samples in db</h3>
+      <table class="table mb-0">
+        <thead>
           <tr>
-            <td>{{ sample.session }}</td>
-            <td>{{ sample.condition }}</td>
-            <td>{{ sample.read_1 }}</td>
-            <td>{{ sample.read_2 }}</td>
-            <td>
-            </td>
+            <th>Sample Key</th>
+            <th>Library Type</th>
+            <th>Read One</th>
+            <th>Read Two</th>
+            <td>Condition</td>
           </tr>
-        {% endfor %}
-      </tbody>
-  </table>
-  {% endblock %}
+        </thead>
+        <tbody>
+            {% for sample in samples_list %}
+            <tr>
+              <td><a href="samples_detail/{{ sample.pk }}">Sample: {{ sample.pk }}</td></a>
+              <td>{{ sample.libtype }}</td>
+              <td>{{ sample.read_1 }}</td>
+              <td>{{ sample.read_2 }}</td>
+              <td>{{ sample.condition }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+  </div>
+    {% endblock %}
   </body>
 </html>
+<!-- <td><a href="conditions_detail/{{ condition.pk }}">Condition: {{ condition.pk }}</a></td> -->
