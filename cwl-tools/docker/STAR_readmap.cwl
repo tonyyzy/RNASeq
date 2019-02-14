@@ -8,7 +8,6 @@ requirements:
   - class: InlineJavascriptRequirement
 arguments:
   - position: 1
-    # shellQuote: False
     valueFrom: "mkdir"
   - position: 2
     valueFrom: $(inputs.outFileNamePrefix)

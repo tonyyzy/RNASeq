@@ -5,7 +5,7 @@ class: CommandLineTool
 baseCommand: python
 hints:
    DockerRequirement:
-      dockerPull: genomicpariscentre/htseq
+      dockerPull: genomicpariscentre/htseq:0.11.0
 
 inputs:
    input_script:
