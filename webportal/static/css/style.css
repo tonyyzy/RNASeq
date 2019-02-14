@@ -10,6 +10,10 @@ p {
   color: #1b2433;
 }
 
+.text-white{
+  color: #dae0ea;
+  /* text-decoration: line-through; */
+}
 .debug{
   /* border-style: solid; */
   border-radius: 5px;
