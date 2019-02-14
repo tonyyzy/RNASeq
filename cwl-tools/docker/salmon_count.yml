@@ -1,0 +1,12 @@
+inputs: 
+   class: File
+   path: ../../scripts/salmon_R_script.R
+gtf: 
+   class: File
+   path: /path/to/file
+metadata:
+   class: File
+   path: /path/to/file
+salmon_dir:
+   class: Directory
+   path: /path/to/Directory

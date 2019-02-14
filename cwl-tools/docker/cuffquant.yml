@@ -1,0 +1,8 @@
+output: "tumour1.cxb"
+threads: "12"
+merged_gtf:
+  class: File
+  path: ./merged.gtf
+alignment_file:
+  class: File
+  path: ./tumour1.bam

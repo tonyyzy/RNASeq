@@ -29,12 +29,12 @@ outputs:
   hisat2_align_out:
     type: Directory
     outputSource: hisat2_align_folder/out
-  htseq_prepare_out:
-    type: Directory
-    outputSource: htseq_prepare_folder/out
   samtools_out:
     type: Directory
     outputSource: samtools_folder/out
+  htseq_prepare_out:
+    type: Directory
+    outputSource: htseq_prepare_folder/out
   htseq_count_out:
     type: Directory
     outputSource: htseq_count_folder/out
@@ -56,7 +56,7 @@ steps:
         valueFrom: $(self[1])
       sam_name:
         source: subject_name1
-        valueFrom: $(self + ".sam")
+        valueFrom: $(self + '.sam')
     out: [sam_output, hisat2_align_out]
   
   hisat2_align_2:
@@ -72,7 +72,7 @@ steps:
         valueFrom: $(self[1])
       sam_name:
         source: subject_name2
-        valueFrom: $(self + ".sam")
+        valueFrom: $(self + '.sam')
     out: [sam_output, hisat2_align_out]
   
   hisat2_align_3:
@@ -89,7 +89,7 @@ steps:
       single_file: fastq3
       sam_name:
         source: subject_name3
-        valueFrom: $(self + ".sam")
+        valueFrom: $(self + '.sam')
     out: [sam_output, hisat2_align_out]
   
   hisat2_align_4:
@@ -106,34 +106,19 @@ steps:
       single_file: fastq4
       sam_name:
         source: subject_name4
-        valueFrom: $(self + ".sam")
+        valueFrom: $(self + '.sam')
     out: [sam_output, hisat2_align_out]
   
   hisat2_align_folder:
-    run:
-      class: ExpressionTool
-      requirements:
-        InlineJavascriptRequirement: {}
-      inputs:
-        dir1: Directory
-        dir2: Directory
-        dir3: Directory
-        dir4: Directory
-      outputs:
-        out: Directory
-      expression: |
-        ${
-          return {"out": {
-            "class": "Directory",
-            "basename": "hisat2",
-            "listing": [inputs.dir1, inputs.dir2, inputs.dir3, inputs.dir4]
-            } };
-          }
+    run: ../../cwl-tools/folder.cwl
     in:
-      dir1: hisat2_align_1/hisat2_align_out
-      dir2: hisat2_align_2/hisat2_align_out
-      dir3: hisat2_align_3/hisat2_align_out
-      dir4: hisat2_align_4/hisat2_align_out
+      item:
+      - hisat2_align_1/hisat2_align_out
+      - hisat2_align_2/hisat2_align_out
+      - hisat2_align_3/hisat2_align_out
+      - hisat2_align_4/hisat2_align_out
+      name:
+        valueFrom: "hisat2"
     out: [out]
 
 # Samtools
@@ -144,7 +129,7 @@ steps:
       threads: threads
       outfilename:
         source: [subject_name1]
-        valueFrom: $(self + ".bam")
+        valueFrom: $(self + '.bam')
     out: [samtools_out]
 
   samtools_2:
@@ -154,7 +139,7 @@ steps:
       threads: threads
       outfilename:
         source: [subject_name2]
-        valueFrom: $(self + ".bam")
+        valueFrom: $(self + '.bam')
     out: [samtools_out]
 
   samtools_3:
@@ -164,7 +149,7 @@ steps:
       threads: threads
       outfilename:
         source: [subject_name3]
-        valueFrom: $(self + ".bam")
+        valueFrom: $(self + '.bam')
     out: [samtools_out]
 
   samtools_4:
@@ -174,34 +159,19 @@ steps:
       threads: threads
       outfilename:
         source: [subject_name4]
-        valueFrom: $(self + ".bam")
+        valueFrom: $(self + '.bam')
     out: [samtools_out]
 
   samtools_folder:
-    run:
-      class: ExpressionTool
-      requirements:
-        InlineJavascriptRequirement: {}
-      inputs:
-        file1: File
-        file2: File
-        file3: File
-        file4: File
-      outputs:
-        out: Directory
-      expression: |
-        ${
-          return {"out": {
-            "class": "Directory",
-            "basename": "samtools",
-            "listing": [inputs.file1, inputs.file2, inputs.file3, inputs.file4]
-            } };
-          }
+    run: ../../cwl-tools/folder.cwl
     in:
-      file1: samtools_1/samtools_out
-      file2: samtools_2/samtools_out
-      file3: samtools_3/samtools_out
-      file4: samtools_4/samtools_out
+      item:
+      - samtools_1/samtools_out
+      - samtools_2/samtools_out
+      - samtools_3/samtools_out
+      - samtools_4/samtools_out
+      name:
+        valueFrom: "samtools"
     out: [out]
 
   htseq_prepare:
@@ -211,28 +181,15 @@ steps:
       gtf: annotation
       gff_name:
         source: [annotation]
-        valueFrom: $(self.nameroot + ".gff")
+        valueFrom: $(self.nameroot + '.gff')
     out: [output]
   
   htseq_prepare_folder:
-    run:
-      class: ExpressionTool
-      requirements:
-        InlineJavascriptRequirement: {}
-      inputs:
-        file: File
-      outputs:
-        out: Directory
-      expression: |
-        ${
-          return {"out": {
-            "class": "Directory",
-            "basename": "htseq_prepare",
-            "listing": [inputs.file]
-            } };
-          }
+    run: ../../cwl-tools/folder.cwl
     in:
-      file: htseq_prepare/output
+      item: htseq_prepare/output
+      name:
+        valueFrom: "htseq_prepare"
     out: [out]
 
   htseq_count_1:
@@ -251,7 +208,7 @@ steps:
       sam: samtools_1/samtools_out
       outname:
         source: [subject_name1]
-        valueFrom: $(self + "_htseq_count.csv")
+        valueFrom: $(self + '_htseq_count.csv')
     out: [output]
 
 
@@ -271,7 +228,7 @@ steps:
       sam: samtools_2/samtools_out
       outname:
         source: [subject_name2]
-        valueFrom: $(self + "_htseq_count.csv")
+        valueFrom: $(self + '_htseq_count.csv')
     out: [output]
 
   htseq_count_3:
@@ -290,7 +247,7 @@ steps:
       sam: samtools_3/samtools_out
       outname:
         source: [subject_name3]
-        valueFrom: $(self + "_htseq_count.csv")
+        valueFrom: $(self + '_htseq_count.csv')
     out: [output]
   
   htseq_count_4:
@@ -309,34 +266,19 @@ steps:
       sam: samtools_4/samtools_out
       outname:
         source: [subject_name4]
-        valueFrom: $(self + "_htseq_count.csv")
+        valueFrom: $(self + '_htseq_count.csv')
     out: [output]
 
   htseq_count_folder:
-    run:
-      class: ExpressionTool
-      requirements:
-        InlineJavascriptRequirement: {}
-      inputs:
-        file1: File
-        file2: File
-        file3: File
-        file4: File
-      outputs:
-        out: Directory
-      expression: |
-        ${
-          return {"out": {
-            "class": "Directory",
-            "basename": "htseq_count",
-            "listing": [inputs.file1, inputs.file2, inputs.file3, inputs.file4]
-            } };
-          }
+    run: ../../cwl-tools/folder.cwl
     in:
-      file1: htseq_count_1/output
-      file2: htseq_count_2/output
-      file3: htseq_count_3/output
-      file4: htseq_count_4/output
+      item:
+      - htseq_count_1/output
+      - htseq_count_2/output
+      - htseq_count_3/output
+      - htseq_count_4/output
+      name:
+        valueFrom: "htseq_count"
     out: [out]
   
   dexseq:
@@ -349,22 +291,9 @@ steps:
     out: [output]
   
   dexseq_folder:
-    run:
-      class: ExpressionTool
-      requirements:
-        InlineJavascriptRequirement: {}
-      inputs:
-        file: File
-      outputs:
-        out: Directory
-      expression: |
-        ${
-          return {"out": {
-            "class": "Directory",
-            "basename": "DEXSeq",
-            "listing": [inputs.file]
-            } };
-          }
+    run: ../../cwl-tools/folder.cwl
     in:
-      file: dexseq/output
+      item: dexseq/output
+      name:
+        valueFrom: "DEXSeq"
     out: [out]

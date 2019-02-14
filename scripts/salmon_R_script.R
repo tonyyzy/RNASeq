@@ -1,9 +1,10 @@
 # ./salmon_R_script.R --gtf FILE --metadata FILE --salmon_dir PATH
 
-library(tximport)
-library(GenomicAlignments)
-library(GenomicFeatures)
-library(dplyr)
+suppressMessages(library(tximport))
+suppressMessages(library(GenomicAlignments))
+suppressMessages(library(GenomicFeatures))
+suppressMessages(library(dplyr))
+suppressMessages(library(rtracklayer))
 
 args <- commandArgs( trailingOnly=TRUE )
 
@@ -12,7 +13,7 @@ if ("--gtf" %in% args) {
   gtf.file.path <- args[ gtf.file.idx+1 ]
   if (file.exists(gtf.file.path)) {
     cat("\nLoading _serialised_ 'gtf' from \"",gtf.file.path,"\" ... ", sep="")
-    TxDb <- makeTxDbFromGFF(file,format="gtf")
+    TxDb <- makeTxDbFromGFF(gtf.file.path,format="gtf")
     cat("done\n")
   } else {
     cat("\nLocation of file containing 'gtf': \"",gtf.file.path,"\"\n", sep="")
@@ -25,7 +26,7 @@ if ("--metadata" %in% args) {
   metadata.file.path <- args[ metadata.file.idx+1 ]
   if (file.exists(metadata.file.path)) {
     cat("\nLoading _serialised_ 'metadata' from \"",metadata.file.path,"\" ... ", sep="")
-    samples <- read.table(metadata, header=TRUE, row.names = 1, sep = ",")
+    samples <- read.table(metadata.file.path, header=TRUE, row.names = 1, sep = ",")
     cat("done\n")
   } else {
     cat("\nLocation of file containing 'metadata': \"",metadata.file.path,"\"\n", sep="")
@@ -34,14 +35,14 @@ if ("--metadata" %in% args) {
 }
 
 if ("--salmon_dir" %in% args) {
-  salmon_dir.file.idx  <- grep("--salmon_dir", args)
-  salmon_dir.file.path <- args[ salmon_dir.file.idx+1 ]
-  if (file.exists(salmon_dir.file.path)) {
-    cat("\nLoading _serialised_ 'salmon_dir' from \"",salmon_dir.file.path,"\" ... ", sep="")
-    files <- file.path(salmon_dir, rownames(samples), "quant.sf")
+  salmon_dir.idx  <- grep("--salmon_dir", args)
+  salmon_dir.path <- args[ salmon_dir.idx+1 ]
+  if (file.exists(salmon_dir.path)) {
+    cat("\nLoading _serialised_ 'salmon_dir' from \"",salmon_dir.path,"\" ... ", sep="")
+    files <- file.path(salmon_dir.path, rownames(samples), "quant.sf")
     cat("done\n")
   } else {
-    cat("\nLocation of file containing 'salmon_dir': \"",salmon_dir.file.path,"\"\n", sep="")
+    cat("\nLocation of file containing 'salmon_dir': \"",salmon_dir.path,"\"\n", sep="")
     stop("File **DOES NOT EXIST**")
   }
 }
@@ -56,17 +57,19 @@ if(nrow(samples) == length(files)){
     exon_version_df <- exon_version_df[!duplicated(exon_version_df$WithVersion),]
   }
   exon_version_df <- exon_version_df[!is.na(exon_version_df$WithVersion),]
-  
-  TxDb <- makeTxDbFromGFF(gtf_file,format=c("gtf"))
+
   k <- keys(TxDb, keytype = "TXNAME")
   tx2gene <- AnnotationDbi::select(TxDb, k,"GENEID", "TXNAME")
   tx2gene <- left_join(exon_version_df,tx2gene, by = "TXNAME")
   tx2gene <- tx2gene[!is.na(tx2gene$GENEID),]
   tx2gene$TXNAME <- NULL
   colnames(tx2gene) <- c("TXNAME", "GENEID")
-  
+
   txi <- tximport(files, type="salmon", tx2gene=tx2gene, dropInfReps=TRUE)
-  write.csv(txi$counts, paste0(salmon_dir,"/gene_count_matrix.csv"))
+  counts <- round(txi$counts,0)
+  write.csv(counts, "gene_count_matrix.csv")
+  write.csv(txi$length, "gene_length_matrix.csv")
+  write.csv(txi$abundance, "gene_abundance_matrix.csv")
 } else {
   stop("Different number of samples, should be same number of salmon directories to samples in metadata")
 }
