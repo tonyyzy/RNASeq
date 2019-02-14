@@ -26,15 +26,16 @@ class database_checker():
     def create_workflow(self, Session_ID):
         reader = database_reader(Session_ID)
         reader.extract_from_database()
-        # print(reader.Index)
-        # print(reader.Mapper[0])
-        # print(reader.Assembler)
+        print(reader.Reads_files)
+        print(reader.Genome_file)
+        print(reader.Annotation_file)
         # print(reader.Analysis)
         # print(reader)
         logic = logic_builder()
         logic.create_workflow_logic(reader)
         print(logic.Workflow)
         print(logic.Workflow_index)
+        print(logic.Workflow_dict)
 
 
 
@@ -46,7 +47,7 @@ class database_reader():
     Assembler = []
     Genome_file = []
     Annotation_file = []
-
+    Reads_files = {}
 
     def __init__(self, Session_ID):
         self.Session_ID = int(Session_ID)
@@ -57,7 +58,7 @@ class database_reader():
         database = sql.connect("./webportal/db.sqlite3")
 
         cur = database.cursor()
-        cur.execute("SELECT * FROM analysis_workflow WHERE Session_ID = {0}".format(self.Session_ID))
+        cur.execute(f"SELECT * FROM analysis_workflow WHERE Session_ID = {self.Session_ID}")
         column_names = [i[0] for i in cur.description]
         query_result = cur.fetchall()
 
@@ -66,21 +67,33 @@ class database_reader():
         self.Assembler = [str(i[column_names.index("assembler")]).upper()  for i in query_result]
         self.Analysis = [str(i[column_names.index("analysis")]).upper()  for i in query_result]
 
-        cur.execute("SELECT * FROM analysis_session WHERE ID = {0}".format(self.Session_ID))
+        cur.execute(f"SELECT * FROM analysis_session WHERE ID = {self.Session_ID}")
         column_names = [i[0] for i in cur.description]
         query_result = cur.fetchall()
 
         self.Genome_file = [i[column_names.index("fasta_file")]  for i in query_result]
         self.Annotation_file = [i[column_names.index("annotation_file")]  for i in query_result]
 
+        cur.execute(f"SELECT * FROM analysis_samples WHERE Session_ID = {self.Session_ID}")
+        column_names = [i[0] for i in cur.description]
+        query_result = cur.fetchall()
+
+        for i in query_result:
+            self.Reads_files[i[column_names.index("accession")]] = {
+            "type": i[column_names.index("libtype")],
+            "path": {1: i[column_names.index("read_1")], 2: i[column_names.index("read_2")]},
+            "condition": i[column_names.index("condition")]
+            }
+
 
     def __repr__(self):
-        return "Session_ID :{0}".format(self.Session_ID)
+        return f"Session_ID :{self.Session_ID}"
 
 class logic_builder():
 
     Workflow = []
     Workflow_index = []
+    Workflow_dict = {}
 
     def __init__(self):
         self.programs_index = pd.read_csv("./backend_scripts/logic/programs_index.csv")
@@ -98,16 +111,10 @@ class logic_builder():
             result[j] = list(self.programs_index.loc[self.programs_index.Program == database_reader_object.Mapper[j],"Index"])
             result[j].extend(list(self.programs_index.loc[self.programs_index.Program == database_reader_object.Assembler[j],"Index"]))
             result[j].extend(list(self.programs_index.loc[self.programs_index.Program == database_reader_object.Analysis[j],"Index"]))
-            #print(self.programs_connections.iloc[8 - 1,1][0])
-
-        print(result)
 
         for e in range(len(result)):
             for i in range(len(result[e])):
-                values = []
-                pos = []
                 try:
-                    print([result[e][i], result[e][i + 1]])
                     value = int(self.programs_connections.iloc[result[e][i] - 1, result[e][i + 1]])
                 except:
                     value = int(self.programs_connections.iloc[result[e][i] - 1, result[e][i + 1]][0])
@@ -115,36 +122,16 @@ class logic_builder():
                     continue
                 elif value > 0:
                     print("inserting step")
-                    values.append(value)
-                    pos.append(i)
                     result[e].insert(i + 1, value)
 
+        workflow_len = [len(result[i]) for i in range(len(result))]
+        self.Workflow_dict = {f"step{i + 1}":{} for i in range(max(workflow_len))}
+
+        for e in range(len(result)):
+            for i in range(len(result[e])):
+                print(self.Workflow_dict)
+                if list(self.programs_index.loc[self.programs_index.Index == result[e][i], "Program"])[0] not in self.Workflow_dict[f"step{i + 1}"].values() :
+                    self.Workflow_dict[f"step{i + 1}"][e + 1] = list(self.programs_index.loc[self.programs_index.Index == result[e][i], "Program"])[0]
 
         self.Workflow = result
         self.Workflow_index = result_index
-
-    def create_indexing(self, database_reader_object):
-        print("Reading program index")
-
-        if self.Workflow_index[0] == 8:
-            print("Creating STAR Index workflow")
-
-            yaml_file = open("./cwl-tools/docker/STAR_index.yml")
-            yaml_file = yaml.load(yaml_file)
-
-            yaml_file["genomeFastaFiles"]["path"] = database_reader_object.Genome_file[0]
-            yaml_file["sjdbGTFfile"]["path"] = database_reader_object.Annotation_file[0]
-
-            with open("STAR_index_{0}.yml".format(database_reader_object.Session_ID), "w+") as outfile:
-                yaml.dump(yaml_file, outfile, default_flow_style=False)
-
-        elif self.Workflow_index[0] == 4:
-            pritn("Creating HISAT 2 Index workflow")
-            yaml_file = open("./cwl-tools/docker/hisat2_build.yml")
-            yaml_file = yaml.load(yaml_file)
-
-            yaml_file["reference"]["path"] = database_reader_object.Genome_file[0]
-            yaml_file["basename"] = database_reader_object.Genome_file[0]
-
-            with open("HISAT2_index_{0}.yml".format(database_reader_object.Session_ID), "w+") as outfile:
-                yaml.dump(yaml_file, outfile, default_flow_style=False)
