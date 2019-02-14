@@ -3,6 +3,9 @@ from django.forms import ModelForm
 from analysis.models import Session, Workflow, Samples, Conditions
 
 
+class SessionSearchForm(forms.Form):
+    user_session = forms.CharField(max_length=100)
+
 class SessionForm(forms.ModelForm):
     class Meta:
         model = Session
@@ -12,8 +15,8 @@ class SessionForm(forms.ModelForm):
 class ConditionsForm(forms.ModelForm):
     class Meta:
         model = Conditions
-        # fields = ['conditions', 'no_replicates']
-        fields = ['session', 'conditions', 'no_replicates']
+        fields = ['conditions', 'no_replicates']
+        # fields = ['session', 'conditions', 'no_replicates']
         # fields='__all__'
 
 
@@ -27,10 +30,9 @@ class SamplesForm(forms.ModelForm):
 class WorkflowForm(forms.ModelForm):
     class Meta:
         model = Workflow
-        # fields = ['GENOME_CHOICES', 'genome', 'organism', 'status', 'no_conditions', 'no_replicates']
-        fields='__all__'
+        fields = ['index', 'mapper', 'assembler', 'analysis', 'status']
+        # fields='__all__'
 
 
 
-# NEED TO GET FROM SUHAIL
 # pip install --upgrade django-crispy-forms

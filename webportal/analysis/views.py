@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.urls import reverse, reverse_lazy
-from .forms import SessionForm, WorkflowForm, SamplesForm, ConditionsForm
+from .forms import SessionSearchForm, SessionForm, WorkflowForm, SamplesForm, ConditionsForm
 from analysis.models import Session, Workflow, Samples, Conditions
 from . import models
 from django.forms import modelformset_factory
+from django.db.models import Q
 # from django.views.generic import TemplateView
 # from django.core.files.storage import FileSystemStorage
 from django.views.generic import (View,TemplateView,
@@ -13,29 +14,63 @@ from django.views.generic import (View,TemplateView,
                                 UpdateView)
 
 
-###### Class based views ######
 # Session
-class cbv_view(View):
+class SessionIndexView(View):
     def get(self, request):
-            return HttpResponse('im not sure about these new fangled class views...')
-            # return render(request,'index.html')
+        # return HttpResponse('Session Index View')
+        sessions = Session.objects.all()
+        # form = SessionSearchForm
+        # context = {'form': form}
+        query = self.request.GET.get('q')
+        if query:
+            query = query.replace('-','')
+            print(f'cleaned query: {query}')
+            query_set_list = sessions.filter(
+                            Q(identifier__icontains=query))
+            # query_set_list = query_set_list.first()
+
+            print(query_set_list)
+            context = {'query_set_list':query_set_list}
+            return render(request, 'analysis/index.html', context)
+        return render(request, 'analysis/index.html')
+
+    def post(self, request):
+        form = SessionSearchForm(request.POST)
+        # context = {'form': form, 'sessions': sessions}
+        if form.is_valid():
+            user_session = form.cleaned_data['user_session']
+            # print(user_session)
+            context = {'form': form, 'sessions': sessions, 'user_session':user_session}
+            return render(request, 'analysis/index.html', context)
+            # return redirect('analysis:session_index')
+        context = {'form': form, 'sessions': sessions}
+        return render(request, 'analysis/index.html', context)
+
 
 class SessionListView(ListView):
     # by default context object used to access parameters is lower(model)_list
     # context_object_name = 'session'
     model = models.Session
 
+
 class SessionDetailView(DetailView):
     context_object_name = 'session_detail'
-    model = models.Session
-    queryset = Session.objects.all()
     # template_name = 'analysis/session_detail.html'
-    # defining custom grouping field in urls.py we must then manually extract the key from self.kwargs
-    def get_object(self):
-        print(f'\nself.kwargs: {self.kwargs}')
-        pk = self.kwargs.get('pk') # passes key 'pk' into kwargs dict to extract value
-        print(f'pk: {pk}')
-        return get_object_or_404(Session, pk=pk)
+    model = models.Session
+
+    def get_context_data(self, **kwargs):
+        context = super(SessionDetailView, self).get_context_data(**kwargs)
+        session_pk = self.kwargs.get('pk')
+        samples = Samples.objects.all()
+        session_samples = []
+        for i in range(len(samples)):
+            if (samples[i].condition.session.pk == session_pk):
+                session_samples.append(samples[i])
+        context['samples'] = session_samples
+        print(session_samples)
+        return context
+
+
 
 
 class SessionCreateView(CreateView):
@@ -50,7 +85,7 @@ class SessionUpdateView(UpdateView):
 
 class SessionDeleteView(DeleteView):
     model = models.Session
-    success_url = reverse_lazy("analysis:session_list")
+    # success_url = reverse_lazy("analysis:session_list")
 
 
 # Conditions
@@ -63,48 +98,58 @@ class ConditionsDetailView(DetailView):
     model = models.Conditions
     template_name = 'analysis/conditions_detail.html'
 
-# removing the session field from conditions create and using primary key defined by session
-# in the url to pass to the conditions model. not working yet.
-# NOT NULL constraint failed: analysis_conditions.session_id
+
 class ConditionsCreateView(CreateView):
     template_name = 'analysis/conditions_form.html'
     # queryset = Conditions.objects.all()
-    model = models.Conditions
-    fields = ('session', 'conditions', 'no_replicates',)
 
-    # def get(self, request, pk):
-    #     form = ConditionsForm
-    #     pk = self.kwargs.get('pk')
-    #     print(f'\nPrimary Key: {pk}')
-    #     return render(request, self.template_name, {'form':form})
-    #
-    # def post(self, request, pk):
-    #     form = ConditionsForm(request.POST)
-    #     if form.is_valid():
-    #         print(form.cleaned_data['session'])
-    #
-    #         pk = self.kwargs.get('pk')
-    #         post = form.save(commit=False)
-    #         post.session = 'session' + str(pk)
-    #         print(post.session)
-    #         post.save()
-    #         # print(f'\nRaw Post Obj: {post}')
-    #         con = form.cleaned_data['conditions']
-    #         no_rep = form.cleaned_data['no_replicates']
-    #         # print(no_rep)
-    #         return redirect('analysis:session_list')
+    def get(self, request, pk):
+        form = ConditionsForm
+        context = {'form':form}
+        return render(request, self.template_name, context)
 
-# Cannot assign "'session1'": "Conditions.session" must be a "Session" instance.
+    def post(self, request, pk):
+        form = ConditionsForm(request.POST)
+        print(request.GET)
+        if form.is_valid():
+            post = form.save(commit=False)
+            sessions = Session.objects.all()
+            adjusted_pk = self.kwargs.get('pk')-1 # database object starts index from 1 not 0
+            # print(f'\n{sessions[adjusted_pk]}') # returns a session object NOT a string
+            post.session = sessions[adjusted_pk]
+            post.save()
+            return redirect('analysis:session_detail', pk)
+        return render(request, self.template_name, {'form':form})
 
 
 class ConditionsUpdateView(UpdateView):
-    fields = ('conditions','no_replicates',)
-    model = models.Conditions
+    template_name = 'analysis/conditions_form.html'
+    form_class = ConditionsForm
+
+    def get_object(self):
+        conditions_pk = self.kwargs.get('conditions_pk')
+        return get_object_or_404(Conditions, id=conditions_pk)
+
+    def form_valid(self, form):
+        session_pk = self.kwargs.get('session_pk')
+        post = form.save(commit=False)
+        post.session = Session.objects.get(pk=session_pk)
+        post.save()
+        return redirect('analysis:session_detail', pk=session_pk)
+
 
 class ConditionsDeleteView(DeleteView):
+    template_name = 'analysis/conditions_confirm_delete.html'
     context_object_name = 'condition'
-    model = models.Conditions
-    success_url = reverse_lazy("analysis:session_list")
+
+    def get_object(self):
+        conditions_pk = self.kwargs.get('conditions_pk')
+        return get_object_or_404(Conditions, id=conditions_pk)
+
+    def post(self, request, session_pk, conditions_pk):
+        instance = get_object_or_404(Conditions, id=conditions_pk)
+        instance.delete()
+        return redirect('analysis:session_detail', pk=session_pk)
 
 
 # Samples
@@ -112,10 +157,12 @@ class SamplesListView(ListView):
     # context_object_name = 'conditions'
     model = models.Samples
 
+
 class SamplesDetailView(DetailView):
     context_object_name = 'samples_detail'
     model = models.Samples
     template_name = 'analysis/samples_detail.html'
+
 
 class SamplesCreateView(CreateView):
     # fields = ('condition','libtype', 'read_1','read_2',)
@@ -144,53 +191,44 @@ class WorkflowListView(ListView):
     # context_object_name = 'conditions'
     model = models.Workflow
 
-class ConditionsDetailView(DetailView):
-    context_object_name = 'conditions_detail'
-    model = models.Conditions
-    template_name = 'analysis/conditions_detail.html'
+class WorkflowDetailView(DetailView):
+    context_object_name = 'workflow_detail'
+    model = models.Workflow
+    template_name = 'analysis/workflow_detail.html'
 
-# removing the session field from conditions create and using primary key defined by session
-# in the url to pass to the conditions model. not working yet.
-# NOT NULL constraint failed: analysis_conditions.session_id
-class ConditionsCreateView(CreateView):
-    template_name = 'analysis/conditions_form.html'
-    # queryset = Conditions.objects.all()
-    model = models.Conditions
-    fields = ('session', 'conditions', 'no_replicates',)
+class WorkflowCreateView(CreateView):
+    template_name = 'analysis/workflow_form.html'
 
-    # def get(self, request, pk):
-    #     form = ConditionsForm
-    #     pk = self.kwargs.get('pk')
-    #     print(f'\nPrimary Key: {pk}')
-    #     return render(request, self.template_name, {'form':form})
-    #
-    # def post(self, request, pk):
-    #     form = ConditionsForm(request.POST)
-    #     if form.is_valid():
-    #         print(form.cleaned_data['session'])
-    #
-    #         pk = self.kwargs.get('pk')
-    #         post = form.save(commit=False)
-    #         post.session = 'session' + str(pk)
-    #         print(post.session)
-    #         post.save()
-    #         # print(f'\nRaw Post Obj: {post}')
-    #         con = form.cleaned_data['conditions']
-    #         no_rep = form.cleaned_data['no_replicates']
-    #         # print(no_rep)
-    #         return redirect('analysis:session_list')
+    def get(self, request, pk):
+        form = WorkflowForm
+        context = {'form':form}
+        print('\nsuccessful get request')
+        return render(request, self.template_name, context)
 
-# Cannot assign "'session1'": "Conditions.session" must be a "Session" instance.
+    def post(self, request, pk):
+        form = WorkflowForm(request.POST)
+        if form.is_valid():
+            print(f'\nPRIMARY KEY: {pk}')
+            sessions = Session.objects.all()
+            # print(sessions)
+            adjusted_pk = self.kwargs.get('pk')-1 # python index 1st session from 0
+            print(sessions[adjusted_pk]) # returns a session object NOT a string!
+            post = form.save(commit=False)
+            post.session = sessions[adjusted_pk]
+            post.save()
+            return redirect('analysis:session_detail', pk)
+        return render(request, self.template_name, {'form':form})
 
 
-class ConditionsUpdateView(UpdateView):
-    fields = ('conditions','no_replicates',)
-    model = models.Conditions
+class WorkflowUpdateView(UpdateView):
+    fields = ('index', 'mapper', 'assembler', 'analysis', 'status',)
+    model = models.Workflow
+    success_url = reverse_lazy("analysis:workflow_list")
 
-class ConditionsDeleteView(DeleteView):
-    context_object_name = 'condition'
-    model = models.Conditions
-    success_url = reverse_lazy("analysis:session_list")
+class WorkflowDeleteView(DeleteView):
+    context_object_name = 'workflow'
+    model = models.Workflow
+    success_url = reverse_lazy("analysis:workflow_list")
 
 
 

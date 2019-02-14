@@ -30,7 +30,7 @@ class Conditions(models.Model):
     no_replicates = models.PositiveSmallIntegerField(blank=False, default=1)
 
     def get_absolute_url(self):
-        return reverse('analysis:conditions_detail', kwargs={'pk':self.pk})
+        return reverse('analysis:session_detail', kwargs={'pk':self.pk})
 
     # def __str__(self):
         # return self.conditions
@@ -43,7 +43,7 @@ class Samples(models.Model):
     )
     condition = models.ForeignKey(Conditions, on_delete=models.PROTECT, related_name='samples')
     libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES, blank=True, null=True)
-    read_1 = models.FileField(upload_to='data/', blank=False)
+    read_1 = models.FileField(upload_to='data/', blank=False, null=False, default=1)
     read_2 = models.FileField(upload_to='data/', blank=True, null=True)
 
     def get_absolute_url(self):
@@ -62,12 +62,12 @@ class Workflow(models.Model):
     ASSEMLBER_CHOICES = (
         ("STRINGTIE", "STRINGTIE"),
     )
-    session = models.ForeignKey(Session, on_delete=models.PROTECT)
+    session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='workflow')
     index = models.CharField(max_length=200, choices=INDEX_CHOICES)
     mapper = models.CharField(max_length=200, choices=MAPPER_CHOICES)
     assembler = models.CharField(max_length=200, choices=ASSEMLBER_CHOICES, blank=True)
     analysis = models.CharField(max_length=200)
     status = models.BooleanField(default=False, null=False)
 
-# inspect available object methods
-# dir(Product.objects.get(id=1))
+    def get_absolute_url(self):
+        return reverse('analysis:session_detail', kwargs={'pk':self.pk})
