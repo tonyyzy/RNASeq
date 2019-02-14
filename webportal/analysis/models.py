@@ -41,10 +41,12 @@ class Samples(models.Model):
         ("PE", "Paired_end"),
         ("SG", "Single")
     )
+    session = models.ForeignKey(Session, on_delete=models.PROTECT)
     condition = models.ForeignKey(Conditions, on_delete=models.PROTECT, related_name='samples')
     libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES, blank=True, null=True)
     read_1 = models.FileField(upload_to='data/', blank=False, null=False, default=1)
     read_2 = models.FileField(upload_to='data/', blank=True, null=True)
+    accession = models.CharField(max_length=200, blank=False, null=False)
 
     def get_absolute_url(self):
         return reverse('analysis:samples_detail', kwargs={'pk':self.pk})
