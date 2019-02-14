@@ -29,6 +29,10 @@ arguments:
     valueFrom: $(runtime.outdir)
 
 inputs:
+  script:
+    type: File
+    inputBinding:
+      position: 0
   tablemaker_output:
     type: Directory[]
   matadata:
