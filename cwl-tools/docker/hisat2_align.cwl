@@ -34,18 +34,18 @@ inputs:
     inputBinding:
       position: 7
       prefix: "-x"
-      valueFrom: "${inputs.index_directory.path + '/' 
-                    + inputs.index_directory.listing[0].nameroot.split('.').slice(0,-1).join('.')}"
+      valueFrom: "${return inputs.index_directory.path + '/' 
+                  + inputs.index_directory.listing[0].nameroot.split('.').slice(0,-1).join('.')}"
   first_pair:
     type: File?
     inputBinding:
       position: 8
-      prefix: -1
+      prefix: "-1"
   second_pair:
     type: File?
     inputBinding:
       position: 9
-      prefix: -2
+      prefix: "-2"
   single_file:
     type: File[]?
     inputBinding:
@@ -74,7 +74,7 @@ inputs:
     type: string
     default: "log.txt"
     inputBinding:
-      position 15
+      position: 15
       prefix: --summary-file
 
 outputs:
