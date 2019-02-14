@@ -27,6 +27,7 @@ class SessionIndexView(View):
             print(f'cleaned query: {query}')
             query_set_list = sessions.filter(
                             Q(identifier__icontains=query))
+
             # query_set_list = query_set_list.first()
 
             print(query_set_list)
@@ -119,6 +120,7 @@ class ConditionsCreateView(CreateView):
             post.save()
             return redirect('analysis:session_detail', pk)
         return render(request, self.template_name, {'form':form})
+
 
 
 class ConditionsUpdateView(UpdateView):

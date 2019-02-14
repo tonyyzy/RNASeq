@@ -16,12 +16,12 @@ test_DESeq2_out
 hisat2_align
 hisat2_build
 software
+data
 gene_count_matrix.csv
 transcript_count_matrix.csv
-test1gz
 test3
+test1gz
 test_workflow1_docker
 test_workflow2_docker
-data
 test1
 test2
