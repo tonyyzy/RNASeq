@@ -26,7 +26,7 @@ class cwl_writer():
         }
 
     output_string = {
-        "star_readmap": "sam_output",
+        "star": "sam_output",
         "samtools": "samtools_out",
         "prepDE": "gene_count",
         "stringtie": "stringtie_out"
@@ -39,18 +39,18 @@ class cwl_writer():
         }
 
 
-    #def __init__(self,):
+    #def __init__(self):
 
 
-    def star_readmap(input_files, yaml):
+    def star(input_files, yaml):
         for i in range(len(input_files)):
             yaml["cwl"]["inputs"]["genomeDir"] = "Directory"
             yaml["cwl"]["inputs"]["subject_name{0}".format(i + 1)] = "File[]"
             yaml["cwl"]["inputs"]["fastq{0}".format(i + 1)] = "string"
-            yaml["cwl"]["outputs"]["star_readmap_1_out"] = {
+            yaml["cwl"]["outputs"]["star_1_out"] = {
             "type": "Directory",
-            "outputSource": "star_readmap_{0}/star_read_out".format(i + 1)}
-            yaml["cwl"]["steps"]["star_readmap_{0}".format(i + 1)] = {
+            "outputSource": "star_{0}/star_read_out".format(i + 1)}
+            yaml["cwl"]["steps"]["star_{0}".format(i + 1)] = {
             "run": "../cwl-tools/docker/STAR_readmap.cwl",
             "in": {
             "threads": "threads",
@@ -73,7 +73,7 @@ class cwl_writer():
             "outputs": {
             "out": "Directory"},
             "expression": "|${{return{{\"out\":{{\"class\":\"Directory\",\"basename\":\"star\",\"listing\":[{}]}};}}}}".format(",".join(["inputs.dir{0}".format(i + 1) for i in range(len(input_files))]))},
-            "in": dict([("dir{0}".format(i + 1), "star_readmap_{0}/star_read_out".format(i + 1)) for i in range(len(input_files))]),
+            "in": dict([("dir{0}".format(i + 1), "star_{0}/star_read_out".format(i + 1)) for i in range(len(input_files))]),
             "out": ["out"]
             }
 
@@ -107,7 +107,7 @@ class cwl_writer():
         return yaml
 
 
-    def prepDE(input_files, yaml, output_string, prev):
+    def prepde(input_files, yaml, output_string, prev):
 
         #inputs_from_prev =
         #print(inputs_from_prev)
@@ -125,7 +125,7 @@ class cwl_writer():
             "class": "ExpressionTool",
             "requirements": {
                 "InlineJavascriptRequirement": {}},
-            "inputs": dict([("file{0}".format(i + 1), "File") for i in range(len(input_files))]),
+            "inputs": dict([(f"file{i + 1}", "File") for i in range(len(input_files))]),
             "outputs": {
                 "out": "Directory"},
             "expression": "|${{return{{\"out\":{{\"class\":\"Directory\",\"basename\":\"prepDE\",\"listing\":[{}]}};}}}}".format(",".join(["inputs.file{0}".format(i + 1) for i in range(len(input_files))]))},
@@ -220,9 +220,49 @@ class cwl_writer():
 
         return yaml
 
+    def create_indexing(self, database_reader_object):
+        print("Reading program index")
 
-inputs = {"test1": {"type": "paired_end", "path": {1: "test.fastq", 2: "test.fastq"}},
-          "test2": {"type": "paired_end", "path": {1: "test.fastq", 2: "test.fastq"}}}
+        if self.Workflow_index[0] == 8:
+            print("Creating STAR Index workflow")
+            yaml_file = open("./cwl-tools/docker/STAR_index.yml")
+            yaml_file = yaml.load(yaml_file)
+
+            yaml_file["genomeFastaFiles"]["path"] = database_reader_object.Genome_file[0]
+            yaml_file["sjdbGTFfile"]["path"] = database_reader_object.Annotation_file[0]
+
+            with open(f"STAR_index_{database_reader_object.Session_ID}.yml", "w+") as outfile:
+                yaml.dump(yaml_file, outfile, default_flow_style=False)
+
+        elif self.Workflow_index[0] == 4:
+            print("Creating HISAT 2 Index workflow")
+            yaml_file = open("./cwl-tools/docker/hisat2_build.yml")
+            yaml_file = yaml.load(yaml_file)
+
+            yaml_file["reference"]["path"] = database_reader_object.Genome_file[0]
+            yaml_file["basename"] = database_reader_object.Genome_file[0]
+
+            with open(f"HISAT2_index_{database_reader_object.Session_ID}.yml", "w+") as outfile:
+                yaml.dump(yaml_file, outfile, default_flow_style=False)
+
+
+    def write_workflow(input_files, logic_object, database_reader_object):
+        flag_split = 0
+        previous_step = []
+        number_of_steps = 1
+
+        for i in list(logic_object.Workflow_dict.keys()):
+            if len(logic_object.Workflow_dict[i]) > number_of_steps:
+                flag_split = 1
+                number_of_steps = len(logic_object.Workflow_dict[i])
+
+            for e in list(logic_object.Workflow_dict[i].keys()):
+                if flag_split == 0:
+                    eval(f"self.{logic_object.Workflow_dict[i][e].lower()}(database_reader_object.Reads_files, self.cwl_workflow, output_string), previous_step")
+                    previous_step = logic_object.Workflow_dict[i][e].lower()
+                else:
+                    while c < number_of_steps
+
 """
 cwl_workflow = star_readmap(inputs, cwl_workflow)
 cwl_workflow = stringtie(inputs, cwl_workflow, output_string, "samtools")
