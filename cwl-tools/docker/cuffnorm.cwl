@@ -29,7 +29,7 @@ inputs:
      type: string
      inputBinding:
         position: 2
-        prefix: -p`
+        prefix: -p
   gtf_file:
      type: File
      inputBinding:

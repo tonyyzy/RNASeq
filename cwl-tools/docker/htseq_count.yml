@@ -1,6 +1,6 @@
 input_script: 
    class: File
-   path: ../../scripts/Basic_DEXSeq_scripts/dexseq_count.py
+   path: ../../scripts/Basic_DEXSeq_scripts/dexseq_count_modified.py
 pairedend: "yes"
 stranded: "no"
 input_format: "bam"

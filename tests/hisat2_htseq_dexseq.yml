@@ -24,7 +24,7 @@ htseq_prepare_script:
   path: ../scripts/Basic_DEXSeq_scripts/dexseq_prepare.py
 htseq_count_script:
   class: File
-  path: ../scripts/Basic_DEXSeq_scripts/dexseq_count.py
+  path: ../scripts/Basic_DEXSeq_scripts/dexseq_count_modified.py
 dexseq_script:
   class: File
   path: ./DEXSeq.R

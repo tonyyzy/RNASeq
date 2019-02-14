@@ -30,8 +30,8 @@ class SamplesForm(forms.ModelForm):
 class WorkflowForm(forms.ModelForm):
     class Meta:
         model = Workflow
-        # fields = ['GENOME_CHOICES', 'genome', 'organism', 'status', 'no_conditions', 'no_replicates']
-        fields='__all__'
+        fields = ['index', 'mapper', 'assembler', 'analysis', 'status']
+        # fields='__all__'
 
 
 
