@@ -1,0 +1,7 @@
+tablemaker_output:
+  - {class: Directory, path: /path/to/directory}
+  - {class: Directory, path: /path/to/directory}
+  metadata:
+    class: File
+    path: /path/to/file
+  condition: "stringbal"
