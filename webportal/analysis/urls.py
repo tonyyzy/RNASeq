@@ -24,6 +24,7 @@ urlpatterns = [
     path('conditions_create/<int:pk>/', views.ConditionsCreateView.as_view(), name='conditions_create'),
     path('session_detail/<int:session_pk>/conditions_update/<int:conditions_pk>/', views.ConditionsUpdateView.as_view(), name='conditions_update'),
 
+
     path('samples_list', views.SamplesListView.as_view(), name='samples_list'),
     path('samples_detail/<int:pk>/', views.SamplesDetailView.as_view(), name='samples_detail'),
     path('samples_create/<int:pk>/', views.SamplesCreateView.as_view(), name='samples_create'),
