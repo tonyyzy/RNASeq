@@ -15,7 +15,7 @@
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" class="btn btn-danger" value="Delete">
-        <a href="{% url 'analysis:workflow_detail' pk=workflow.pk %} ">Cancel</a>
+        <a href="{% url 'analysis:session_detail' pk=workflow.session.pk %} ">Cancel</a>
       </form>
   {% endblock %}
   </body>

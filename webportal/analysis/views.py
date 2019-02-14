@@ -68,10 +68,8 @@ class SessionDetailView(DetailView):
             if (samples[i].condition.session.pk == session_pk):
                 session_samples.append(samples[i])
         context['samples'] = session_samples
-        print(session_samples)
+        # print(context)
         return context
-
-
 
 
 class SessionCreateView(CreateView):
@@ -93,6 +91,7 @@ class SessionDeleteView(DeleteView):
 class ConditionsListView(ListView):
     # context_object_name = 'conditions'
     model = models.Conditions
+
 
 class ConditionsDetailView(DetailView):
     context_object_name = 'conditions_detail'
@@ -187,7 +186,6 @@ class SamplesDeleteView(DeleteView):
     success_url = reverse_lazy("analysis:samples_list")
 
 
-
 # Workflow
 class WorkflowListView(ListView):
     # context_object_name = 'conditions'
@@ -223,51 +221,31 @@ class WorkflowCreateView(CreateView):
 
 
 class WorkflowUpdateView(UpdateView):
-    fields = ('index', 'mapper', 'assembler', 'analysis', 'status',)
-    model = models.Workflow
-    success_url = reverse_lazy("analysis:workflow_list")
+    template_name = 'analysis/workflow_form.html'
+    form_class = WorkflowForm
+
+    def get_object(self):
+        # return HttpResponse('hi there old sport')
+        workflow_pk = self.kwargs.get('workflow_pk')
+        return get_object_or_404(Workflow, pk=workflow_pk)
+
+    def form_valid(self, form):
+        session_pk = self.kwargs.get('session_pk')
+        post = form.save(commit=False)
+        # post.session = Session.objects.get(pk=session_pk)
+        post.save()
+        return redirect('analysis:session_detail', pk=session_pk)
+
 
 class WorkflowDeleteView(DeleteView):
+    template_name = 'analysis/workflow_confirm_delete.html'
     context_object_name = 'workflow'
-    model = models.Workflow
-    success_url = reverse_lazy("analysis:workflow_list")
 
+    def get_object(self):
+        workflow_pk = self.kwargs.get('workflow_pk')
+        return get_object_or_404(Workflow, pk=workflow_pk)
 
-
-
-
-
-
-
-
-
-
-
-# FILE SUBMISSION EXAMPLE
-def get_files(request):
-    # return HttpResponse("post me post me post me post me post me post me")
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = FileSubmission(request.POST, request.FILES) # check whether it's valid:
-        # form = ModelFormWithFileField(request.POST, request.FILES)
-        if form.is_valid():
-            user = request.user
-            post = form.save(commit=False)
-            post.user = request.user
-            post.save()
-            text = form.cleaned_data['post'] # assign clean data to text variable
-
-        args = {'form': form, 'text': text, 'user': user}
-        return render(request, 'analysis/file_submit.html', args)
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = FileSubmission()
-    return render(request, 'analysis/file_submit.html', {'form': form})
-
-
-
-
-def detail(request, venue_id):
-    session = get_object_or_404(Venue, pk=venue_id)
-    return render(request, 'analysis/conditions_list.html', {'session': session})
+    def post(self, request,  session_pk, workflow_pk):
+        instance = get_object_or_404(Workflow, pk=workflow_pk)
+        instance.delete()
+        return redirect('analysis:session_detail', pk=session_pk)

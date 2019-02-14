@@ -15,11 +15,8 @@
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" class="btn btn-danger" value="Delete">
-
+        <a href="{% url 'analysis:session_detail' pk=condition.session.pk %} ">Cancel</a>
       </form>
-      <h2>session: pk: {{condition.session.pk}}</h2>
-      <h2>conditions pk: {{conditions_pk}}</h2>
   {% endblock %}
   </body>
 </html>
-<!-- <a href="{% url 'analysis:session_detail' pk={{condition.sesison.pk}} %} ">Cancel</a> -->
