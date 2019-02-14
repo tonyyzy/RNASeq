@@ -122,40 +122,34 @@ class ConditionsCreateView(CreateView):
         return render(request, self.template_name, {'form':form})
 
 
-
 class ConditionsUpdateView(UpdateView):
-    # fields = ('conditions','no_replicates',)
-    # model = models.Conditions
     template_name = 'analysis/conditions_form.html'
-    # queryset = Conditions.objects.all()
+    form_class = ConditionsForm
 
-    def get(self, request, pk, id):
-        form = ConditionsForm
-        context = {'form':form, 'pk':pk, 'id':id}
-        return render(request, self.template_name, context)
+    def get_object(self):
+        conditions_pk = self.kwargs.get('conditions_pk')
+        return get_object_or_404(Conditions, id=conditions_pk)
 
-    def post(self, request, pk, id):
-        form = ConditionsForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            conditions = Conditions.objects.all()
-            # pk = self.kwargs.get('id') # database object starts index from 1 not 0
-            print(f'\n{id}')
-            # print(f'\n{conditions[adjusted_pk]}') # returns a session object NOT a string
-            # post.session = conditions[adjusted_pk]
-            # post.save()
-            return redirect('analysis:session_detail', pk)
-        return render(request, self.template_name, {'form':form})
-# in the old version we moved from session_detai/1 page to conditions_update/31 and then could not reverse to sesison-detail/1
-# we need to define a pk and an id (perheps better label them to avoid confusion), use the id to adjust the update and the pk to define the reverse
-# good luck
-
+    def form_valid(self, form):
+        session_pk = self.kwargs.get('session_pk')
+        post = form.save(commit=False)
+        post.session = Session.objects.get(pk=session_pk)
+        post.save()
+        return redirect('analysis:session_detail', pk=session_pk)
 
 
 class ConditionsDeleteView(DeleteView):
+    template_name = 'analysis/conditions_confirm_delete.html'
     context_object_name = 'condition'
-    model = models.Conditions
-    success_url = reverse_lazy("analysis:session_list")
+
+    def get_object(self):
+        conditions_pk = self.kwargs.get('conditions_pk')
+        return get_object_or_404(Conditions, id=conditions_pk)
+
+    def post(self, request, session_pk, conditions_pk):
+        instance = get_object_or_404(Conditions, id=conditions_pk)
+        instance.delete()
+        return redirect('analysis:session_detail', pk=session_pk)
 
 
 # Samples
@@ -163,10 +157,12 @@ class SamplesListView(ListView):
     # context_object_name = 'conditions'
     model = models.Samples
 
+
 class SamplesDetailView(DetailView):
     context_object_name = 'samples_detail'
     model = models.Samples
     template_name = 'analysis/samples_detail.html'
+
 
 class SamplesCreateView(CreateView):
     # fields = ('condition','libtype', 'read_1','read_2',)

@@ -41,8 +41,8 @@
                 <td>{{ condition.pk }}</td>
                 <td>{{ condition.conditions }}</td>
                 <td>{{ condition.no_replicates }}</td>
-                <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:conditions_update' pk=condition.session.pk id=condition.pk %}">Update</a></td>
-                <td><a class='btn btn-sm btn-danger' href="{% url 'analysis:conditions_delete' pk=condition.pk %}">Delete</a></td>
+                <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:conditions_update' session_pk=condition.session.pk conditions_pk=condition.pk %}">Update</a></td>
+                <td><a class='btn btn-sm btn-danger' href="{% url 'analysis:conditions_delete' session_pk=condition.session.pk conditions_pk=condition.pk %}">Delete</a></td>
               </tr>
             {% endfor %}
           </tbody>
