@@ -5,20 +5,18 @@
   <head>
     <meta charset="utf-8">
     {% block head %}
-      <title>Conditions Detail</title>
+      <title>Workflow Detail Detail Detail</title>
     {% endblock %}
   </head>
   <body>
     {% block body %}
+    <h1>Workflow form data entry</h1>
     <div class="jumbotron">
-      <form method="POST">
+      <form method="POST"  enctype="multipart/form-data">
         {% csrf_token %}
         {{ form|crispy }}
-        <input type="submit" class='btn btn-primary' value="Update">
+        <input type="submit" class='btn btn-primary' value="Submit">
       </form>
-      <h2>session: pk: {{session_pk}}</h2>
-      <h2>conditions pk: {{conditions_pk}}</h2>
-      {{ session1 }}
   {% endblock %}
   </body>
 </html>

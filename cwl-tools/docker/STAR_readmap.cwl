@@ -7,10 +7,19 @@ requirements:
   - class: ShellCommandRequirement
   - class: InlineJavascriptRequirement
 arguments:
-  - position: 0
+  - position: 1
+    valueFrom: "mkdir"
+  - position: 2
+    valueFrom: $(inputs.outFileNamePrefix)
+  - position: 3
     shellQuote: False
-    valueFrom: "$('mkdir ' + inputs.outFileNamePrefix + ' && cd ' + inputs.outFileNamePrefix + ' && STAR ')"
+    valueFrom: '&& cd'
+  - position: 4
+    valueFrom: $(inputs.outFileNamePrefix)
   - position: 5
+    shellQuote: False
+    valueFrom: '&& STAR'
+  - position: 6
     valueFrom: "${
         if (inputs.readFilesIn[0].nameext == '.gz'){
           return '--readFilesCommand gunzip -c'}
@@ -25,28 +34,28 @@ inputs:
   threads:
     type: int
     inputBinding:
-      position: 1
+      position: 7
       prefix: --runThreadN
   genomeDir:
     type: Directory
     inputBinding:
-      position: 2
+      position: 8
       prefix: --genomeDir
   readFilesIn:
     type: File[]
     inputBinding:
-      position: 3
+      position: 9
       prefix: --readFilesIn
   outFileNamePrefix:
     type: string
     inputBinding:
-      position: 4
+      position: 10
       prefix: --outFileNamePrefix
   XSTag:
     type: string?
     default: intronMotif
     inputBinding:
-      position: 6
+      position: 11
       prefix: --outSAMstrandField
 
 outputs:
