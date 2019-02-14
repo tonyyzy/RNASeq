@@ -1,0 +1,11 @@
+output: "merged"
+cufflinks_output:
+  - {class: File, path: ./normal1/transcripts.gtf}
+  - {class: File, path: ./tumour1/transcripts.gtf}
+threads: "12"
+gtf:
+  class: File
+  path: ./Homo_sapiens.GRCh38.95.gtf
+ref_fasta:
+  class: File
+  path: ./Homo_sapiens.GRCh38.dna.toplevel.fa

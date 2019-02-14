@@ -1,0 +1,33 @@
+threads: 2
+genomeDir:
+  class: Directory
+  path: ../../tests/ht2_index
+annotation:
+  class: File
+  path: ../../tests/test.gtf
+subject_name1: test1
+subject_name2: test2
+subject_name3: test3
+subject_name4: test4
+fastq1:
+  - {class: File, path: ../../tests/test1.1.fastq}
+  - {class: File, path: ../../tests/test1.2.fastq}
+fastq2:
+  - {class: File, path: ../../tests/test2.1.fastq}
+  - {class: File, path: ../../tests/test2.2.fastq}
+fastq3:
+  - {class: File, path: ../../tests/test3.fastq}
+fastq4:
+  - {class: File, path: ../../tests/test4.fastq}
+htseq_prepare_script:
+  class: File
+  path: ../../scripts/Basic_DEXSeq_scripts/dexseq_prepare.py
+htseq_count_script:
+  class: File
+  path: ../../scripts/Basic_DEXSeq_scripts/dexseq_count_modified.py
+dexseq_script:
+  class: File
+  path: ../../scripts/Basic_DEXSeq_scripts/DEXSeq.R
+metadata:
+  class: File
+  path: ../../tests/metadata.csv

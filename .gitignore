@@ -1,8 +1,6 @@
 __pycache__
 STARIndex
 .pytest_cache
-test1
-test2
 test_stringtie_out
 test_samtools_out
 test_htseq_prepare_out
@@ -18,3 +16,12 @@ test_DESeq2_out
 hisat2_align
 hisat2_build
 software
+gene_count_matrix.csv
+transcript_count_matrix.csv
+test1gz
+test3
+test_workflow1_docker
+test_workflow2_docker
+data
+test1
+test2

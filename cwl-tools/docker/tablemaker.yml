@@ -1,0 +1,8 @@
+threads: "4"
+merged_gtf:
+  class: File
+  path: /path/to/file
+output: "TablemakerOutput"
+bam:
+  class: File
+  path: /path/to/file

@@ -1,0 +1,14 @@
+input_script: 
+   class: File
+   path: ../../scripts/Basic_DEXSeq_scripts/dexseq_count_modified.py
+pairedend: "yes"
+stranded: "no"
+input_format: "bam"
+sorted_by: "pos"
+gff:
+   class: File
+   path: ../../tests/test.gff
+sam: 
+   class: File
+   path: ../../tests/test1.bam
+outname: "test1_htseq_count.csv"

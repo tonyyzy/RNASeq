@@ -40,6 +40,33 @@ inputs:
       position: 4
   gtfs:
     type: File[]
+  length:
+    type: string?
+    inputBinding:
+      prefix: -l
+      position: 6
+  cluster:
+    type: string?
+    inputBinding:
+      prefix: -c
+      position: 7
+  geneID_prefix:
+    type: string?
+    inputBinding:
+      prefix: -s
+      position: 8
+  cluster_prefix:
+    type: string?
+    inputBinding:
+      prefix: -k
+      position: 9
+  transcript_2_gene_if_clustering:
+    type: string?
+    inputBinding:
+      prefix: --legend
+      position: 10
+
+# if clutering genes that overlap with different gene IDs use "cluster", "cluster_prefix" and "transcript_2_gene_if_clustering" parameters.
 
 outputs:
   gene_output:

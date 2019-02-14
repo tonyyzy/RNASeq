@@ -9,7 +9,7 @@ hints:
     dockerPull: quay.io/biocontainers/star:2.6.0c--0
 
 inputs:
-  Threads:
+  threads:
     type: int
     inputBinding:
       prefix: --runThreadN
@@ -23,11 +23,11 @@ inputs:
     inputBinding:
       prefix: --genomeDir
   genomeFastaFiles:
-    type: File
+    type: File[]
     inputBinding:
       prefix: --genomeFastaFiles
   sjdbGTFfile:
-    type: File
+    type: File[]
     inputBinding:
       prefix: --sjdbGTFfile
   sjdbGTFtagExonParentTranscript:
@@ -38,6 +38,11 @@ inputs:
     type: string?
     inputBinding:
       prefix: --genomeSAindexNbases
+  RAMlimit:
+    type: long
+    default: 400000000000
+    inputBinding:
+      prefix: --limitGenomeGenerateRAM
 
 outputs:
   output:

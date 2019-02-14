@@ -1,10 +1,10 @@
 _ambiguous	0
 _ambiguous_readpair_position	0
-_empty	99
+_empty	0
 _lowaqual	0
 _notaligned	0
-gene1:001	40
-gene2:001	6
-gene2:002	26
-gene2:003	25
-gene2:004	11
+gene1:001	400
+gene2:001	19
+gene2:002	44
+gene2:003	7
+gene2:004	24

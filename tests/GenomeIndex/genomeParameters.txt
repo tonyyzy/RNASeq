@@ -1,4 +1,4 @@
-### star   --runMode genomeGenerate   --genomeDir ./STARIndex   --genomeFastaFiles ./tests/test.fa      --genomeSAindexNbases 5   --sjdbGTFfile ./tests/test.gff3   --sjdbGTFtagExonParentTranscript exon_id
+### star   --runMode genomeGenerate   --genomeDir ./STARIndex   --genomeFastaFiles ./tests/test.fa      --genomeSAindexNbases 5   --sjdbGTFfile ./tests/test.gtf
 ### GstrandBit 
 versionGenome	20201
 genomeFastaFiles	./tests/test.fa 
@@ -7,10 +7,10 @@ genomeChrBinNbits	18
 genomeSAsparseD	1
 sjdbOverhang	100
 sjdbFileChrStartEnd	- 
-sjdbGTFfile	./tests/test.gff3
+sjdbGTFfile	./tests/test.gtf
 sjdbGTFchrPrefix	-
 sjdbGTFfeatureExon	exon
-sjdbGTFtagExonParentTranscript	exon_id
+sjdbGTFtagExonParentTranscript	transcript_id
 sjdbGTFtagExonParentGene	gene_id
 sjdbInsertSave	Basic
-genomeFileSizes	262144 49503
+genomeFileSizes	262948 56103

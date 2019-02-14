@@ -1,0 +1,13 @@
+output: "cuffdiff_out"
+threads: "12"
+label: ["Normal","Tumour"]
+FDR: "0.05"
+libType: "fr-unstranded"
+libNorm: "classic-fpkm"
+gtf_file:
+    class: File
+    path: ./merged/merged.gtf
+condition1_files:
+   - {class: File, path: ./normal1/abundances.cxb}
+condition2_files:
+   - {class: File, path: ./tumour1/abundances.cxb}

@@ -2,6 +2,12 @@
 
 [![Build Status](https://travis-ci.com/tonyyzy/RNASeq.svg?token=5Fwptxoz1iaezXoMzRSd&branch=master)](https://travis-ci.com/tonyyzy/RNASeq)
 
+# We will probably drop nodocker support soon...it's becoming harder to account for both versions
+Death to no docker !!!!!!!!!!
+
+Ah you think docker is your ally? You merely adopted the docker. I was born in it, molded by it.
+
+Sure but the docker is strong in me !!!!!!!!
 
 ## Notes
 DESeq2 requires metadata sample name to match gene_count_matrix sample name
@@ -35,3 +41,32 @@ tests/test_STAR_index_nodocker.py .                                      [100%]
 =========================== 1 passed in 2.01 seconds ===========================
 The command "pytest tests" exited with 0.
 ```
+## Backend data structure  
+<pre>
+rnaseq  
+|  
+|-- Genome_Index  
+|               |-- H. Sapiens  
+|               |             |-- fasta  
+|               |             |-- annotation  
+|               |             |-- STAR_index  
+|               |             |-- HISAT2_index  
+|               |              
+|               |-- P. Yoelii  
+|-- data  
+|       |  
+|       |-- Session ID  
+|                     |-- workflow1  
+|                     |            |-- cwl file  
+|                     |            |-- yml file
+|                     |            |-- analysis result directories
+|                     |-- fastq  
+|                     |        |-- file1.fastq  
+|                     |        |-- file2.fastq  
+|                     |  
+|                     |-- genome  
+|                              |-- fasta  
+|                              |-- annotation  
+|  
+|-- RNASeq (repository)  
+</pre>

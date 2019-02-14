@@ -1,0 +1,14 @@
+index:
+  class: Directory
+  path: ./transcript_index
+out_dir: test3_quant
+cores: "4"
+#first_end_fastq:
+#  class: File
+#  path: test1.1.fastq
+#second_end_fastq:
+#  class: File
+#  path: test1.2.fastq
+single_fastq:
+  class: File
+  path: test3.fastq

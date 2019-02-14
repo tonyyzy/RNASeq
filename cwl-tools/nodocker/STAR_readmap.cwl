@@ -6,33 +6,52 @@ baseCommand:
 requirements:
   - class: ShellCommandRequirement
   - class: InlineJavascriptRequirement
-arguments: ["mkdir", $(inputs.outFileNamePrefix + "_STARAligner"), "&&", "cd", $(inputs.outFileNamePrefix + "_STARAligner"), "&&", "STAR"]
-
+arguments:
+  - position: 0
+    shellQuote: False
+    valueFrom: $("mkdir " + inputs.outFileNamePrefix + " && cd " + inputs.outFileNamePrefix + " && STAR ")
+  - position: 5
+    valueFrom: |
+      ${
+        if (inputs.readFilesIn[0].nameext == ".gz"){
+          return "--readFilesCommand gunzip -c";}
+          return "";
+      }
 inputs:
-  Threads:
+  threads:
     type: int
     inputBinding:
+      position: 1
       prefix: --runThreadN
   genomeDir:
     type: Directory
     inputBinding:
+      position: 2
       prefix: --genomeDir
   readFilesIn:
     type: File[]
     inputBinding:
+      position: 3
       prefix: --readFilesIn
   outFileNamePrefix:
-    type: string?
+    type: string
     inputBinding:
+      position: 4
       prefix: --outFileNamePrefix
+  XSTag:
+    type: string?
+    default: intronMotif
+    inputBinding:
+      position: 5
+      prefix: --outSAMstrandField
 
 outputs:
   star_read_out:
     type: Directory
     outputBinding:
-      glob: $(inputs.outFileNamePrefix + "_STARAligner")
+      glob: $(inputs.outFileNamePrefix)
 
   sam_output:
     type: File
     outputBinding:
-      glob: $(inputs.outFileNamePrefix + "_STARAligner/*.sam")
+      glob: $(inputs.outFileNamePrefix + "/*.sam")
