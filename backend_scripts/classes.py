@@ -43,6 +43,7 @@ class database_reader():
     Index = []
     Mapper = []
     Assembler = []
+    Organism_name = []
     Genome_file = []
     Annotation_file = []
     Reads_files = {}
@@ -71,6 +72,7 @@ class database_reader():
 
         self.Genome_file = [i[column_names.index("fasta_file")]  for i in query_result]
         self.Annotation_file = [i[column_names.index("annotation_file")]  for i in query_result]
+        self.Organism_name = [i[column_names.index("organism")]  for i in query_result]
 
         cur.execute(f"SELECT * FROM analysis_samples WHERE Session_ID = {self.Session_ID}")
         column_names = [i[0] for i in cur.description]

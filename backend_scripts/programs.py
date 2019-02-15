@@ -240,7 +240,7 @@ class cwl_writer():
             yaml_file = yaml.load(yaml_file)
 
             yaml_file["reference"]["path"] = database_reader_object.Genome_file[0]
-            yaml_file["basename"] = database_reader_object.Genome_file[0]
+            yaml_file["basename"] = database_reader_object.Organism_name[0]
 
             with open(f"HISAT2_index_{database_reader_object.Session_ID}.yml", "w+") as outfile:
                 yaml.dump(yaml_file, outfile, default_flow_style=False)
