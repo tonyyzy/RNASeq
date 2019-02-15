@@ -4,10 +4,11 @@ import numpy as np
 import yaml
 import time
 import threading
+import programs
 
 class database_checker():
 
-    waiting_time = 10
+    waiting_time = 100
 
     def __init__(self, database_link):
         self.Database = database_link
@@ -29,13 +30,10 @@ class database_checker():
         print(reader.Reads_files)
         print(reader.Genome_file)
         print(reader.Annotation_file)
-        # print(reader.Analysis)
-        # print(reader)
         logic = logic_builder()
         logic.create_workflow_logic(reader)
-        print(logic.Workflow)
-        print(logic.Workflow_index)
-        print(logic.Workflow_dict)
+        writer = programs.cwl_writer()
+        writer.write_workflow(reader.Reads_files, logic, reader)
 
 
 
