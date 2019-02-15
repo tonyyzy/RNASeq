@@ -11,7 +11,7 @@ hints:
 requirements:
   InlineJavascriptRequirement: {}
   InitialWorkDirRequirement:
-    listing: | 
+    listing: |
       ${
         var paths = [];
         for (var i = 0; i < inputs.tablemaker_output.length; i ++) {

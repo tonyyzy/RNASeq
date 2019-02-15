@@ -1,0 +1,13 @@
+script:
+  class: File
+  path: /path/to/script
+bam_files:
+  - {class: File, path: /path/to/file}
+  - {class: File, path: /path/to/file}
+  - {class: File, path: /path/to/file}
+  - {class: File, path: /path/to/file}
+gtf:
+  class: File
+  path: /path/to/File
+threads: "4"
+pairedend: ""

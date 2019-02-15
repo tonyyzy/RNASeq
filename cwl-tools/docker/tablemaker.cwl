@@ -17,9 +17,6 @@ arguments:
     valueFrom: "-q"
   - position: 3
     valueFrom: "-W"
-#  - position: 6
-#    valueFrom: $(runtime.outdir+"/"+inputs.bam.basename)
-#    shellQuote: False
 
 inputs:
   threads:
