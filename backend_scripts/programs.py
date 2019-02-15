@@ -250,6 +250,7 @@ class cwl_writer():
         flag_split = 0
         previous_step = []
         number_of_steps = 1
+        result = []
 
         for i in list(logic_object.Workflow_dict.keys()):
             if len(logic_object.Workflow_dict[i]) > number_of_steps:
@@ -258,11 +259,13 @@ class cwl_writer():
 
             for e in list(logic_object.Workflow_dict[i].keys()):
                 if flag_split == 0:
-                    eval(f"self.{logic_object.Workflow_dict[i][e].lower()}(database_reader_object.Reads_files, self.cwl_workflow, output_string), previous_step")
+                    result = eval(f"self.{logic_object.Workflow_dict[i][e].lower()}(database_reader_object.Reads_files, self.cwl_workflow, output_string), previous_step")
                     previous_step = logic_object.Workflow_dict[i][e].lower()
                 else:
-                    while c < number_of_steps
-
+                    while c < number_of_steps:
+                        result = eval(f"self.{logic_object.Workflow_dict[i][e].lower()}(database_reader_object.Reads_files, self.cwl_workflow, output_string), previous_step")
+                        previous_step = logic_object.Workflow_dict[i][e].lower()
+                        c += 1
 """
 cwl_workflow = star_readmap(inputs, cwl_workflow)
 cwl_workflow = stringtie(inputs, cwl_workflow, output_string, "samtools")

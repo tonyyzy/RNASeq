@@ -82,7 +82,7 @@ class database_reader():
             self.Reads_files[i[column_names.index("accession")]] = {
             "type": i[column_names.index("libtype")],
             "path": {1: i[column_names.index("read_1")], 2: i[column_names.index("read_2")]},
-            "condition": i[column_names.index("condition")]
+            "condition": i[column_names.index("condition_id")]
             }
 
 
