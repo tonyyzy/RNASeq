@@ -75,9 +75,14 @@ inputs:
     inputBinding:
       position: 11
       prefix: --e
+  output:
+    type: string
+    inputBinding:
+      position: 12
+      prefix: --o
 
 outputs:
   output:
     type: File
     outputBinding:
-      glob: "gene_count_matrix.csv"
+      glob: $(inputs.output+".csv")
