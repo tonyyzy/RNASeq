@@ -4,6 +4,9 @@ cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: cuffquant
 
+requirements:
+    InlineJavascriptRequirement: {}
+
 hints:
     DockerRequirement:
         dockerPull: machalen/cufflinksdocker:latest
