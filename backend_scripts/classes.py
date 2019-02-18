@@ -4,10 +4,11 @@ import numpy as np
 import yaml
 import time
 import threading
+import programs
 
 class database_checker():
 
-    waiting_time = 10
+    waiting_time = 100
 
     def __init__(self, database_link):
         self.Database = database_link
@@ -29,13 +30,10 @@ class database_checker():
         print(reader.Reads_files)
         print(reader.Genome_file)
         print(reader.Annotation_file)
-        # print(reader.Analysis)
-        # print(reader)
         logic = logic_builder()
         logic.create_workflow_logic(reader)
-        print(logic.Workflow)
-        print(logic.Workflow_index)
-        print(logic.Workflow_dict)
+        writer = programs.cwl_writer()
+        writer.write_workflow(reader.Reads_files, logic, reader)
 
 
 
@@ -45,6 +43,7 @@ class database_reader():
     Index = []
     Mapper = []
     Assembler = []
+    Organism_name = []
     Genome_file = []
     Annotation_file = []
     Reads_files = {}
@@ -73,6 +72,7 @@ class database_reader():
 
         self.Genome_file = [i[column_names.index("fasta_file")]  for i in query_result]
         self.Annotation_file = [i[column_names.index("annotation_file")]  for i in query_result]
+        self.Organism_name = [i[column_names.index("organism")]  for i in query_result]
 
         cur.execute(f"SELECT * FROM analysis_samples WHERE Session_ID = {self.Session_ID}")
         column_names = [i[0] for i in cur.description]
