@@ -50,7 +50,16 @@ inputs:
          position: 8
 
 outputs:
-   output:
+   cufflink_out:
       type: Directory
       outputBinding:
          glob: $(inputs.output_dir)
+   gtf_out:
+      type: File
+      outputBinding:
+         glob: $(inputs.output_dir+"transcripts.gtf")
+         outputEval: |
+          ${
+            self[0].basename = inputs.output_dir + '.gtf';
+            return self[0]
+          }

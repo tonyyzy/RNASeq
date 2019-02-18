@@ -91,7 +91,7 @@ inputs:
          prefix: ""
 
 outputs:
-   output:
+   cuffdiff_out:
       type: Directory
       outputBinding:
          glob: $(inputs.output)

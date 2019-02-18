@@ -1,0 +1,10 @@
+test1	Cufflinks	transcript	500	999	1000	+	.	gene_id "gene1"; transcript_id "trans1"; FPKM "2785927.3372014062"; frac "1.000000"; conf_lo "2461234.024642"; conf_hi "3110620.649761"; cov "106.361134";
+test1	Cufflinks	exon	500	999	1000	+	.	gene_id "gene1"; transcript_id "trans1"; exon_number "1"; FPKM "2785927.3372014062"; frac "1.000000"; conf_lo "2461234.024642"; conf_hi "3110620.649761"; cov "106.361134";
+test1	Cufflinks	transcript	3000	5299	1000	-	.	gene_id "gene2"; transcript_id "trans3"; FPKM "181147.7727736400"; frac "0.732915"; conf_lo "128198.551611"; conf_hi "234096.993937"; cov "6.915860";
+test1	Cufflinks	exon	3000	3299	1000	-	.	gene_id "gene2"; transcript_id "trans3"; exon_number "1"; FPKM "181147.7727736400"; frac "0.732915"; conf_lo "128198.551611"; conf_hi "234096.993937"; cov "6.915860";
+test1	Cufflinks	exon	3500	3999	1000	-	.	gene_id "gene2"; transcript_id "trans3"; exon_number "2"; FPKM "181147.7727736400"; frac "0.732915"; conf_lo "128198.551611"; conf_hi "234096.993937"; cov "6.915860";
+test1	Cufflinks	exon	5050	5299	1000	-	.	gene_id "gene2"; transcript_id "trans3"; exon_number "3"; FPKM "181147.7727736400"; frac "0.732915"; conf_lo "128198.551611"; conf_hi "234096.993937"; cov "6.915860";
+test1	Cufflinks	transcript	3000	5299	325	-	.	gene_id "gene2"; transcript_id "trans2"; FPKM "58951.8596962419"; frac "0.267085"; conf_lo "27440.737358"; conf_hi "90462.982035"; cov "2.250664";
+test1	Cufflinks	exon	3000	3299	325	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "1"; FPKM "58951.8596962419"; frac "0.267085"; conf_lo "27440.737358"; conf_hi "90462.982035"; cov "2.250664";
+test1	Cufflinks	exon	4400	4999	325	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "2"; FPKM "58951.8596962419"; frac "0.267085"; conf_lo "27440.737358"; conf_hi "90462.982035"; cov "2.250664";
+test1	Cufflinks	exon	5050	5299	325	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "3"; FPKM "58951.8596962419"; frac "0.267085"; conf_lo "27440.737358"; conf_hi "90462.982035"; cov "2.250664";

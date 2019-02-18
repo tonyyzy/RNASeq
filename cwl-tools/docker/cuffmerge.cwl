@@ -62,7 +62,11 @@ inputs:
         type: File[]
 
 outputs:
-    output:
+    cuffmerge_out:
         type: Directory
         outputBinding:
             glob: $(inputs.output)
+    merged_gtf:
+        type: File
+        outputBinding:
+            glob: $(inputs.output+"/merged.gtf")

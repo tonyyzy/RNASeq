@@ -40,7 +40,7 @@ inputs:
       position: 6
 
 outputs:
-  output:
+  tablemaker_out:
     type: Directory
     outputBinding:
       glob: $(inputs.output)

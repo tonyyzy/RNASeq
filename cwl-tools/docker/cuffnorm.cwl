@@ -50,7 +50,7 @@ inputs:
         prefix: ""
 
 outputs:
-   output:
+   cuffnorm_out:
     type: Directory
     outputBinding:
       glob: $(inputs.output)
