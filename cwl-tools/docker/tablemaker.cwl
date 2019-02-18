@@ -20,7 +20,7 @@ arguments:
 
 inputs:
   threads:
-    type: string
+    type: int
     inputBinding:
       position: 1
       prefix: -p
