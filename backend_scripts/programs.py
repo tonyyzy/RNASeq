@@ -44,44 +44,57 @@ class cwl_writer():
         self.file_names = list(input_files) # list of filenames, fixed order
         self.num = len(input_files) # total number of inputs
         self.input_files = input_files
-
+        for index, name in enumerate(self.file_names):
+            self.cwl_workflow["inputs"][f"subject_name{index+1}"] = "string"
+            self.cwl_workflow["inputs"][f"fastq{index+1}"] = "File[]"
+            self.cwl_input[f"subject_name{index+1}"] = name
+            if self.input_files[name]["type"] is "pairedend":
+                self.cwl_input[f"fastq{index+1}"] = [
+                    {
+                        "class": "File",
+                        "path": self.input_files[name]["path"][num + 1]
+                    } for num in range(2)
+                ]
+            elif self.input_files[name]["type"] is "single":
+                self.cwl_input[f"fastq{index+1}"] = [
+                    {
+                        "class": "File",
+                        "path": self.input_files[name]["path"][1]
+                    }
+                ]
 
     def star(self):
-        for i in range(self.num):
-            self.cwl_workflow["inputs"]["genomeDir"] = "Directory"
-            self.cwl_workflow["inputs"]["subject_name{0}".format(i + 1)] = "File[]"
-            self.cwl_workflow["inputs"]["fastq{0}".format(i + 1)] = "string"
-            self.cwl_workflow["outputs"]["star_1_out"] = {
+        self.cwl_workflow["inputs"]["star_genomedir"] = "Directory"
+        self.cwl_workflow["outputs"]["star_readmap_out"] = {
             "type": "Directory",
-            "outputSource": "star_{0}/star_read_out".format(i + 1)}
-            self.cwl_workflow["steps"]["star_{0}".format(i + 1)] = {
-            "run": "../cwl-tools/docker/STAR_readmap.cwl",
-            "in": {
-            "threads": "threads",
-            "genomeDir": "genomeDir",
-            "readFilesIn": "fastq{0}".format(i + 1),
-            "outFileNamePrefix": "subject_name{0}".format(i + 1)},
-            "out": ["sam_output", "star_read_out"]}
-            self.cwl_input["genomeDir"] = {
+            "outputSource": f"star_folder/out"
+        }
+        for i in range(self.num):
+            self.cwl_workflow["steps"][f"star_readmap_{i+1}"] = {
+                "run": "../cwl-tools/docker/STAR_readmap.cwl",
+                "in": {
+                    "threads": "threads",
+                    "genomeDir": "genomeDir",
+                    "readFilesIn": f"fastq{i+1}",
+                    "outFileNamePrefix": f"subject_name{i+1}"
+                },
+                "out": ["sam_output", "star_read_out"]
+            }
+        self.cwl_input["star_genomedir"] = {
             "class": "Directory",
-            "path": "../tests/GenomeIndex"}
-            self.cwl_input["subject_name{0}".format(i + 1)] = "test{0}".format(i + 1)
-            self.cwl_input["fastq{0}".format(i + 1)] = [{"class": "File", "path": "path"} for e in range(len(input_files))]
+            "path": self.conf["star_genomedir"]
+        }
 
         self.cwl_workflow["steps"]["star_folder"] = {
-        "run": {
-        "class": "ExpressionTool",
-        "requirements": {
-            "InlineJavascriptRequirement": {}},
-            "inputs": dict([("dir{0}".format(i + 1), "Directory") for i in range(len(input_files))]),
-            "outputs": {
-            "out": "Directory"},
-            "expression": "|${{return{{\"out\":{{\"class\":\"Directory\",\"basename\":\"star\",\"listing\":[{}]}};}}}}".format(",".join(["inputs.dir{0}".format(i + 1) for i in range(len(input_files))]))},
-            "in": dict([("dir{0}".format(i + 1), "star_{0}/star_read_out".format(i + 1)) for i in range(len(input_files))]),
+            "run": self.conf["folder"],
+            "in": {
+                "item": [f"star_readmap_{i}/star_read_out" 
+                            for i in range(self.num)],
+                "name": "star"
+            },
             "out": ["out"]
             }
 
-        return yaml
 
     def samtools(self, input_files, yaml, output_string, prev):
         for i in range(len(input_files)):
@@ -431,3 +444,16 @@ with open("test.cwl", "w+") as outfile:
 with open("test.yml", "w+") as outfile:
     yaml.dump(cwl_workflow["yml"], outfile, default_flow_style=False)
 """
+
+
+files = {"file1": {
+    "type": "pairedend",
+    "path": {1: "path", 2: "path2"},
+    "condition": "normal"
+    },
+    "file2": {
+    "type": "single",
+    "path": {1: "path", 2: None},
+    "condition": "normal"
+    }
+    }
