@@ -19,7 +19,6 @@ urlpatterns = [
     path('session_detail/<int:session_pk>/conditions_update/<int:conditions_pk>/', views.ConditionsUpdateView.as_view(), name='conditions_update'),
     path('session_detail/<int:session_pk>/conditions_delete/<int:conditions_pk>/', views.ConditionsDeleteView.as_view(), name='conditions_delete'),
 
-
     path('samples_list', views.SamplesListView.as_view(), name='samples_list'),
     path('samples_detail/<int:pk>/', views.SamplesDetailView.as_view(), name='samples_detail'),
     path('session_detail/<int:session_pk>/samples_create/<int:conditions_pk>/', views.SamplesCreateView.as_view(), name='samples_create'),
@@ -28,7 +27,7 @@ urlpatterns = [
 
     path('workflow_list', views.WorkflowListView.as_view(), name='workflow_list'),
     path('workflow_detail/<int:pk>/', views.WorkflowDetailView.as_view(), name='workflow_detail'),
-    path('workflow_create/<int:pk>/', views.WorkflowCreateView.as_view(), name='workflow_create'),
+    path('session_detail/<int:session_pk>/workflow_create/', views.WorkflowCreateView.as_view(), name='workflow_create'),
     path('session_detail/<int:session_pk>/workflow_update/<int:workflow_pk>/', views.WorkflowUpdateView.as_view(), name='workflow_update'),
     path('session_detail/<int:session_pk>/workflow_delete/<int:workflow_pk>/', views.WorkflowDeleteView.as_view(), name='workflow_delete'),
 

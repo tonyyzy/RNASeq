@@ -1,4 +1,4 @@
-{%extends 'base.html'%}
+  {%extends 'base.html'%}
 <!DOCTYPE html>
 <html>
   <head>
@@ -136,18 +136,8 @@ analysis/session_detail/2/samples_update/7/ -->
         {% if not session_detail.workflow.all %}
           <h3>No Workflows defined.</h3>
         {% endif %}
-        <a class='btn btn-success' href="{% url 'analysis:workflow_create' pk=session_detail.pk %}">Add Workflow</a>
+        <a class='btn btn-success' href="{% url 'analysis:workflow_create' session_pk=session_detail.pk %}">Add Workflow</a>
     </div>
   {% endblock %}
   </body>
 </html>
-
-
-
-
-
-
-want to have a button to add samples to samples table linked to session and conditions
-can use the iteration for loop within the session detail page
-to extract the pk associated with that condition
-should also be able to pull out from from this the condition string and pass this as a string to the crete sample funciton
