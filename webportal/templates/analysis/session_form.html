@@ -11,6 +11,7 @@
   <body>
     {% block body %}
     <div class="jumbotron">
+      <h2>this is from session form</h2>
       <form method="POST"  enctype="multipart/form-data">
         {% csrf_token %}
         {{ form|crispy }}

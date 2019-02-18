@@ -22,9 +22,12 @@ urlpatterns = [
 
     path('samples_list', views.SamplesListView.as_view(), name='samples_list'),
     path('samples_detail/<int:pk>/', views.SamplesDetailView.as_view(), name='samples_detail'),
-    path('samples_create/<int:pk>/', views.SamplesCreateView.as_view(), name='samples_create'),
+    # path('samples_create/<int:pk>/', views.SamplesCreateView.as_view(), name='samples_create'),
     path('samples_update/<int:pk>/', views.SamplesUpdateView.as_view(), name='samples_update'),
     path('samples_delete/<int:pk>/', views.SamplesDeleteView.as_view(), name='samples_delete'),
+
+
+    path('session_detail/<int:session_pk>/samples_create/<str:conditions_str/', views.SamplesCreateView.as_view(), name='samples_create'),
 
     path('workflow_list', views.WorkflowListView.as_view(), name='workflow_list'),
     path('workflow_detail/<int:pk>/', views.WorkflowDetailView.as_view(), name='workflow_detail'),

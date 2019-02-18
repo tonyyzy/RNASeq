@@ -169,12 +169,19 @@ class SamplesCreateView(CreateView):
     # fields = ('condition','libtype', 'read_1','read_2',)
     # model = models.Samples
     template_name = 'analysis/samples_form.html'
-    form_class = SamplesForm
-    queryset = Samples.objects.all()
+    # form_class = SamplesForm
+    # queryset = Samples.objects.all()
 
-    def form_valid(self, form):
-        print(form.cleaned_data)
-        return super().form_valid(form)
+    # def form_valid(self, form):
+        # print(form.cleaned_data)
+        # return super().form_valid(form)
+
+
+    def get(self, request, pk):
+        form = SamplesForm
+        context = {'form':form}
+        return render(request, self.template_name, context)
+
 
 class SamplesUpdateView(UpdateView):
     fields = ('libtype','read_1','read_2',)
