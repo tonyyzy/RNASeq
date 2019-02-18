@@ -25,15 +25,15 @@ class Session(models.Model):
 
 
 class Conditions(models.Model):
-    session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='conditions')
+    session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='conditions_fk')
     conditions = models.CharField(max_length=50, blank=False)
     no_replicates = models.PositiveSmallIntegerField(blank=False, default=1)
 
     def get_absolute_url(self):
         return reverse('analysis:session_detail', kwargs={'pk':self.pk})
 
-    # def __str__(self):
-        # return self.conditions
+    def __str__(self):
+        return self.conditions
 
 
 class Samples(models.Model):
@@ -41,15 +41,15 @@ class Samples(models.Model):
         ("PE", "Paired_end"),
         ("SG", "Single")
     )
-    session = models.ForeignKey(Session, on_delete=models.PROTECT)
-    condition = models.ForeignKey(Conditions, on_delete=models.PROTECT, related_name='samples')
-    libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES, blank=True, null=True)
-    read_1 = models.FileField(upload_to='data/', blank=False, null=False, default=1)
+    session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='samples_fk')
+    condition = models.ForeignKey(Conditions, on_delete=models.PROTECT)
+    libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES, blank=False, null=False)
+    read_1 = models.FileField(upload_to='data/', blank=False, null=False)
     read_2 = models.FileField(upload_to='data/', blank=True, null=True)
     accession = models.CharField(max_length=200, blank=False, null=False)
 
     def get_absolute_url(self):
-        return reverse('analysis:samples_detail', kwargs={'pk':self.pk})
+        return reverse('analysis:session_detail', kwargs={'session_pk':self.session_pk})
 
 
 class Workflow(models.Model):
@@ -73,4 +73,3 @@ class Workflow(models.Model):
 
     def get_absolute_url(self):
         return reverse('analysis:session_detail', kwargs={'pk':self.pk})
-

@@ -29,7 +29,7 @@
         </div>
 
         <!-- CONDITIONS -->
-        {% if session_detail.conditions.all %}
+        {% if session_detail.conditions_fk.all %}
           <p class='lead'>Session Conditions:</p>
           <table class="table mb-1 condition_table">
             <thead>
@@ -39,57 +39,67 @@
                 <th>Replicates</th>
                 <th>Update</th>
                 <th>Delete</th>
+                <th>Add Sample</th>
               </tr>
             </thead>
             <tbody>
-                {% for condition in session_detail.conditions.all %}
+                {% for condition in session_detail.conditions_fk.all %}
                 <tr>
                   <td>{{ condition.pk }}</td>
                   <td>{{ condition.conditions }}</td>
                   <td>{{ condition.no_replicates }}</td>
                   <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:conditions_update' session_pk=condition.session.pk conditions_pk=condition.pk %}">Update</a></td>
                   <td><a class='btn btn-sm btn-danger' href="{% url 'analysis:conditions_delete' session_pk=condition.session.pk conditions_pk=condition.pk %}">Delete</a></td>
+                  <td><a class='btn btn-sm btn-success' href="{% url 'analysis:samples_create' session_pk=condition.session.pk conditions_pk=condition.pk %}">Add Sample</a></td>
                 </tr>
               {% endfor %}
             </tbody>
           </table>
         {% endif %}
-        {% if not session_detail.conditions.all %}
+        {% if not session_detail.conditions_fk.all %}
           <h3>No conditions defined.</h3>
         {% endif %}
         <a class='btn btn-success' href="{% url 'analysis:conditions_create' pk=session_detail.pk %}">Add Condition</a>
 <br><br>
       <!-- SAMPLES -->
-      {% if samples %}
+      {% if session_detail.samples_fk.all %}
       <p class='lead'>Session Samples:</p>
       <table class="table mb-1 condition_table">
         <thead>
           <tr>
             <th>Key</th>
-            <th>Condition Obj</th>
+            <th>Libtype</th>
             <th>Condition</th>
-            <th>Library</th>
-            <th>Read 1</th>
-            <th>Read 2</th>
+            <th>Read One</th>
+            <th>Read Two</th>
+            <th>Accession</th>
+            <th>Update</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
-          {% for sample in samples %}
-          <tr>
-            <td>{{sample.pk}}</td>
-            <td>{{ sample.condition }}</td>
-            <td>{{ sample.condition.conditions }}</td>
-            <td>{{ sample.libtype }}</td>
-            <td>{{ sample.read_1 }}</td>
-            <td>{{ sample.read_2 }}</td>
-          </tr>
-        {% endfor %}
+            {% for sample in session_detail.samples_fk.all %}
+            <tr>
+              <td>{{ sample.pk }}</td>
+              <td>{{ sample.libtype }}</td>
+              <td>{{ sample.condition }}</td>
+              <td>{{ sample.read_1 }}</td>
+              <td>{{ sample.read_2 }}</td>
+              <td>{{ sample.accession }}</td>
+              <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:samples_update' session_pk=sample.session.pk samples_pk=sample.pk %}">Update</a></td>
+              <td><a class='btn btn-sm btn-danger' href="{% url 'analysis:samples_delete' session_pk=sample.session.pk samples_pk=sample.pk %}">Delete</a></td>
+<!-- session_pk': 2, 'sample_pk': 7
+analysis/session_detail/2/samples_update/7/ -->
+
+            </tr>
+          {% endfor %}
         </tbody>
       </table>
       {% endif %}
-      {% if not samples %}
-        <p>No Current Samples</p>
+      {% if not session_detail.samples_fk.all %}
+              {{'no samples defined'}}
       {% endif %}
+
 <br><br>
         <!-- WORKFLOW -->
         {% if session_detail.workflow.all %}
@@ -131,3 +141,13 @@
   {% endblock %}
   </body>
 </html>
+
+
+
+
+
+
+want to have a button to add samples to samples table linked to session and conditions
+can use the iteration for loop within the session detail page
+to extract the pk associated with that condition
+should also be able to pull out from from this the condition string and pass this as a string to the crete sample funciton
