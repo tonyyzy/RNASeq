@@ -41,10 +41,10 @@ class cwl_writer():
         "folder": "path",
         "htseq_count_script": "path"
     }
-    
+
     name = ""
     previous_name = ""
-    
+
     def __init__(self, input_files):
         self.file_names = list(input_files) # list of filenames, fixed order
         self.num = len(input_files) # total number of inputs
@@ -68,7 +68,7 @@ class cwl_writer():
                     }
                 ]
 
-    def star(self):
+    def star(self, *args):
         self.cwl_workflow["inputs"]["star_genomedir"] = "Directory"
         self.cwl_workflow["outputs"]["star_readmap_out"] = {
             "type": "Directory",
@@ -93,14 +93,14 @@ class cwl_writer():
         self.cwl_workflow["steps"]["star_folder"] = {
             "run": self.conf["folder"],
             "in": {
-                "item": [f"star_readmap_{i}/star_read_out" 
+                "item": [f"star_readmap_{i}/star_read_out"
                             for i in range(self.num)],
                 "name": "star"
             },
             "out": ["out"]
             }
 
-    def samtools(self, input_files, yaml, output_string, prev):
+    def samtools(self, yaml, output_string, prev):
         for i in range(len(input_files)):
             yaml["cwl"]["outputs"]["samtools_out"] ={
                 "type": "Directory",
@@ -114,7 +114,7 @@ class cwl_writer():
                     "source": [f"subject_name{i + 1}"],
                     "valueFrom": "$(self + \".bam\")"}},
             "out": ["samtools_out"]}
-              
+
         yaml["cwl"]["steps"]["samtools_folder"] = {
         "run": "./cwl-tools/folder.cwl",
         "in":{
@@ -126,10 +126,7 @@ class cwl_writer():
         "out": ["out"]
         }
 
-        return yaml
-
-
-    def prepde(self, input_files, yaml, output_string, prev):
+    def prepde(self, output_string, prev):
 
         #inputs_from_prev =
         #print(inputs_from_prev)
@@ -156,9 +153,8 @@ class cwl_writer():
         self.cwl_input["prepDE_script"] = {
             "class": "File",
             "path": self.conf["prepde_script"]}
-        return yaml
 
-    def stringtie(self, input_files, yaml, output_string, prev):
+    def stringtie(self, output_string, prev):
         # inputs
         yaml["cwl"]["inputs"]["annotation"] = "File"
         # outputs
@@ -201,7 +197,7 @@ class cwl_writer():
 
         return yaml
 
-    def deseq2(self, input_files, yaml, output_string, prev):
+    def deseq2(self, output_string, prev):
 
         yaml["cwl"]["inputs"]["DESeq2_script"] = "File"
         yaml["cwl"]["inputs"]["metadata"] = "File"
@@ -238,9 +234,7 @@ class cwl_writer():
             "path": self.conf["metadata"]
         }
 
-        return yaml
-    
-    def dexseq(self, input_files, yaml, output_string, prev):
+    def dexseq(self, output_string, prev):
         self.cwl_workflow["inputs"]["dexseq_script"] = "File"
         self.cwl_workflow["outputs"][f"{prev}dexseq_out"] = {
             "type": "Directory",
@@ -264,9 +258,8 @@ class cwl_writer():
                 "name": {"valueFrom": f"{prev}_DEXseq"}
             }
         }
-        return yaml
 
-    def hisat2(self, input_files, yaml, output_string, prev):
+    def hisat2(self, output_string, prev):
         self.cwl_workflow["outputs"]["hisat2_align_out"] = {
             "type": "Directory",
             "outputSource": "hisat2_folder/out"
@@ -315,9 +308,9 @@ class cwl_writer():
                 "name": {"valueFrom": "hisat2_align"}
             }
         }
-        return yaml
-    
-    def htseq_prepare(self, input_files, yaml, output_string, prev):
+
+    def htseq(self, output_string, prev):
+
         self.cwl_workflow["inputs"]["htseq_prepare_script"] = "File",
         self.cwl_workflow["outputs"]["htseq_prepare_folder"] = {
             "type": "Directory",
@@ -343,10 +336,7 @@ class cwl_writer():
             },
             "out": ["out"]
         }
-        return yaml
-    
 
-    def htseq_count(self, input_files, yaml, output_string, prev):
         self.cwl_workflow["inputs"]["htseq_count_script"] = "File"
         self.cwl_workflow["outputs"][f"{prev}htseq_count_out"] = {
             "type": "Directory",
@@ -386,8 +376,6 @@ class cwl_writer():
             "class": "File",
             "path": self.conf["htseq_count_script"]
         }
-        return yaml
-
 
     def create_indexing(self, database_reader_object):
         print("Reading program index")
@@ -433,7 +421,7 @@ class cwl_writer():
             for e in list(logic_object.Workflow_dict[i].keys()):
                 if flag_split == 0:
                     self.name += f"{logic_object.Workflow_dict[i][e].lower()}_"
-                    result = eval(f"self.{logic_object.Workflow_dict[i][e].lower()}(database_reader_object.Reads_files, self.cwl_workflow, self.output_string, previous_step)")
+                    result = eval(f"self.{logic_object.Workflow_dict[i][e].lower()}(self.output_string, previous_step)")
                     previous_step = logic_object.Workflow_dict[i][e].lower()
                     self.previous_name = self.name
 
@@ -451,7 +439,7 @@ class cwl_writer():
                         names[c] += f"{logic_object.Workflow_dict[i][e].lower()}_"
                         self.name = names[c]
                         self.previous_name = previous_names[c]
-                        result = eval(f"self.{logic_object.Workflow_dict[i][e].lower()}(database_reader_object.Reads_files, self.cwl_workflow, self.output_string, previous_step)")
+                        result = eval(f"self.{logic_object.Workflow_dict[i][e].lower()}(self.output_string, previous_step)")
                         previous_step = logic_object.Workflow_dict[i][e].lower()
                         previous_names[c] = names[c]
                         c += 1
