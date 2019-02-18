@@ -3,86 +3,102 @@ from collections import OrderedDict
 import subprocess
 
 class cwl_writer():
+    # dict for cwl file
+    # will modify this attribute directly rather than passing it around
     cwl_workflow = {
-        "cwl":
-        {
-            "cwlVersion": "v1.0",
-            "class": "Workflow",
-            "requirements":{
-                "ScatterFeatureRequirement": {},
-                "MultipleInputFeatureRequirement": {},
-                "StepInputExpressionRequirement": {},
-                "InlineJavascriptRequirement": {}
-            },
-            "inputs": {
-                "threads": "int"
-                },
-            "outputs": {},
-            "steps": {}
+        "cwlVersion": "v1.0",
+        "class": "Workflow",
+        "requirements":{
+            "ScatterFeatureRequirement": {},
+            "MultipleInputFeatureRequirement": {},
+            "StepInputExpressionRequirement": {},
+            "InlineJavascriptRequirement": {}
         },
-        "yml":
-        {
-            "threads": 2
-            }
-        }
-
+        "inputs": {
+            "threads": "int"
+        },
+        "outputs": {},
+        "steps": {}
+    }
+    # dict for yml file
+    cwl_input = {
+        "threads": 2,
+        "metadata": "path",
+        "annotation": "path"
+    }
+    # is this still needed?
     output_string = {
         "star": "sam_output",
         "samtools": "samtools_out",
         "prepde": "gene_output",
         "stringtie": "stringtie_out"
-        }
-
+    }
+    # conf need to hold root path for repo rather than individual files
     conf = {
-        "DESeq2_script": "./scripts/Basic_DESeq2.R",
-        "metadata": "./tests/metadata0.csv",
+        "DESeq2_script": "path/to/script",
+        "metadata": "path/to/metadata",
         "annotation": "path/to/annotation",
-        "genomeDir": "./tests/GenomeIndex",
-        "prepde_script": "./scripts/prepDE.py"
-        }
+        "folder": "path",
+        "htseq_count_script": "path"
+    }
+    
     name = ""
     previous_name = ""
+    
+    def __init__(self, input_files):
+        self.file_names = list(input_files) # list of filenames, fixed order
+        self.num = len(input_files) # total number of inputs
+        self.input_files = input_files
+        for index, name in enumerate(self.file_names):
+            self.cwl_workflow["inputs"][f"subject_name{index+1}"] = "string"
+            self.cwl_workflow["inputs"][f"fastq{index+1}"] = "File[]"
+            self.cwl_input[f"subject_name{index+1}"] = name
+            if self.input_files[name]["type"] is "pairedend":
+                self.cwl_input[f"fastq{index+1}"] = [
+                    {
+                        "class": "File",
+                        "path": self.input_files[name]["path"][num + 1]
+                    } for num in range(2)
+                ]
+            elif self.input_files[name]["type"] is "single":
+                self.cwl_input[f"fastq{index+1}"] = [
+                    {
+                        "class": "File",
+                        "path": self.input_files[name]["path"][1]
+                    }
+                ]
 
-    #def __init__(self):
-
-
-    def star(self, input_files, yaml, output_string, prev):
-        for i in range(len(input_files)):
-            yaml["cwl"]["inputs"]["genomeDir"] = "Directory"
-            yaml["cwl"]["inputs"][f"subject_name{i + 1}"] = "string"
-            yaml["cwl"]["inputs"][f"fastq{i + 1}"] = "File[]"
-            yaml["cwl"]["outputs"]["star_out"] = {
+    def star(self):
+        self.cwl_workflow["inputs"]["star_genomedir"] = "Directory"
+        self.cwl_workflow["outputs"]["star_readmap_out"] = {
             "type": "Directory",
-            "outputSource": "star_folder/out"}
-            yaml["cwl"]["steps"][f"{self.name}{i + 1}"] = {
-            "run": "./cwl-tools/docker/STAR_readmap.cwl",
-            "in": {
-            "threads": "threads",
-            "genomeDir": "genomeDir",
-            "readFilesIn": f"fastq{i + 1}",
-            "outFileNamePrefix": f"subject_name{i + 1}"},
-            "out": ["sam_output", "star_read_out"]}
-
-            yaml["yml"]["genomeDir"] = {
+            "outputSource": f"star_folder/out"
+        }
+        for i in range(self.num):
+            self.cwl_workflow["steps"][f"star_readmap_{i+1}"] = {
+                "run": "../cwl-tools/docker/STAR_readmap.cwl",
+                "in": {
+                    "threads": "threads",
+                    "genomeDir": "genomeDir",
+                    "readFilesIn": f"fastq{i+1}",
+                    "outFileNamePrefix": f"subject_name{i+1}"
+                },
+                "out": ["sam_output", "star_read_out"]
+            }
+        self.cwl_input["star_genomedir"] = {
             "class": "Directory",
-            "path": self.conf["genomeDir"]}
-            yaml["yml"][f"subject_name{i + 1}"] = f"test{i + 1}"
-            yaml["yml"][f"fastq{i + 1}"] = [{"class": "File",
-            "path": f"../{input_files[list(input_files.keys())[i]]['path'][e + 1]}" } for e in range(len(input_files[list(input_files.keys())[i]]["path"]))]
-
-
-        yaml["cwl"]["steps"]["star_folder"] = {
-        "run": "./cwl-tools/folder.cwl",
-        "in":{
-            "item":[f"{self.name}{i + 1}/star_read_out" for i in range(len(input_files))],
-            "name": {
-                "valueFrom": self.name
-                }
-            },
-        "out": ["out"]
+            "path": self.conf["star_genomedir"]
         }
 
-        return yaml
+        self.cwl_workflow["steps"]["star_folder"] = {
+            "run": self.conf["folder"],
+            "in": {
+                "item": [f"star_readmap_{i}/star_read_out" 
+                            for i in range(self.num)],
+                "name": "star"
+            },
+            "out": ["out"]
+            }
 
     def samtools(self, input_files, yaml, output_string, prev):
         for i in range(len(input_files)):
@@ -98,7 +114,7 @@ class cwl_writer():
                     "source": [f"subject_name{i + 1}"],
                     "valueFrom": "$(self + \".bam\")"}},
             "out": ["samtools_out"]}
-
+              
         yaml["cwl"]["steps"]["samtools_folder"] = {
         "run": "./cwl-tools/folder.cwl",
         "in":{
@@ -137,7 +153,7 @@ class cwl_writer():
         "out": ["out"]
         }
 
-        yaml["yml"]["prepDE_script"] = {
+        self.cwl_input["prepDE_script"] = {
             "class": "File",
             "path": self.conf["prepde_script"]}
         return yaml
@@ -146,11 +162,13 @@ class cwl_writer():
         # inputs
         yaml["cwl"]["inputs"]["annotation"] = "File"
         # outputs
-        yaml["cwl"]["outputs"]["stringtie_out"] = {"type": "Directory",
-                                                    "outputSource": "stringtie_folder/out"
-                                                    }
+        self.cwl_workflow["outputs"]["stringtie_out"] = {
+            "type": "Directory",
+            "outputSource": "stringtie_folder/out"
+        }
         # steps
         for i in range(len(input_files)):
+
             yaml["cwl"]["steps"][f"{self.name[0]}{i + 1}"] = {
                 "run": "./cwl-tools/docker/stringtie.cwl",
                 "in": {
@@ -184,6 +202,7 @@ class cwl_writer():
         return yaml
 
     def deseq2(self, input_files, yaml, output_string, prev):
+
         yaml["cwl"]["inputs"]["DESeq2_script"] = "File"
         yaml["cwl"]["inputs"]["metadata"] = "File"
         yaml["cwl"]["outputs"]["DESeq2_out"] = {
@@ -199,6 +218,7 @@ class cwl_writer():
             },
             "out": ["DESeq2_out"]
         }
+
         yaml["cwl"]["steps"]["DESeq2_folder"] = {
             "run": "./cwl-tools/folder.cwl",
             "in":{
@@ -209,16 +229,165 @@ class cwl_writer():
             },
         "out": ["out"]
         }
-        yaml["yml"]["DESeq2_script"] = {
+        self.cwl_input["DESeq2_script"] = {
             "class": "File",
             "path": self.conf["DESeq2_script"]
         }
-        yaml["yml"]["metadata"] = {
+        self.cwl_input["metadata"] = {
             "class": "File",
             "path": self.conf["metadata"]
         }
 
         return yaml
+    
+    def dexseq(self, input_files, yaml, output_string, prev):
+        self.cwl_workflow["inputs"]["dexseq_script"] = "File"
+        self.cwl_workflow["outputs"][f"{prev}dexseq_out"] = {
+            "type": "Directory",
+            "outputSource": f"{prev}dexseq_folder/out"
+        }
+        self.cwl_workflow["steps"][f"{prev}_dexseq"] = {
+            "run": "../../cwl-tools/docker/dexseq.cwl",
+            "in": {
+                "input_script": "dexseq_script",
+                "count_matrix": f"{prev}/{output_string[prev.split('_')[-1]]}",
+                "gff": "htseq_prepare_folder/out",
+                "metadata": "metadata"
+            },
+            "out": ["output"]
+        }
+
+        self.cwl_workflow["steps"][f"{prev}_dexseq_folder"] = {
+            "run": "../../cwl-tools/folder.cwl",
+            "in": {
+                "item": f"{prev}_dexseq/output",
+                "name": {"valueFrom": f"{prev}_DEXseq"}
+            }
+        }
+        return yaml
+
+    def hisat2(self, input_files, yaml, output_string, prev):
+        self.cwl_workflow["outputs"]["hisat2_align_out"] = {
+            "type": "Directory",
+            "outputSource": "hisat2_folder/out"
+        }
+        for index, name in enumerate(self.file_names):
+            if input_files[name]["libtype"] is "pairedend":
+                self.cwl_workflow["steps"][f"hisat2_align_{index}"] = {
+                    "run": self.conf["hisat2_align"],
+                    "in": {
+                        "threads" : "threads",
+                        "index_directory" : "genomeDir",
+                        "first_pair": {
+                            "source": f"fastq{index}",
+                            "valueFrom": "$(self[0])"
+                        },
+                        "second_pair": {
+                            "source": f"fastq{index}",
+                            "valueFrom": "$(self[1])"
+                        },
+                        "sam_name": {
+                            "source": f"subject_name{index}",
+                            "valueFrom": "$(self + '.sam')"
+                        }
+                    },
+                    "out": ["sam_output", "hisat2_align_out"]
+                }
+            elif input_files[name]["libtype"] is "single":
+                self.cwl_workflow["steps"][f"hisat2_align_{index}"] = {
+                    "run": self.conf["hisat2_align"],
+                    "in": {
+                        "threads" : "threads",
+                        "index_directory" : "genomeDir",
+                        "single_file" : f"fastq{index}",
+                        "sam_name": {
+                            "source": f"subject_name{index}",
+                            "valueFrom": "$(self + '.sam')"
+                        }
+                    },
+                    "out": ["sam_output", "hisat2_align_out"]
+                }
+        self.cwl_workflow["steps"]["hisat2_align_folder"] = {
+            "run": self.conf["folder"],
+            "in": {
+                "item": [f"hisat2_align_{i}/hisat2_align_out"
+                            for i in range(self.num)],
+                "name": {"valueFrom": "hisat2_align"}
+            }
+        }
+        return yaml
+    
+    def htseq_prepare(self, input_files, yaml, output_string, prev):
+        self.cwl_workflow["inputs"]["htseq_prepare_script"] = "File",
+        self.cwl_workflow["outputs"]["htseq_prepare_folder"] = {
+            "type": "Directory",
+            "outputSource": "htseq_prepare_folder/out"
+        }
+        self.cwl_workflow["steps"]["htseq_prepare"] = {
+            "run": self.conf["htseq_prepare"],
+            "in": {
+                "input_script": "htseq_prepare_script",
+                "gtf": "annotation",
+                "gff_name": {
+                    "source": ["annotation"],
+                    "valueFrom": "$(self.nameroot + '.gff')"
+                }
+            },
+            "out": ["output"]
+        }
+        self.cwl_workflow["steps"]["htseq_prepare_folder"] = {
+            "run": self.conf["folder"],
+            "in": {
+                "item": "htseq_prepare/output",
+                "name": "htseq_prepare"
+            },
+            "out": ["out"]
+        }
+        return yaml
+    
+
+    def htseq_count(self, input_files, yaml, output_string, prev):
+        self.cwl_workflow["inputs"]["htseq_count_script"] = "File"
+        self.cwl_workflow["outputs"][f"{prev}htseq_count_out"] = {
+            "type": "Directory",
+            "outputSource": f"{prev}htseq_count_folder/out"
+        }
+        for index, name in enumerate(self.file_names):
+            if input_files[name]["libtype"] is "pairedend":
+                pairedend = "yes"
+            elif input_files[name]["libtype"] is "single":
+                pairedend = "no"
+            self.cwl_workflow["steps"][f"{prev}htseq_count_{index}"] = {
+                "run": self.conf["htseq_count"],
+                "in": {
+                    "input_script": "htseq_count_script",
+                    "pairedend": {"valueFrom": pairedend},
+                    "stranded": {"valueFrom": "no"},
+                    "input_format": {"valueFrom", "bam"},
+                    "sorted_by": {"valueFrom": "pos"},
+                    "gff": "htseq_prepare/output",
+                    "sam": f"{prev}samtools_{index}/samtools_out",
+                    "outname": {
+                        "source": [f"subject_name{index}"],
+                        "valueFrom": "$(self + '_htseq_count.csv')"
+                    },
+                "out": ["output"]
+                }
+            }
+        self.cwl_workflow["steps"][f"{prev}htseq_count_folder"] = {
+            "run": self.conf["folder"],
+            "in": {
+                "item": [f"{prev}htseq_count_{i}/output" for i in range(self.num)],
+                "name": {"valueFrom": f"{prev}htseq_count"}
+            },
+            "out": ["out"]
+        }
+        self.cwl_input["htseq_count_script"] = {
+            "class": "File",
+            "path": self.conf["htseq_count_script"]
+        }
+        return yaml
+
 
     def create_indexing(self, database_reader_object):
         print("Reading program index")
@@ -287,7 +456,7 @@ class cwl_writer():
                         previous_names[c] = names[c]
                         c += 1
 
-        with open("test.cwl", "w+") as outfile:
+          with open("test.cwl", "w+") as outfile:
             outfile.write("#!/usr/bin/env cwl-runner\n\n")
             yaml.dump(result["cwl"], outfile, default_flow_style=False)
         with open("test.yml", "w+") as outfile:
