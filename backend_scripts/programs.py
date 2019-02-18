@@ -151,10 +151,10 @@ class cwl_writer():
                                                     }
         # steps
         for i in range(len(input_files)):
-            yaml["cwl"]["steps"][f"{self.name}{i + 1}"] = {
+            yaml["cwl"]["steps"][f"{self.name[0]}{i + 1}"] = {
                 "run": "./cwl-tools/docker/stringtie.cwl",
                 "in": {
-                    "input_bam": f"{self.previous_name}{i+1}/{output_string[prev]}",
+                    "input_bam": f"{self.previous_name[0]}{i+1}/{output_string[prev]}",
                     "threads": "threads",
                     "annotation": "annotation",
                     "outfilename": {
@@ -168,7 +168,7 @@ class cwl_writer():
         yaml["cwl"]["steps"]["stringtie_folder"] = {
         "run": "./cwl-tools/folder.cwl",
         "in":{
-            "item":[f"{self.name}{i + 1}/stringtie_out" for i in range(len(input_files))],
+            "item":[f"{self.name[0]}{i + 1}/stringtie_out" for i in range(len(input_files))],
             "name": {
                 "valueFrom": self.name
                 }
@@ -190,11 +190,11 @@ class cwl_writer():
             "type": "Directory",
             "outputSource": "DESeq2_folder/out"
         }
-        yaml["cwl"]["steps"][f"{self.name}"] = {
+        yaml["cwl"]["steps"][f"{self.name[0]}"] = {
             "run": "./cwl-tools/docker/DESeq2.cwl",
             "in": {
                 "script": "DESeq2_script",
-                "count_matrix": f"{self.previous_name}/{output_string[prev]}",
+                "count_matrix": f"{self.previous_name[0]}/{output_string[prev]}",
                 "metadata": "metadata"
             },
             "out": ["DESeq2_out"]
@@ -269,11 +269,22 @@ class cwl_writer():
                     self.previous_name = self.name
 
                 else:
-                    c = 1
+                    c = 0
+                    names = []
+                    previous_names = []
+                    for steps in range(number_of_steps):
+                        names.append("")
+                        previous_names.append("")
+
                     while c < number_of_steps:
                         print("multiple")
+                        print(logic_object.Workflow_dict[i][e])
+                        names[c] += f"{logic_object.Workflow_dict[i][e].lower()}_"
+                        self.name = names[c]
+                        self.previous_name = previous_names[c]
                         result = eval(f"self.{logic_object.Workflow_dict[i][e].lower()}(database_reader_object.Reads_files, self.cwl_workflow, self.output_string, previous_step)")
                         previous_step = logic_object.Workflow_dict[i][e].lower()
+                        previous_names[c] = names[c]
                         c += 1
 
         with open("test.cwl", "w+") as outfile:
