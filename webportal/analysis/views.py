@@ -4,7 +4,6 @@ from django.urls import reverse, reverse_lazy
 from .forms import SessionSearchForm, SessionForm, WorkflowForm, SamplesForm, ConditionsForm
 from analysis.models import Session, Workflow, Samples, Conditions
 from . import models
-from django.forms import modelformset_factory
 from django.db.models import Q
 # from django.views.generic import TemplateView
 # from django.core.files.storage import FileSystemStorage
@@ -122,7 +121,6 @@ class ConditionsCreateView(CreateView):
         return render(request, self.template_name, {'form':form})
 
 
-
 class ConditionsUpdateView(UpdateView):
     template_name = 'analysis/conditions_form.html'
     form_class = ConditionsForm
@@ -166,31 +164,58 @@ class SamplesDetailView(DetailView):
 
 
 class SamplesCreateView(CreateView):
-    # fields = ('condition','libtype', 'read_1','read_2',)
-    # model = models.Samples
     template_name = 'analysis/samples_form.html'
-    # form_class = SamplesForm
-    # queryset = Samples.objects.all()
 
-    # def form_valid(self, form):
-        # print(form.cleaned_data)
-        # return super().form_valid(form)
-
-
-    def get(self, request, pk):
+    def get(self, request, session_pk, conditions_pk):
         form = SamplesForm
         context = {'form':form}
         return render(request, self.template_name, context)
 
+    def post(self, request, session_pk, conditions_pk):
+        form = SamplesForm
+        bound_form = SamplesForm(request.POST, request.FILES)
+        # print(bound_form.is_valid())
+        if bound_form.is_valid():
+            print(bound_form.cleaned_data)
+            session = Session.objects.get(pk=session_pk)
+            condition = Conditions.objects.get(pk=conditions_pk)
+            bound_post = bound_form.save(commit=False)
+            bound_post.session = session
+            bound_post.condition = condition
+            bound_post.save()
+            return redirect('analysis:session_detail', pk=session_pk)
+        return render(request, self.template_name, {'form':form})
+
 
 class SamplesUpdateView(UpdateView):
-    fields = ('libtype','read_1','read_2',)
-    model = models.Samples
+    template_name = 'analysis/samples_form.html'
+    form_class = SamplesForm
+
+    def get_object(self):
+        samples_pk = self.kwargs.get('samples_pk')
+        return get_object_or_404(Samples, pk=samples_pk)
+
+    def form_valid(self, form):
+        session_pk = self.kwargs.get('session_pk')
+        post = form.save(commit=False)
+        # post.session = Session.objects.get(pk=session_pk)
+        post.save()
+        return redirect('analysis:session_detail', pk=session_pk)
+
 
 class SamplesDeleteView(DeleteView):
+    template_name = 'analysis/samples_confirm_delete.html'
     context_object_name = 'sample'
-    model = models.Samples
-    success_url = reverse_lazy("analysis:samples_list")
+
+    def get_object(self):
+        samples_pk = self.kwargs.get('samples_pk')
+        return get_object_or_404(Samples, pk=samples_pk)
+
+    def post(self, request,  session_pk, samples_pk):
+        instance = get_object_or_404(Samples, pk=samples_pk)
+        instance.delete()
+        return redirect('analysis:session_detail', pk=session_pk)
+
 
 
 # Workflow
