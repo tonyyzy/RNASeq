@@ -1,5 +1,5 @@
 threads: 2
-genomeDir:
+salmon_index:
   class: Directory
   path: ../../tests/transcript_index
 subject_name1: test1
