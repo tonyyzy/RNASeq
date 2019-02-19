@@ -45,5 +45,5 @@ bg_filt = subset (bg,"rowVars(texpr(bg)) > 1", genomesubset=TRUE)
 # Perform DE
 results_transcripts = stattest(bg_filt, feature="transcript", covariate=condition, getFC=TRUE, meas="FPKM")
 results_genes = stattest(bg_filt, feature="gene", covariate=condition, getFC=TRUE, meas="FPKM")
-write.csv(results_transcripts,"transcript_count_matrix.csv")
-write.csv(results_genes,"gene_count_matrix.csv")
+write.csv(results_transcripts,"DTE_res.csv")
+write.csv(results_genes,"DGE_res.csv")

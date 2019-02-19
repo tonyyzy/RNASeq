@@ -1,0 +1,3 @@
+tracking_id	Normal_count	Normal_count_variance	Normal_count_uncertainty_var	Normal_count_dispersion_var	Normal_status	Tumour_count	Tumour_count_variance	Tumour_count_uncertainty_var	Tumour_count_dispersion_var	Tumour_status
+P1	8.91614	1989.43	0	8.91614	OK	14.3577	2208.26	0	14.3577	OK
+P2	105.625	2020.81	0	105.625	OK	111.451	2229.67	0	111.451	OK

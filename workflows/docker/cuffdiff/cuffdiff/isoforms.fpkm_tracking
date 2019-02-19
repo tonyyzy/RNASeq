@@ -1,0 +1,4 @@
+tracking_id	class_code	nearest_ref_id	gene_id	gene_short_name	tss_id	locus	length	coverage	Normal_FPKM	Normal_conf_lo	Normal_conf_hi	Normal_status	Tumour_FPKM	Tumour_conf_lo	Tumour_conf_hi	Tumour_status
+TCONS_00000001	=	trans1	XLOC_000001	gene1	TSS1	test1:499-999	500	-	1.45313e+06	1.13134e+06	1.77491e+06	OK	1.3311e+06	1.02296e+06	1.63923e+06	OK
+TCONS_00000002	=	trans2	XLOC_000002	gene2	TSS2	test1:2999-5299	1150	-	566125	84244.7	1.04801e+06	OK	597350	91179.5	1.10352e+06	OK
+TCONS_00000003	=	trans3	XLOC_000002	gene2	TSS2	test1:2999-5299	1050	-	53512.4	0	588905	OK	86171.3	0	650241	OK

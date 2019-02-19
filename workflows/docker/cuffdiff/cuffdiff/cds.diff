@@ -1,0 +1,2 @@
+test_id	gene_id	gene	locus	sample_1	sample_2	status	value_1	value_2	sqrt(JS)	test_stat	p_value	q_value	significant
+XLOC_000002	XLOC_000002	gene2	test1:2999-5299	Normal	Tumour	NOTEST	0	0	0.0456853	0	0.688	1	no
