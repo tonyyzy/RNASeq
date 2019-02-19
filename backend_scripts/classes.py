@@ -32,8 +32,8 @@ class database_checker():
         print(reader.Annotation_file)
         logic = logic_builder()
         logic.create_workflow_logic(reader)
-        writer = programs.cwl_writer(reader.Reads_files)
-        writer.write_workflow(reader.Reads_files, logic, reader)
+        writer = programs.cwl_writer(reader.Reads_files, reader)
+        writer.write_workflow(logic)
 
 
 
