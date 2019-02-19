@@ -21,28 +21,26 @@ class SessionIndexView(View):
         query = self.request.GET.get('q')
         if query:
             query = query.replace('-','')
-            print(f'cleaned query: {query}')
+            print(f'\ncleaned query: {query}')
             query_set_list = sessions.filter(
-                            Q(identifier__icontains=query))
-
-            # query_set_list = query_set_list.first()
-
+                            Q(identifier__icontains=query),
+                            )
             print(query_set_list)
             context = {'query_set_list':query_set_list}
             return render(request, 'analysis/index.html', context)
         return render(request, 'analysis/index.html')
 
-    def post(self, request):
-        form = SessionSearchForm(request.POST)
-        # context = {'form': form, 'sessions': sessions}
-        if form.is_valid():
-            user_session = form.cleaned_data['user_session']
-            # print(user_session)
-            context = {'form': form, 'sessions': sessions, 'user_session':user_session}
-            return render(request, 'analysis/index.html', context)
-            # return redirect('analysis:session_index')
-        context = {'form': form, 'sessions': sessions}
-        return render(request, 'analysis/index.html', context)
+    # def post(self, request):
+    #     form = SessionSearchForm(request.POST)
+    #     # context = {'form': form, 'sessions': sessions}
+    #     if form.is_valid():
+    #         user_session = form.cleaned_data['user_session']
+    #         # print(user_session)
+    #         context = {'form': form, 'sessions': sessions, 'user_session':user_session}
+    #         return render(request, 'analysis/index.html', context)
+    #         # return redirect('analysis:session_index')
+    #     context = {'form': form, 'sessions': sessions}
+    #     return render(request, 'analysis/index.html', context)
 
 
 class SessionListView(ListView):
@@ -58,14 +56,6 @@ class SessionDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(SessionDetailView, self).get_context_data(**kwargs)
-        session_pk = self.kwargs.get('pk')
-        samples = Samples.objects.all()
-        session_samples = []
-        for i in range(len(samples)):
-            if (samples[i].condition.session.pk == session_pk):
-                session_samples.append(samples[i])
-        context['samples'] = session_samples
-        # print(context)
         return context
 
 
@@ -100,22 +90,19 @@ class ConditionsCreateView(CreateView):
     template_name = 'analysis/conditions_form.html'
     # queryset = Conditions.objects.all()
 
-    def get(self, request, pk):
+    def get(self, request, session_pk):
         form = ConditionsForm
         context = {'form':form}
         return render(request, self.template_name, context)
 
-    def post(self, request, pk):
+    def post(self, request, session_pk):
         form = ConditionsForm(request.POST)
         print(request.GET)
         if form.is_valid():
             post = form.save(commit=False)
-            sessions = Session.objects.all()
-            adjusted_pk = self.kwargs.get('pk')-1 # database object starts index from 1 not 0
-            # print(f'\n{sessions[adjusted_pk]}') # returns a session object NOT a string
-            post.session = sessions[adjusted_pk]
+            post.session = Session.objects.get(pk=session_pk)
             post.save()
-            return redirect('analysis:session_detail', pk)
+            return redirect('analysis:session_detail', session_pk)
         return render(request, self.template_name, {'form':form})
 
 
@@ -170,16 +157,13 @@ class SamplesCreateView(CreateView):
         return render(request, self.template_name, context)
 
     def post(self, request, session_pk, conditions_pk):
-        form = SamplesForm
         bound_form = SamplesForm(request.POST, request.FILES)
         # print(bound_form.is_valid())
         if bound_form.is_valid():
             print(bound_form.cleaned_data)
-            session = Session.objects.get(pk=session_pk)
-            condition = Conditions.objects.get(pk=conditions_pk)
             bound_post = bound_form.save(commit=False)
-            bound_post.session = session
-            bound_post.condition = condition
+            bound_post.session = Session.objects.get(pk=session_pk)
+            bound_post.condition = Conditions.objects.get(pk=conditions_pk)
             bound_post.save()
             return redirect('analysis:session_detail', pk=session_pk)
         return render(request, self.template_name, {'form':form})
@@ -196,7 +180,6 @@ class SamplesUpdateView(UpdateView):
     def form_valid(self, form):
         session_pk = self.kwargs.get('session_pk')
         post = form.save(commit=False)
-        # post.session = Session.objects.get(pk=session_pk)
         post.save()
         return redirect('analysis:session_detail', pk=session_pk)
 
@@ -238,9 +221,8 @@ class WorkflowCreateView(CreateView):
     def post(self, request, session_pk):
         form = WorkflowForm(request.POST)
         if form.is_valid():
-            session = Session.objects.filter(id=session_pk)
             post = form.save(commit=False)
-            post.session = Session.objects.filter(id=session_pk)[0]
+            post.session = Session.objects.get(id=session_pk)
             post.save()
             return redirect('analysis:session_detail', session_pk)
         return render(request, self.template_name, {'form':form})
@@ -251,14 +233,12 @@ class WorkflowUpdateView(UpdateView):
     form_class = WorkflowForm
 
     def get_object(self):
-        # return HttpResponse('hi there old sport')
         workflow_pk = self.kwargs.get('workflow_pk')
         return get_object_or_404(Workflow, pk=workflow_pk)
 
     def form_valid(self, form):
         session_pk = self.kwargs.get('session_pk')
         post = form.save(commit=False)
-        # post.session = Session.objects.get(pk=session_pk)
         post.save()
         return redirect('analysis:session_detail', pk=session_pk)
 

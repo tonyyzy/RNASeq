@@ -34,7 +34,8 @@
           <table class="table mb-1 condition_table">
             <thead>
               <tr>
-                <th>Key</th>
+                <!-- <th>Key</th> -->
+                <th>Num</th>
                 <th>Condition</th>
                 <th>Replicates</th>
                 <th>Update</th>
@@ -45,7 +46,8 @@
             <tbody>
                 {% for condition in session_detail.conditions_fk.all %}
                 <tr>
-                  <td>{{ condition.pk }}</td>
+                  <!-- <td>{{ condition.pk }}</td> -->
+                  <td>{{forloop.counter}}</td>
                   <td>{{ condition.conditions }}</td>
                   <td>{{ condition.no_replicates }}</td>
                   <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:conditions_update' session_pk=condition.session.pk conditions_pk=condition.pk %}">Update</a></td>
@@ -59,7 +61,7 @@
         {% if not session_detail.conditions_fk.all %}
           <h3>No conditions defined.</h3>
         {% endif %}
-        <a class='btn btn-success' href="{% url 'analysis:conditions_create' pk=session_detail.pk %}">Add Condition</a>
+        <a class='btn btn-success' href="{% url 'analysis:conditions_create' session_pk=session_detail.pk %}">Add Condition</a>
 <br><br>
       <!-- SAMPLES -->
       {% if session_detail.samples_fk.all %}
@@ -67,7 +69,8 @@
       <table class="table mb-1 condition_table">
         <thead>
           <tr>
-            <th>Key</th>
+            <!-- <th>Key</th> -->
+            <th>Num</th>
             <th>Libtype</th>
             <th>Condition</th>
             <th>Read One</th>
@@ -80,7 +83,8 @@
         <tbody>
             {% for sample in session_detail.samples_fk.all %}
             <tr>
-              <td>{{ sample.pk }}</td>
+              <!-- <td>{{ sample.pk }}</td> -->
+              <td>{{forloop.counter}}</td>
               <td>{{ sample.libtype }}</td>
               <td>{{ sample.condition }}</td>
               <td>{{ sample.read_1 }}</td>
@@ -97,7 +101,7 @@ analysis/session_detail/2/samples_update/7/ -->
       </table>
       {% endif %}
       {% if not session_detail.samples_fk.all %}
-              {{'no samples defined'}}
+            <h3>{{'No samples defined.'}}</h3>
       {% endif %}
 
 <br><br>
@@ -107,7 +111,8 @@ analysis/session_detail/2/samples_update/7/ -->
         <table class="table mb-1 condition_table">
           <thead>
             <tr>
-              <th>Key</th>
+              <!-- <th>Key</th> -->
+              <th>Num</th>
               <th>Index</th>
               <th>Mapper</th>
               <th>Assembler</th>
@@ -120,7 +125,8 @@ analysis/session_detail/2/samples_update/7/ -->
           <tbody>
             {% for workflow in session_detail.workflow.all %}
             <tr>
-              <td>{{workflow.pk}}</td>
+              <!-- <td>{{workflow.pk}}</td> -->
+              <td>{{forloop.counter}}</td>
               <td>{{ workflow.index }}</td>
               <td>{{ workflow.mapper }}</td>
               <td>{{ workflow.assembler }}</td>
