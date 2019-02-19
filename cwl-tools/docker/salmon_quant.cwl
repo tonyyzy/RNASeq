@@ -27,7 +27,7 @@ inputs:
          position: 2
          prefix: "-o"
    cores:
-      type: string
+      type: int
       inputBinding:
          position: 3
          prefix: "-p"
@@ -42,7 +42,7 @@ inputs:
          position: 6
          prefix: "-2"
    single_fastq:
-      type: File?
+      type: File[]?
       inputBinding:
          position: 5
          prefix: "-r"
