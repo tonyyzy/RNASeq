@@ -13,10 +13,13 @@ from django.views.generic import (View,TemplateView,
                                 UpdateView)
 
 
+
+
+
+
 # Session
 class SessionIndexView(View):
     def get(self, request):
-        # return HttpResponse('Session Index View')
         sessions = Session.objects.all()
         query = self.request.GET.get('q')
         if query:
@@ -54,11 +57,26 @@ class SessionDetailView(DetailView):
     # template_name = 'analysis/session_detail.html'
     model = models.Session
 
-    def get_context_data(self, **kwargs):
-        context = super(SessionDetailView, self).get_context_data(**kwargs)
-        return context
+    def get_object(self):
+        slug = self.kwargs.get('session_slug')
+        return get_object_or_404(Session, identifier=slug)
+
+    # def get_context_data(self, **kwargs):
+    #     context = super(SessionDetailView, self).get_context_data(**kwargs)
+    #     return context
 
 
+# class SlugTestView(DetailView):
+#     model = models.Session
+#     context_object_name = 'session_detail'
+#
+#     def get_object(self):
+#         slug = self.kwargs.get('session_slug')
+#         return get_object_or_404(Session, identifier=slug)
+
+
+
+# currently broken by the move from pk to identifier slug. will need to fix tomorrow.
 class SessionCreateView(CreateView):
     fields = ('organism','genome','fasta_file', 'annotation_file',)
     model = models.Session
@@ -90,19 +108,19 @@ class ConditionsCreateView(CreateView):
     template_name = 'analysis/conditions_form.html'
     # queryset = Conditions.objects.all()
 
-    def get(self, request, session_pk):
+    def get(self, request, session_slug):
         form = ConditionsForm
         context = {'form':form}
         return render(request, self.template_name, context)
 
-    def post(self, request, session_pk):
+    def post(self, request, session_slug):
         form = ConditionsForm(request.POST)
         print(request.GET)
         if form.is_valid():
             post = form.save(commit=False)
-            post.session = Session.objects.get(pk=session_pk)
+            post.session = Session.objects.get(identifier=session_slug)
             post.save()
-            return redirect('analysis:session_detail', session_pk)
+            return redirect('analysis:session_detail', session_slug)
         return render(request, self.template_name, {'form':form})
 
 
@@ -115,11 +133,11 @@ class ConditionsUpdateView(UpdateView):
         return get_object_or_404(Conditions, id=conditions_pk)
 
     def form_valid(self, form):
-        session_pk = self.kwargs.get('session_pk')
+        session_slug = self.kwargs.get('session_slug')
         post = form.save(commit=False)
-        post.session = Session.objects.get(pk=session_pk)
+        post.session = Session.objects.get(identifier=session_slug)
         post.save()
-        return redirect('analysis:session_detail', pk=session_pk)
+        return redirect('analysis:session_detail', session_slug)
 
 
 class ConditionsDeleteView(DeleteView):
@@ -127,13 +145,14 @@ class ConditionsDeleteView(DeleteView):
     context_object_name = 'condition'
 
     def get_object(self):
+        # return HttpResponse('test')
         conditions_pk = self.kwargs.get('conditions_pk')
-        return get_object_or_404(Conditions, id=conditions_pk)
+        return get_object_or_404(Conditions, pk=conditions_pk)
 
-    def post(self, request, session_pk, conditions_pk):
-        instance = get_object_or_404(Conditions, id=conditions_pk)
+    def post(self, request, session_slug, conditions_pk):
+        instance = get_object_or_404(Conditions, pk=conditions_pk)
         instance.delete()
-        return redirect('analysis:session_detail', pk=session_pk)
+        return redirect('analysis:session_detail', session_slug=session_slug)
 
 
 # Samples
@@ -151,21 +170,21 @@ class SamplesDetailView(DetailView):
 class SamplesCreateView(CreateView):
     template_name = 'analysis/samples_form.html'
 
-    def get(self, request, session_pk, conditions_pk):
+    def get(self, request, session_slug, conditions_pk):
         form = SamplesForm
         context = {'form':form}
         return render(request, self.template_name, context)
 
-    def post(self, request, session_pk, conditions_pk):
+    def post(self, request, session_slug, conditions_pk):
         bound_form = SamplesForm(request.POST, request.FILES)
         # print(bound_form.is_valid())
         if bound_form.is_valid():
             print(bound_form.cleaned_data)
             bound_post = bound_form.save(commit=False)
-            bound_post.session = Session.objects.get(pk=session_pk)
+            bound_post.session = Session.objects.get(identifier=session_slug)
             bound_post.condition = Conditions.objects.get(pk=conditions_pk)
             bound_post.save()
-            return redirect('analysis:session_detail', pk=session_pk)
+            return redirect('analysis:session_detail', session_slug=session_slug)
         return render(request, self.template_name, {'form':form})
 
 
@@ -178,10 +197,9 @@ class SamplesUpdateView(UpdateView):
         return get_object_or_404(Samples, pk=samples_pk)
 
     def form_valid(self, form):
-        session_pk = self.kwargs.get('session_pk')
-        post = form.save(commit=False)
-        post.save()
-        return redirect('analysis:session_detail', pk=session_pk)
+        session_slug = self.kwargs.get('session_slug')
+        form.save()
+        return redirect('analysis:session_detail', session_slug=session_slug)
 
 
 class SamplesDeleteView(DeleteView):
@@ -192,10 +210,10 @@ class SamplesDeleteView(DeleteView):
         samples_pk = self.kwargs.get('samples_pk')
         return get_object_or_404(Samples, pk=samples_pk)
 
-    def post(self, request,  session_pk, samples_pk):
+    def post(self, request,  session_slug, samples_pk):
         instance = get_object_or_404(Samples, pk=samples_pk)
         instance.delete()
-        return redirect('analysis:session_detail', pk=session_pk)
+        return redirect('analysis:session_detail', session_slug=session_slug)
 
 
 # Workflow
@@ -213,18 +231,18 @@ class WorkflowDetailView(DetailView):
 class WorkflowCreateView(CreateView):
     template_name = 'analysis/workflow_form.html'
 
-    def get(self, request, session_pk):
+    def get(self, request, session_slug):
         form = WorkflowForm
         context = {'form':form}
         return render(request, self.template_name, context)
 
-    def post(self, request, session_pk):
+    def post(self, request, session_slug):
         form = WorkflowForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-            post.session = Session.objects.get(id=session_pk)
+            post.session = Session.objects.get(identifier=session_slug)
             post.save()
-            return redirect('analysis:session_detail', session_pk)
+            return redirect('analysis:session_detail', session_slug)
         return render(request, self.template_name, {'form':form})
 
 
@@ -237,10 +255,9 @@ class WorkflowUpdateView(UpdateView):
         return get_object_or_404(Workflow, pk=workflow_pk)
 
     def form_valid(self, form):
-        session_pk = self.kwargs.get('session_pk')
-        post = form.save(commit=False)
-        post.save()
-        return redirect('analysis:session_detail', pk=session_pk)
+        session_slug = self.kwargs.get('session_slug')
+        form.save()
+        return redirect('analysis:session_detail', session_slug=session_slug)
 
 
 class WorkflowDeleteView(DeleteView):
@@ -251,7 +268,7 @@ class WorkflowDeleteView(DeleteView):
         workflow_pk = self.kwargs.get('workflow_pk')
         return get_object_or_404(Workflow, pk=workflow_pk)
 
-    def post(self, request,  session_pk, workflow_pk):
+    def post(self, request,  session_slug, workflow_pk):
         instance = get_object_or_404(Workflow, pk=workflow_pk)
         instance.delete()
-        return redirect('analysis:session_detail', pk=session_pk)
+        return redirect('analysis:session_detail', session_slug=session_slug)
