@@ -18,8 +18,6 @@ class SessionIndexView(View):
     def get(self, request):
         # return HttpResponse('Session Index View')
         sessions = Session.objects.all()
-        # form = SessionSearchForm
-        # context = {'form': form}
         query = self.request.GET.get('q')
         if query:
             query = query.replace('-','')
@@ -217,38 +215,34 @@ class SamplesDeleteView(DeleteView):
         return redirect('analysis:session_detail', pk=session_pk)
 
 
-
 # Workflow
 class WorkflowListView(ListView):
     # context_object_name = 'conditions'
     model = models.Workflow
+
 
 class WorkflowDetailView(DetailView):
     context_object_name = 'workflow_detail'
     model = models.Workflow
     template_name = 'analysis/workflow_detail.html'
 
+
 class WorkflowCreateView(CreateView):
     template_name = 'analysis/workflow_form.html'
 
-    def get(self, request, pk):
+    def get(self, request, session_pk):
         form = WorkflowForm
         context = {'form':form}
-        print('\nsuccessful get request')
         return render(request, self.template_name, context)
 
-    def post(self, request, pk):
+    def post(self, request, session_pk):
         form = WorkflowForm(request.POST)
         if form.is_valid():
-            print(f'\nPRIMARY KEY: {pk}')
-            sessions = Session.objects.all()
-            # print(sessions)
-            adjusted_pk = self.kwargs.get('pk')-1 # python index 1st session from 0
-            print(sessions[adjusted_pk]) # returns a session object NOT a string!
+            session = Session.objects.filter(id=session_pk)
             post = form.save(commit=False)
-            post.session = sessions[adjusted_pk]
+            post.session = Session.objects.filter(id=session_pk)[0]
             post.save()
-            return redirect('analysis:session_detail', pk)
+            return redirect('analysis:session_detail', session_pk)
         return render(request, self.template_name, {'form':form})
 
 

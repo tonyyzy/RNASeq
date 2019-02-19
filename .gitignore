@@ -10,6 +10,7 @@ test_dexseq_out
 STARIndexd
 test1d
 db.sqlite3
+settings.py
 .pytest_cache
 migrations
 test_DESeq2_out
