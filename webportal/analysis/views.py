@@ -13,10 +13,6 @@ from django.views.generic import (View,TemplateView,
                                 UpdateView)
 
 
-
-
-
-
 # Session
 class SessionIndexView(View):
     def get(self, request):
