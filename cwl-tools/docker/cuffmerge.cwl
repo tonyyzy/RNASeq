@@ -49,7 +49,7 @@ inputs:
             position: 2
             prefix: -g
     threads:
-        type: string
+        type: int
         inputBinding:
             position: 3
             prefix: -p

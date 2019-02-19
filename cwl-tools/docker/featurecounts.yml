@@ -1,0 +1,12 @@
+script:
+  class: File
+  path: /project/home18/fmj18/Documents/RNASeq/scripts/featurecount.R
+bam_files:
+  - {class: File, path: ../cufflinks/tumour1.bam}
+  - {class: File, path: ../cufflinks/normal1.bam}
+gtf:
+  class: File
+  path: ../cufflinks/Homo_sapiens.GRCh38.95.gtf
+threads: "4"
+pairedend: ""
+output: "gene_count"

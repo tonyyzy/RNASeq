@@ -52,16 +52,16 @@ Gene_Sets <- lapply(unique(gs[,2]), function(x) gs[gs[,2] == x,1])
 names(Gene_Sets) <- unique(gs[,2])
 
 print("step 2")
-
-stats <- Deseq.results[!is.na(Deseq.results$padj),]
-tmp <- stats[,"log2FoldChange"]
-names(tmp) <- rownames(stats)
-print(head(tmp))
-
-print("step 3")
-gsea.Results <- fgsea::fgsea(Gene_Sets,tmp, 5000, minSize = 10)
+Deseq.results <- Deseq.results[!is.na(Deseq.results$padj),]
+list2 <- Deseq.results[Deseq.results$padj <= 0.05,]
+results <- c()
+for(list1 in Gene_Sets){
+  overlap <- list1[list1 %in% rownames(list2)]
+  tmp <- phyper(length(overlap),length(list1),(nrow(Deseq.results)-length(list1)),nrow(list2),lower.tail = FALSE, log.p = FALSE)
+  results <- c(results,tmp)
+}
 
 print("step 4")
-
-Results <- data.frame(gsea.Results[,2:7], row.names = gsea.Results$pathway)
-write.csv(Results, res_name)
+results2 <- p.adjust(results, method = "bonferroni")
+results <- data.frame("pvalue"=results, "padj"=results2, row.names = names(Gene_Sets))
+write.csv(results, paste0(res_name, ".csv"))
