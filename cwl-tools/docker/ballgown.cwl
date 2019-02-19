@@ -6,7 +6,7 @@ baseCommand: Rscript
 
 hints:
   DockerRequirement:
-    dockerpull: quay.io/biocontainers/bioconductor-ballgown:2.14.0--r351_0
+    dockerPull: quay.io/biocontainers/bioconductor-ballgown:2.14.0--r351_0
 
 requirements:
   InlineJavascriptRequirement: {}
@@ -14,11 +14,11 @@ requirements:
     listing: |
       ${
         var paths = [];
-        for (var i = 0, i < inputs.tablemaker_output.lengths; i ++) {
+        for (var i = 0; i < inputs.tablemaker_output.length; i ++) {
           paths.push({
             "class": "Directory",
-            "basename": inputs.tablemaker_output[i].nameroot,
-            "listing": [inputs.tablemaker_output[i]]
+            "basename": inputs.tablemaker_output[i].basename,
+            "listing": inputs.tablemaker_output[i].listing
           });
         }return paths;
       }
@@ -35,7 +35,7 @@ inputs:
       position: 0
   tablemaker_output:
     type: Directory[]
-  matadata:
+  metadata:
     type: File
     inputBinding:
       position: 2
@@ -50,8 +50,8 @@ outputs:
   gene_matrix:
     type: File
     outputBinding:
-      glob: "*gene_count_matrix*"
+      glob: $("gene_count_matrix.csv")
   transcript_matrix:
-    type: Files
+    type: File
     outputBinding:
-      glob: "*transcript_count_matrix*"
+      glob: $("transcript_count_matrix.csv")

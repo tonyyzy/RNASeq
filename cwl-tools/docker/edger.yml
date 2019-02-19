@@ -1,0 +1,11 @@
+script:
+    class: File
+    path: /path/to/script
+condition: "string"
+counts:
+    class: File
+    path: /path/to/File
+metadata:
+    class: File
+    path: /path/to/File
+output: "string"
