@@ -62,12 +62,12 @@ inputs:
          position: 8
          prefix: --FDR
    libType:
-      type: string
+      type: string?
       inputBinding:
          position: 9
          prefix: --library-type
    libNorm:
-      type: string
+      type: string?
       inputBinding:
          position: 10
          prefix: --library-norm-method

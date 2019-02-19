@@ -92,13 +92,13 @@ steps:
     in:
       threads: threads
       index_directory: genomeDir
-      first_pair:
-        source: fastq3
-        valueFrom: $(self[0])
-      second_pair:
-        source: fastq3
-        valueFrom: $(self[1])
-      #single_file: fastq3
+      #first_pair:
+      #  source: fastq3
+      #  valueFrom: $(self[0])
+      #second_pair:
+      #  source: fastq3
+      #  valueFrom: $(self[1])
+      single_file: fastq3
       XSTag: Tag
       sam_name:
         source: subject_name3
@@ -110,13 +110,13 @@ steps:
     in:
       threads: threads
       index_directory: genomeDir
-      first_pair:
-        source: fastq3
-        valueFrom: $(self[0])
-      second_pair:
-        source: fastq3
-        valueFrom: $(self[1])
-      #single_file: fastq4
+      #first_pair:
+      #  source: fastq3
+      #  valueFrom: $(self[0])
+      #second_pair:
+      #  source: fastq3
+      #  valueFrom: $(self[1])
+      single_file: fastq4
       XSTag: Tag
       sam_name:
         source: subject_name4
@@ -237,10 +237,10 @@ steps:
     run: ../../cwl-tools/folder.cwl
     in:
       item:
-        - cufflinks_1/cufflink_out
-        - cufflinks_2/cufflink_out
-        - cufflinks_3/cufflink_out
-        - cufflinks_4/cufflink_out
+        - cufflinks_1/gtf_out
+        - cufflinks_2/gtf_out
+        - cufflinks_3/gtf_out
+        - cufflinks_4/gtf_out
       name:
         valueFrom: "cufflinks"
     out: [out]
@@ -264,7 +264,7 @@ steps:
   cuffmerge_folder:
     run: ../../cwl-tools/folder.cwl
     in:
-      item: cuffmerge/cuffmerge_out
+      item: cuffmerge/merged_gtf
       name:
         valueFrom: "cuffmerge"
     out: [out]
@@ -317,10 +317,10 @@ steps:
     run: ../../cwl-tools/folder.cwl
     in:
       item:
-        - cuffquant_1/cuffquant_out
-        - cuffquant_2/cuffquant_out
-        - cuffquant_3/cuffquant_out
-        - cuffquant_4/cuffquant_out
+        - cuffquant_1/cxb
+        - cuffquant_2/cxb
+        - cuffquant_3/cxb
+        - cuffquant_4/cxb
       name:
         valueFrom: "cuffquant"
     out: [out]
@@ -330,12 +330,12 @@ steps:
     in:
       threads: threads
       gtf_file: cuffmerge/merged_gtf
-      libType:
-        valueFrom: "fr-unstranded"
-      libNorm:
-        valueFrom: "classic-fpkm"
+      #libType:
+      #  valueFrom: "fr-unstranded"
+      #libNorm:
+      #  valueFrom: "classic-fpkm"
       FDR:
-        valueFrom: "0.05"
+        valueFrom: "1"
       label: conditions
       condition1_files:
         - cuffquant_1/cxb
@@ -350,7 +350,9 @@ steps:
   cuffdiff_folder:
     run: ../../cwl-tools/folder.cwl
     in:
-      item: cuffdiff/cuffdiff_out
+      item: 
+        - cuffdiff/cuffdiff_out
+        - cuffdiff/cuffdiff_out
       name:
         valueFrom: "cuffdiff"
     out: [out]
@@ -365,7 +367,6 @@ steps:
         source: [subject_name1]
         valueFrom: $(self)
     out: [tablemaker_out]
-
   tablemaker_2:
     run: ../../cwl-tools/docker/tablemaker.cwl
     in:
