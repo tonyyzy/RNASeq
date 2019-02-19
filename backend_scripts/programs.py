@@ -41,7 +41,8 @@ class cwl_writer():
         # "htseq_count_script": "path"
         "metadata": "path/to/metadata",
         "annotation": "path/to/annotation",
-        "root": "repo/root"
+        "root": "repo/root",
+        "salmon_index": "salmonindex"
     }
 
     name = ""
@@ -290,7 +291,7 @@ class cwl_writer():
     def hisat2(self):
         # workflow section
         # inputs
-
+        self.cwl_workflow["inputs"]["HISAT2Index"] = "Directory"
         # outputs
         self.cwl_workflow["outputs"]["hisat2_align_out"] = {
             "type": "Directory",
@@ -304,7 +305,7 @@ class cwl_writer():
                     "run": f"{self.conf['root']}/cwl-tools/docker/hisat2_align.cwl",
                     "in": {
                         "threads" : "threads",
-                        "index_directory" : "genomeDir",
+                        "index_directory" : "HISAT2Index",
                         "first_pair": {
                             "source": f"fastq{index+1}",
                             "valueFrom": "$(self[0])"
@@ -325,7 +326,7 @@ class cwl_writer():
                     "run": f"{self.conf['root']}/cwl-tools/docker/hisat2_align.cwl",
                     "in": {
                         "threads" : "threads",
-                        "index_directory" : "genomeDir",
+                        "index_directory" : "HISAT2Index",
                         "single_file" : f"fastq{index+1}",
                         "sam_name": {
                             "source": f"subject_name{index+1}",
@@ -342,6 +343,12 @@ class cwl_writer():
                             for i in range(self.num)],
                 "name": {"valueFrom": self.name[:-1]}
             }
+        }
+
+        # yml section
+        self.cwl_input["HISAT2Index"] = {
+            "class": "Directory",
+            "path": self.conf["HISAT2Index"]
         }
 
     def htseq(self):
@@ -429,6 +436,103 @@ class cwl_writer():
             "class": "File",
             "path": f"{self.conf['root']}/scripts/Basic_DEXSeq_scripts/dexseq_count_modified.py"
         }
+
+    def salmon(self):
+        # salmon_quant
+        # workflow section
+        # inputs
+        self.cwl_workflow["inputs"]["salmon_index"] = "Directory"
+        # outputs
+        self.cwl_workflow["outputs"]["salmon_quant_out"] = {
+            "type": "Directory",
+            "outputSource": "salmon_quant_folder/out"
+        }
+        # steps
+        for index, name in enumerate(self.file_names):
+            if self.input_files[name]["type"] is "pairedend":
+                self.cwl_workflow["steps"][f"salmon_quant_{index+1}"] = {
+                    "run": f"{self.conf['root']}/cwl-tools/docker/salmon_quant.cwl",
+                    "in": {
+                        "cores" : "threads",
+                        "index" : "salmon_index",
+                        "first_end_fastq": {
+                            "source": f"fastq{index+1}",
+                            "valueFrom": "$(self[0])"
+                        },
+                        "second_end_fastq": {
+                            "source": f"fastq{index+1}",
+                            "valueFrom": "$(self[1])"
+                        },
+                        "out_dir": f"subject_name{index+1}"
+                    },
+                    "out": ["output"]
+                }
+            elif self.input_files[name]["type"] is "single":
+                self.cwl_workflow["steps"][f"salmon_quant_{index+1}"] = {
+                    "run": f"{self.conf['root']}/cwl-tools/docker/salmon_quant.cwl",
+                    "in": {
+                        "cores" : "threads",
+                        "index" : "salmon_index",
+                        "single_fastq" : f"fastq{index+1}",
+                        "out_dir": f"subject_name{index+1}"
+                    },
+                    "out": ["output"]
+                }
+        # foldering
+        self.cwl_workflow["steps"]["salmon_quant_folder"] = {
+            "run": f"{self.conf['root']}/cwl-tools/folder.cwl",
+            "in": {
+                "item": [f"salmon_quant_{i+1}/output"
+                            for i in range(self.num)],
+                "name": {"valueFrom": "salmon_quant"}
+            }
+        }
+
+        # yml section
+        self.cwl_input["salmon_index"] = {
+            "class": "Directory",
+            "path": self.conf["salmon_index"]
+        }
+
+        # salmon_count
+        # workflow section
+        # inputs
+        self.cwl_workflow["inputs"]["salmon_count_script"] = "File"
+        # outputs
+        self.cwl_workflow["outputs"]["salmon_count_out"] = {
+            "type": "Directory",
+            "outputSource": "salmon_count_folder/out"
+        }
+        # steps
+        self.cwl_workflow["steps"]["salmon_count"] = {
+            "run": f"{self.conf['root']}/cwl-tools/docker/salmon_count.cwl",
+            "in": {
+                "input_script": "salmon_count_script",
+                "gtf": "annotation",
+                "metadata": "metadata",
+                "salmon_dir": "salmon_quant_folder/out"
+            },
+            "out": ["count", "length", "abundance"]
+        }
+        # foldering
+        self.cwl_workflow["steps"]["salmon_count_folder"] = {
+            "run": f"{self.conf['root']}/cwl-tools/folder.cwl",
+            "in": {
+                "item": [
+                    "salmon_count/count",
+                    "salmon_count/length",
+                    "salmon_count/abundance"
+                ],
+                "name": {"valueFrom": "salmon_count"}
+            }
+        }
+
+        # yml section
+        self.cwl_input["salmon_count_script"] = {
+            "class": "File",
+            "path": f"{self.conf['root']}/scripts/salmon_R_script.R"
+        }
+
 
     def create_indexing(self, database_reader_object):
         print("Reading program index")
