@@ -1,5 +1,0 @@
-file	condition	replicate_num	total_mass	norm_mass	internal_scale	external_scale
-/var/lib/cwl/stgef238bdc-8a95-415e-ac16-7b25877b8994/abundances.cxb	Normal	0	760	199.572	3.17115	1
-/var/lib/cwl/stgd522608c-9dfe-4678-a72b-e7b95297e388/abundances.cxb	Normal	1	434	199.572	2.79414	1
-/var/lib/cwl/stgdd9952ce-d402-4552-a469-81fef512ae18/abundances.cxb	Tumour	0	1377	199.572	6.09871	1
-/var/lib/cwl/stgc4e98d36-416e-4422-819b-5dfaa2dc5768/abundances.cxb	Tumour	1	372	199.572	2.0956	1

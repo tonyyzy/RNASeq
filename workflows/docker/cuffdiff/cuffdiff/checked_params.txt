@@ -1,5 +1,0 @@
-file	default frag length mean	default frag length std dev	bias correction	bias mode	multiread correction	max-mle-iterations	min-mle-accuracy	max-bundle-frags	max-frag-multihits	no-effective-length-correction	no-length-correction
-/var/lib/cwl/stgef238bdc-8a95-415e-ac16-7b25877b8994/abundances.cxb	200	80	no	1	no	5000	1e-05	1e+06	1e+07	no	no	
-/var/lib/cwl/stgd522608c-9dfe-4678-a72b-e7b95297e388/abundances.cxb	200	80	no	1	no	5000	1e-05	1e+06	1e+07	no	no	
-/var/lib/cwl/stgdd9952ce-d402-4552-a469-81fef512ae18/abundances.cxb	200	80	no	1	no	5000	1e-05	1e+06	1e+07	no	no	
-/var/lib/cwl/stgc4e98d36-416e-4422-819b-5dfaa2dc5768/abundances.cxb	200	80	no	1	no	5000	1e-05	1e+06	1e+07	no	no	

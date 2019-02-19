@@ -1,3 +1,0 @@
-tracking_id	Normal_count	Normal_count_variance	Normal_count_uncertainty_var	Normal_count_dispersion_var	Normal_status	Tumour_count	Tumour_count_variance	Tumour_count_uncertainty_var	Tumour_count_dispersion_var	Tumour_status
-TSS1	82.6155	83.6755	0	82.6155	OK	75.6777	76.7267	0	75.6777	OK
-TSS2	114.541	119.118	0	114.541	OK	125.808	129.284	0	125.808	OK
