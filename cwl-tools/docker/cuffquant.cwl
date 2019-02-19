@@ -4,6 +4,9 @@ cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: cuffquant
 
+requirements:
+    InlineJavascriptRequirement: {}
+
 hints:
     DockerRequirement:
         dockerPull: machalen/cufflinksdocker:latest
@@ -67,8 +70,3 @@ outputs:
       type: File
       outputBinding:
          glob: $(inputs.output+"/abundances.cxb")
-         outputEval: |
-          ${
-            self[0].basename = inputs.output + '.cxb';
-            return self[0]
-          }

@@ -92,13 +92,13 @@ steps:
     in:
       threads: threads
       index_directory: genomeDir
-      first_pair:
-        source: fastq3
-        valueFrom: $(self[0])
-      second_pair:
-        source: fastq3
-        valueFrom: $(self[1])
-      #single_file: fastq3
+      #first_pair:
+      #  source: fastq3
+      #  valueFrom: $(self[0])
+      #second_pair:
+      #  source: fastq3
+      #  valueFrom: $(self[1])
+      single_file: fastq3
       XSTag: Tag
       sam_name:
         source: subject_name3
@@ -110,13 +110,13 @@ steps:
     in:
       threads: threads
       index_directory: genomeDir
-      first_pair:
-        source: fastq3
-        valueFrom: $(self[0])
-      second_pair:
-        source: fastq3
-        valueFrom: $(self[1])
-      #single_file: fastq4
+      #first_pair:
+      #  source: fastq3
+      #  valueFrom: $(self[0])
+      #second_pair:
+      #  source: fastq3
+      #  valueFrom: $(self[1])
+      single_file: fastq4
       XSTag: Tag
       sam_name:
         source: subject_name4
