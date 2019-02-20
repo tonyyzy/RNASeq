@@ -9,14 +9,15 @@ if ("--d" %in% args){
   bam_dir.idx <- grep("--d", args)
   bam_dir.path <- args[ bam_dir.idx + 1 ]
   files <- list.files(bam_dir.path)
+  files <- paste0(bam_dir.path,"/",files[grep(".bam", files)])
 } else {
   stop("must provide directory with bam files as a parameter with prefix '--d'")
 }
 
 if ("--g" %in% args){
   gtf.idx <- grep("--g", args)
-  gtf <- args[ gtf.idx + 1 ]
-  gtf <- rtracklayer::import(gtf, format = "gtf")
+  gtf.path <- args[ gtf.idx + 1 ]
+  gtf <- rtracklayer::import(gtf.path, format = "gtf")
   GTFAnnotationFile <- TRUE
 } else {
   stop("please provide a gtf file with prefix '--g'")
@@ -80,10 +81,29 @@ if ("--p" %in% args){
   thread <- 1
 }
 
-for(x in files){
-  tmp <- featureCounts(files=x, annot.ext = gtf, isGTFAnnotationFile = GTFAnnotationFile,
-                       GTF.featureType = featureType, GTF.attrType = attrType, 
-                       allowMultiOverlap = MultipleOverlap, countMultiMappingReads = countMultiRead, 
-                       fraction = fraction, isLongRead = LongRead, strandSpecific = stranded, 
-                       isPairedEnd = PairedEnd, nthreads = thread)
+if( "--o" %in% args){
+  output.idx <- grep("--o", args)
+  output <- args[ output.idx +1 ]
+} else {
+  stop("please enter output name with prefix '--o'")
 }
+
+for(x in files){
+  if(exists("counts")){
+    tmp_counts <- featureCounts(files=x, annot.ext = gtf.path, isGTFAnnotationFile = GTFAnnotationFile,
+                          GTF.featureType = featureType, GTF.attrType = attrType,
+                          allowMultiOverlap = MultipleOverlap, countMultiMappingReads = countMultiReads,
+                          fraction = fraction, isLongRead = LongReads, strandSpecific = stranded,
+                          isPairedEnd = PairedEnd, nthreads = thread)
+    counts <- cbind(counts,tmp_counts$counts)
+  } else {
+    counts <- featureCounts(files=x, annot.ext = gtf.path, isGTFAnnotationFile = GTFAnnotationFile,
+                         GTF.featureType = featureType, GTF.attrType = attrType,
+                         allowMultiOverlap = MultipleOverlap, countMultiMappingReads = countMultiReads,
+                         fraction = fraction, isLongRead = LongReads, strandSpecific = stranded,
+                         isPairedEnd = PairedEnd, nthreads = thread)
+    counts <- counts$counts
+  }
+}
+colnames(counts) <- unlist(lapply(basename(files), function(x) gsub(".bam", "",x)))
+write.csv(counts, paste0(output,".csv"))

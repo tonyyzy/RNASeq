@@ -1,5 +1,6 @@
 # ./salmon_R_script.R --gtf FILE --metadata FILE --salmon_dir PATH
 
+library(stringr)
 suppressMessages(library(tximport))
 suppressMessages(library(GenomicAlignments))
 suppressMessages(library(GenomicFeatures))
@@ -49,24 +50,13 @@ if ("--salmon_dir" %in% args) {
 
 if(nrow(samples) == length(files)){
   names(files) <- rownames(samples)
-  exon_version_df <- data.frame("WithVersion"=NA,"TXNAME"=NA)
-  for(x in 1:length(files)){
-    sf_table <- read.table(files[x], header=TRUE)
-    exon_df <- data.frame("WithVersion"=sf_table$Name,"TXNAME"=gsub("..$", "", sf_table$Name))
-    exon_version_df <- rbind(exon_version_df,exon_df)
-    exon_version_df <- exon_version_df[!duplicated(exon_version_df$WithVersion),]
-  }
-  exon_version_df <- exon_version_df[!is.na(exon_version_df$WithVersion),]
-
   k <- keys(TxDb, keytype = "TXNAME")
   tx2gene <- AnnotationDbi::select(TxDb, k,"GENEID", "TXNAME")
-  tx2gene <- left_join(exon_version_df,tx2gene, by = "TXNAME")
   tx2gene <- tx2gene[!is.na(tx2gene$GENEID),]
-  tx2gene$TXNAME <- NULL
-  colnames(tx2gene) <- c("TXNAME", "GENEID")
 
-  txi <- tximport(files, type="salmon", tx2gene=tx2gene, dropInfReps=TRUE)
+  txi <- tximport(files, type="salmon", tx2gene=tx2gene, dropInfReps=TRUE, ignoreTxVersion = TRUE)
   counts <- round(txi$counts,0)
+  colnames(counts) <- names(files)
   write.csv(counts, "gene_count_matrix.csv")
   write.csv(txi$length, "gene_length_matrix.csv")
   write.csv(txi$abundance, "gene_abundance_matrix.csv")

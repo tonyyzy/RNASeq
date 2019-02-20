@@ -49,7 +49,7 @@ inputs:
             position: 2
             prefix: -g
     threads:
-        type: string
+        type: int
         inputBinding:
             position: 3
             prefix: -p
@@ -62,7 +62,11 @@ inputs:
         type: File[]
 
 outputs:
-    output:
+    cuffmerge_out:
         type: Directory
         outputBinding:
             glob: $(inputs.output)
+    merged_gtf:
+        type: File
+        outputBinding:
+            glob: $(inputs.output+"/merged.gtf")

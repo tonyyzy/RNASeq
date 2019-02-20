@@ -26,7 +26,7 @@ inputs:
          position: 1
          prefix: -o
    threads:
-      type: string
+      type: int
       inputBinding:
          position: 2
          prefix: -p
@@ -62,12 +62,12 @@ inputs:
          position: 8
          prefix: --FDR
    libType:
-      type: string
+      type: string?
       inputBinding:
          position: 9
          prefix: --library-type
    libNorm:
-      type: string
+      type: string?
       inputBinding:
          position: 10
          prefix: --library-norm-method
@@ -91,7 +91,7 @@ inputs:
          prefix: ""
 
 outputs:
-   output:
+   cuffdiff_out:
       type: Directory
       outputBinding:
          glob: $(inputs.output)

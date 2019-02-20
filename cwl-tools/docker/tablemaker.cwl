@@ -6,7 +6,11 @@ baseCommand: tablemaker
 
 hints:
   DockerRequirement:
-    dockerPull: filipejesus/tablemaker:latest
+    dockerPull: filipejesus/tablemaker.2.1.1:latest
+
+requirements:
+   InlineJavascriptRequirement: {}
+   ShellCommandRequirement: {}
 
 arguments:
   - position: 2
@@ -16,27 +20,27 @@ arguments:
 
 inputs:
   threads:
-    type: string
+    type: int
     inputBinding:
       position: 1
-      prefix: -q
+      prefix: -p
   merged_gtf:
     type: File
     inputBinding:
-      position: 3
+      position: 4
       prefix: -G
   output:
     type: string
     inputBinding:
-      position: 4
+      position: 5
       prefix: -o
   bam:
     type: File
     inputBinding:
-      position: 5
+      position: 6
 
 outputs:
-  output:
+  tablemaker_out:
     type: Directory
-    inputBinding:
+    outputBinding:
       glob: $(inputs.output)

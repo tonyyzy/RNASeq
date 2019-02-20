@@ -1,0 +1,10 @@
+script:
+  class: File
+  path: /path/to/script
+de_res:
+  class: File
+  path: /path/to/script
+gene_set:
+  class: File
+  path: /path/to/script
+output: "stringhyp"
