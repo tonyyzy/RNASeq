@@ -5,7 +5,7 @@ from .forms import SessionSearchForm, SessionForm, WorkflowForm, SamplesForm, Co
 from analysis.models import Session, Workflow, Samples, Conditions
 from . import models
 from django.db.models import Q
-# from django.views.generic import TemplateView
+from django.contrib import messages
 # from django.core.files.storage import FileSystemStorage
 from django.views.generic import (View,TemplateView,
                                 ListView,DetailView,
@@ -19,32 +19,25 @@ class SessionIndexView(View):
         sessions = Session.objects.all()
         query = self.request.GET.get('q')
         if query:
-            query = query.replace('-','')
-            print(f'\ncleaned query: {query}')
-            query_set_list = sessions.filter(
-                            Q(identifier__icontains=query),
-                            )
-            print(query_set_list)
-            context = {'query_set_list':query_set_list}
-            return render(request, 'analysis/index.html', context)
+            print(f'\n{query}\n')
+            # query_set = sessions.filter(Q(identifier__exact=query)
+            try:
+                session_query = Session.objects.get(identifier__exact=query)
+                print(session_query)
+                messages.success(request, 'success')
+                context = {'session_query':session_query}
+                return render(request, 'analysis/index.html', context)
+            except:
+                messages.warning(request, 'Session ID not found')
+                context = {'invalid_query': query}
+                return render(request, 'analysis/index.html', context)
         return render(request, 'analysis/index.html')
 
-    # def post(self, request):
-    #     form = SessionSearchForm(request.POST)
-    #     # context = {'form': form, 'sessions': sessions}
-    #     if form.is_valid():
-    #         user_session = form.cleaned_data['user_session']
-    #         # print(user_session)
-    #         context = {'form': form, 'sessions': sessions, 'user_session':user_session}
-    #         return render(request, 'analysis/index.html', context)
-    #         # return redirect('analysis:session_index')
-    #     context = {'form': form, 'sessions': sessions}
-    #     return render(request, 'analysis/index.html', context)
 
 
 class SessionListView(ListView):
-    # by default context object used to access parameters is lower(model)_list
     # context_object_name = 'session'
+    # by default context object used to access database object within template is is lower(model_name)_list
     model = models.Session
 
 
@@ -57,23 +50,8 @@ class SessionDetailView(DetailView):
         slug = self.kwargs.get('session_slug')
         return get_object_or_404(Session, identifier=slug)
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(SessionDetailView, self).get_context_data(**kwargs)
-    #     return context
 
-
-# class SlugTestView(DetailView):
-#     model = models.Session
-#     context_object_name = 'session_detail'
-#
-#     def get_object(self):
-#         slug = self.kwargs.get('session_slug')
-#         return get_object_or_404(Session, identifier=slug)
-
-
-
-# currently broken by the move from pk to identifier slug. will need to fix tomorrow.
-class SessionCreateView(CreateView):
+class SessionCreateView(CreateView): # CreateView expects template lower(model_name)_form.html
     fields = ('organism','genome','fasta_file', 'annotation_file',)
     model = models.Session
 

@@ -17,8 +17,8 @@ class Session(models.Model):
     fasta_file = models.FileField(upload_to='data/', blank=True, null=True)
     annotation_file = models.FileField(upload_to='data/', blank=True, null=True)
 
-    def get_absolute_url(self):
-        return reverse('analysis:session_detail', kwargs={'pk':self.pk})
+    def get_absolute_url(self): # provides a default if Session is called from views.py without a specified reverse or redirect
+        return reverse('analysis:session_detail', kwargs={'session_slug':self.identifier})
 
     def __str__(self):
         return 'session' + str(self.pk)

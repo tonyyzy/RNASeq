@@ -11,10 +11,10 @@
     {% block body %}
     <div class="jumbotron">
         <div class="card bg-light mb-3" style="max-width: 120rem;">
-          <div class="card-header">Session {{ session_detail.pk}} Details</div>
+          <div class="card-header">Session Identifier: {{session_detail.identifier}}</div>
           <div class="card-body">
-            <!-- <h5 class="card-title"></h5> -->
-            <p class="card-text">
+            <!-- <h5 class="card-title">Session Identifier: {{session_detail.identifier}}</h5> -->
+            <div class="card-text">
               <!-- <p>{{session_detail.identifier}}</p> -->
               <p>Organism: {{session_detail.organism}}</p>
               <p>Genome: {{session_detail.genome}}</p>
@@ -24,8 +24,8 @@
               {% if session_detail.annotation_file %}
                 <p>Annotation File: {{session_detail.annotation_file}}</p>
               {% endif %}
-              <p>{{session_detail.identifier}}</p>
-            </p>
+              <p></p>
+            </div>
           </div>
         </div>
 

@@ -9,25 +9,38 @@
   </head>
   <body>
     {% block body %}
-      <div class="content">
-        <h1>SESSION DATABASE</h1>
-        <form action="" method="GET">
-          <input type="text" name="q" placeholder="enter session ID", value={{ request.GET.q }}>
-          <br>
-          <input type="submit" id='upload_btn' name="" value='Search DB'>
-          <a href="{% url 'analysis:session_create' %}"><input type="button" id='upload_btn' name="" value='New Session'></a>
-        </form>
 
-        {% if query_set_list.first %}
-          <div class="jumbotron">
-            <h4>{{query_set_list.first}}</h4>
-            <p>Organism: {{query_set_list.first.organism}}</p>
-            <p>Genome: {{query_set_list.first.genome}}</p>
-            <a class='btn btn-success' href="{% url 'analysis:session_detail' pk=query_set_list.first.pk %}">Details</a>
-          </div>
-        {% endif %}
+    {% if messages %}
+      {% for message in messages %}
+        <!-- <div class="alert alert-{{message.tags}}"> -->
+        <!-- <p>message.tags: {{message.tags}}</p> -->
+        <p>{{message}}</p>
+      {% endfor %}
+    {% endif %}
+    <div class="content alert alert-{{message.tags}}">
+      <h1>SESSION DATABASE</h1>
+      <form action="" method="GET">
+        <input id="search_field_1" type="text" name="q" placeholder="enter session ID", value={{ request.GET.q }}>
+        <br>
+        <input type="submit" id='upload_btn' name="" value='Search DB'>
+        <a href="{% url 'analysis:session_create' %}" style="text-decoration:none"><input type="button" id='upload_btn' name="" value="New Session"></a>
+      </form>
+      {% if session_query %}
+      <div class="jumbotron">
+        <h4>{{session_query}}</h4>
+        <p>Organism: {{session_query.organism}}</p>
+        <p>Genome: {{session_query.genome}}</p>
+        <a class='btn btn-success' href="{% url 'analysis:session_detail' session_slug=session_query.identifier %}">Details</a>
       </div>
+      {% endif %}
+      {% if invalid_query %}
+      <div class="jumbotron warning">
+        <h3>Error</h3>
+        <p>Session ID: {{invalid_query}} is not associated with a Session</p>
+        <p>Please enter a valid Session ID</p>
+      </div>
+      {% endif %}
+    </div>
     {% endblock %}
   </body>
 </html>
-<!-- <input type="submit" name="user_data" value="Search"> -->
