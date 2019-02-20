@@ -10,7 +10,7 @@ test_dexseq_out
 STARIndexd
 test1d
 db.sqlite3
-settings.py
+settings2.py
 .pytest_cache
 migrations
 test_DESeq2_out
@@ -26,4 +26,6 @@ test_workflow1_docker
 test_workflow2_docker
 test1
 test2
+bootstrap-4.3.1-dist
 .vscode/settings.json
+
