@@ -157,7 +157,7 @@ class SamplesCreateView(CreateView):
             bound_post = bound_form.save(commit=False)
             bound_post.session = Session.objects.get(identifier=session_slug)
             bound_post.condition = Conditions.objects.get(pk=conditions_pk)
-            bound_post.save()
+            # bound_post.save()
             return redirect('analysis:session_detail', session_slug=session_slug)
         return render(request, self.template_name, {'form':form})
 
