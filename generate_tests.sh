@@ -100,5 +100,7 @@ cwl-runner --outdir=./test_hisat_align cwl-tools/docker/hisat2_align.cwl tests/h
 tail -n +5 ./test_hisat_align/test1/test1.sam > ./tests/test1.hisat2.tail.sam
 rm -r ./test_hisat_align
 
-
+# Salmon index
+cwl-runner ./cwl-tools/docker/salmon_index.cwl ./tests/salmon_index.yml
+mv Salmonindex ./tests/
 
