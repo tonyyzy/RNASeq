@@ -104,3 +104,16 @@ rm -r ./test_hisat_align
 cwl-runner ./cwl-tools/docker/salmon_index.cwl ./tests/salmon_index.yml
 mv Salmonindex ./tests/
 
+# Salmon quant
+mkdir ./tests/salmon_quant
+cwl-runner ./cwl-tools/docker/salmon_quant.cwl ./tests/salmon_quant.yml
+tail -n +2 ./test2/quant.sf | awk 'BEGIN{OFS=FS="\t"}{$3=sprintf("%3.0f",$3);$4=sprintf("%3.0f",$4)}1' > ./test2/quant.sf
+cwl-runner ./cwl-tools/docker/salmon_quant.cwl ./tests/salmon_quant.single.yml
+tail -n +2 ./test3/quant.sf | awk 'BEGIN{OFS=FS="\t"}{$3=sprintf("%3.0f",$3);$4=sprintf("%3.0f",$4)}1' > ./test3/quant.sf
+mv test2 test3 ./tests/salmon_quant
+# Salmon count
+
+# workflow 2
+
+# workflow 4
+
