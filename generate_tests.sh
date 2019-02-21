@@ -1,5 +1,5 @@
 module purge
-module load python star stringtie samtools R
+module load python/3.7.1 python/2.7.11 star stringtie samtools R
 
 # test for star index
 if [ -d "./STARIndex" ]; then
@@ -100,5 +100,32 @@ cwl-runner --outdir=./test_hisat_align cwl-tools/docker/hisat2_align.cwl tests/h
 tail -n +5 ./test_hisat_align/test1/test1.sam > ./tests/test1.hisat2.tail.sam
 rm -r ./test_hisat_align
 
+# Salmon index
+if [ -d "./tests/Salmonindex" ]; then
+        rm -r ./tests/Salmonindex
+fi
+cwl-runner ./cwl-tools/docker/salmon_index.cwl ./tests/salmon_index.yml
+mv Salmonindex ./tests/
 
+# Salmon quant
+if [ -d "./tests/salmon_quant" ]; then
+        rm -r ./tests/salmon_quant
+fi
+mkdir ./tests/salmon_quant
+cwl-runner ./cwl-tools/docker/salmon_quant.cwl ./tests/salmon_quant.yml
+tail -n +2 ./test2/quant.sf | awk 'BEGIN{OFS=FS="\t"}{$3=sprintf("%3.0f",$3);$4=sprintf("%3.0f",$4)}1' > ./tests/salmon_quant/test2.sf
+cwl-runner ./cwl-tools/docker/salmon_quant.cwl ./tests/salmon_quant.single.yml
+tail -n +2 ./test3/quant.sf | awk 'BEGIN{OFS=FS="\t"}{$3=sprintf("%3.0f",$3);$4=sprintf("%3.0f",$4)}1' > ./tests/salmon_quant/test3.sf
+rm -r test2 test3
+# workflow 4
+cwl-runner --outdir=./workflow4 ./workflows/docker/salmon_DESeq2.cwl ./tests/salmon_DESeq2.yml
+cp ./workflow4/DESeq2/DGE_results.csv ./tests/salmon_DGE_results.csv
 
+# Salmon count
+cp ./workflow4/salmon_count/gene_count_matrix.csv ./tests/salmon_gene_count.csv
+rm -rf ./workflow4
+
+# workflow 2
+cwl-runner --outdir=./workflow2 ./workflows/docker/hisat2_htseq_dexseq.cwl ./tests/hisat2_htseq_dexseq.yml
+cp ./workflow2/DEXSeq/DEE_results.csv ./tests/DEE_results.csv
+rm -rf ./workflow2
