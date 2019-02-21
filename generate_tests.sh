@@ -101,10 +101,16 @@ tail -n +5 ./test_hisat_align/test1/test1.sam > ./tests/test1.hisat2.tail.sam
 rm -r ./test_hisat_align
 
 # Salmon index
+if [ -d "./tests/Salmonindex" ]; then
+        rm -r ./tests/Salmonindex
+fi
 cwl-runner ./cwl-tools/docker/salmon_index.cwl ./tests/salmon_index.yml
 mv Salmonindex ./tests/
 
 # Salmon quant
+if [ -d "./tests/salmon_quant" ]; then
+        rm -r ./tests/salmon_quant
+fi
 mkdir ./tests/salmon_quant
 cwl-runner ./cwl-tools/docker/salmon_quant.cwl ./tests/salmon_quant.yml
 tail -n +2 ./test2/quant.sf | awk 'BEGIN{OFS=FS="\t"}{$3=sprintf("%3.0f",$3);$4=sprintf("%3.0f",$4)}1' > ./tests/salmon_quant/test2.sf
