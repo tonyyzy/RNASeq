@@ -16,7 +16,7 @@
     {% block body %}
     <div class="jumbotron">
       <h2>this is from samples form</h2>
-      <form method="POST"  enctype="multipart/form-data">
+      <form method="POST"  enctype="multipart/form-data" onsubmit="return validateLibrary();">
         {% csrf_token %}
         {{ form|crispy }}
         <input type="submit" class='btn btn-primary' value="Submit">

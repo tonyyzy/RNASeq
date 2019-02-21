@@ -19,19 +19,12 @@ $( document ).ready(function() {
     $('#div_id_accession').hide()
     $('#div_id_libtype').on('click', function(){
       if ($('#div_id_libtype option:selected').val() == 'PE'){ // executes if PE selected from dropdown
-        $('#div_id_read_1').hide()
-        $('#div_id_read_2').hide()
-        $('#div_id_accession').hide()
         $('#div_id_read_1').show()
         $('#div_id_read_2').show()
         $('#div_id_accession').show()
       }
       if ($('#div_id_libtype option:selected').val() == 'SG'){ // executes if SG selected from dropdown
-        $('#div_id_read_1').hide()
         $('#div_id_read_2').hide()
-        $('#div_id_accession').hide()
-        $('#div_id_read_1').show()
-        $('#div_id_accession').show()
       }
     })
   }
@@ -63,4 +56,12 @@ $( document ).ready(function() {
   }
 });
 
-id="read_2-clear_id"
+
+function validateLibrary(){
+  if ($('#div_id_libtype option:selected').val() == 'PE'){ // executes if PE selected from dropdown
+    if ($('#id_read_2').val() == ''){
+      alert('please select second file for paired end read submission');
+      return false;
+    }
+  }
+}
