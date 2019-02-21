@@ -29,3 +29,4 @@ metadata:
   class: File
   path: ../../tests/metadata.csv
 conditions: ["Normal","Tumour"]
+Tag: --dta-cufflinks

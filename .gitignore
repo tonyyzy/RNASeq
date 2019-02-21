@@ -1,9 +1,11 @@
 __pycache__
 .pytest_cache
 db.sqlite3
+settings2.py
 .pytest_cache
 migrations
 software
 data
 .vscode/settings.json
 test.py
+bootstrap-4.3.1-dist

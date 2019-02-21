@@ -68,6 +68,7 @@ inputs:
       prefix: -p
   XSTag:
     type: string?
+    default: --dta-cufflinks
     inputBinding:
       position: 14
   log:
