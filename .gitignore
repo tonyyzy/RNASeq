@@ -26,3 +26,4 @@ test_workflow2_docker
 test1
 test2
 .vscode/settings.json
+test.py
