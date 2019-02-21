@@ -48,16 +48,16 @@ if __name__ == "__main__":
 	file1 = open("./test2.1.fastq", "w")
 	file2 = open("./test2.2.fastq", "w")
 	fake_pairend(exon1, 400)
-	fake_pairend(exon2_2, 200)
-	fake_pairend(exon2_1, 50)
+	fake_pairend(exon2_2, 100)
+	fake_pairend(exon2_1, 20)
 
 	file1 = open("./test3.fastq", "w")
 	fake_single(exon1, 50)
 	fake_single(exon2_1, 2550)
-	fake_single(exon2_2, 50)
+	fake_single(exon2_2, 30)
 
 	file1 = open("./test4.fastq", "w")
 	fake_single(exon1, 300)
-	fake_single(exon2_2, 70)
-	fake_single(exon2_1, 50)
+	fake_single(exon2_2, 270)
+	fake_single(exon2_1, 20)
 
