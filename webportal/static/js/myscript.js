@@ -1,13 +1,4 @@
 
-// $('[name=options] option').filter(function() {
-//     return ($(this).text() == 'Blue'); //To select Blue
-// }).prop('selected', true);
-//
-//
-// $('#div_id_libtype option:eq(2)')
-
-// $('#div_id_libtype option:eq(2)').css("background-color", "yellow");
-
 
 
 // SAMPLES CREATE JAVASCRIPT
@@ -17,6 +8,7 @@ $( document ).ready(function() {
     $('#div_id_read_1').hide()
     $('#div_id_read_2').hide()
     $('#div_id_accession').hide()
+    $('#validate_library').hide()
     $('#div_id_libtype').on('click', function(){
       if ($('#div_id_libtype option:selected').val() == 'PE'){ // executes if PE selected from dropdown
         $('#div_id_read_1').show()
@@ -24,6 +16,8 @@ $( document ).ready(function() {
         $('#div_id_accession').show()
       }
       if ($('#div_id_libtype option:selected').val() == 'SG'){ // executes if SG selected from dropdown
+        $('#div_id_read_1').show()
+        $('#div_id_accession').show()
         $('#div_id_read_2').hide()
       }
     })
@@ -32,6 +26,16 @@ $( document ).ready(function() {
     console.log('no blinding required')
   }
 });
+
+function validateLibrary(){
+  if ($('#div_id_libtype option:selected').val() == 'PE'){ // executes if PE selected from dropdown
+    if ($('#id_read_2').val() == ''){ // checks if read_2 file upload is empty
+      $('#validate_library').show()
+      return false;
+    }
+  }
+}
+
 
 // SAMPLES UPDATE JAVASCRIPT
 $( document ).ready(function() {
@@ -45,7 +49,7 @@ $( document ).ready(function() {
         $('#div_id_read_2').show()
         $('#read_2-clear_id').prop("checked", false);
       }
-      if ($('#div_id_libtype option:selected').val() == 'SG'){ // executes if PE selected from dropdown
+      if ($('#div_id_libtype option:selected').val() == 'SG'){ // executes if SG selected from dropdown
         $('#div_id_read_2').hide()
         $('#read_2-clear_id').prop("checked", true);
       }
@@ -57,11 +61,12 @@ $( document ).ready(function() {
 });
 
 
-function validateLibrary(){
-  if ($('#div_id_libtype option:selected').val() == 'PE'){ // executes if PE selected from dropdown
-    if ($('#id_read_2').val() == ''){
-      alert('please select second file for paired end read submission');
-      return false;
-    }
-  }
-}
+
+// $('[name=options] option').filter(function() {
+//     return ($(this).text() == 'Blue'); //To select Blue
+// }).prop('selected', true);
+//
+//
+// $('#div_id_libtype option:eq(2)')
+
+// $('#div_id_libtype option:eq(2)').css("background-color", "yellow");

@@ -147,17 +147,26 @@ class SamplesCreateView(CreateView):
     def get(self, request, session_slug, conditions_pk):
         form = SamplesForm
         context = {'form':form}
+        session_pk = Session.objects.get(identifier=session_slug).id
+        condition = Conditions.objects.get(pk=conditions_pk)
+        con = condition.conditions
+        print(f'\ncondition: {con}\n')
+        print(f'replicates: {condition.no_replicates}')
+        con_count = Samples.objects.filter(session_id=session_pk).filter(condition__conditions=con).count()
+        print(f'\n{con_count}')
+        if con_count >= condition.no_replicates:
+            return redirect('analysis:session_detail', session_slug=session_slug)
         return render(request, self.template_name, context)
 
     def post(self, request, session_slug, conditions_pk):
         bound_form = SamplesForm(request.POST, request.FILES)
         # print(bound_form.is_valid())
         if bound_form.is_valid():
-            print(bound_form.cleaned_data)
+            # print(bound_form.cleaned_data)
             bound_post = bound_form.save(commit=False)
             bound_post.session = Session.objects.get(identifier=session_slug)
             bound_post.condition = Conditions.objects.get(pk=conditions_pk)
-            # bound_post.save()
+            bound_post.save()
             return redirect('analysis:session_detail', session_slug=session_slug)
         return render(request, self.template_name, {'form':form})
 

@@ -7,68 +7,18 @@
     {% block head %}
       <title>Samples Form</title>
     {% endblock %}
-    <script>
-        let d = new Date();
-        alert("Today's date is " + d);
-    </script>
+
   </head>
   <body>
     {% block body %}
     <div class="jumbotron">
-      <h2>this is from samples form</h2>
       <form method="POST"  enctype="multipart/form-data" onsubmit="return validateLibrary();">
         {% csrf_token %}
         {{ form|crispy }}
+        <p id='validate_library' style="color:red;">Paired_end library type selected. Please upload second file.</p>
         <input type="submit" class='btn btn-primary' value="Submit">
       </form>
   {% endblock %}
 
-
-
-
-
   </body>
 </html>
-
-
-
-
-
-
-
-<!-- DJANGO LOADED FORM FOR DEBUGING
-<div class="jumbotron">
-  <h2>this is from samples form</h2>
-  <form method="POST"  enctype="multipart/form-data">
-    <input type="hidden" name="csrfmiddlewaretoken" value="WK6Ovraq3UDApPaQCzV11rvnphRlzTvO7B05nbOAZU9KEa8nwiQuB1e1xjZuj9W2">
-
-  <div id="div_id_libtype" class="form-group">
-    <label for="id_libtype" class="col-form-label  requiredField">
-      Libtype<span class="asteriskField">*</span>
-    </label> <div class="">
-      <select name="libtype" class="select form-control" required id="id_libtype">
-        <option value="" selected>-</option>
-        <option value="PE">Paired_end</option>
-        <option value="SG">Single</option>
-      </select>
-    </div>
-  </div>
-<div id="div_id_read_1" class="form-group">
-    <label for="id_read_1" class="col-form-label  requiredField">Read 1<span class="asteriskField">*</span> </label>
-    <div class="">Currently: <a href="data/abc_5UnOC3R.txt">data/abc_5UnOC3R.txt</a><br>Change:
-    <input type="file" name="read_1" class="clearablefileinput" id="id_read_1">
-    </div>
-</div>
-<div id="div_id_read_2" class="form-group">
-  <label for="id_read_2" class="col-form-label ">Read 2</label>
-  <div class="">Currently: <a href="data/abc_T8UcPlQ.txt">data/abc_T8UcPlQ.txt</a>
-  <input type="checkbox" name="read_2-clear" id="read_2-clear_id">
-  <label for="read_2-clear_id">Clear</label><br>Change:
-  <input type="file" name="read_2" class="clearablefileinput" id="id_read_2"> </div> </div>
-<div id="div_id_accession" class="form-group">
-  <label for="id_accession" class="col-form-label  requiredField">Accession<span class="asteriskField">*</span>
-  </label> <div class=""> <input type="text" name="accession" value="normal_1" maxlength="200" class="textinput textInput form-control" required id="id_accession">
-  </div> </div>
-    <input type="submit" class='btn btn-primary' value="Submit">
-  </form>
-</div> -->
