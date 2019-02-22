@@ -129,3 +129,9 @@ rm -rf ./workflow4
 cwl-runner --outdir=./workflow2 ./workflows/docker/hisat2_htseq_dexseq.cwl ./tests/hisat2_htseq_dexseq.yml
 cp ./workflow2/DEXSeq/DEE_results.csv ./tests/DEE_results.csv
 rm -rf ./workflow2
+
+# workflow3
+cwl-runner --outdir=./workflow3 ./workflows/docker/hisat2-cufflink-cuffmerge-cuffquant-ballgown-cuffdiffs.cwl ./tests/hisat2-cufflink-cuffmerge-cuffquant-ballgown-cuffdiffs.yml
+cp ./workflow3/cuffdiff/cuffdiff/gene_exp.diff ./tests/cuffdiff_res.csv
+cp ./workflow3/ballgown/DGE_res.csv ./tests/ballgown_res.csv
+rm -r ./workflow3
