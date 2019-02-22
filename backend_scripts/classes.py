@@ -32,8 +32,8 @@ class database_checker():
         print(reader.Annotation_file)
         logic = logic_builder()
         logic.create_workflow_logic(reader)
-        writer = programs.cwl_writer(reader.Reads_files, reader)
-        writer.write_workflow(logic)
+        #writer = programs.cwl_writer(reader.Reads_files, reader)
+        #writer.write_workflow(logic)
 
 
 
@@ -126,12 +126,19 @@ class logic_builder():
 
         workflow_len = [len(result[i]) for i in range(len(result))]
         self.Workflow_dict = {f"step{i + 1}":{} for i in range(max(workflow_len))}
-
+        print(result)
         for e in range(len(result)):
             for i in range(len(result[e])):
-                print(self.Workflow_dict)
-                if list(self.programs_index.loc[self.programs_index.Index == result[e][i], "Program"])[0] not in self.Workflow_dict[f"step{i + 1}"].values() :
-                    self.Workflow_dict[f"step{i + 1}"][e + 1] = list(self.programs_index.loc[self.programs_index.Index == result[e][i], "Program"])[0]
+                branching_flag = 0
+                if e > 0:
+                    if result[e - 1][:i] == result[e][:i] and result[e - 1][i] == result[e][i]:
+                        continue
+                    else:
+                        print("changing flag")
+                        branching_flag = 1
+                prev_value = e + 1 if branching_flag == 0 else e
+                self.Workflow_dict[f"step{i + 1}"][f"{e + 1}_{prev_value}"] = list(self.programs_index.loc[self.programs_index.Index == result[e][i], "Program"])[0]
+            print(self.Workflow_dict)
 
         self.Workflow = result
         self.Workflow_index = result_index
