@@ -7,18 +7,18 @@
     {% block head %}
       <title>Samples Form</title>
     {% endblock %}
+
   </head>
   <body>
     {% block body %}
     <div class="jumbotron">
-      <h2>this is from samples form</h2>
-      <form method="POST"  enctype="multipart/form-data">
+      <form method="POST"  enctype="multipart/form-data" onsubmit="return validateLibrary();">
         {% csrf_token %}
         {{ form|crispy }}
+        <p id='validate_library' style="color:red;">Paired_end library type selected. Please upload second file.</p>
         <input type="submit" class='btn btn-primary' value="Submit">
       </form>
-      {{session_pk}}
-      {{conditions_pk}}
   {% endblock %}
+
   </body>
 </html>
