@@ -1,4 +1,37 @@
 
+// SESSION DETAIL JAVASCRIPT
+// $( document ).ready(function() {
+//   var user_url = window.location.pathname
+//   if (user_url.includes('session_detail')){ // executes if session_detail page loaded
+//
+// // var session_conditions = [];
+// // for (var i = 0; i < 5; i++){
+// //
+// // }
+// // $('#td_condition').text()
+// });
+// var conditions_max = [1,2,3,4,5,6,7,8,9,10];
+// var conditions_count = [];
+// for (var i = 0; i < conditions_max.length; i++){
+//   if ($('#td_condition_[i]').text() != ''){ // checks if read_2 file upload is empty
+//     console.log('td_condition_[i] passed');
+//   }}
+//
+// else {
+//   console.log('end')
+// }
+//
+// $('#td_condition_[i]')
+
+//
+// $( ".td_condition" ).each(function( index ) {
+//   return var myVar = $( this ).text();
+// });
+//
+// $( ".td_replicate" ).each(function( index ) {
+//   console.log( index + ": " + $( this ).text() );
+// });
+
 
 
 // SAMPLES CREATE JAVASCRIPT
@@ -22,9 +55,6 @@ $( document ).ready(function() {
       }
     })
   }
-  else {
-    console.log('no blinding required')
-  }
 });
 
 function validateLibrary(){
@@ -41,8 +71,9 @@ function validateLibrary(){
 $( document ).ready(function() {
   var user_url = window.location.pathname // stores current url as user_url
   if (user_url.includes('samples_update')){ // executes if samples_update page loaded
+    $('#validate_library').hide()
     if ($('#div_id_libtype option:selected').val() == 'SG'){
-    	$('#div_id_read_2').hide()
+    	$('#div_id_read_2').toggle()
     }
     $('#div_id_libtype').on('click', function(){
       if ($('#div_id_libtype option:selected').val() == 'PE'){ // executes if PE selected from dropdown

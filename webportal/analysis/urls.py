@@ -9,7 +9,10 @@ urlpatterns = [
     path('', views.SessionIndexView.as_view(), name='session_index'),
 
     path('session_list', views.SessionListView.as_view(), name='session_list'),
-    path('session_detail/<slug:session_slug>/', views.SessionDetailView.as_view(), name='session_detail'),
+    # path('session_detail/<int:session_pk>/', views.SessionDetailView.as_view(), name='session_detail'),
+    # path('session_detail/<int:session_pk>/', views.SessionDetailView.as_view(), name='session_detail'),
+    path('session_detail/<slug:session_slug>/', views.SessionDetailView, name='session_detail'),
+    # path('session_detail/<slug:session_slug>/', views.SessionDetailView.as_view(), name='session_detail'), # not sure how to customize the slug variable name. has to be passed as "slug" currently
     path('session_create', views.SessionCreateView.as_view(), name='session_create'),
     path('session_update/<int:pk>/', views.SessionUpdateView.as_view(), name='session_update'),
     path('session_delete/<int:pk>/', views.SessionDeleteView.as_view(), name='session_delete'),
@@ -33,3 +36,5 @@ urlpatterns = [
     path('session_detail/<slug:session_slug>/workflow_delete/<int:workflow_pk>/', views.WorkflowDeleteView.as_view(), name='workflow_delete'),
 
 ]
+# 9ba16a6f-babe-4fe3-a713-d4b69b46396d
+# session_slug

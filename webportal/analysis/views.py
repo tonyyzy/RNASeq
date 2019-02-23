@@ -41,14 +41,15 @@ class SessionListView(ListView):
     model = models.Session
 
 
-class SessionDetailView(DetailView):
-    context_object_name = 'session_detail'
-    # template_name = 'analysis/session_detail.html'
-    model = models.Session
-
-    def get_object(self):
-        slug = self.kwargs.get('session_slug')
-        return get_object_or_404(Session, identifier=slug)
+def SessionDetailView(request, session_slug):
+    template_name = 'analysis/session_detail.html' # for debug pague use: analysis/session_detail_debug.html
+    session = Session.objects.filter(identifier=session_slug)
+    try:
+        session = Session.objects.get(identifier=session_slug)
+    except session.DoesNotExist:
+        raise Http404('Session does not exist')
+    context = {'session_detail':session, 'key2':'val2'}
+    return render(request, template_name, context)
 
 
 class SessionCreateView(CreateView): # CreateView expects template lower(model_name)_form.html
@@ -147,14 +148,15 @@ class SamplesCreateView(CreateView):
     def get(self, request, session_slug, conditions_pk):
         form = SamplesForm
         context = {'form':form}
+
         session_pk = Session.objects.get(identifier=session_slug).id
-        condition = Conditions.objects.get(pk=conditions_pk)
-        con = condition.conditions
-        print(f'\ncondition: {con}\n')
-        print(f'replicates: {condition.no_replicates}')
-        con_count = Samples.objects.filter(session_id=session_pk).filter(condition__conditions=con).count()
-        print(f'\n{con_count}')
-        if con_count >= condition.no_replicates:
+        condition_obj = Conditions.objects.get(pk=conditions_pk)
+        row_condition = condition_obj.conditions
+        print(f'\ncondition: {row_condition}\n')
+        print(f'replicates: {condition_obj.no_replicates}')
+        row_condition_count = Samples.objects.filter(session_id=session_pk).filter(condition__conditions=row_condition).count()
+        if row_condition_count >= condition_obj.no_replicates:
+            messages.warning(request, f'Error: {condition_obj.no_replicates} {condition_obj.conditions} sample(s) already uploaded.')
             return redirect('analysis:session_detail', session_slug=session_slug)
         return render(request, self.template_name, context)
 

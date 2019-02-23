@@ -49,7 +49,7 @@ class Samples(models.Model):
     accession = models.CharField(max_length=200, blank=False, null=False)
 
     def get_absolute_url(self):
-        return reverse('analysis:session_detail', kwargs={'session_pk':self.session_pk})
+        return reverse('analysis:session_detail', kwargs={'slug':self.slug})
 
 
 class Workflow(models.Model):
