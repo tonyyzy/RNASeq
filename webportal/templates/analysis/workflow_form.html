@@ -5,18 +5,30 @@
   <head>
     <meta charset="utf-8">
     {% block head %}
-      <title>Workflow Detail Detail Detail</title>
+      <title>Workflow Create</title>
     {% endblock %}
   </head>
   <body>
     {% block body %}
-    <h1>Workflow form data entry</h1>
-    <div class="jumbotron">
-      <form method="POST"  enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <input type="submit" class='btn btn-primary' value="Submit">
-      </form>
-  {% endblock %}
+      <div class="offset-3 col-md-6">
+        <div class="">
+          <div class="form-group">
+            <form method="POST"  enctype="multipart/form-data" class="session_form">
+              {% csrf_token %}
+
+              <div class="form_title">
+                <h4>NEW WORKFLOW</h4>
+              </div>
+              <hr class="my-4">
+
+              {{form|crispy}}
+              <br>
+              <input type="submit" class='testWidth' value="Submit">
+            </form>
+          </div>
+        </div>
+
+      </div>
+    {% endblock %}
   </body>
 </html>

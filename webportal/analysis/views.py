@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.urls import reverse, reverse_lazy
-from .forms import SessionSearchForm, SessionForm, WorkflowForm, SamplesForm, ConditionsForm
+from .forms import SessionSearchForm, SessionForm, WorkflowForm, SamplesForm, ConditionsForm, DebugForm
 from analysis.models import Session, Workflow, Samples, Conditions
 from . import models
 from django.db.models import Q
@@ -12,6 +12,13 @@ from django.views.generic import (View,TemplateView,
                                 CreateView,DeleteView,
                                 UpdateView)
 
+
+
+class DebugView(View):
+    def get(self, request):
+        form = SessionForm
+        return render(request, 'analysis/debug_page.html', {'form':form})
+        return HttpResponse('success debug view loaded')
 
 # Session
 class SessionIndexView(View):
@@ -52,10 +59,24 @@ def SessionDetailView(request, session_slug):
     return render(request, template_name, context)
 
 
-class SessionCreateView(CreateView): # CreateView expects template lower(model_name)_form.html
-    fields = ('organism','genome','fasta_file', 'annotation_file',)
-    model = models.Session
+# class SessionCreateView(CreateView): # CreateView expects template lower(model_name)_form.html
+#     fields = ('organism','genome','fasta_file', 'annotation_file',)
+#     model = models.Session
 
+class SessionCreateView(CreateView):
+    template_name = 'analysis/session_form.html'
+
+    def get(self, request):
+        form = SessionForm
+        return render(request, self.template_name, {'form':form})
+
+    def post(self, request):
+        form = SessionForm
+        bound_form = SessionForm(request.POST, request.FILES)
+        if bound_form.is_valid():
+            post = bound_form.save()
+            return redirect('analysis:session_detail', session_slug=post.identifier)
+        return render(request, self.template_name, {'form':form})
 
 class SessionUpdateView(UpdateView):
     fields = ('organism','genome','fasta_file', 'annotation_file',)

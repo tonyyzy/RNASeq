@@ -5,6 +5,18 @@ from django.conf import settings
 from django.urls import reverse
 
 
+
+class The_Debug(models.Model):
+    FIELD_THREE_CHOICES = (
+        ("choice1", "choice1"),
+        ("choice2", "choice2"),
+        ("choice3", "choice3"),
+    )
+    field_one = models.CharField(max_length=200)
+    field_two = models.CharField(max_length=200)
+    field_three = models.CharField(max_length=200, choices=FIELD_THREE_CHOICES)
+
+
 class Session(models.Model):
     identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     GENOME_CHOICES = (

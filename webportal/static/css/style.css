@@ -6,27 +6,36 @@ html,body{
   width: 100%;
 }
 
-p {
-  color: #1b2433;
+
+
+.block {
+  display: block;
+  width: 100%;
+  border: none;
+  background-color: #4CAF50;
+  padding: 14px 28px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
 }
+
+
 
 .text-white{
   color: #dae0ea;
   /* text-decoration: line-through; */
 }
-.debug{
-  /* border-style: solid; */
-  border-radius: 5px;
-  border: 2px solid #8e1332;
-  padding: 5px;
-  margin: 10px;
-  /* background: blue; */
-}
+
+
 
 .form{
   border-radius: 10px;
   border: 2px solid #044c7c;
   padding: 10px;
+}
+
+.form_title{
+  text-align: center;
 }
 
 .sans_serif{
@@ -50,14 +59,16 @@ p {
   max-width: none;
 }
 
+
+
 .content{
   max-width: 900px;
   margin: 0 auto;
   text-align: center;
   margin-bottom: 230px;
   margin-top: 100px;
-  font-size: 140%;
   color: #101111;
+  font-size: 140%;
   font-family: 'Open Sans', sans-serif;
 }
 
@@ -134,4 +145,48 @@ p {
 .condition_table{
   /* width: 400px; */
    width: auto !important;
+}
+
+
+.session_form{
+  /* text-align: center; */
+  margin: 90px;
+  padding: 20px;
+  background: rgba(90, 100, 100, 0.1);
+  /* border: 1px solid gray; */
+  /* border:20px */
+  /* display: block; */
+  /* width: 100%; */
+  font-size: 120%;
+}
+
+.testWidth{
+   background-color: #4CAF50;
+   border: none;
+   color: white;
+   padding: 15px 32px;
+   text-align: center;
+   text-decoration: none;
+   display: inline-block;
+   font-size: 16px;
+   width:100%;
+   cursor: pointer;
+}
+
+.debug1{
+  /* border-style: solid; */
+  border-radius: 5px;
+  border: 2px solid red;
+  padding: 5px;
+  margin: 10px;
+  /* background: blue; */
+}
+
+.debug2{
+  /* border-style: solid; */
+  border-radius: 5px;
+  border: 2px solid yellow;
+  padding: 5px;
+  margin: 10px;
+  /* background: blue; */
 }

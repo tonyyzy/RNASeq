@@ -5,18 +5,61 @@
   <head>
     <meta charset="utf-8">
     {% block head %}
-    <title>Session Form</title>
+      <title>Session Create</title>
     {% endblock %}
   </head>
   <body>
     {% block body %}
-    <div class="jumbotron">
-      <h2>this is from session form</h2>
-      <form method="POST"  enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <input type="submit" class='btn btn-primary' value="Submit">
-      </form>
-  {% endblock %}
+
+      <div class="offset-3 col-md-6">
+        <div class="">
+          <div class="form-group">
+            <form method="POST"  enctype="multipart/form-data" class="session_form">
+              {% csrf_token %}
+              <!-- <h3>NEW SESSION</h3> -->
+
+              <div class="form_title">
+                <h4>NEW SESSION</h4>
+              </div>
+              <hr class="my-4">
+              <!-- <label for="">{{form.organism.label_tag}}</label>
+              {{form.organism}}<b><br>
+              <label for="">{{form.genome.label_tag}}</label>
+              {{form.genome}}</b><br>
+              <div class="container">
+                <div class="row">
+                  <div class="col">
+                    <label for="">{{form.fasta_file.label_tag}}</label>
+                    {{form.fasta_file}}<br><br>
+                  </div>
+                  <div class="col">
+                    <label for="">{{form.annotation_file.label_tag}}</label>
+                    {{form.annotation_file}}
+                  </div>
+                </div>
+              </div> -->
+
+              <!-- {% for field in form %} -->
+              <!-- <label for="">{{field.label_tag}}</label> -->
+                <!-- {{field }} -->
+                <!-- <br> -->
+              <!-- {% endfor %} -->
+              <!-- {{form}} -->
+              {{form|crispy}}
+              <br>
+              <input type="submit" class='testWidth' value="Submit">
+            </form>
+          </div>
+        </div>
+
+      </div>
+    {% endblock %}
   </body>
 </html>
+
+
+<!--
+    background-color: yellow;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer; -->
