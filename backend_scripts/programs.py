@@ -598,7 +598,7 @@ class cwl_writer():
                         names[c] += f"{logic_object.Workflow_dict[i][e].lower()}_"
                         self.name = names[c]
                         self.previous_name = previous_names[c]
-                        eval(f"self.{logic_object.Workflow_dict[i][e].lower()}(self.output_string, previous_step)")
+                        getattr(cwl_writer,f"self.{logic_object.Workflow_dict[i][e].lower()}(self.output_string, previous_step)")()
                         previous_step = logic_object.Workflow_dict[i][e].lower()
                         previous_names[c] = names[c]
                         c += 1

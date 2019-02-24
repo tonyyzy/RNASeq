@@ -32,8 +32,8 @@ class database_checker():
         print(reader.Annotation_file)
         logic = logic_builder()
         logic.create_workflow_logic(reader)
-        #writer = programs.cwl_writer(reader.Reads_files, reader)
-        #writer.write_workflow(logic)
+        writer = programs.cwl_writer(reader.Reads_files, reader)
+        writer.write_workflow(logic)
 
 
 
@@ -133,7 +133,12 @@ class logic_builder():
                 elif value > 0:
                     print("inserting step")
                     result[e].insert(i + 1, value)
-                    branching_value = "n" if type(branching_matrix[e][i + 1]) is str else branching_matrix[e][i]
+                    if type(branching_matrix[e][i + 1]) is str and type(branching_matrix[e][i - 1]) is int:
+                        branching_value = "n" if result[e][i] != result[branching_matrix[e][i - 1]][i] else branching_matrix[e][i - 1]
+                    elif type(branching_matrix[e][i + 1]) is str:
+                        branching_value = "n"
+                    else:
+                        branching_value = branching_matrix[e][i]
                     branching_matrix[e].insert(i + 1, branching_value)
 
         workflow_len = [len(result[i]) for i in range(len(result))]
@@ -149,7 +154,7 @@ class logic_builder():
                     else:
                         print("changing flag")
                         branching_flag = 1
-                prev_value = e + 1 if branching_flag == 0 else branching_matrix[e][i - 1]
+                prev_value = e + 1 if branching_flag == 0 else branching_matrix[e][i - 1] + 1
                 self.Workflow_dict[f"step{i + 1}"][f"{e + 1}_{prev_value}"] = list(self.programs_index.loc[self.programs_index.Index == result[e][i], "Program"])[0]
             print(self.Workflow_dict)
 
