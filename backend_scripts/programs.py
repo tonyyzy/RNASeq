@@ -36,26 +36,28 @@ class cwl_writer():
     }
     # conf need to hold root path for repo rather than individual files
     conf = {
-        # "DESeq2_script": "path/to/script",
-        # "folder": "path",
-        # "htseq_count_script": "path"
+        "DESeq2_script": "path/to/script",
+        "folder": "path",
+        "htseq_count_script": "path",
         "metadata": "path/to/metadata",
         "annotation": "path/to/annotation",
         "root": "repo/root",
-        "salmon_index": "salmonindex"
+        "salmon_index": "salmonindex",
+        "star_genomedir": "test",
+        "prepde_script": "path/to/script",
     }
 
     name = ""
     previous_name = ""
 
-    def __init__(self, input_files):
+    def __init__(self, input_files, database_reader_object):
         self.file_names = list(input_files) # list of filenames, fixed order
         self.num = len(input_files) # total number of inputs
         self.input_files = input_files
         for index, name in enumerate(self.file_names):
             # add subject_name to workflow dict
             self.cwl_workflow["inputs"][f"subject_name{index+1}"] = "string"
-            # add subject_name to 
+            # add subject_name to
             self.cwl_input[f"subject_name{index+1}"] = name
             # add fastq to workflow dict
             self.cwl_workflow["inputs"][f"fastq{index+1}"] = "File[]"
@@ -73,15 +75,19 @@ class cwl_writer():
                         "path": self.input_files[name]["path"][1]
                     }
                 ]
+        self.conf["annotation"] = f"../{database_reader_object.Annotation_file[0]}"
+        self.conf["genome"] = f"../{database_reader_object.Genome_file[0]}"
+        self.conf["organism_name"] = database_reader_object.Organism_name[0]
+        self.conf["session_ID"] = database_reader_object.Session_ID
 
-    def star(self, *args):
+    def star(self):
         self.cwl_workflow["inputs"]["star_genomedir"] = "Directory"
-        self.cwl_workflow["outputs"]["star_readmap_out"] = {
+        self.cwl_workflow["outputs"]["star_out"] = {
             "type": "Directory",
             "outputSource": f"star_folder/out"
         }
         for i in range(self.num):
-            self.cwl_workflow["steps"][f"star_readmap_{i+1}"] = {
+            self.cwl_workflow["steps"][f"star_{i+1}"] = {
                 "run": "../cwl-tools/docker/STAR_readmap.cwl",
                 "in": {
                     "threads": "threads",
@@ -99,32 +105,33 @@ class cwl_writer():
         self.cwl_workflow["steps"]["star_folder"] = {
             "run": self.conf["folder"],
             "in": {
-                "item": [f"star_readmap_{i}/star_read_out"
+                "item": [f"star_{i}/star_read_out"
                             for i in range(self.num)],
                 "name": "star"
             },
             "out": ["out"]
             }
 
-    def samtools(self, yaml, output_string, prev):
-        for i in range(len(input_files)):
-            yaml["cwl"]["outputs"]["samtools_out"] ={
+    def samtools(self):
+        for i in range(self.num):
+            self.cwl_workflow["outputs"]["samtools_out"] ={
                 "type": "Directory",
                 "outputSource": "samtools_folder/out"}
-            yaml["cwl"]["steps"][f"{self.name}{i + 1}"] = {
+            self.cwl_workflow["steps"][f"{self.name}{i + 1}"] = {
             "run": "./cwl-tools/docker/samtools.cwl",
             "in": {
-                "samfile": f"{self.previous_name}{i+1}/{output_string[prev]}",
+            # TODO change value with previous step output
+                "samfile": f"{self.previous_name}{i+1}/value",
                 "threads": "threads",
                 "outfilename": {
                     "source": [f"subject_name{i + 1}"],
                     "valueFrom": "$(self + \".bam\")"}},
             "out": ["samtools_out"]}
 
-        yaml["cwl"]["steps"]["samtools_folder"] = {
+        self.cwl_workflow["steps"]["samtools_folder"] = {
         "run": "./cwl-tools/folder.cwl",
         "in":{
-            "item":[f"{self.name}{i + 1}/samtools_out" for i in range(len(input_files))],
+            "item":[f"{self.name}{i + 1}/samtools_out" for i in range(self.num)],
             "name": {
                 "valueFrom": self.name
                 }
@@ -132,20 +139,21 @@ class cwl_writer():
         "out": ["out"]
         }
 
-    def prepde(self, output_string, prev):
+    def prepde(self):
 
         #inputs_from_prev =
         #print(inputs_from_prev)
-        yaml["cwl"]["inputs"]["prepDE_script"] = "File"
-        yaml["cwl"]["outputs"]["prepde_out"] = {
+        self.cwl_workflow["inputs"]["prepDE_script"] = "File"
+        self.cwl_workflow["outputs"]["prepde_out"] = {
                 "type": "Directory",
                 "outputSource": "prepde_folder/out"}
-        yaml["cwl"]["steps"][f"{self.name}"] = {
+        self.cwl_workflow["steps"][f"{self.name}"] = {
             "run": "./cwl-tools/docker/prepDE.cwl",
-            "in": {"program": "prepDE_script", "gtfs": [f"{self.previous_name}{i+1}/{output_string[prev]}" for i in range(len(input_files))]},
+            # TODO change value with previous step output
+            "in": {"program": "prepDE_script", "gtfs": [f"{self.previous_name}{i+1}/value" for i in range(self.num)]},
         "out": ["gene_output", "transcript_output"]}
 
-        yaml["cwl"]["steps"]["prepde_folder"] = {
+        self.cwl_workflow["steps"]["prepde_folder"] = {
         "run": "./cwl-tools/folder.cwl",
         "in":{
             "item":[f"{self.name}/gene_output", f"{self.name}/transcript_output"],
@@ -160,21 +168,21 @@ class cwl_writer():
             "class": "File",
             "path": self.conf["prepde_script"]}
 
-    def stringtie(self, output_string, prev):
+    def stringtie(self):
         # inputs
-        yaml["cwl"]["inputs"]["annotation"] = "File"
+        self.cwl_workflow["inputs"]["annotation"] = "File"
         # outputs
         self.cwl_workflow["outputs"]["stringtie_out"] = {
             "type": "Directory",
             "outputSource": "stringtie_folder/out"
         }
         # steps
-        for i in range(len(input_files)):
-
-            yaml["cwl"]["steps"][f"{self.name[0]}{i + 1}"] = {
+        for i in range(self.num):
+            self.cwl_workflow["steps"][f"{self.name}{i + 1}"] = {
                 "run": "./cwl-tools/docker/stringtie.cwl",
                 "in": {
-                    "input_bam": f"{self.previous_name[0]}{i+1}/{output_string[prev]}",
+                # TODO change value with previous step output
+                    "input_bam": f"{self.previous_name}{i+1}/value",
                     "threads": "threads",
                     "annotation": "annotation",
                     "outfilename": {
@@ -185,10 +193,10 @@ class cwl_writer():
                 "out": ["stringtie_out"]
             }
 
-        yaml["cwl"]["steps"]["stringtie_folder"] = {
+        self.cwl_workflow["steps"]["stringtie_folder"] = {
         "run": "./cwl-tools/folder.cwl",
         "in":{
-            "item":[f"{self.name[0]}{i + 1}/stringtie_out" for i in range(len(input_files))],
+            "item":[f"{self.name}{i + 1}/stringtie_out" for i in range(self.num)],
             "name": {
                 "valueFrom": self.name
                 }
@@ -196,12 +204,10 @@ class cwl_writer():
         "out": ["out"]
             }
 
-        yaml["yml"]["annotation"] = {
+        self.cwl_input["annotation"] = {
             "class": "File",
             "path": self.conf["annotation"]
         }
-
-        return yaml
 
     def deseq2(self):
         """
@@ -248,7 +254,7 @@ class cwl_writer():
             "class": "File",
             "path": f"{self.conf['root']}/scripts/Basic_DESeq2.R"
         }
-        # TODO move this to 
+        # TODO move this to
         # self.cwl_input["metadata"] = {
         #     "class": "File",
         #     "path": self.conf["metadata"]
@@ -420,7 +426,7 @@ class cwl_writer():
                 },
                 "out": ["output"]
             }
-        
+
         # foldering
         self.cwl_workflow["steps"][f"{self.name}folder"] = {
             "run": f"{self.conf['root']}/cwl-tools/folder.cwl",
@@ -533,6 +539,8 @@ class cwl_writer():
             "path": f"{self.conf['root']}/scripts/salmon_R_script.R"
         }
 
+    def deseq(self):
+        pass
 
     def cufflink(self):
         # cufflinks 
@@ -570,10 +578,10 @@ class cwl_writer():
             yaml_file = open("./cwl-tools/docker/STAR_index.yml")
             yaml_file = yaml.load(yaml_file)
 
-            yaml_file["genomeFastaFiles"]["path"] = database_reader_object.Genome_file[0]
-            yaml_file["sjdbGTFfile"]["path"] = database_reader_object.Annotation_file[0]
+            yaml_file["genomeFastaFiles"]["path"] = self.conf["genome"]
+            yaml_file["sjdbGTFfile"]["path"] = self.conf["annotation"]
 
-            with open(f"STAR_index_{database_reader_object.Session_ID}.yml", "w+") as outfile:
+            with open(f'STAR_index_{self.conf["session_ID"]}.yml', "w+") as outfile:
                 yaml.dump(yaml_file, outfile, default_flow_style=False)
 
         elif self.Workflow_index[0] == 4:
@@ -581,59 +589,41 @@ class cwl_writer():
             yaml_file = open("./cwl-tools/docker/hisat2_build.yml")
             yaml_file = yaml.load(yaml_file)
 
-            yaml_file["reference"]["path"] = database_reader_object.Genome_file[0]
-            yaml_file["basename"] = database_reader_object.Organism_name[0]
+            yaml_file["reference"]["path"] = self.conf["genome"]
+            yaml_file["basename"] = self.conf["organism_name"]
 
-            with open(f"HISAT2_index_{database_reader_object.Session_ID}.yml", "w+") as outfile:
+            with open(f'HISAT2_index_{self.conf["session_ID"]}.yml', "w+") as outfile:
                 yaml.dump(yaml_file, outfile, default_flow_style=False)
 
 
-    def write_workflow(self, input_files, logic_object, database_reader_object):
-        flag_split = 0
-        previous_step = [""]
-        number_of_steps = 1
-        result = []
-        self.conf["annotation"] = f"../{database_reader_object.Annotation_file[0]}"
-
+    def write_workflow(self, logic_object):
+        names = [""]
+        previous_names = [""]
 
         print("writing cwl")
         for i in list(logic_object.Workflow_dict.keys()):
-            if len(logic_object.Workflow_dict[i]) > number_of_steps:
-                print("changing flag")
-                flag_split = 1
-                number_of_steps = len(logic_object.Workflow_dict[i])
-
             for e in list(logic_object.Workflow_dict[i].keys()):
-                if flag_split == 0:
-                    self.name += f"{logic_object.Workflow_dict[i][e].lower()}_"
-                    result = eval(f"self.{logic_object.Workflow_dict[i][e].lower()}(self.output_string, previous_step)")
-                    previous_step = logic_object.Workflow_dict[i][e].lower()
-                    self.previous_name = self.name
-
-                else:
-                    c = 0
-                    names = []
-                    previous_names = []
-                    for steps in range(number_of_steps):
-                        names.append("")
-                        previous_names.append("")
-
-                    while c < number_of_steps:
-                        print("multiple")
-                        print(logic_object.Workflow_dict[i][e])
-                        names[c] += f"{logic_object.Workflow_dict[i][e].lower()}_"
-                        self.name = names[c]
-                        self.previous_name = previous_names[c]
-                        result = eval(f"self.{logic_object.Workflow_dict[i][e].lower()}(self.output_string, previous_step)")
-                        previous_step = logic_object.Workflow_dict[i][e].lower()
-                        previous_names[c] = names[c]
-                        c += 1
+                try:
+                    names[int(e[0]) - 1] += f"{logic_object.Workflow_dict[i][e].lower()}_"
+                except:
+                    names.append(self.name)
+                    names[int(e[0]) - 1] += f"{logic_object.Workflow_dict[i][e].lower()}_"
+                self.name = names[int(e[-1]) - 1]
+                self.previous_name = previous_names[int(e[-1]) - 1]
+                print(self.name)
+                print(self.previous_name)
+                getattr(cwl_writer,f"{logic_object.Workflow_dict[i][e].lower()}")(self)
+                try:
+                    previous_names[int(e[0]) - 1] += f"{logic_object.Workflow_dict[i][e].lower()}_"
+                except:
+                    previous_names.append(self.previous_name)
+                    previous_names[int(e[0]) - 1] += f"{logic_object.Workflow_dict[i][e].lower()}_"
 
         with open("test.cwl", "w+") as outfile:
             outfile.write("#!/usr/bin/env cwl-runner\n\n")
-            yaml.dump(result["cwl"], outfile, default_flow_style=False)
+            yaml.dump(self.cwl_workflow, outfile, default_flow_style=False)
         with open("test.yml", "w+") as outfile:
-            yaml.dump(result["yml"], outfile, default_flow_style=False)
+            yaml.dump(self.cwl_input, outfile, default_flow_style=False)
 
         subprocess.run(["cwl-runner",
                     "--outdir=./alessandro",
