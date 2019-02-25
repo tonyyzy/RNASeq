@@ -68,10 +68,16 @@ if ("--s" %in% args){
   stranded = 0
 }
 
-if ("--e" %in% args){
-  PairedEnd <- TRUE
+if ("--metadata" %in% args){
+  metadata.idx <- grep("--e", args)
+  metadata <- read.table(args[grep("--metadata", args)+1],header = TRUE, row.names = 1, sep=",")
+  if("libType" %in% colnames(metadata)){
+    libtype <- metadata$libType
+  } else {
+    stop("libtype must be a column in metadata")
+  }
 } else {
-  PairedEnd <- FALSE
+  stop("array of libtype must be provided with prefix '--e'")
 }
 
 if ("--p" %in% args){
@@ -81,7 +87,19 @@ if ("--p" %in% args){
   thread <- 1
 }
 
-for(x in files){
+print("starting featurecounts")
+
+for(i in 1:length(files)){
+  x <- files[i]
+  PairedEnd <- libtype[i]
+  print(i)
+  print(x)
+  print(PairedEnd)
+  if(PairedEnd == "paired-end"){
+    PairedEnd <- TRUE
+  } else if(PairedEnd == "single"){
+    PairedEnd <- FALSE
+  }
   if(exists("counts")){
     tmp_counts <- featureCounts(files=x, annot.ext = gtf.path, isGTFAnnotationFile = GTFAnnotationFile,
                           GTF.featureType = featureType, GTF.attrType = attrType,

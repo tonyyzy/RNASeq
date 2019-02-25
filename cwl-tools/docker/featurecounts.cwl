@@ -31,7 +31,7 @@ inputs:
       position: 2
       prefix: --g
   threads:
-    type: string?
+    type: int?
     inputBinding:
       position: 3
       prefix: --p
@@ -70,11 +70,11 @@ inputs:
     inputBinding:
       position: 10
       prefix: --s
-  pairedend:
-    type: string?
+  metadata:
+    type: File
     inputBinding:
       position: 11
-      prefix: --e
+      prefix: --metadata
 
 outputs:
   output:

@@ -135,3 +135,7 @@ cwl-runner --outdir=./workflow3 ./workflows/docker/hisat2-cufflink-cuffmerge-cuf
 cp ./workflow3/cuffdiff/cuffdiff/gene_exp.diff ./tests/cuffdiff_res.csv
 cp ./workflow3/ballgown/DGE_res.csv ./tests/ballgown_res.csv
 rm -r ./workflow3
+
+cwl-runner --outdir=./workflow5 ./workflows/docker/star_samtools_featurecounts_DESeq2.cwl ./tests/star_samtools_featurecounts_DESeq2.yml
+cp ./workflow5/DESeq2/DGE_results.csv ./tests/featurecounts_DGE_res.csv
+rm -r ./workflow5

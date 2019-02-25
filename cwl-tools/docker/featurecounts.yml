@@ -7,6 +7,7 @@ bam_files:
 gtf:
   class: File
   path: ../cufflinks/Homo_sapiens.GRCh38.95.gtf
-threads: "4"
-pairedend: ""
-output: "gene_count"
+threads: 4
+metadata:
+  class: File
+  path: ./metadata.csv
