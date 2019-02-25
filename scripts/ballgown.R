@@ -39,13 +39,15 @@ if( "--condition" %in% args ){
 print(data_dir)
 print(list.files(paste0(data_dir, "/normal1")))
 sample_full_path <- paste(data_dir, metadata[,1], sep = "/")
-bg = ballgown(samples = as.vector(sample_full_path), pData = metadata)
+bg <- ballgown(samples = as.vector(sample_full_path), pData = metadata)
 
 # Filter out transcripts with low variance
-bg_filt = subset (bg,"rowVars(texpr(bg)) > 1", genomesubset=TRUE)
+bg_filt <- subset (bg,"rowVars(texpr(bg)) > 1", genomesubset=TRUE)
 
 # Perform DE
-results_transcripts = stattest(bg_filt, feature="transcript", covariate=condition, getFC=TRUE, meas="FPKM")
-results_genes = stattest(bg_filt, feature="gene", covariate=condition, getFC=TRUE, meas="FPKM")
+results_transcripts <- stattest(bg_filt, feature="transcript", covariate=condition, getFC=TRUE, meas="FPKM")
+results_transcripts <- round(results_transcripts[,3:ncol(results_transcripts)],4)
+results_genes <- stattest(bg_filt, feature="gene", covariate=condition, getFC=TRUE, meas="FPKM")
+results_genes <- round(results_genes[,3:ncol(results_genes)],4)
 write.csv(results_transcripts,"DTE_res.csv")
 write.csv(results_genes,"DGE_res.csv")

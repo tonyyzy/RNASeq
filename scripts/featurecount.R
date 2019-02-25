@@ -81,13 +81,6 @@ if ("--p" %in% args){
   thread <- 1
 }
 
-if( "--o" %in% args){
-  output.idx <- grep("--o", args)
-  output <- args[ output.idx +1 ]
-} else {
-  stop("please enter output name with prefix '--o'")
-}
-
 for(x in files){
   if(exists("counts")){
     tmp_counts <- featureCounts(files=x, annot.ext = gtf.path, isGTFAnnotationFile = GTFAnnotationFile,
@@ -106,4 +99,4 @@ for(x in files){
   }
 }
 colnames(counts) <- unlist(lapply(basename(files), function(x) gsub(".bam", "",x)))
-write.csv(counts, paste0(output,".csv"))
+write.csv(counts, "gene_count_matrix.csv")

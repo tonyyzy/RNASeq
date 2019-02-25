@@ -1,4 +1,4 @@
-# Rscript EdgeR.R --condition string --counts PATH --metadata PATH --output string
+# Rscript EdgeR.R --condition string --counts PATH --metadata PATH
 # code inspired by https://f1000research.com/articles/5-1408/v1
 
 library(limma)
@@ -13,13 +13,6 @@ if( "--condition" %in% args ){
   condition <- args[ condition.idx + 1 ]
 } else {
   stop("please enter condition with prefix '--condition'")
-}
-
-if( "--output" %in% args ){
-  output.idx <- grep("--output", args)
-  output <- args[ output.idx + 1 ]
-} else {
-  stop("please enter output with prefix '--output'")
 }
 
 if( "--counts" %in% args ){
@@ -64,4 +57,4 @@ efit <- eBayes(vfit)
 dge.res <- topTable(efit,sort="none",n=Inf)
 dge.res <- dge.res[,c("AveExpr", "logFC", "t", "P.Value", "adj.P.Val")]
 colnames(dge.res) <- c("baseMean", "log2FoldChange", "stat", "pvalue","padj")
-write.csv(dge.res, paste0(output,".csv"))
+write.csv(dge.res, paste0("DGE_res.csv"))
