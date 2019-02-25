@@ -16,9 +16,15 @@
           <form method="POST"  enctype="multipart/form-data">
             {% csrf_token %}
             {% for field in form %}
-            <label for="">{{field.label_tag}}</label>
+            <!-- <label for="">{{field.label_tag}}</label>
               {{field}}
-            {% endfor %}
+            {% endfor %} -->
+
+            {{form.debug_title}}
+            {{form.debug_body}}
+            {{form.field_one}}
+            {{form.field_two}}
+            {{form.field_three}}
             <input type="submit" class='btn btn-primary' value="Submit">
           </form>
         </div>

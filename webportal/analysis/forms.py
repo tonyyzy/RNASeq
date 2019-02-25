@@ -14,9 +14,10 @@ class GenomeForm(forms.ModelForm):
 
 
 class SessionForm(forms.ModelForm):
+
     class Meta:
         model = Session
-        fields = ['genome','select_genome','organism', 'fasta_dna_file', 'fasta_cdna_file', 'gtf_file']
+        fields = ['genome_index','select_genome','organism', 'salmon', 'fasta_dna_file', 'fasta_cdna_file', 'gtf_file']
         widgets={
             'organism': forms.TextInput(attrs={
                 'class':'form-control',

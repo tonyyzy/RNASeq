@@ -5,18 +5,6 @@ from django.conf import settings
 from django.urls import reverse
 
 
-
-class The_Debug(models.Model):
-    FIELD_THREE_CHOICES = (
-        ("choice1", "choice1"),
-        ("choice2", "choice2"),
-        ("choice3", "choice3"),
-    )
-    field_one = models.CharField(max_length=200)
-    field_two = models.CharField(max_length=200)
-    field_three = models.CharField(max_length=200, choices=FIELD_THREE_CHOICES)
-
-
 class Genome(models.Model):
     organism = models.CharField(max_length=200)
     source = models.CharField(max_length=200)
@@ -25,36 +13,30 @@ class Genome(models.Model):
     fasta_cdna_file = models.FileField(upload_to='data/', blank=False, null=False)
     gtf_file = models.FileField(upload_to='data/', blank=False, null=False)
 
+    def __str__(self):
+        return self.organism
+
 
 class Session(models.Model):
-    identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     GENOME_CHOICES = (
         ("pre_index", "Preindexed Genome"),
         ("user_provided", "Provide Own Index"),
     )
-    ORGANISM_CHOICES = (
-        ("Drosophila", "Drosophila"),
-        ("Ecoli", "Ecoli"),
-        ("Human", "Human"),
-        ("Mouse", "Mouse"),
-        ("Rat", "Rat"),
-        ("Yeast", "Yeast"),
-        ("Zebrafish", "Zebrafish"),
-    )
-    genome = models.CharField(max_length=200, choices=GENOME_CHOICES)
-    select_genome = models.CharField(max_length=200, choices=ORGANISM_CHOICES)
-    organism = models.CharField(max_length=200)
-    fasta_dna_file = models.FileField(upload_to='data/', blank=False, null=False)
-    fasta_cdna_file = models.FileField(upload_to='data/', blank=False, null=False)
-    gtf_file = models.FileField(upload_to='data/', blank=False, null=False)
+    identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+
+    genome_index = models.CharField(max_length=200, choices=GENOME_CHOICES)
+    select_genome = models.ForeignKey(Genome, on_delete=models.PROTECT, related_name='genome_fk', blank=True, null=True)
+    organism = models.CharField(max_length=200, blank=True, null=True)
+    salmon = models.BooleanField(default=False, blank=True, null=True)
+    fasta_dna_file = models.FileField(upload_to='data/', blank=True, null=True)
+    fasta_cdna_file = models.FileField(upload_to='data/', blank=True, null=True)
+    gtf_file = models.FileField(upload_to='data/', blank=True, null=True)
 
     def get_absolute_url(self): # provides a default if Session is called from views.py without a specified reverse or redirect
         return reverse('analysis:session_detail', kwargs={'session_slug':self.identifier})
 
     def __str__(self):
         return 'session' + str(self.pk)
-
-
 
 
 class Conditions(models.Model):
@@ -118,3 +100,14 @@ class Workflow(models.Model):
 
     def get_absolute_url(self):
         return reverse('analysis:session_detail', kwargs={'pk':self.pk})
+
+
+class The_Debug(models.Model):
+    FIELD_THREE_CHOICES = (
+        ("choice1", "choice1"),
+        ("choice2", "choice2"),
+        ("choice3", "choice3"),
+    )
+    field_one = models.CharField(max_length=200)
+    field_two = models.CharField(max_length=200)
+    field_three = models.CharField(max_length=200, choices=FIELD_THREE_CHOICES)

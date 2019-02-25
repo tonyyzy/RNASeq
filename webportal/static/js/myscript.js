@@ -37,12 +37,13 @@
 $( document ).ready(function() {
   var user_url = window.location.pathname
   if (user_url.includes('session_create')){ // executes if session_create page loaded
-    $('#div_id_organism').hide()
-    $('#div_id_fasta_dna_file').hide()
-    $('#div_id_fasta_cdna_file').hide()
-    $('#div_id_gtf_file').hide()
-    $('#div_id_accession').hide()
-    $('#div_id_select_genome').hide()
+    console.log('session_create page loaded')
+    // $('#div_id_organism').hide()
+    // $('#div_id_fasta_dna_file').hide()
+    // $('#div_id_fasta_cdna_file').hide()
+    // $('#div_id_gtf_file').hide()
+    // $('#div_id_accession').hide()
+    // $('#div_id_select_genome').hide()
     $('#div_id_genome').on('click', function(){
       // console.log('hi')
       if ($('#div_id_genome option:selected').val() == 'pre_index'){ // executes if pre_index selected from dropdown

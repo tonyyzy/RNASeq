@@ -13,13 +13,6 @@ from django.views.generic import (View,TemplateView,
                                 UpdateView)
 
 
-
-class DebugView(View):
-    def get(self, request):
-        form = SessionForm
-        return render(request, 'analysis/debug_page.html', {'form':form})
-        return HttpResponse('success debug view loaded')
-
 # Session
 class SessionIndexView(View):
     def get(self, request):
@@ -300,3 +293,12 @@ class GenomeCreateView(CreateView):
             post.save()
             return redirect('analysis:session_index')
         return render(request, self.template_name, {'form':form})
+
+
+
+
+class DebugView(View):
+    def get(self, request):
+        form = DebugForm
+        return render(request, 'analysis/debug_page.html', {'form':form})
+        return HttpResponse('success debug view loaded')
