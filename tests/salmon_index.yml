@@ -1,0 +1,7 @@
+fasta:
+   class: File
+   path: ./test.cdna.fa
+index_name: "Salmonindex"
+# options are "fmd" or "quasi"
+index_type: "quasi"
+cores: "4"

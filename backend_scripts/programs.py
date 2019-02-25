@@ -534,6 +534,34 @@ class cwl_writer():
         }
 
 
+    def cufflink(self):
+        # cufflinks 
+        # workflow section
+        # inputs
+
+        # outputs
+        self.cwl_workflow["outputs"]["cufflink_out"] = {
+            "type": "Directory",
+            "outputSource": "cufflink_folder/out"
+        }
+
+        # steps
+        for index in range(self.num):
+            self.cwl_workflow["steps"][f"{self.previous_name}_cufflinks_{index+1}"] = {
+                "run": f"{self.conf['root']}/cwl-tools/docker/cufflinks.cwl",
+                "in": {
+                    "gtf": "annotation",
+                    "threads": "threads",
+                    "alignment_file": f"{self.previous_name}{index+1}/samtools_out",
+                    "output_dir": {
+                        "source": [f"subject_name{index+1}"],
+                        "valueFrom": "$(self + '/')"
+                    }
+                },
+                "out": ["cufflink_out", "gtf_out"]
+            }
+
+
     def create_indexing(self, database_reader_object):
         print("Reading program index")
 
