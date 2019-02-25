@@ -49,6 +49,7 @@ class cwl_writer():
 
     name = ""
     previous_name = ""
+    prev = ""
 
     def __init__(self, input_files, database_reader_object):
         self.file_names = list(input_files) # list of filenames, fixed order
@@ -121,7 +122,7 @@ class cwl_writer():
             "run": "./cwl-tools/docker/samtools.cwl",
             "in": {
             # TODO change value with previous step output
-                "samfile": f"{self.previous_name}{i+1}/value",
+                "samfile": f"{self.previous_name}{i+1}/{self.output_string[self.prev]}",
                 "threads": "threads",
                 "outfilename": {
                     "source": [f"subject_name{i + 1}"],
@@ -150,7 +151,7 @@ class cwl_writer():
         self.cwl_workflow["steps"][f"{self.name}"] = {
             "run": "./cwl-tools/docker/prepDE.cwl",
             # TODO change value with previous step output
-            "in": {"program": "prepDE_script", "gtfs": [f"{self.previous_name}{i+1}/value" for i in range(self.num)]},
+            "in": {"program": "prepDE_script", "gtfs": [f"{self.previous_name}{i+1}/{self.output_string[self.prev]}" for i in range(self.num)]},
         "out": ["gene_output", "transcript_output"]}
 
         self.cwl_workflow["steps"]["prepde_folder"] = {
@@ -182,7 +183,7 @@ class cwl_writer():
                 "run": "./cwl-tools/docker/stringtie.cwl",
                 "in": {
                 # TODO change value with previous step output
-                    "input_bam": f"{self.previous_name}{i+1}/value",
+                    "input_bam": f"{self.previous_name}{i+1}/{self.output_string[self.prev]}",
                     "threads": "threads",
                     "annotation": "annotation",
                     "outfilename": {
@@ -599,6 +600,7 @@ class cwl_writer():
     def write_workflow(self, logic_object):
         names = [""]
         previous_names = [""]
+        prevs = [""]
 
         print("writing cwl")
         for i in list(logic_object.Workflow_dict.keys()):
@@ -610,9 +612,16 @@ class cwl_writer():
                     names[int(e[0]) - 1] += f"{logic_object.Workflow_dict[i][e].lower()}_"
                 self.name = names[int(e[-1]) - 1]
                 self.previous_name = previous_names[int(e[-1]) - 1]
+                self.prev = prevs[int(e[-1]) - 1]
                 print(self.name)
                 print(self.previous_name)
                 getattr(cwl_writer,f"{logic_object.Workflow_dict[i][e].lower()}")(self)
+                try:
+                    prevs[int(e[0]) - 1] = f"{logic_object.Workflow_dict[i][e].lower()}"
+                except:
+                    prevs.append("")
+                    prevs[int(e[0]) - 1] = f"{logic_object.Workflow_dict[i][e].lower()}"
+
                 try:
                     previous_names[int(e[0]) - 1] += f"{logic_object.Workflow_dict[i][e].lower()}_"
                 except:
