@@ -82,12 +82,12 @@ class cwl_writer():
 
     def star(self):
         self.cwl_workflow["inputs"]["star_genomedir"] = "Directory"
-        self.cwl_workflow["outputs"]["star_readmap_out"] = {
+        self.cwl_workflow["outputs"]["star_out"] = {
             "type": "Directory",
             "outputSource": f"star_folder/out"
         }
         for i in range(self.num):
-            self.cwl_workflow["steps"][f"star_readmap_{i+1}"] = {
+            self.cwl_workflow["steps"][f"star_{i+1}"] = {
                 "run": "../cwl-tools/docker/STAR_readmap.cwl",
                 "in": {
                     "threads": "threads",
@@ -105,7 +105,7 @@ class cwl_writer():
         self.cwl_workflow["steps"]["star_folder"] = {
             "run": self.conf["folder"],
             "in": {
-                "item": [f"star_readmap_{i}/star_read_out"
+                "item": [f"star_{i}/star_read_out"
                             for i in range(self.num)],
                 "name": "star"
             },
