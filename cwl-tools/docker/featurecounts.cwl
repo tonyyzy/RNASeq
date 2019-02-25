@@ -31,7 +31,7 @@ inputs:
       position: 2
       prefix: --g
   threads:
-    type: string?
+    type: int?
     inputBinding:
       position: 3
       prefix: --p
@@ -70,19 +70,14 @@ inputs:
     inputBinding:
       position: 10
       prefix: --s
-  pairedend:
-    type: string?
+  metadata:
+    type: File
     inputBinding:
       position: 11
-      prefix: --e
-  output:
-    type: string
-    inputBinding:
-      position: 12
-      prefix: --o
+      prefix: --metadata
 
 outputs:
   output:
     type: File
     outputBinding:
-      glob: $(inputs.output+".csv")
+      glob: $("gene_count_matrix.csv")

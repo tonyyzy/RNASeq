@@ -4,6 +4,9 @@ cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: cufflinks
 
+requirements:
+   InlineJavascriptRequirement: {}
+
 hints:
    DockerRequirement:
       dockerPull: machalen/cufflinksdocker:latest
@@ -50,7 +53,11 @@ inputs:
          position: 8
 
 outputs:
-   output:
+   cufflink_out:
       type: Directory
       outputBinding:
          glob: $(inputs.output_dir)
+   gtf_out:
+      type: File
+      outputBinding:
+         glob: $(inputs.output_dir+"/transcripts.gtf")

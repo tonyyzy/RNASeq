@@ -21,14 +21,9 @@ inputs:
    inputBinding:
      position: 3
      prefix: --gene_set
- output:
-   type: string:
-   inputBinding:
-     position: 4
-     prefix: --doc_name
 
 outputs:
   DESeq2_out:
    type: File
    outputBinding:
-    glob: "*.csv"
+    glob: "hypergeo_res.csv"

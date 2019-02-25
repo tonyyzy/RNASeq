@@ -26,7 +26,7 @@
         <tbody>
           {% for session in session_list %}
             <tr>
-              <td><a href="session_detail/{{ session.pk }}">Sesison: {{ session.pk }}</a></td>
+              <td><a href="session_detail/{{ session.identifier }}">Sesison: {{ session.pk }}</a></td>
               <td>{{ session.organism }}</td>
               <td>{{ session.genome }}</td>
               <td>{{ session.fasta_file }}</td>
@@ -39,7 +39,6 @@
         </tbody>
     </table>
     <a href="{% url 'analysis:session_create' %}"><button type="submit" class="btn btn-primary" name="button">New Session</button><a>
-
     </div>
   {% endblock %}
   </body>

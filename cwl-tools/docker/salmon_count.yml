@@ -1,4 +1,4 @@
-inputs: 
+input_script: 
    class: File
    path: ../../scripts/salmon_R_script.R
 gtf: 

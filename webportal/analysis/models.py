@@ -17,23 +17,23 @@ class Session(models.Model):
     fasta_file = models.FileField(upload_to='data/', blank=True, null=True)
     annotation_file = models.FileField(upload_to='data/', blank=True, null=True)
 
-    def get_absolute_url(self):
-        return reverse('analysis:session_detail', kwargs={'pk':self.pk})
+    def get_absolute_url(self): # provides a default if Session is called from views.py without a specified reverse or redirect
+        return reverse('analysis:session_detail', kwargs={'session_slug':self.identifier})
 
     def __str__(self):
         return 'session' + str(self.pk)
 
 
 class Conditions(models.Model):
-    session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='conditions')
+    session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='conditions_fk')
     conditions = models.CharField(max_length=50, blank=False)
     no_replicates = models.PositiveSmallIntegerField(blank=False, default=1)
 
     def get_absolute_url(self):
         return reverse('analysis:session_detail', kwargs={'pk':self.pk})
 
-    # def __str__(self):
-        # return self.conditions
+    def __str__(self):
+        return self.conditions
 
 
 class Samples(models.Model):
@@ -41,15 +41,15 @@ class Samples(models.Model):
         ("PE", "Paired_end"),
         ("SG", "Single")
     )
-    session = models.ForeignKey(Session, on_delete=models.PROTECT)
-    condition = models.ForeignKey(Conditions, on_delete=models.PROTECT, related_name='samples')
-    libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES, blank=True, null=True)
-    read_1 = models.FileField(upload_to='data/', blank=False, null=False, default=1)
+    session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='samples_fk')
+    condition = models.ForeignKey(Conditions, on_delete=models.PROTECT)
+    libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES, blank=False, null=False)
+    read_1 = models.FileField(upload_to='data/', blank=False, null=False)
     read_2 = models.FileField(upload_to='data/', blank=True, null=True)
     accession = models.CharField(max_length=200, blank=False, null=False)
 
     def get_absolute_url(self):
-        return reverse('analysis:samples_detail', kwargs={'pk':self.pk})
+        return reverse('analysis:session_detail', kwargs={'session_pk':self.session_pk})
 
 
 class Workflow(models.Model):
@@ -64,13 +64,26 @@ class Workflow(models.Model):
     ASSEMLBER_CHOICES = (
         ("STRINGTIE", "STRINGTIE"),
     )
+    ANALYSIS_CHOICES = (
+        ('DESEQ2', 'DESEQ2'),
+        ('DEXEQ', 'DEXEQ'),
+        ('HISAT2', 'HISAT2'),
+        ('HTSEQ', 'HTSEQ'),
+        ('PREPDE', 'PREPDE'),
+        ('SAMTOOLS', 'SAMTOOLS'),
+        ('STAR', 'STAR'),
+        ('STRINGTIE', 'STRINGTIE'),
+        ('MISO', 'MISO'),
+        ('SALMON', 'SALMON'),
+        ('DESEQ', 'DESEQ'),
+        ('CUFFLINKS', 'CUFFLINKS'),
+    )
     session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='workflow')
     index = models.CharField(max_length=200, choices=INDEX_CHOICES)
     mapper = models.CharField(max_length=200, choices=MAPPER_CHOICES)
     assembler = models.CharField(max_length=200, choices=ASSEMLBER_CHOICES, blank=True)
-    analysis = models.CharField(max_length=200)
+    analysis = models.CharField(max_length=200, choices=ANALYSIS_CHOICES)
     status = models.BooleanField(default=False, null=False)
 
     def get_absolute_url(self):
         return reverse('analysis:session_detail', kwargs={'pk':self.pk})
-

@@ -1,12 +1,12 @@
 # stringtie -eB ./tests/test1.bam -G ./tests/test.gtf -o ./tests/stringtie/test1/test1.gtf
 # StringTie version 1.3.4c
-test1	StringTie	transcript	500	999	1000	+	.	gene_id "gene1"; transcript_id "trans1"; cov "28.280001"; FPKM "125018.789062"; TPM "132448.000000";
+test1	StringTie	transcript	500	999	1000	+	.	gene_id "gene1"; transcript_id "trans1"; cov "28.280001"; FPKM "66046.835938"; TPM "72672.835938";
 test1	StringTie	exon	500	999	1000	+	.	gene_id "gene1"; transcript_id "trans1"; exon_number "1"; cov "28.280001";
-test1	StringTie	transcript	3000	5299	1000	-	.	gene_id "gene2"; transcript_id "trans2"; cov "175.593704"; FPKM "776255.750000"; TPM "822384.562500";
-test1	StringTie	exon	3000	3299	1000	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "1"; cov "122.606506";
-test1	StringTie	exon	4400	4999	1000	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "2"; cov "222.250000";
-test1	StringTie	exon	5050	5299	1000	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "3"; cov "127.203178";
-test1	StringTie	transcript	3000	5299	1000	-	.	gene_id "gene2"; transcript_id "trans3"; cov "9.644055"; FPKM "42633.949219"; TPM "45167.460938";
-test1	StringTie	exon	3000	3299	1000	-	.	gene_id "gene2"; transcript_id "trans3"; exon_number "1"; cov "9.166840";
-test1	StringTie	exon	3500	3999	1000	-	.	gene_id "gene2"; transcript_id "trans3"; exon_number "2"; cov "11.162000";
-test1	StringTie	exon	5050	5299	1000	-	.	gene_id "gene2"; transcript_id "trans3"; exon_number "3"; cov "7.180823";
+test1	StringTie	transcript	3000	5299	1000	-	.	gene_id "gene2"; transcript_id "trans2"; cov "351.296722"; FPKM "820439.750000"; TPM "902748.625000";
+test1	StringTie	exon	3000	3299	1000	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "1"; cov "278.889069";
+test1	StringTie	exon	4400	4999	1000	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "2"; cov "433.211670";
+test1	StringTie	exon	5050	5299	1000	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "3"; cov "241.589981";
+test1	StringTie	transcript	3000	5299	1000	-	.	gene_id "gene2"; transcript_id "trans3"; cov "9.564555"; FPKM "22337.644531"; TPM "24578.619141";
+test1	StringTie	exon	3000	3299	1000	-	.	gene_id "gene2"; transcript_id "trans3"; exon_number "1"; cov "8.947587";
+test1	StringTie	exon	3500	3999	1000	-	.	gene_id "gene2"; transcript_id "trans3"; exon_number "2"; cov "12.068000";
+test1	StringTie	exon	5050	5299	1000	-	.	gene_id "gene2"; transcript_id "trans3"; exon_number "3"; cov "5.298026";

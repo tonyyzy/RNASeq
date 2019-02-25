@@ -26,20 +26,15 @@ inputs:
         type: File
         inputBinding:
             position: 2
-            prefix: --counts 
+            prefix: --counts
     metadata:
         type: File
         inputBinding:
             position: 3
             prefix: --metadata
-    output:
-        type: string
-        inputBinding:
-            position: 4
-            prefix: --output
 
 outputs:
     output:
       type: File
       outputBinding:
-        glob: $(inputs.output+".csv")
+        glob: $("DGE_reds.csv")

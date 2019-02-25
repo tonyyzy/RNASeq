@@ -51,13 +51,13 @@ p {
 }
 
 .content{
-  max-width: 500px;
+  max-width: 900px;
   margin: 0 auto;
   text-align: center;
   margin-bottom: 230px;
   margin-top: 100px;
   font-size: 140%;
-  color: #686793;
+  color: #101111;
   font-family: 'Open Sans', sans-serif;
 }
 
@@ -76,6 +76,15 @@ p {
   border: solid gray 3px;
 }
 
+
+#search_field_1{
+  width: 420px;
+}
+
+.warning{
+  background-color: rgba(196, 27, 27, 0.1);
+  margin: 15px;
+}
 
 .text_body_1{
   font-size: 130%;

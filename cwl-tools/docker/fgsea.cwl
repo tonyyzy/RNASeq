@@ -22,14 +22,9 @@ inputs:
       inputBinding:
          position: 3
          prefix: --gene_set
-   doc_name:
-      type: string
-      inputBinding:
-         position: 4
-         prefix: --doc_name
 
 outputs:
    example_out:
       type: File
       outputBinding:
-         glob: "*"
+         glob: "gsea_res.csv"
