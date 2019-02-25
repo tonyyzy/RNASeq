@@ -3,6 +3,8 @@
 library("matrixStats")
 library("ballgown")
 
+set.seed(1)
+
 args <- commandArgs(trailingOnly = TRUE)
 
 if( "--data_dir" %in% args){
