@@ -33,6 +33,54 @@
 // });
 
 
+// SESSION CREATE JAVASCRIPT
+$( document ).ready(function() {
+  var user_url = window.location.pathname
+  if (user_url.includes('session_create')){ // executes if session_create page loaded
+    $('#div_id_organism').hide()
+    $('#div_id_fasta_dna_file').hide()
+    $('#div_id_fasta_cdna_file').hide()
+    $('#div_id_gtf_file').hide()
+    $('#div_id_accession').hide()
+    $('#div_id_select_genome').hide()
+    $('#div_id_genome').on('click', function(){
+      // console.log('hi')
+      if ($('#div_id_genome option:selected').val() == 'pre_index'){ // executes if pre_index selected from dropdown
+        // console.log('great success with pre index')
+        $('#div_id_organism').hide()
+        $('#div_id_fasta_dna_file').hide()
+        $('#div_id_fasta_cdna_file').hide()
+        $('#div_id_gtf_file').hide()
+        $('#div_id_accession').hide()
+        $('#div_id_select_genome').show()
+      }
+      if ($('#div_id_genome option:selected').val() == 'user_provided'){ // executes if pre_index selected from dropdown
+        // console.log('great success with pre index')
+                $('#div_id_select_genome').hide()
+        $('#div_id_organism').show()
+        $('#div_id_fasta_dna_file').show()
+        $('#div_id_fasta_cdna_file').show()
+        $('#div_id_gtf_file').show()
+        $('#div_id_accession').show()
+      }
+    })
+  }
+})
+
+
+
+
+if ($('#div_id_libtype option:selected').val() == 'user_provided'){ // executes if user_provided selected from dropdown
+  $('#div_id_read_1').show()
+  $('#div_id_accession').show()
+  $('#div_id_read_2').hide()
+}
+
+
+
+
+
+
 
 // SAMPLES CREATE JAVASCRIPT
 $( document ).ready(function() {
@@ -86,9 +134,7 @@ $( document ).ready(function() {
       }
     })
     }
-  else {
-    console.log('no hiding required')
-  }
+
 });
 
 

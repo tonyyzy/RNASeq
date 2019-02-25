@@ -1,18 +1,22 @@
 from django import forms
 from django.forms import ModelForm
-from analysis.models import Session, Workflow, Samples, Conditions, The_Debug
+from analysis.models import Session, Workflow, Samples, Conditions, The_Debug, Genome
 from django.core.exceptions import ValidationError
 
 class SessionSearchForm(forms.Form):
     user_session = forms.CharField(max_length=100)
 
 
+class GenomeForm(forms.ModelForm):
+    class Meta:
+        model = Genome
+        fields='__all__'
 
 
 class SessionForm(forms.ModelForm):
     class Meta:
         model = Session
-        fields = ['organism','genome','fasta_file', 'annotation_file']
+        fields = ['genome','select_genome','organism', 'fasta_dna_file', 'fasta_cdna_file', 'gtf_file']
         widgets={
             'organism': forms.TextInput(attrs={
                 'class':'form-control',

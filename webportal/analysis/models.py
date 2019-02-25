@@ -17,23 +17,44 @@ class The_Debug(models.Model):
     field_three = models.CharField(max_length=200, choices=FIELD_THREE_CHOICES)
 
 
+class Genome(models.Model):
+    organism = models.CharField(max_length=200)
+    source = models.CharField(max_length=200)
+    version = models.CharField(max_length=200)
+    fasta_dna_file = models.FileField(upload_to='data/', blank=False, null=False)
+    fasta_cdna_file = models.FileField(upload_to='data/', blank=False, null=False)
+    gtf_file = models.FileField(upload_to='data/', blank=False, null=False)
+
+
 class Session(models.Model):
     identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     GENOME_CHOICES = (
-        ("PreIndex", "Preindexed_Genome"),
-        ("OwnGFF", "User_Provided_Annotation"),
-        ("OwnFASTA", "User_Provided_Genome"),
+        ("pre_index", "Preindexed Genome"),
+        ("user_provided", "Provide Own Index"),
     )
-    organism = models.CharField(max_length=200)
+    ORGANISM_CHOICES = (
+        ("Drosophila", "Drosophila"),
+        ("Ecoli", "Ecoli"),
+        ("Human", "Human"),
+        ("Mouse", "Mouse"),
+        ("Rat", "Rat"),
+        ("Yeast", "Yeast"),
+        ("Zebrafish", "Zebrafish"),
+    )
     genome = models.CharField(max_length=200, choices=GENOME_CHOICES)
-    fasta_file = models.FileField(upload_to='data/', blank=True, null=True)
-    annotation_file = models.FileField(upload_to='data/', blank=True, null=True)
+    select_genome = models.CharField(max_length=200, choices=ORGANISM_CHOICES)
+    organism = models.CharField(max_length=200)
+    fasta_dna_file = models.FileField(upload_to='data/', blank=False, null=False)
+    fasta_cdna_file = models.FileField(upload_to='data/', blank=False, null=False)
+    gtf_file = models.FileField(upload_to='data/', blank=False, null=False)
 
     def get_absolute_url(self): # provides a default if Session is called from views.py without a specified reverse or redirect
         return reverse('analysis:session_detail', kwargs={'session_slug':self.identifier})
 
     def __str__(self):
         return 'session' + str(self.pk)
+
+
 
 
 class Conditions(models.Model):
@@ -68,27 +89,25 @@ class Workflow(models.Model):
     INDEX_CHOICES = (
         ("STAR", "STARAligner"),
         ("HISAT2", "HISAT2"),
+        ('SALMON', 'SALMON'),
     )
     MAPPER_CHOICES = (
         ("STAR", "STARAligner"),
         ("HISAT2", "HISAT2"),
+        ('SALMON', 'SALMON'),
     )
     ASSEMLBER_CHOICES = (
         ("STRINGTIE", "STRINGTIE"),
+        ('CUFFLINKS', 'CUFFLINKS'),
+        ('MISO', 'MISO'),
+        ('HTSEQ', 'HTSEQ'),
     )
     ANALYSIS_CHOICES = (
         ('DESEQ2', 'DESEQ2'),
         ('DEXEQ', 'DEXEQ'),
-        ('HISAT2', 'HISAT2'),
         ('HTSEQ', 'HTSEQ'),
-        ('PREPDE', 'PREPDE'),
-        ('SAMTOOLS', 'SAMTOOLS'),
-        ('STAR', 'STAR'),
-        ('STRINGTIE', 'STRINGTIE'),
         ('MISO', 'MISO'),
-        ('SALMON', 'SALMON'),
         ('DESEQ', 'DESEQ'),
-        ('CUFFLINKS', 'CUFFLINKS'),
     )
     session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='workflow')
     index = models.CharField(max_length=200, choices=INDEX_CHOICES)

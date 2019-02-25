@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.urls import reverse, reverse_lazy
-from .forms import SessionSearchForm, SessionForm, WorkflowForm, SamplesForm, ConditionsForm, DebugForm
+from .forms import SessionSearchForm, SessionForm, WorkflowForm, SamplesForm, ConditionsForm, DebugForm, GenomeForm
 from analysis.models import Session, Workflow, Samples, Conditions
 from . import models
 from django.db.models import Q
@@ -278,3 +278,25 @@ class WorkflowDeleteView(DeleteView):
         instance = get_object_or_404(Workflow, pk=workflow_pk)
         instance.delete()
         return redirect('analysis:session_detail', session_slug=session_slug)
+
+
+class GenomeCreateView(CreateView):
+    template_name = 'analysis/genome_form.html'
+
+    def get(self, request):
+        form = GenomeForm
+        # return HttpResponse('success')
+        return render(request, self.template_name, {'form':form})
+
+    def post(self, request):
+        form = GenomeForm
+        bound_form = GenomeForm(request.POST, request.FILES)
+        print(bound_form)
+        # print(bound_form.cleaned_data)
+        print(bound_form.is_valid())
+        if bound_form.is_valid():
+            post = bound_form.save()
+            print(f'\n{post}')
+            post.save()
+            return redirect('analysis:session_index')
+        return render(request, self.template_name, {'form':form})

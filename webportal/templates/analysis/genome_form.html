@@ -1,0 +1,34 @@
+{%extends 'base.html'%}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+      <title>Genome Create</title>
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+      <div class="offset-3 col-md-6">
+        <div class="">
+          <div class="form-group">
+            <form method="POST"  enctype="multipart/form-data" class="session_form">
+              {% csrf_token %}
+
+              <div class="form_title">
+                <h4>ADMIN VIEW: NEW GENOME</h4>
+              </div>
+              <hr class="my-4">
+
+              {{form|crispy}}
+              <br>
+              <input type="submit" class='testWidth' value="Submit">
+            </form>
+          </div>
+        </div>
+
+      </div>
+    {% endblock %}
+  </body>
+</html>
