@@ -1,16 +1,5 @@
 # Mini documentation for each tools
 ### Specify the inputs and outputs for each cwl script
-- ## salmon_count
-   #### inputs:  
-   `input_script`: R count script  
-   `gtf`: annotation file in gtf format  
-   `metadata`: metadata.csv  
-   `salmon_dir`: directory with subdirectorys of outputs from `salmon_quant`  
-   > maybe change this directory name? like `quant_results`?
-   #### outputs:
-   `gene_abundance_matrix.csv`  
-   `gene_count_matrix.csv` * this one used for DGE analysis e.g. DESeq2  
-   `gene_length_matrix.csv`
 
 - ## ballgown
    #### inputs:
@@ -100,11 +89,12 @@
   `count_matrix`: exon count matrix file
   `gff`: directory containing gff file from htseq prepare
   `metadata`: metadata csv file.
+  `threads`: number of threads to use
   #### outputs:
   `DEE_results.csv`
   > change to `DEE_res.csv`
 
-- ## edger
+- ## edger:
   #### inputs:
   `script`: R edger script
   > change to `input_script`
@@ -114,3 +104,213 @@
   `metadata`: metadata csv file.
   #### outputs:
   `DGE_res.csv`
+
+- ## featurecounts:
+  #### inputs:
+  `script`: R featurecounts script
+  > change to `input_script`
+  `bam_files`: all bam files
+  `gtf`: annotation in ftd format
+  `threads`: number of threads to use.
+  `pairedend`: use if samples are pairedend.
+  #### outputs:
+  `gene_count_matrix.csv`
+
+- ## fgsea:
+  #### inputs:
+  `input_scripts`: R fgsea input_script
+  > change to `input_script`
+  `de_results`: DGE res file
+  > change to `de_res`
+  `gene_set`: file containing gene set information in long form.
+  #### ouputs:
+  `gsea_res.csv`
+
+- ## hisat2_align:
+  #### inputs:
+  `threads`: number of threads
+  `index_directory`: path to hisat2 index
+  `first_pair`: first fastq file
+  `second_pair`: second fastq file
+  `sam_name`: output name
+  > change to output
+  `XSTag`: Tag to use ("--dta" or "--dta-cufflinks")
+
+- ## hisat2_build:
+  #### inputs:
+  `reference`: fasta file
+  > change to fasta
+  `threads`: number of threads to use.
+  `basename`: name to use for output
+  > change to output
+  #### outputs@
+  `basename`: samfile with a basename given from inputs.basename
+  `log`
+
+- ## htseq_count:
+  #### inputs:
+  `input_script`: python htseq_count script
+  `pairedend`: logical
+  `stranded`: logical
+  `input_format`: bam or sam
+  > make bam a default
+  `sorted_by`: pos
+  `gff`: gff file from htseq_annotation
+  `sam`: bam or sam file
+  > change to `bam`
+  `outname`: name for outfile
+  > remove
+  #### outputs:
+  `outname`: named after input.ouput
+  > change to a default of exon_count_matrix.csv
+
+- ## htseq_prepare:
+  #### inputs:
+  `input_script`: python input script
+  `gtf`: gtf annotation file
+  `gff_name`: name for gff output
+  #### outputs:
+  `gff_name`: gff file named after inputs.gff_name
+
+- ## hypergeo
+  #### inputs:
+  `script`: R HyperGeo_Script script
+  > change to `input_script`
+  `de_res`: DGE res file
+  `gene_set`: file containing gene set information in long form.
+  #### outputs:
+  `hypergeo_res.csv`
+
+- ## miso_index:
+  #### inputs:
+  `annotation`: gtf file
+  > change to `gtf`
+  `index_dir`: output name for output directory
+  > change to `output`
+  #### outputs:
+  `index_dir`: output directory named after inputs.index_dir
+
+- ## miso_run
+  #### inputs:
+  `cores`: number of threads to use
+  > change to 'threads'
+  `lib_type`: pairedend or not
+  > change to `pairedend` or change all other to `lib_type`
+  `index`: Directory from miso_index output
+  > change to `index_directory`
+  `bam`: bam file
+  `read_len`: read length
+  `annotation_file`: gtf file
+  > change to `gtf`
+  `min_exon_size`: minimum exon size to use
+  `out_dir`: output name
+  > change to output
+  #### outputs:
+  `out_dir`: directory named after inputs.out_dir
+
+- ## prepDE
+  #### inputs:
+  `program`: python prepDE script
+  > change to input_script
+  `gtfs`: gtf files from stringtie
+  > change to `stringtie_out`?
+  #### outputs:
+  `gene_count_matrix.csv`
+  `transcript_count_matrix.csv`
+
+- ## salmon_count
+  #### inputs:  
+  `input_script`: R count script  
+  `gtf`: annotation file in gtf format  
+  `metadata`: metadata.csv  
+  `salmon_dir`: directory with subdirectorys of outputs from `salmon_quant`  
+  > maybe change this directory name? like `quant_results`?
+  #### outputs:
+  `gene_abundance_matrix.csv`  
+  `gene_count_matrix.csv` * this one used for DGE analysis e.g. DESeq2  
+  `gene_length_matrix.csv`
+
+- ## salmon_inputs:
+  #### inputs:
+  `fasta`: fasta files
+  `index_type`: 2 different type of running "fmd" or "quasi"
+  `cores`: number of threads to use
+  > change to `threads`
+  `index_name`: directory output name
+  > change to `output`
+  #### outputs:
+  `index_name`: output directory with name inputs.index_name
+
+- ## salmon_quant:
+  #### inputs:
+  `index`: directory of salmon index
+  > change to `index_directory`
+  `cores`: number of threads to use
+  > change to `threads`
+  `out_dir`: output name
+  > change to output
+  `first_end_fastq`: if paired end. first pair fastq file
+  `second_end_fastq` if paired end. second pair fastq file
+  `single_fastq`: if single end. single fastq file
+  #### outputs:
+  `out_dir`: Directory with name of inputs.out_dir
+
+- ## samtools:
+  #### inputs:
+  `action`: samtools command (default in sort)
+  `sortby`: how to sort the bam file
+  `threads`: how many threads to use (total - 1), it is additional
+  `samfile`: sam file
+  > change to `sam`
+  `outfilename`: ouutput file name
+  > change to `output`
+  #### outputs:
+  `outfilename`: bam file with name inputs.outfilename
+
+- ## STAR_index:
+  #### inputs:
+  `threads`: number of threads
+  `Mode`: how to run STAR (use genomeGenerate)
+  `genomeDir`: directory name to use
+  > change to `output`
+  `genomeFastaFiles`: fasta files
+  > change to fasta
+  `sjdbGTFfile`: gtf file
+  > change to `gtf`
+
+- ## STAR_readmap
+  #### inputs:
+  `threads`: number of threads to use
+  `Mode`: how to run STAR (use alignReads)
+  `genomeDir`: directory name to use
+  `sjdbGTFfile`: gtf file
+  > change to `gtf`
+  `sjdbOverhang`
+  `readFilesIn`: fastq files
+  `outSAMtype`: state the output wanted use("BAM SortedByCoordinate")
+  `outFileNamePrefix`: output name for directory
+  > change to `output`
+  #### outputs:
+  `outFileNamePrefix`: output directory name with name inputs.outFileNamePrefix
+  `sam`: sam file
+
+- ## stringtie
+  #### inputs:
+  `input_bam`: bam file
+  > change to `bam`
+  `threads`: number of threads to use.
+  `annotation`: gtf file
+  > change to `gtf`
+  `outfilename`: output name for file
+  > change to `output`
+  #### outputs:
+  `outfilename`: output file name with name inputs.outfilename
+
+- ## tablemaker:
+  #### inputs:
+  `threads`: number of threads to use.
+  `merged_gtf`: merged gtf from cuffmerge
+  `bam`: bam files to use
+  `output`: output name for directory.
+  #### outputs:
+  `output`: Directory with name inputs.outputs

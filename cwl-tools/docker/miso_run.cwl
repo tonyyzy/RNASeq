@@ -58,7 +58,7 @@ inputs:
       type: File?
       inputBinding:
          position: 11
-   exon_size:
+   min_exon_size:
       type: string?
       inputBinding:
          position: 12

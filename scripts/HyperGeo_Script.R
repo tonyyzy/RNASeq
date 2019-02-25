@@ -1,4 +1,4 @@
-# Rscript ./GSEA_Script.R --de_res PATH --gene_set PATH --doc_name STRING
+# Rscript ./GSEA_Script.R --de_res PATH --gene_set PATH
 
 args <- commandArgs( trailingOnly=TRUE )
 
@@ -16,10 +16,6 @@ if ("--gene_set" %in% args) {
   }
 }
 
-if ("--doc_name" %in% args) {
-  doc_name.file.idx  <- grep("--doc_name", args)
-  res_name <- args[ doc_name.file.idx+1 ]
-}
 
 ## Read file containing the **serialised** 'SummarizedExperiment' object & check its class is correct ##
 if (! "--de_res" %in% args) {
@@ -27,7 +23,7 @@ if (! "--de_res" %in% args) {
   stop("'Differential Expression' flag [--de_res] absent")
 } else {
   de.file.path <- args[ grep("--de_res", args)+1 ]
-  
+
   if (file.exists(de.file.path)) {
     cat("\nLoading _serialised_ 'differential expression' results from \"", de.file.path ,"\" ... ", sep="")
     Deseq.results <- read.csv(de.file.path, row.names = 1, header = TRUE)
@@ -64,4 +60,4 @@ for(list1 in Gene_Sets){
 print("step 4")
 results2 <- p.adjust(results, method = "bonferroni")
 results <- data.frame("pvalue"=results, "padj"=results2, row.names = names(Gene_Sets))
-write.csv(results, paste0(res_name, ".csv"))
+write.csv(results, "hypergeo_res.csv")

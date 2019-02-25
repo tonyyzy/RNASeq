@@ -27,6 +27,11 @@ inputs:
       inputBinding:
          position: 4
          prefix: --metadata
+   threads:
+      type: int?
+      inputBinding:
+        position: 5
+        prefix: --threads
 
 outputs:
    output:

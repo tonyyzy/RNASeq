@@ -1,4 +1,4 @@
-threads: "4"
+threads: 4
 merged_gtf:
   class: File
   path: /path/to/file

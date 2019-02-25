@@ -7,4 +7,3 @@ de_res:
 gene_set:
   class: File
   path: /path/to/script
-output: "stringhyp"
