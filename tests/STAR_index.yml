@@ -1,8 +1,8 @@
 threads: 2
 Mode: "genomeGenerate"
-genomeFastaFiles:
+fasta:
   - {class: File, path: ./test.fa}
-sjdbGTFfile:
+gtf:
   - {class: File, path: ./test.gtf}
 # sjdbGTFtagExonParentTranscript: "exon_id"
 genomeSAindexNbases: "5"

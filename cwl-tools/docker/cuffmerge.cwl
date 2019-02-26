@@ -28,7 +28,7 @@ arguments:
     - prefix: "&&"
       position: -2
       shellQuote: False
-      valueFrom: $("cp "+ inputs.ref_fasta.path + " " + runtime.outdir)
+      valueFrom: $("cp "+ inputs.fasta.path + " " + runtime.outdir)
     - prefix: "&&"
       position: -1
       valueFrom: "cuffmerge"
@@ -36,7 +36,7 @@ arguments:
       valueFrom: assembly_GTF_list.txt
     - position: 4
       prefix: -s
-      valueFrom: $(runtime.outdir+"/"+inputs.ref_fasta.basename)
+      valueFrom: $(runtime.outdir+"/"+inputs.fasta.basename)
 inputs:
     output:
         type: string
@@ -53,7 +53,7 @@ inputs:
         inputBinding:
             position: 3
             prefix: -p
-    ref_fasta:
+    fasta:
         type: File
 #        inputBinding:
 #            position: 4

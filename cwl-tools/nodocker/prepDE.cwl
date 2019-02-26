@@ -10,11 +10,11 @@ requirements:
     listing: |
       ${
         var paths = [];
-        for (var i = 0; i < inputs.gtfs.length; i ++) {
+        for (var i = 0; i < inputs.stringtie_out.length; i ++) {
           paths.push({
           "class": "Directory",
-          "basename": inputs.gtfs[i].nameroot,
-          "listing": [inputs.gtfs[i]]
+          "basename": inputs.stringtie_out[i].nameroot,
+          "listing": [inputs.stringtie_out[i]]
           });
         }return paths;
       }
@@ -23,11 +23,11 @@ arguments:
     position: 2
     valueFrom: $(runtime.outdir)
 inputs:
-  program:
+  input_script:
     type: File
     inputBinding:
       position: 1
-  gtfs:
+  stringtie_out:
     type: File[]
 
 outputs:

@@ -7,7 +7,7 @@ hints:
   dockerPull: biowardrobe2/scidap-deseq:v0.0.5
 baseCommand: Rscript
 inputs:
- script:
+ input_script:
   type: File
   inputBinding:
     position: 1

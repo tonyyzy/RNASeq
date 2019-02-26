@@ -24,6 +24,7 @@ inputs:
          prefix: -s
    input_format:
       type: string
+      default: "bam"
       inputBinding:
          position: 4
          prefix: -f
@@ -36,7 +37,7 @@ inputs:
       type: File?
       inputBinding:
          position: 6
-   sam:
+   bam:
       type: File?
       inputBinding:
          position: 7

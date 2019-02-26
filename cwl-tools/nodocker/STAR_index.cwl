@@ -18,11 +18,11 @@ inputs:
     default: "./"
     inputBinding:
       prefix: --genomeDir
-  genomeFastaFiles:
+  fasta:
     type: File[]
     inputBinding:
       prefix: --genomeFastaFiles
-  sjdbGTFfile:
+  gtf:
     type: File[]
     inputBinding:
       prefix: --sjdbGTFfile

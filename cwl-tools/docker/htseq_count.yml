@@ -8,7 +8,7 @@ sorted_by: "pos"
 gff:
    class: File
    path: ../../tests/test.gff
-sam: 
+bam: 
    class: File
    path: ../../tests/test1.bam
 outname: "test1_htseq_count.csv"

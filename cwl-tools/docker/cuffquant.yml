@@ -3,6 +3,6 @@ threads: "12"
 merged_gtf:
   class: File
   path: ./merged.gtf
-alignment_file:
+bam:
   class: File
   path: ./tumour1.bam

@@ -146,10 +146,10 @@ steps:
   stringtie_1:
     run: ../../cwl-tools/docker/stringtie.cwl
     in:
-      input_bam: samtools_1/samtools_out
+      bam: samtools_1/samtools_out
       threads: threads
-      annotation: annotation
-      outfilename:
+      gtf: annotation
+      output:
         source: [subject_name1]
         valueFrom: $(self + ".gtf")
     out: [stringtie_out]
@@ -157,10 +157,10 @@ steps:
   stringtie_2:
     run: ../../cwl-tools/docker/stringtie.cwl
     in:
-      input_bam: samtools_2/samtools_out
+      bam: samtools_2/samtools_out
       threads: threads
-      annotation: annotation
-      outfilename:
+      gtf: annotation
+      output:
         source: [subject_name2]
         valueFrom: $(self + ".gtf")
     out: [stringtie_out]
@@ -168,10 +168,10 @@ steps:
   stringtie_3:
     run: ../../cwl-tools/docker/stringtie.cwl
     in:
-      input_bam: samtools_3/samtools_out
+      bam: samtools_3/samtools_out
       threads: threads
-      annotation: annotation
-      outfilename:
+      gtf: annotation
+      output:
         source: [subject_name3]
         valueFrom: $(self + ".gtf")
     out: [stringtie_out]
@@ -179,10 +179,10 @@ steps:
   stringtie_4:
     run: ../../cwl-tools/docker/stringtie.cwl
     in:
-      input_bam: samtools_4/samtools_out
+      bam: samtools_4/samtools_out
       threads: threads
-      annotation: annotation
-      outfilename:
+      gtf: annotation
+      output:
         source: [subject_name4]
         valueFrom: $(self + ".gtf")
     out: [stringtie_out]
@@ -202,8 +202,8 @@ steps:
   prepDE:
     run: ../../cwl-tools/docker/prepDE.cwl
     in:
-     program: prepDE_script
-     gtfs:
+     input_script: prepDE_script
+     stringtie_out:
      - stringtie_1/stringtie_out
      - stringtie_2/stringtie_out
      - stringtie_3/stringtie_out
@@ -223,7 +223,7 @@ steps:
   DESeq2:
     run: ../../cwl-tools/docker/DESeq2.cwl
     in:
-      script: DESeq2_script
+      input_script: DESeq2_script
       count_matrix: prepDE/gene_output
       metadata: metadata
     out: [DESeq2_out]

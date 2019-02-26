@@ -1,8 +1,8 @@
 threads: 2
 Mode: "genomeGenerate"
-genomeDir: "./"
-genomeFastaFiles:
+output: "./"
+fasta:
   - {class: File, path: ../../Guillardia_theta_gca_000002975.ASM297v1.dna.toplevel.fa}
-sjdbGTFfile:
+gtf:
   - {class: File, path: ../../Guillardia_theta_gca_000002975.ASM297v1.42.gff3}
 sjdbGTFtagExonParentTranscript: "exon_id"

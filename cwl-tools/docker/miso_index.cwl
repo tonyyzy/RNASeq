@@ -8,12 +8,12 @@ hints:
       dockerPull: filipejesus/miso 
 
 inputs:
-   annotation:
+   gtf:
       type: File
       inputBinding:
          position: 1
          prefix: --index
-   index_dir:
+   output:
       type: string
       inputBinding:
          position: 2

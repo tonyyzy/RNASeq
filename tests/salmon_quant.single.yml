@@ -1,8 +1,8 @@
-index:
+index_directory:
   class: Directory
   path: ./Salmonindex
-out_dir: test3
-cores: 2
+output: test3
+threads: 2
 #first_end_fastq:
 #  class: File
 #  path: test1.1.fastq

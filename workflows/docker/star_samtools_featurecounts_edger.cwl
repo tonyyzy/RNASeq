@@ -144,7 +144,7 @@ steps:
   featurecounts:
     run: ../../cwl-tools/docker/featurecounts.cwl
     in:
-      script: featurecounts_script
+      input_script: featurecounts_script
       bam_files:
       - samtools_1/samtools_out
       - samtools_2/samtools_out
@@ -166,8 +166,8 @@ steps:
   edger:
     run: ../../cwl-tools/docker/edger.cwl
     in:
-      script: EdgeR_script
-      counts: featurecounts/output
+      input_script: EdgeR_script
+      count_matrix: featurecounts/output
       metadata: metadata
       condition: condition
     out: [output]

@@ -1,6 +1,6 @@
 output: "cuffdiff_out"
 threads: "12"
-gtf_file:
+merged_gtf:
     class: File
     path: ./merged/merged.gtf
 condition1_files:

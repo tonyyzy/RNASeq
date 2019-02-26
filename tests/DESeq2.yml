@@ -1,4 +1,4 @@
-script:
+input_script:
   class: File
   path: ../scripts/Basic_DESeq2.R
 count_matrix:

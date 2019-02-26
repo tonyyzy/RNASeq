@@ -16,7 +16,7 @@ inputs:
       inputBinding:
          position: 1
          prefix: -t
-   index_name:
+   output:
       type: string
       inputBinding:
          position: 2
@@ -26,8 +26,8 @@ inputs:
       inputBinding:
          position: 3
          prefix: --type
-   cores:
-      type: string
+   threads:
+      type: int
       inputBinding:
          position: 4
          prefix: -p
@@ -36,4 +36,4 @@ outputs:
    output:
       type: Directory
       outputBinding:
-         glob: $(inputs.index_name)
+         glob: $(inputs.output)
