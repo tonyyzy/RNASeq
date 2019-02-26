@@ -44,16 +44,25 @@ class SessionListView(ListView):
 # in order to update the session status on completion of the Session Detail Page
 # check if it is possible to convert SessionDetailView into a view with get and post methods
 # see if you can store below metthod within the get and post update the status of session
-def SessionDetailView(request, session_slug):
-    template_name = 'analysis/session_detail.html' # for debug pague use: analysis/session_detail_debug.html
-    session = Session.objects.filter(identifier=session_slug)
-    try:
-        session = Session.objects.get(identifier=session_slug)
-    except session.DoesNotExist:
-        raise Http404('Session does not exist')
+class SessionDetailView(View):
+    template_name = 'analysis/session_detail.html' # for debug pagu e use: analysis/session_detail_debug.html
 
-    context = {'session_detail':session, 'key2':'val2'}
-    return render(request, template_name, context)
+    def get(self, request, session_slug):
+        session = Session.objects.filter(identifier=session_slug)
+        form = SessionSubmitForm
+        try:
+            session = Session.objects.get(identifier=session_slug)
+        except session.DoesNotExist:
+            raise Http404('Session does not exist')
+
+        context = {'session_detail':session, 'key2':'val2', 'form':form}
+        return render(request, self.template_name, context)
+
+    def post(self, request, session_slug):
+        # session_slug = self.kwargs.get('session_slug')
+        post = form.save(commit=False)
+        post.save()
+        return redirect('analysis:session_detail', session_slug)
 
 
 class SessionCreateView(CreateView):

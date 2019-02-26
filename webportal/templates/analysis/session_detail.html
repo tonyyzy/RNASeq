@@ -10,7 +10,6 @@
   <body>
     {% block body %}
 
-
     <div class="jumbotron">
       <div class="session_detail">
         {% if messages %}
@@ -181,6 +180,14 @@ analysis/session_detail/2/samples_update/7/ -->
         <br><br>
       </div>
 
+      <h1>the success form</h1>
+      <form method="POST"  enctype="multipart/form-data" id='id_SessionSubmitForm'>
+        {% csrf_token %}
+        <!-- {{form}} -->
+        <!-- will need to define individual fields in which case i dont need to use javascript to hide as i can specify fields shown directly! -->
+        <br>
+        <input type="submit" class='create_button' value="SUBMIT FOR ANALYSIS">
+      </form>
     </div>
   </div>
   {% endblock %}

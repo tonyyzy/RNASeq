@@ -91,6 +91,7 @@ $( document ).ready(function() {
     	// alert('show samples');
       $('#session_upload').show()
     }
+    $('#id_SessionSubmitForm')
   }
 });
 

@@ -40,22 +40,13 @@ class SessionForm(forms.ModelForm):
             'gtf_file': forms.FileInput(),
         }
 
+
 class SessionSubmitForm(forms.ModelForm):
 
     class Meta:
         model = Session
-        fields = ['genome_index','select_genome','organism', 'salmon', 'fasta_dna_file', 'fasta_cdna_file', 'gtf_file']
-        widgets={
-            'organism': forms.TextInput(attrs={
-                'class':'form-control',
-                'placeholder': 'enter organism here...'
-                }),
-            'genome': forms.Select(attrs={
-                'class':'form-control',
-                }),
-            'fasta_file': forms.FileInput(),
-            'annotation_file': forms.FileInput(),
-        }
+        fields = ['status']
+
 
 class ConditionsForm(forms.ModelForm):
     class Meta:
