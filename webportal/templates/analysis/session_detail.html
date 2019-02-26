@@ -12,7 +12,7 @@
 
 
     <div class="jumbotron">
-      <div class="">
+      <div class="session_detail">
         {% if messages %}
           {% for message in messages %}
             <div class="alert alert-{{message.tags}}">
@@ -22,26 +22,43 @@
             </div>
           {% endfor %}
         {% endif %}
+
+
         <div class="card bg-light mb-3" style="max-width: 150rem;">
           <div class="card-header">Session Identifier: {{session_detail.identifier}}</div>
           <div class="card-body">
             <!-- <h5 class="card-title">Session Identifier: {{session_detail.identifier}}</h5> -->
             <div class="card-text">
               <!-- <p>{{session_detail.identifier}}</p> -->
-              <p>Organism: {{session_detail.organism}}</p>
-              <p>Genome: {{session_detail.genome}}</p>
-              {% if session_detail.fasta_file %}
-                <p>Genome File: {{session_detail.fasta_file}}</p>
+              <p>Genome: {{session_detail.genome_index}}</p>
+
+              {% if session_detail.genome_index == 'pre_index' %}
+                <p>Organism: {{session_detail.select_genome.organism}}</p>
+                <p>Salmon Analysis: {{session_detail.salmon}}</pe>
+                <p>DNA Fasta File: {{session_detail.select_genome.fasta_dna_file}}</p>
+                <p>cDNA Fasta File: {{session_detail.select_genome.fasta_cdna_file}}</p>
+                <p>Annotation File: {{session_detail.select_genome.gtf_file}}</p>
+                <!-- <p>{{session_detail.select_genome.organism}}</p> -->
               {% endif %}
-              {% if session_detail.annotation_file %}
-                <p>Annotation File: {{session_detail.annotation_file}}</p>
+
+              {% if session_detail.genome_index == 'user_provided' %}
+                <p>Organism: {{session_detail.organism}}</pe>
+                  {% if session_detail.salmon %}
+                    <p>Salmon Analysis: {{session_detail.salmon}}</pe>
+                    <p>cDNA Fasta File: {{session_detail.fasta_cdna_file}}</pe>
+                  {% endif %}
+                <p>DNA Fasta File: {{session_detail.fasta_dna_file}}</pe>
+                <p>Annotation File: {{session_detail.gtf_file}}</pe>
               {% endif %}
+              <h1>{{session_detail.status}}</h1>
+              <h1>{{key2}}</h1>
               <p></p>
             </div>
           </div>
         </div>
 
         <!-- CONDITIONS -->
+        <div id='id_conditions_div'>
         {% if session_detail.conditions_fk.all %}
           <p class='lead'>Session Conditions:</p>
           <table class="table mb-1 condition_table">
@@ -74,9 +91,12 @@
         {% if not session_detail.conditions_fk.all %}
           <h3>No conditions defined.</h3>
         {% endif %}
+        </div>
         <a class='btn btn-success' href="{% url 'analysis:conditions_create' session_slug=session_detail.identifier %}">Add Condition</a>
+
 <br><br>
       <!-- SAMPLES -->
+      <div id='id_samples_div'>
       {% if session_detail.samples_fk.all %}
       <p class='lead'>Session Samples:</p>
       <table class="table mb-1 condition_table">
@@ -98,7 +118,7 @@
             <tr>
               <!-- <td>{{ sample.pk }}</td> -->
               <td>{{forloop.counter}}</td>
-              <td>{{ sample.libtype }}</td>
+              <td class="td_libtype">{{ sample.libtype }}</td>
               <td>{{ sample.condition }}</td>
               <td>{{ sample.read_1 }}</td>
               <td>{{ sample.read_2 }}</td>
@@ -116,9 +136,11 @@ analysis/session_detail/2/samples_update/7/ -->
       {% if not session_detail.samples_fk.all %}
             <h3>{{'No samples defined.'}}</h3>
       {% endif %}
+    </div>
 
 <br><br>
         <!-- WORKFLOW -->
+        <div id='id_workflow_div'>
         {% if session_detail.workflow.all %}
         <p class='lead'>Session Workflow:</p>
         <table class="table mb-1 condition_table">
@@ -140,7 +162,7 @@ analysis/session_detail/2/samples_update/7/ -->
             <tr>
               <!-- <td>{{workflow.pk}}</td> -->
               <td>{{forloop.counter}}</td>
-              <td>{{ workflow.index }}</td>
+              <td class="td_index">{{ workflow.index }}</td>
               <td>{{ workflow.mapper }}</td>
               <td>{{ workflow.assembler }}</td>
               <td>{{ workflow.analysis }}</td>
@@ -156,7 +178,16 @@ analysis/session_detail/2/samples_update/7/ -->
           <h3>No Workflows defined.</h3>
         {% endif %}
         <a class='btn btn-success' href="{% url 'analysis:workflow_create' session_slug=session_detail.identifier %}">Add Workflow</a>
+        <br><br>
+      </div>
+
     </div>
+  </div>
   {% endblock %}
   </body>
 </html>
+
+
+<!-- <a href="{% url 'analysis:session_submitted' session_slug=session_detail.identifier %}">
+  <input type="submit" id='session_upload' class='testWidth' value="Submit Session For Anlysis">
+</a> -->

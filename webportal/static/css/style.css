@@ -7,41 +7,19 @@ html,body{
 }
 
 
-
-.block {
-  display: block;
-  width: 100%;
-  border: none;
-  background-color: #4CAF50;
-  padding: 14px 28px;
-  font-size: 16px;
-  cursor: pointer;
-  text-align: center;
-}
-
-
-
+/* FONT */
 .text-white{
   color: #dae0ea;
   /* text-decoration: line-through; */
 }
 
 
-
-.form{
-  border-radius: 10px;
-  border: 2px solid #044c7c;
-  padding: 10px;
-}
-
-.form_title{
-  text-align: center;
-}
-
 .sans_serif{
     font-family: 'Open Sans', sans-serif;
 }
 
+
+/* INTRO */
 .intro{
   width:100%;
   height:100%;
@@ -58,8 +36,6 @@ html,body{
   width: 100%;
   max-width: none;
 }
-
-
 
 .content{
   max-width: 900px;
@@ -81,12 +57,14 @@ html,body{
   border: solid;
   text-transform: uppercase;
   text-decoration: none;
+  color:inherit;
 }
+
 #upload_btn:hover{
   color: gray;
   border: solid gray 3px;
+  /* color: inherit; */
 }
-
 
 #search_field_1{
   width: 420px;
@@ -109,29 +87,8 @@ html,body{
   }
 }
 
-/* FORM STYLE */
-/* Style the form - display items horizontally */
-.form-inline_1 {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
-  /* border: solid blue 10px; */
-}
 
-/* Add some margins for each label */
-.form-inline_1 label {
-  margin: 5px 10px 5px 10;
-}
-
-/* Style the input fields */
-/* .form-inline_1 input {
-  vertical-align: middle;
-  margin: 5px 10px 5px 0;
-  padding: 5px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-} */
-
+/* BASE.HTML STYLE */
 .footer {
   position: fixed;
   left: 0;
@@ -148,11 +105,22 @@ html,body{
 }
 
 
-.session_form{
+/* FORMS */
+.form{
+  border-radius: 10px;
+  border: 2px solid #044c7c;
+  padding: 10px;
+}
+
+.form_title{
+  text-align: center;
+}
+
+.create_form{
   /* text-align: center; */
   margin: 90px;
   padding: 20px;
-  background: rgba(90, 100, 100, 0.1);
+  background: rgba(90, 100, 100, 0.2);
   /* border: 1px solid gray; */
   /* border:20px */
   /* display: block; */
@@ -160,7 +128,8 @@ html,body{
   font-size: 120%;
 }
 
-.testWidth{
+
+.create_button{
    background-color: #4CAF50;
    border: none;
    color: white;
@@ -189,4 +158,23 @@ html,body{
   padding: 5px;
   margin: 10px;
   /* background: blue; */
+}
+
+
+/* SESSION DETAIL STYLE */
+
+#id_conditions_div{
+  /* display: none; */
+}
+
+#id_samples_div{
+  /* display: none; */
+}
+
+#id_workflow_div{
+  /* display: none; */
+}
+
+#session_upload{
+  display: none;
 }

@@ -19,6 +19,33 @@ class SessionForm(forms.ModelForm):
         model = Session
         fields = ['genome_index','select_genome','organism', 'salmon', 'fasta_dna_file', 'fasta_cdna_file', 'gtf_file']
         widgets={
+            'genome_index': forms.Select(attrs={
+                'class':'form-control',
+                }),
+            'select_genome': forms.Select(attrs={
+                'class':'form-control',
+                }),
+            'organism': forms.TextInput(attrs={
+                'class':'form-control',
+                'placeholder': 'enter organism here...'
+                }),
+            'genome': forms.Select(attrs={
+                'class':'form-control',
+                }),
+            'salmon': forms.NullBooleanSelect(attrs={
+                'class':'form-control',
+                }),
+            'fasta_dna_file': forms.FileInput(),
+            'fasta_cdna_file': forms.FileInput(),
+            'gtf_file': forms.FileInput(),
+        }
+
+class SessionSubmitForm(forms.ModelForm):
+
+    class Meta:
+        model = Session
+        fields = ['genome_index','select_genome','organism', 'salmon', 'fasta_dna_file', 'fasta_cdna_file', 'gtf_file']
+        widgets={
             'organism': forms.TextInput(attrs={
                 'class':'form-control',
                 'placeholder': 'enter organism here...'
@@ -29,7 +56,6 @@ class SessionForm(forms.ModelForm):
             'fasta_file': forms.FileInput(),
             'annotation_file': forms.FileInput(),
         }
-
 
 class ConditionsForm(forms.ModelForm):
     class Meta:

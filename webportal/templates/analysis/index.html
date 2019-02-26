@@ -23,7 +23,8 @@
         <input id="search_field_1" type="text" name="q" placeholder="enter session ID", value={{ request.GET.q }}>
         <br>
         <input type="submit" id='upload_btn' name="" value='Search DB'>
-        <a href="{% url 'analysis:session_create' %}" style="text-decoration:none"><input type="button" id='upload_btn' name="" value="New Session"></a>
+        <a style="  text-decoration:none;color:inherit;" href="{% url 'analysis:session_create' %}" style="text-decoration:none"><input type="button" id='upload_btn' name="" value="New Session"></a>
+
       </form>
       {% if session_query %}
       <div class="jumbotron">

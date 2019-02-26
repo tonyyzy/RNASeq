@@ -1,9 +1,14 @@
 
-// SESSION DETAIL JAVASCRIPT
-// $( document ).ready(function() {
-//   var user_url = window.location.pathname
-//   if (user_url.includes('session_detail')){ // executes if session_detail page loaded
-//
+
+
+
+
+
+
+
+
+
+
 // // var session_conditions = [];
 // // for (var i = 0; i < 5; i++){
 // //
@@ -57,7 +62,7 @@ $( document ).ready(function() {
       }
       if ($('#div_id_genome option:selected').val() == 'user_provided'){ // executes if pre_index selected from dropdown
         // console.log('great success with pre index')
-                $('#div_id_select_genome').hide()
+        $('#div_id_select_genome').hide()
         $('#div_id_organism').show()
         $('#div_id_fasta_dna_file').show()
         $('#div_id_fasta_cdna_file').show()
@@ -78,7 +83,16 @@ if ($('#div_id_libtype option:selected').val() == 'user_provided'){ // executes 
 }
 
 
-
+// SESSION DETAIL JAVASCRIPT
+$( document ).ready(function() {
+  var user_url = window.location.pathname
+  if (user_url.includes('session_detail')){ // executes if session_detail page loaded
+    if($('.td_index').length){
+    	// alert('show samples');
+      $('#session_upload').show()
+    }
+  }
+});
 
 
 
@@ -135,7 +149,6 @@ $( document ).ready(function() {
       }
     })
     }
-
 });
 
 
