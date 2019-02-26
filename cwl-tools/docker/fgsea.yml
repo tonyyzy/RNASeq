@@ -1,7 +1,7 @@
-input_scripts:
+input_script:
    class: File
    path: ./GSEA_Script.R
-de_results:
+de_res:
    class: File
    path: ./test_dge_results.csv
 gene_set:

@@ -1,8 +1,8 @@
-script:
+input_script:
     class: File
     path: /path/to/script
 condition: "string"
-counts:
+count_matrix:
     class: File
     path: /path/to/File
 metadata:

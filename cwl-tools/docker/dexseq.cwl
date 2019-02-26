@@ -37,4 +37,4 @@ outputs:
    output:
       type: File
       outputBinding:
-         glob: "*"
+         glob: "DEE_results.csv"

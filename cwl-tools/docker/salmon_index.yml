@@ -1,7 +1,7 @@
 fasta:
    class: File
    path: ./test.fa
-index_name: "transcript_index"
+output: "transcript_index"
 # options are "fmd" or "quasi"
 index_type: "quasi"
-cores: "4"
+threads: "4"

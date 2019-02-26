@@ -8,11 +8,11 @@ hints:
       dockerPull: filipejesus/fgsea
 
 inputs:
-   input_scripts:
+   input_script:
       type: File
       inputBinding:
          position: 1
-   de_results:
+   de_res:
       type: File
       inputBinding:
          position: 2

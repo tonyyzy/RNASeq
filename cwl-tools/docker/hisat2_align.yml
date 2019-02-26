@@ -8,6 +8,6 @@ first_pair:
 second_pair:
    class: File
    path: test1.2.fastq
-sam_name: "test1.sam"
+output: "test1.sam"
 # dta for stringtie while dta-cufflinks for cufflinks
 XSTag: "--dta"

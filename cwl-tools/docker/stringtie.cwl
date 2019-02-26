@@ -7,7 +7,7 @@ hints:
   DockerRequirement:
     dockerPull: quay.io/biocontainers/stringtie:1.3.0--hd28b015_2
 inputs:
- input_bam:
+ bam:
   type: File
   inputBinding:
    position: 1
@@ -17,12 +17,12 @@ inputs:
    inputBinding:
      position: 2
      prefix: -p
- annotation:
+ gtf:
   type: File
   inputBinding:
    position: 3
    prefix: -G
- outfilename:
+ output:
   type: string
   inputBinding:
     position: 4
@@ -32,4 +32,4 @@ outputs:
  stringtie_out:
   type: File
   outputBinding:
-   glob: $(inputs.outfilename)
+   glob: $(inputs.output)

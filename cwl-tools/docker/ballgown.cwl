@@ -9,7 +9,7 @@ hints:
     dockerPull: quay.io/biocontainers/bioconductor-ballgown:2.14.0--r351_0
 
 inputs:
-  script:
+  input_script:
     type: File
     inputBinding:
       position: 0

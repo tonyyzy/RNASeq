@@ -1,4 +1,4 @@
-script:
+input_script:
   class: File
   path: ../../scripts/Basic_DESeq2.R
 count_matrix:
@@ -7,3 +7,4 @@ count_matrix:
 metadata:
   class: File
   path: ../../tests/metadata.csv
+threads: 2

@@ -56,7 +56,7 @@ inputs:
         type: File
         inputBinding:
             position: 9
-    alignment_file:
+    bam:
         type: File
         inputBinding:
             position: 10

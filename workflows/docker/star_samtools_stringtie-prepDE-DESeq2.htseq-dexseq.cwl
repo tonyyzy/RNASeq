@@ -158,10 +158,10 @@ steps:
   stringtie_1:
     run: ../../cwl-tools/docker/stringtie.cwl
     in:
-      input_bam: samtools_1/samtools_out
+      bam: samtools_1/samtools_out
       threads: threads
-      annotation: annotation
-      outfilename:
+      gtf: annotation
+      output:
         source: [subject_name1]
         valueFrom: $(self + ".gtf")
     out: [stringtie_out]
@@ -169,10 +169,10 @@ steps:
   stringtie_2:
     run: ../../cwl-tools/docker/stringtie.cwl
     in:
-      input_bam: samtools_2/samtools_out
+      bam: samtools_2/samtools_out
       threads: threads
-      annotation: annotation
-      outfilename:
+      gtf: annotation
+      output:
         source: [subject_name2]
         valueFrom: $(self + ".gtf")
     out: [stringtie_out]
@@ -180,10 +180,10 @@ steps:
   stringtie_3:
     run: ../../cwl-tools/docker/stringtie.cwl
     in:
-      input_bam: samtools_3/samtools_out
+      bam: samtools_3/samtools_out
       threads: threads
-      annotation: annotation
-      outfilename:
+      gtf: annotation
+      output:
         source: [subject_name3]
         valueFrom: $(self + ".gtf")
     out: [stringtie_out]
@@ -191,10 +191,10 @@ steps:
   stringtie_4:
     run: ../../cwl-tools/docker/stringtie.cwl
     in:
-      input_bam: samtools_4/samtools_out
+      bam: samtools_4/samtools_out
       threads: threads
-      annotation: annotation
-      outfilename:
+      gtf: annotation
+      output:
         source: [subject_name4]
         valueFrom: $(self + ".gtf")
     out: [stringtie_out]
@@ -279,7 +279,7 @@ steps:
       sorted_by:
         valueFrom: "pos"
       gff: htseq_prepare/output
-      sam: samtools_1/samtools_out
+      bam: samtools_1/samtools_out
       outname:
         source: [subject_name1]
         valueFrom: $(self + "_htseq_count.csv")
@@ -299,7 +299,7 @@ steps:
       sorted_by:
         valueFrom: "pos"
       gff: htseq_prepare/output
-      sam: samtools_2/samtools_out
+      bam: samtools_2/samtools_out
       outname:
         source: [subject_name2]
         valueFrom: $(self + "_htseq_count.csv")
@@ -318,7 +318,7 @@ steps:
       sorted_by:
         valueFrom: "pos"
       gff: htseq_prepare/output
-      sam: samtools_3/samtools_out
+      bam: samtools_3/samtools_out
       outname:
         source: [subject_name3]
         valueFrom: $(self + "_htseq_count.csv")
@@ -337,7 +337,7 @@ steps:
       sorted_by:
         valueFrom: "pos"
       gff: htseq_prepare/output
-      sam: samtools_4/samtools_out
+      bam: samtools_4/samtools_out
       outname:
         source: [subject_name4]
         valueFrom: $(self + "_htseq_count.csv")

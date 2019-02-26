@@ -8,12 +8,12 @@ hints:
       dockerPull: quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2 
 stdout: log.txt
 inputs:
-   reference:
+   fasta:
       type: File
       inputBinding:
          position: 1
          prefix: -f
-   basename:
+   output:
       type: string
       inputBinding:
          position: 2

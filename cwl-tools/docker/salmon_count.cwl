@@ -22,7 +22,7 @@ inputs:
       inputBinding:
          position: 3
          prefix: --metadata
-   salmon_dir:
+   quant_results:
       type: Directory
       inputBinding:
          position: 4

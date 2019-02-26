@@ -30,7 +30,7 @@ inputs:
      inputBinding:
         position: 2
         prefix: -p
-  gtf_file:
+  merged_gtf:
      type: File
      inputBinding:
         position: 3

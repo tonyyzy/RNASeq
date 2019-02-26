@@ -1,4 +1,4 @@
-script:
+input_script:
   class: File
   path: /project/home18/fmj18/Documents/RNASeq/scripts/featurecount.R
 bam_files:

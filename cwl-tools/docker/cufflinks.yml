@@ -1,7 +1,7 @@
 gtf:
     class: File
     path: ./Homo_sapiens.GRCh38.95.gtf
-output_dir: "./"
+output: "./"
 threads: "12"
 #BiasCorrecting:
 #    class: File
@@ -9,6 +9,6 @@ threads: "12"
 #libtype: "ff-firststrand" 
 #libNorm: "classic-fpkm"
 #multi_read_correction: ""
-alignment_file:
+bam:
     class: File
     path: ./tumour1.bam

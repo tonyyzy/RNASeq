@@ -11,7 +11,7 @@ requirements:
   ShellCommandRequirement: {}
   InitialWorkDirRequirement:
     listing:
-      - entry: '{"inputs": $(inputs.gtfs)}'
+      - entry: '{"inputs": $(inputs.stringtie_out)}'
         entryname: inputs.json
 
 arguments:
@@ -34,11 +34,11 @@ arguments:
     position: 5
     valueFrom: sample_lst.txt
 inputs:
-  program:
+  input_script:
     type: File
     inputBinding:
       position: 4
-  gtfs:
+  stringtie_out:
     type: File[]
   length:
     type: string?

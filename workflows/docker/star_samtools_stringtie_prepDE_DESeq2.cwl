@@ -202,8 +202,8 @@ steps:
   prepDE:
     run: ../../cwl-tools/docker/prepDE.cwl
     in:
-     program: prepDE_script
-     gtfs:
+     input_script: prepDE_script
+     stringtie_out:
      - stringtie_1/stringtie_out
      - stringtie_2/stringtie_out
      - stringtie_3/stringtie_out
@@ -223,7 +223,7 @@ steps:
   DESeq2:
     run: ../../cwl-tools/docker/DESeq2.cwl
     in:
-      script: DESeq2_script
+      input_script: DESeq2_script
       count_matrix: prepDE/gene_output
       metadata: metadata
     out: [DESeq2_out]
