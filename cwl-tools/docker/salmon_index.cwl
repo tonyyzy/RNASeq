@@ -27,7 +27,7 @@ inputs:
          position: 3
          prefix: --type
    threads:
-      type: int
+      type: string
       inputBinding:
          position: 4
          prefix: -p
