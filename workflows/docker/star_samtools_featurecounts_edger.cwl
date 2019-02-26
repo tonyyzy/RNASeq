@@ -21,8 +21,9 @@ inputs:
   fastq3: File[]
   fastq4: File[]
   featurecounts_script: File
-  DESeq2_script: File
+  EdgeR_script: File
   metadata: File
+  condition: string
 
 outputs:
   star_readmap_out:
@@ -34,9 +35,10 @@ outputs:
   featurecounts_out:
     type: Directory
     outputSource: featurecounts_folder/out
-  DESeq2_out:
+  edger_out:
     type: Directory
-    outputSource: DESeq2_folder/out
+    outputSource: edger_folder/out
+
 steps:
 # STAR
   star_readmap_1:
@@ -161,18 +163,19 @@ steps:
         valueFrom: "featurecounts"
     out: [out]
 
-  DESeq2:
-    run: ../../cwl-tools/docker/DESeq2.cwl
+  edger:
+    run: ../../cwl-tools/docker/edger.cwl
     in:
-      script: DESeq2_script
-      count_matrix: featurecounts/output
+      script: EdgeR_script
+      counts: featurecounts/output
       metadata: metadata
-    out: [DESeq2_out]
+      condition: condition
+    out: [output]
 
-  DESeq2_folder:
+  edger_folder:
     run: ../../cwl-tools/folder.cwl
     in:
-      item: DESeq2/DESeq2_out
+      item: edger/output
       name:
-        valueFrom: "DESeq2"
+        valueFrom: "edger"
     out: [out]

@@ -37,4 +37,4 @@ outputs:
     output:
       type: File
       outputBinding:
-        glob: $("DGE_reds.csv")
+        glob: $("DGE_res.csv")

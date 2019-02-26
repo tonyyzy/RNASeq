@@ -22,9 +22,10 @@ annotation:
 featurecounts_script:
   class: File
   path: ../../scripts/featurecount.R
-DESeq2_script:
+EdgeR_script:
   class: File
-  path: ../../scripts/Basic_DESeq2.R
+  path: ../../scripts/EdgeR.R
 metadata:
   class: File
   path: ../../tests/metadata.csv
+condition: "condition"

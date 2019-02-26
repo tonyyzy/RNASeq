@@ -47,7 +47,7 @@ DGE$samples$group <- group
 DGE <- calcNormFactors(DGE, method = "TMM")
 
 design <- model.matrix(~0+group)
-contr.matrix <- makeContrasts(contrasts = paste0("group0-group1"), levels = colnames(design))
+contr.matrix <- makeContrasts(contrasts = gsub(".$","",paste0(paste0("group", unique(group)),sep="-", collapse = "")), levels = colnames(design))
 
 v <- voom(DGE, design)
 vfit <- lmFit(v, design)

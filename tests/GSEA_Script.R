@@ -68,4 +68,4 @@ print("step 4")
 
 Results <- data.frame(gsea.Results[,2:7], row.names = gsea.Results$pathway)
 Results <- round(Results, 2)
-write.csv(Results, res_name)
+write.csv(Results, "gsea_res.csv")
