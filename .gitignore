@@ -15,3 +15,4 @@ test_workflow2_docker
 test.py
 test.cwl
 test.yml
+.vscode/launch.json
