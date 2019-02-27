@@ -167,7 +167,7 @@ class cwl_writer():
                     "out": ["sam_output", "hisat2_align_out"]
                 }
             elif self.input_files[name]["type"] == "SG":
-                self.cwl_workflow["steps"][f"{self.name}{index+1}"] = {
+                self.cwl_workflow["steps"][f"{self.name}_{index+1}"] = {
                     "run": f"{self.conf['root']}/cwl-tools/docker/hisat2_align.cwl",
                     "in": {
                         "threads" : "threads",
@@ -338,19 +338,19 @@ class cwl_writer():
         # inputs
 
         # outputs
-        self.cwl_workflow["outputs"]["cufflinks_out"] = {
+        self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
-            "outputSource": f"{self.previous_name}cufflinks_folder/out"
+            "outputSource": f"{self.previous_name}_cufflinks_folder/out"
         }
 
         # steps
         for index in range(self.num):
-            self.cwl_workflow["steps"][f"{self.name}{index+1}"] = {
+            self.cwl_workflow["steps"][f"{self.name}_{index+1}"] = {
                 "run": f"{self.conf['root']}/cwl-tools/docker/cufflinks.cwl",
                 "in": {
                     "gtf": "annotation",
                     "threads": "threads",
-                    "alignment_file": f"{self.previous_name}{index+1}/{self.output_string[self.prev]}",
+                    "alignment_file": f"{self.previous_name}_{index+1}/{self.output_string[self.prev]}",
                     "output_dir": {
                         "source": [f"subject_name{index+1}"],
                         "valueFrom": "$(self + '/')"
@@ -360,10 +360,10 @@ class cwl_writer():
             }
         
         # foldering
-        self.cwl_workflow["steps"][f"{self.previous_name}cufflinks_folder"] = {
+        self.cwl_workflow["steps"][f"{self.previous_name}_cufflinks_folder"] = {
             "run": "./cwl-tools/folder.cwl",
             "in":{
-                "item":[f"{self.name}{i + 1}/gtf_out" for i in range(self.num)],
+                "item":[f"{self.name}_{i + 1}/gtf_out" for i in range(self.num)],
                 "name": {
                     "valueFrom": self.name
                 }
@@ -382,17 +382,17 @@ class cwl_writer():
         # outputs
         self.cwl_workflow["outputs"]["cuffmerge_out"] = {
             "type": "Directory",
-            "outputSource": f"{self.previous_name}cuffmerge_folder/out"
+            "outputSource": f"{self.previous_name}_cuffmerge_folder/out"
         }
 
         # steps
-        self.cwl_workflow["steps"][f"{self.previous_name}cuffmerge"] = {
+        self.cwl_workflow["steps"][f"{self.previous_name}_cuffmerge"] = {
             "run": f"{self.conf['root']}/cwl-tools/docker/cuffmerge.cwl",
             "in": {
                 "threads": "threads",
                 "gtf": "annotation",
                 "ref_fasta": "fasta",
-                "cufflinks_output": [f"{self.name}{i+1}/gtf_out" for i in range(self.num)],
+                "cufflinks_output": [f"{self.name}_{i+1}/gtf_out" for i in range(self.num)],
                 "output": {
                     "valueFrom": "cuffmerge"
                 }
@@ -401,10 +401,10 @@ class cwl_writer():
         }
 
         # foldering
-        self.cwl_workflow["steps"][f"{self.previous_name}cuffmerge_folder"] = {
+        self.cwl_workflow["steps"][f"{self.previous_name}_cuffmerge_folder"] = {
             "run": f"{self.conf['root']}/cwl-tools/folder.cwl",
             "in":{
-                "item": f"{self.previous_name}cuffmerge/merged_gtf",
+                "item": f"{self.previous_name}_cuffmerge/merged_gtf",
                 "name": {
                     "valueFrom": self.name
                 }
@@ -578,12 +578,6 @@ class cwl_writer():
             "class": "File",
             "path": f"{self.conf['root']}/scripts/Basic_DESeq2.R"
         }
-        # TODO move this to
-        # self.cwl_input["metadata"] = {
-        #     "class": "File",
-        #     "path": self.conf["metadata"]
-        # }
-
 
     def dexseq(self):
         # workflow section
@@ -634,21 +628,21 @@ class cwl_writer():
             "outputSource": f"{self.previous_name}_cuffquant_folder/out"
         }
         # steps
+        cuffmerge = "_".join(self.previous_name.split("_")[:-1])
+        bam = "_".join(self.previous_name.split("_")[:2])
         for i in range(self.num):
-            cuffmerge = "_".join(self.previous_name.split("_")[:-1])
-            bam = "_".join(self.previous_name.split("_")[:2])
-            self.cwl_workflow["steps"[f"{self.previous_name}_cuffquant_{i+1}"]] = {
+            self.cwl_workflow["steps"][f"{self.previous_name}_cuffquant_{i+1}"] = {
                 "run": f"{self.conf['root']}/cwl-tools/docker/cuffquant.cwl",
                 "in": {
                     "threads": "threads",
-                    "merged_gtf": f"{cuffmerge}_cuffmerge_{i+1}/merged_gtf",
+                    "merged_gtf": f"{cuffmerge}_cuffmerge/merged_gtf",
                     "bam": f"{bam}_{i+1}/samtools_out",
                     "output": {
                         "source": [f"subject_name{i+1}"],
                         "valueFrom": "$(self)"
-                    },
+                    }
+                },
                 "out": ["cuffquant_out", "cxb"]
-                }
             }
         
         # foldering
@@ -673,10 +667,10 @@ class cwl_writer():
         }
         # steps
         self.cwl_workflow["steps"][self.name] = {
-            "run": f"self.conf['root']/cwl-tools/docker/cuffdiff.cwl",
+            "run": f"{self.conf['root']}/cwl-tools/docker/cuffdiff.cwl",
             "in": {
                 "threads": "threads",
-                "merged_gtf": f"{cuffmerge}_cuffmerge_{i+1}/merged_gtf",
+                "merged_gtf": f"{cuffmerge}_cuffmerge/merged_gtf",
                 "FDR": {"valueFrom": "1"},
                 "label": "conditions",
                 "output": {"valueFrom": "cuffdiff"}
@@ -684,9 +678,7 @@ class cwl_writer():
             "out": ["cuffdiff_out"]
         }
         for index, condition in enumerate(self.conditions):
-            self.cwl_workflow["step"][self.name]["in"][f"condition{index+1}_files"] = [
-                f"{self.previous_name}_cuffquant_{i+1}/cxb" for i in range(len(self.conditions[condition]))
-            ]
+            self.cwl_workflow["steps"][self.name]["in"][f"condition{index+1}_files"] = [f"{self.previous_name}_cuffquant_{i+1}/cxb" for i in range(len(self.conditions[condition]))]
         
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
@@ -716,10 +708,10 @@ class cwl_writer():
                 "run": f"{self.conf['root']}/cwl-tools/docker/tablemaker.cwl",
                 "in": {
                     "threads": "threads",
-                    "merged_gtf": f"{cuffmerge}_cuffmerge_{i+1}/merged_gtf",
-                    "bam": f"{bam}_{i+1}/samtools_out",
+                    "merged_gtf": f"{cuffmerge}_cuffmerge_{index+1}/merged_gtf",
+                    "bam": f"{bam}_{index+1}/samtools_out",
                     "output": {
-                        "source": [f"subject_name{i+1}"],
+                        "source": [f"subject_name{index+1}"],
                         "valueFrom": "$(self)"
                     },
                 "out": ["tablemaker_out"]
@@ -775,7 +767,41 @@ class cwl_writer():
     
 
     def edger(self):
-        raise NotImplementedError
+        # inputs
+        self.cwl_workflow["inputs"]["EdgeR_script"] = "File"
+        self.cwl_input["EdgeR_script"] = {
+            "class": "File",
+            "path": f"{self.conf['root']}/scripts/EdgeR.R"
+        }
+        # outputs
+        self.cwl_workflow["outputs"][f"{self.name}_out"] = {
+            "type": "Directory",
+            "outputSource": f"{self.name}_folder/out"
+        }
+        
+        # steps
+        self.cwl_workflow["steps"][self.name] = {
+            "run": f"{self.conf['root']}/cwl-tools/docker/edger.cwl",
+            "in": {
+                "input_script": "EdgeR_script",
+                "count_matrix": f"{self.previous_name}/output",
+                "metadata": "metadata",
+                "condition": {"valueFrom": "condition"}
+            },
+            "out": ["output"]
+        }
+
+        # foldering
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
+            "run": "./cwl-tools/folder.cwl",
+            "in":{
+                "item": f"{self.name}/output",
+                "name": {
+                    "valueFrom": self.name
+                    }
+                },
+            "out": ["out"]
+        }
 
     #----------utility-----------
     def samtools(self):
@@ -831,14 +857,14 @@ class cwl_writer():
         "out": ["gene_output", "transcript_output"]}
 
         self.cwl_workflow["steps"]["prepde_folder"] = {
-        "run": "./cwl-tools/folder.cwl",
-        "in":{
-            "item":[f"{self.name}/gene_output", f"{self.name}/transcript_output"],
-            "name": {
-                "valueFrom": self.name
-                }
-            },
-        "out": ["out"]
+            "run": "./cwl-tools/folder.cwl",
+            "in":{
+                "item":[f"{self.name}/gene_output", f"{self.name}/transcript_output"],
+                "name": {
+                    "valueFrom": self.name
+                    }
+                },
+            "out": ["out"]
         }
 
 

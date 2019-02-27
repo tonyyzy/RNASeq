@@ -129,16 +129,16 @@ class logic_builder():
                 elif value != "0":
                     value = int(value)
                     result_copy[e].insert(i * 2 + 1, value)
-            
-        result = copy.deepcopy(result_copy)
-        for i in range(len(result_copy)):
-            result_copy[i][0] = str(result_copy[i][0])
-            for j in range(1, len(result_copy[i])):
-                result_copy[i][j] = str(result_copy[i][j-1]) + str(result_copy[i][j])
 
-        steps = set(item for sublist in result_copy for item in sublist)
+        result = copy.deepcopy(result_copy)
+        for i in range(len(result)):
+            result[i][0] = str(result[i][0])
+            for j in range(1, len(result[i])):
+                result[i][j] = str(result[i][j-1]) + "_" +  str(result[i][j])
+
+        steps = set(item for sublist in result for item in sublist)
 
         for step in steps:
-            self.workflow.append("_".join([self.num_to_prog[i] for i in step]).lower())
+            self.workflow.append("_".join([self.num_to_prog[i] for i in step.split("_")]))
 
         self.Workflow_index = result_index
