@@ -32,8 +32,8 @@ class database_checker():
         print(reader.Annotation_file)
         logic = logic_builder()
         logic.create_workflow_logic(reader)
-        writer = programs.cwl_writer()
-        writer.write_workflow(reader.Reads_files, logic, reader)
+        writer = programs.cwl_writer(reader.Reads_files, reader)
+        writer.write_workflow(logic)
 
 
 
@@ -43,6 +43,7 @@ class database_reader():
     Index = []
     Mapper = []
     Assembler = []
+    Organism_name = []
     Genome_file = []
     Annotation_file = []
     Reads_files = {}
@@ -71,6 +72,7 @@ class database_reader():
 
         self.Genome_file = [i[column_names.index("fasta_file")]  for i in query_result]
         self.Annotation_file = [i[column_names.index("annotation_file")]  for i in query_result]
+        self.Organism_name = [i[column_names.index("organism")]  for i in query_result]
 
         cur.execute(f"SELECT * FROM analysis_samples WHERE Session_ID = {self.Session_ID}")
         column_names = [i[0] for i in cur.description]
@@ -100,7 +102,9 @@ class logic_builder():
     def create_workflow_logic(self, database_reader_object):
 
         result = [[]] * len(database_reader_object.Mapper)
+        branching_matrix = [["n"] * 3 for n in range(len(database_reader_object.Mapper))]
         result_index = [[]] * len(database_reader_object.Mapper)
+
 
         if (database_reader_object.Index) != []:
             for i in range(len(database_reader_object.Index)):
@@ -109,6 +113,14 @@ class logic_builder():
             result[j] = list(self.programs_index.loc[self.programs_index.Program == database_reader_object.Mapper[j],"Index"])
             result[j].extend(list(self.programs_index.loc[self.programs_index.Program == database_reader_object.Assembler[j],"Index"]))
             result[j].extend(list(self.programs_index.loc[self.programs_index.Program == database_reader_object.Analysis[j],"Index"]))
+
+        for e in range(3):
+            list_to_check = [i[e] for i in result]
+            for j in range(1, len(result)):
+                value = list_to_check.pop(j)
+                if value in list_to_check[:j]:
+                    branching_matrix[j][e] = list_to_check.index(value)
+                list_to_check.insert(j, value)
 
         for e in range(len(result)):
             for i in range(len(result[e])):
@@ -121,15 +133,30 @@ class logic_builder():
                 elif value > 0:
                     print("inserting step")
                     result[e].insert(i + 1, value)
+                    if type(branching_matrix[e][i + 1]) is str and type(branching_matrix[e][i - 1]) is int:
+                        branching_value = "n" if result[e][i] != result[branching_matrix[e][i - 1]][i] else branching_matrix[e][i - 1]
+                    elif type(branching_matrix[e][i + 1]) is str:
+                        branching_value = "n"
+                    else:
+                        branching_value = branching_matrix[e][i]
+                    branching_matrix[e].insert(i + 1, branching_value)
 
         workflow_len = [len(result[i]) for i in range(len(result))]
         self.Workflow_dict = {f"step{i + 1}":{} for i in range(max(workflow_len))}
-
+        print(result)
+        print(branching_matrix)
         for e in range(len(result)):
             for i in range(len(result[e])):
-                print(self.Workflow_dict)
-                if list(self.programs_index.loc[self.programs_index.Index == result[e][i], "Program"])[0] not in self.Workflow_dict[f"step{i + 1}"].values() :
-                    self.Workflow_dict[f"step{i + 1}"][e + 1] = list(self.programs_index.loc[self.programs_index.Index == result[e][i], "Program"])[0]
+                branching_flag = 0
+                if e > 0:
+                    if type(branching_matrix[e][i]) is int:
+                        continue
+                    else:
+                        print("changing flag")
+                        branching_flag = 1
+                prev_value = e + 1 if branching_flag == 0 else branching_matrix[e][i - 1] + 1
+                self.Workflow_dict[f"step{i + 1}"][f"{e + 1}_{prev_value}"] = list(self.programs_index.loc[self.programs_index.Index == result[e][i], "Program"])[0]
+            print(self.Workflow_dict)
 
         self.Workflow = result
         self.Workflow_index = result_index
