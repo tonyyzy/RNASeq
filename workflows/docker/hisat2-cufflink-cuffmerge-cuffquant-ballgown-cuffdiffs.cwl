@@ -44,7 +44,7 @@ outputs:
       outputSource: cuffmerge_folder/out
     cuffdiff_out:
       type: Directory
-      outputSource: cuffdiff_folder/out
+      outputSource: cuffdiff/cuffdiff_out
     tablemaker_out:
       type: Directory
       outputSource: tablemaker_folder/out
@@ -347,15 +347,15 @@ steps:
         valueFrom: "cuffdiff"
     out: [cuffdiff_out]
 
-  cuffdiff_folder:
-    run: ../../cwl-tools/folder.cwl
-    in:
-      item: 
-        - cuffdiff/cuffdiff_out
-        - cuffdiff/cuffdiff_out
-      name:
-        valueFrom: "cuffdiff"
-    out: [out]
+#  cuffdiff_folder:
+#    run: ../../cwl-tools/folder.cwl
+#    in:
+#      item: 
+#        - cuffdiff/cuffdiff_out
+#        #- cuffdiff/cuffdiff_out
+#      name:
+#        valueFrom: "cuffdiff"
+#    out: [out]
 
   tablemaker_1:
     run: ../../cwl-tools/docker/tablemaker.cwl
