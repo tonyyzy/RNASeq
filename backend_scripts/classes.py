@@ -44,6 +44,7 @@ class database_reader():
     Index = []
     Mapper = []
     Assembler = []
+    Analysis = []
     Organism_name = []
     Genome_file = []
     Annotation_file = []
