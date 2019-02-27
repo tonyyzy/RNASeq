@@ -11,10 +11,22 @@ metadata <- read.table(args[grep("--metadata", args)+1],header = TRUE, row.names
 
 metadata <- metadata[colnames(data),]
 
-dds <- DESeqDataSetFromMatrix(countData=data, colData=metadata, design= ~condition)
-dds <- DESeq(dds)
+if( "--condition" %in% args ){
+  condition.idx <- grep("--condition", args)
+  condition <- args[ condition.idx + 1 ]
+  colnames(sampleTable) <- sub(condition, "condition",colnames(sampleTable))
+}
 
-res <- results(dds) 
-res <- as.data.frame(res)
-
-write.csv(res,"DGE_results.csv")
+comb <- combn(unique(metadata[,condition]), 2)
+for(i in 1:ncol(comb)){
+  metadata.f <- metadata[metadata$condition %in% comb[,i],]
+  count.f <- data[,rownames(metadata.f)]
+  dds <- DESeqDataSetFromMatrix(countData=count.f, colData=metadata.f, design= ~condition)
+  dds <- DESeq(dds)
+  
+  res <- results(dds) 
+  res <- as.data.frame(res)
+  
+  contrast <- gsub(".$","",paste0(paste0("group", unique(metadata$condition)),sep="-", collapse = ""))
+  write.csv(res,paste0(contrast,"_","DGE_results.csv"))
+}

@@ -11,6 +11,12 @@ countFiles <- list.files(args[grep("--count_matrix_dir", args)+1], pattern = "ht
 flattenedFile <- list.files(args[grep("--gff_file_dir", args)+1], pattern = "gff$", full.names = TRUE)
 sampleTable <- read.table(args[grep("--metadata", args)+1], row.names = 1, header = TRUE, sep = ",")
 
+if( "--condition" %in% args ){
+  condition.idx <- grep("--condition", args)
+  condition <- args[ condition.idx + 1 ]
+  colnames(sampleTable) <- sub(condition, "condition",colnames(sampleTable))
+}
+
 #construct an DEXSeqDataSet object
 dxd <- DEXSeqDataSetFromHTSeq(countfiles = countFiles, sampleData = sampleTable, design = ~ sample + exon + condition:exon, flattenedfile = flattenedFile)
 
