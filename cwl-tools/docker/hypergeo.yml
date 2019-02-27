@@ -1,4 +1,4 @@
-script:
+input_script:
   class: File
   path: /path/to/script
 de_res:

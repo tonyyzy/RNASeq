@@ -1,15 +1,15 @@
-cores: "2"
+threads: "2"
 #options are "Single" or "Paired_end"
 lib_type: "Paired_end"
-index:
+index_directory:
    class: Directory
    path: ./indexed_test
 bam:
    class: File
    path: ./test1.bam
 read_len: "101"
-out_dir: "miso_out"
-annotation_file:
+output: "miso_out"
+gtf:
    class: File
    path: ./test.gff3
 min_exon_size: "50"

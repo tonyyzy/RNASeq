@@ -44,7 +44,7 @@ outputs:
       outputSource: cuffmerge_folder/out
     cuffdiff_out:
       type: Directory
-      outputSource: cuffdiff_folder/out
+      outputSource: cuffdiff/cuffdiff_out
     tablemaker_out:
       type: Directory
       outputSource: tablemaker_folder/out
@@ -65,7 +65,7 @@ steps:
         source: fastq1
         valueFrom: $(self[1])
       XSTag: Tag
-      sam_name:
+      output:
         source: subject_name1
         valueFrom: $(self + '.sam')
     out: [sam_output, hisat2_align_out]
@@ -82,7 +82,7 @@ steps:
         source: fastq2
         valueFrom: $(self[1])
       XSTag: Tag
-      sam_name:
+      output:
         source: subject_name2
         valueFrom: $(self + '.sam')
     out: [sam_output, hisat2_align_out]
@@ -100,7 +100,7 @@ steps:
       #  valueFrom: $(self[1])
       single_file: fastq3
       XSTag: Tag
-      sam_name:
+      output:
         source: subject_name3
         valueFrom: $(self + '.sam')
     out: [sam_output, hisat2_align_out]
@@ -118,7 +118,7 @@ steps:
       #  valueFrom: $(self[1])
       single_file: fastq4
       XSTag: Tag
-      sam_name:
+      output:
         source: subject_name4
         valueFrom: $(self + '.sam')
     out: [sam_output, hisat2_align_out]
@@ -194,8 +194,8 @@ steps:
     in:
       gtf: annotation
       threads: threads
-      alignment_file: samtools_1/samtools_out
-      output_dir:
+      bam: samtools_1/samtools_out
+      output:
         source: [subject_name1]
         valueFrom: $(self + '/')
     out: [cufflink_out, gtf_out]
@@ -205,8 +205,8 @@ steps:
     in:
       gtf: annotation
       threads: threads
-      alignment_file: samtools_2/samtools_out
-      output_dir:
+      bam: samtools_2/samtools_out
+      output:
         source: [subject_name2]
         valueFrom: $(self + '/')
     out: [cufflink_out, gtf_out]
@@ -216,8 +216,8 @@ steps:
     in:
       gtf: annotation
       threads: threads
-      alignment_file: samtools_3/samtools_out
-      output_dir:
+      bam: samtools_3/samtools_out
+      output:
         source: [subject_name3]
         valueFrom: $(self + '/')
     out: [cufflink_out, gtf_out]
@@ -227,8 +227,8 @@ steps:
     in:
       gtf: annotation
       threads: threads
-      alignment_file: samtools_4/samtools_out
-      output_dir:
+      bam: samtools_4/samtools_out
+      output:
         source: [subject_name4]
         valueFrom: $(self + '/')
     out: [cufflink_out, gtf_out]
@@ -237,10 +237,10 @@ steps:
     run: ../../cwl-tools/folder.cwl
     in:
       item:
-        - cufflinks_1/gtf_out
-        - cufflinks_2/gtf_out
-        - cufflinks_3/gtf_out
-        - cufflinks_4/gtf_out
+        - cufflinks_1/cufflink_out
+        - cufflinks_2/cufflink_out
+        - cufflinks_3/cufflink_out
+        - cufflinks_4/cufflink_out
       name:
         valueFrom: "cufflinks"
     out: [out]
@@ -251,7 +251,7 @@ steps:
     in:
       threads: threads
       gtf: annotation
-      ref_fasta: fasta
+      fasta: fasta
       cufflinks_output:
         - cufflinks_1/gtf_out
         - cufflinks_2/gtf_out
@@ -274,7 +274,7 @@ steps:
     in:
       threads: threads
       merged_gtf: cuffmerge/merged_gtf
-      alignment_file: samtools_1/samtools_out
+      bam: samtools_1/samtools_out
       output:
         source: [subject_name1]
         valueFrom: $(self)
@@ -285,7 +285,7 @@ steps:
     in:
       threads: threads
       merged_gtf: cuffmerge/merged_gtf
-      alignment_file: samtools_2/samtools_out
+      bam: samtools_2/samtools_out
       output:
         source: [subject_name2]
         valueFrom: $(self)
@@ -296,7 +296,7 @@ steps:
     in:
       threads: threads
       merged_gtf: cuffmerge/merged_gtf
-      alignment_file: samtools_3/samtools_out
+      bam: samtools_3/samtools_out
       output:
         source: [subject_name3]
         valueFrom: $(self)
@@ -307,7 +307,7 @@ steps:
     in:
       threads: threads
       merged_gtf: cuffmerge/merged_gtf
-      alignment_file: samtools_4/samtools_out
+      bam: samtools_4/samtools_out
       output:
         source: [subject_name4]
         valueFrom: $(self)
@@ -317,10 +317,10 @@ steps:
     run: ../../cwl-tools/folder.cwl
     in:
       item:
-        - cuffquant_1/cxb
-        - cuffquant_2/cxb
-        - cuffquant_3/cxb
-        - cuffquant_4/cxb
+        - cuffquant_1/cuffquant_out
+        - cuffquant_2/cuffquant_out
+        - cuffquant_3/cuffquant_out
+        - cuffquant_4/cuffquant_out
       name:
         valueFrom: "cuffquant"
     out: [out]
@@ -329,7 +329,7 @@ steps:
     run: ../../cwl-tools/docker/cuffdiff.cwl
     in:
       threads: threads
-      gtf_file: cuffmerge/merged_gtf
+      merged_gtf: cuffmerge/merged_gtf
       #libType:
       #  valueFrom: "fr-unstranded"
       #libNorm:
@@ -347,15 +347,15 @@ steps:
         valueFrom: "cuffdiff"
     out: [cuffdiff_out]
 
-  cuffdiff_folder:
-    run: ../../cwl-tools/folder.cwl
-    in:
-      item: 
-        - cuffdiff/cuffdiff_out
-        - cuffdiff/cuffdiff_out
-      name:
-        valueFrom: "cuffdiff"
-    out: [out]
+#  cuffdiff_folder:
+#    run: ../../cwl-tools/folder.cwl
+#    in:
+#      item: 
+#        - cuffdiff/cuffdiff_out
+#        #- cuffdiff/cuffdiff_out
+#      name:
+#        valueFrom: "cuffdiff"
+#    out: [out]
 
   tablemaker_1:
     run: ../../cwl-tools/docker/tablemaker.cwl
@@ -415,7 +415,7 @@ steps:
   ballgown:
     run: ../../cwl-tools/docker/ballgown.cwl
     in:
-      script: ballgown_script
+      input_script: ballgown_script
       metadata: metadata
       condition:
         valueFrom: "condition"

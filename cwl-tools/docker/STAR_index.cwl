@@ -17,16 +17,16 @@ inputs:
     type: string
     inputBinding:
       prefix: --runMode
-  genomeDir:
+  output:
     type: string
     default: "./"
     inputBinding:
       prefix: --genomeDir
-  genomeFastaFiles:
+  fasta:
     type: File[]
     inputBinding:
       prefix: --genomeFastaFiles
-  sjdbGTFfile:
+  gtf:
     type: File[]
     inputBinding:
       prefix: --sjdbGTFfile

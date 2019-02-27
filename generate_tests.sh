@@ -93,7 +93,8 @@ Rscript ./tests/DEXSeq.R --count_matrix_dir ./tests --gff_file_dir ./tests --met
 mv DEE_results.csv ./tests/test_DEE_results.csv
 
 # test for fgsea
-Rscript ./tests/GSEA_Script.R --de_res ./tests/test_dge_results.csv --gene_set ./tests/reactome.tsv --doc_name ./tests/test_gsea_res.csv
+Rscript ./tests/GSEA_Script.R --de_res ./tests/test_dge_results.csv --gene_set ./tests/reactome.tsv
+mv gsea_res.csv ./tests/test_gsea_res.csv 
 
 # test for hisat_align
 cwl-runner --outdir=./test_hisat_align cwl-tools/docker/hisat2_align.cwl tests/hisat2_align.yml
@@ -136,6 +137,6 @@ cp ./workflow3/cuffdiff/cuffdiff/gene_exp.diff ./tests/cuffdiff_res.csv
 cp ./workflow3/ballgown/DGE_res.csv ./tests/ballgown_res.csv
 rm -r ./workflow3
 
-cwl-runner --outdir=./workflow5 ./workflows/docker/star_samtools_featurecounts_DESeq2.cwl ./tests/star_samtools_featurecounts_DESeq2.yml
-cp ./workflow5/DESeq2/DGE_results.csv ./tests/featurecounts_DGE_res.csv
+cwl-runner --outdir=./workflow5 ./workflows/docker/star_samtools_featurecounts_edger.cwl ./tests/star_samtools_featurecounts_edger.yml
+cp ./workflow5/edger/DGE_res.csv ./tests/featurecounts_DGE_res.csv
 rm -r ./workflow5

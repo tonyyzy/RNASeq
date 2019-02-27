@@ -1,8 +1,8 @@
-index:
+index_directory:
   class: Directory
   path: ./transcript_index
-out_dir: test2_quant
-cores: 4
+output: test2_quant
+threads: 4
 first_end_fastq:
   class: File
   path: test2.1.fastq

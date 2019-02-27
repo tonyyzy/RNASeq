@@ -1,8 +1,8 @@
-input_bam:
+bam:
   class: File
   path: ./test1.bam
 threads: 2
-annotation:
+gtf:
   class: File
   path: ./test.gtf
-outfilename: test1.stringtie.gtf
+output: test1.stringtie.gtf

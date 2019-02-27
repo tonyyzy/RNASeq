@@ -65,7 +65,7 @@ steps:
       second_pair:
         source: fastq1
         valueFrom: $(self[1])
-      sam_name:
+      output:
         source: subject_name1
         valueFrom: $(self + '.sam')
     out: [sam_output, hisat2_align_out]
@@ -81,7 +81,7 @@ steps:
       second_pair:
         source: fastq2
         valueFrom: $(self[1])
-      sam_name:
+      output:
         source: subject_name2
         valueFrom: $(self + '.sam')
     out: [sam_output, hisat2_align_out]
@@ -98,7 +98,7 @@ steps:
       #   source: fastq2
       #   valueFrom: $(self[1])
       single_file: fastq3
-      sam_name:
+      output:
         source: subject_name3
         valueFrom: $(self + '.sam')
     out: [sam_output, hisat2_align_out]
@@ -115,7 +115,7 @@ steps:
       #   source: fastq2
       #   valueFrom: $(self[1])
       single_file: fastq4
-      sam_name:
+      output:
         source: subject_name4
         valueFrom: $(self + '.sam')
     out: [sam_output, hisat2_align_out]
@@ -390,7 +390,7 @@ steps:
   DESeq2:
     run: ../../cwl-tools/docker/DESeq2.cwl
     in:
-      script: DESeq2_script
+      input_script: DESeq2_script
       count_matrix: prepDE/gene_output
       metadata: metadata
     out: [DESeq2_out]

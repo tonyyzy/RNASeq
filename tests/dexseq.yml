@@ -10,3 +10,4 @@ gff:
 metadata:
    class: File
    path: ./metadata.csv
+threads: 2

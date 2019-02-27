@@ -16,17 +16,17 @@ arguments:
      valueFrom: "A"
      prefix: "-l"
 inputs:
-   index:
+   index_directory:
       type: Directory
       inputBinding:
          position: 1
          prefix: "-i"
-   out_dir:
+   output:
       type: string
       inputBinding:
          position: 2
          prefix: "-o"
-   cores:
+   threads:
       type: int
       inputBinding:
          position: 3
@@ -51,4 +51,4 @@ outputs:
    output:
       type: Directory
       outputBinding:
-         glob: $(inputs.out_dir)
+         glob: $(inputs.output)

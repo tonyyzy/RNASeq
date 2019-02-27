@@ -1,0 +1,5 @@
+param	value
+cmd_line	cuffdiff -o cuffdiff -p 2 -L Normal,Tumour --FDR 1 /var/lib/cwl/stgd03d57e6-1176-4441-aaca-6d29e051b62d/merged.gtf /var/lib/cwl/stg9e6d5fc7-c143-45f0-8c00-bec64c618775/abundances.cxb,/var/lib/cwl/stg736dd271-6fac-43c8-9d67-8e82902fba8b/abundances.cxb /var/lib/cwl/stg3a9808b9-e902-45e5-a01d-10eddf3d637c/abundances.cxb,/var/lib/cwl/stg9377bbf4-0229-4730-a76a-cd81e9e9cee1/abundances.cxb 
+version	2.2.1
+SVN_revision	4237
+boost_version	104700

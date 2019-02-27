@@ -6,6 +6,6 @@ threads: "12"
 gtf:
   class: File
   path: ./Homo_sapiens.GRCh38.95.gtf
-ref_fasta:
+fasta:
   class: File
   path: ./Homo_sapiens.GRCh38.dna.toplevel.fa

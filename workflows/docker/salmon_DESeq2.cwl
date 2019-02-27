@@ -38,9 +38,9 @@ steps:
   salmon_quant_1:
     run: ../../cwl-tools/docker/salmon_quant.cwl
     in:
-      index: salmon_index
-      out_dir: subject_name1
-      cores: threads
+      index_directory: salmon_index
+      output: subject_name1
+      threads: threads
       first_end_fastq:
         source: [fastq1]
         valueFrom: $(self[0])
@@ -52,9 +52,9 @@ steps:
   salmon_quant_2:
     run: ../../cwl-tools/docker/salmon_quant.cwl
     in:
-      index: salmon_index
-      out_dir: subject_name2
-      cores: threads
+      index_directory: salmon_index
+      output: subject_name2
+      threads: threads
       first_end_fastq:
         source: [fastq2]
         valueFrom: $(self[0])
@@ -66,18 +66,18 @@ steps:
   salmon_quant_3:
     run: ../../cwl-tools/docker/salmon_quant.cwl
     in:
-      index: salmon_index
-      out_dir: subject_name3
-      cores: threads
+      index_directory: salmon_index
+      output: subject_name3
+      threads: threads
       single_fastq: fastq3
     out: [output]
 
   salmon_quant_4:
     run: ../../cwl-tools/docker/salmon_quant.cwl
     in:
-      index: salmon_index
-      out_dir: subject_name4
-      cores: threads
+      index_directory: salmon_index
+      output: subject_name4
+      threads: threads
       single_fastq: fastq4
     out: [output]
 
@@ -99,7 +99,7 @@ steps:
       input_script: salmon_count_script
       gtf: annotation
       metadata: metadata
-      salmon_dir: salmon_quant_folder/out
+      quant_results: salmon_quant_folder/out
     out: [count, length, abundance]
 
   salmon_count_folder:
@@ -116,7 +116,7 @@ steps:
   DESeq2:
     run: ../../cwl-tools/docker/DESeq2.cwl
     in:
-      script: DESeq2_script
+      input_script: DESeq2_script
       count_matrix: salmon_count/count
       metadata: metadata
     out: [DESeq2_out]

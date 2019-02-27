@@ -1,5 +1,5 @@
 threads: 2
-reference:
+fasta:
    class: File
    path: test.fa
-basename: "test_index"
+output: "test_index"

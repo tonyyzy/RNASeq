@@ -1,0 +1,4 @@
+test_id	gene_id	gene	locus	sample_1	sample_2	status	value_1	value_2	log2(fold_change)	test_stat	p_value	q_value	significant
+P1	XLOC_000001	gene1	test1:499-999	Normal	Tumour	OK	847607	780560	-0.118886	-0.519097	0.467	0.7005	yes
+P2	XLOC_000002	gene2	test1:2999-5299	Normal	Tumour	OK	49842.3	201897	2.01817	0.217907	0.3707	0.7005	yes
+P3	XLOC_000002	gene2	test1:2999-5299	Normal	Tumour	OK	695679	713655	0.036804	0.0357912	0.9118	0.9118	yes

@@ -1,0 +1,10 @@
+test1	Cufflinks	transcript	500	999	1000	+	.	gene_id "gene1"; transcript_id "trans1"; FPKM "1918179.4780730999"; frac "1.000000"; conf_lo "1694620.148114"; conf_hi "2141738.808032"; cov "106.361134";
+test1	Cufflinks	exon	500	999	1000	+	.	gene_id "gene1"; transcript_id "trans1"; exon_number "1"; FPKM "1918179.4780730999"; frac "1.000000"; conf_lo "1694620.148114"; conf_hi "2141738.808032"; cov "106.361134";
+test1	Cufflinks	transcript	3000	5299	1000	-	.	gene_id "gene2"; transcript_id "trans3"; FPKM "518148.7993328451"; frac "0.961509"; conf_lo "446316.623625"; conf_hi "589980.975040"; cov "28.730833";
+test1	Cufflinks	exon	3000	3299	1000	-	.	gene_id "gene2"; transcript_id "trans3"; exon_number "1"; FPKM "518148.7993328451"; frac "0.961509"; conf_lo "446316.623625"; conf_hi "589980.975040"; cov "28.730833";
+test1	Cufflinks	exon	3500	3999	1000	-	.	gene_id "gene2"; transcript_id "trans3"; exon_number "2"; FPKM "518148.7993328451"; frac "0.961509"; conf_lo "446316.623625"; conf_hi "589980.975040"; cov "28.730833";
+test1	Cufflinks	exon	5050	5299	1000	-	.	gene_id "gene2"; transcript_id "trans3"; exon_number "3"; FPKM "518148.7993328451"; frac "0.961509"; conf_lo "446316.623625"; conf_hi "589980.975040"; cov "28.730833";
+test1	Cufflinks	transcript	3000	5299	35	-	.	gene_id "gene2"; transcript_id "trans2"; FPKM "18523.9411938327"; frac "0.038491"; conf_lo "3431.895556"; conf_hi "33615.986831"; cov "1.027134";
+test1	Cufflinks	exon	3000	3299	35	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "1"; FPKM "18523.9411938327"; frac "0.038491"; conf_lo "3431.895556"; conf_hi "33615.986831"; cov "1.027134";
+test1	Cufflinks	exon	4400	4999	35	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "2"; FPKM "18523.9411938327"; frac "0.038491"; conf_lo "3431.895556"; conf_hi "33615.986831"; cov "1.027134";
+test1	Cufflinks	exon	5050	5299	35	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "3"; FPKM "18523.9411938327"; frac "0.038491"; conf_lo "3431.895556"; conf_hi "33615.986831"; cov "1.027134";

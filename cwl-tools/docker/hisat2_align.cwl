@@ -13,12 +13,12 @@ arguments:
   - position: 1
     valueFrom: "mkdir"
   - position: 2
-    valueFrom: $(inputs.sam_name.split('.')[0])
+    valueFrom: $(inputs.output.split('.')[0])
   - position: 3
     shellQuote: False
     valueFrom: '&& cd'
   - position: 4
-    valueFrom: $(inputs.sam_name.split('.')[0])
+    valueFrom: $(inputs.output.split('.')[0])
   - position: 5
     shellQuote: False
     valueFrom: '&& hisat2'
@@ -56,7 +56,7 @@ inputs:
     inputBinding:
       position: 11
       prefix: --sra-acc
-  sam_name:
+  output:
     type: string
     inputBinding:
       position: 12
@@ -82,10 +82,10 @@ outputs:
   hisat2_align_out:
     type: Directory
     outputBinding:
-      glob: $(inputs.sam_name.split('.')[0])
+      glob: $(inputs.output.split('.')[0])
   
   sam_output:
     type: File
     outputBinding:
-      glob: $(inputs.sam_name.split('.')[0] + '/' + inputs.sam_name)
+      glob: $(inputs.output.split('.')[0] + '/' + inputs.output)
 

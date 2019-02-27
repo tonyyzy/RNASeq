@@ -7,6 +7,6 @@ gtf:
 metadata:
    class: File
    path: /path/to/file
-salmon_dir:
+quant_results:
    class: Directory
    path: /path/to/Directory

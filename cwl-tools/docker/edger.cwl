@@ -3,17 +3,12 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: Rscript
-
-requirements:
-  - class: ShellCommandRequirement
-  - class: InlineJavascriptRequirement
-
 hints:
     DockerRequirement:
         dockerPull: quay.io/biocontainers/bioconductor-edger:3.24.1--r351hf484d3e_0
 
 inputs:
-    script:
+    input_script:
         type: File
         inputBinding:
             position: 0
@@ -22,7 +17,7 @@ inputs:
         inputBinding:
             position: 1
             prefix: --condition
-    counts:
+    count_matrix:
         type: File
         inputBinding:
             position: 2
@@ -37,4 +32,4 @@ outputs:
     output:
       type: File
       outputBinding:
-        glob: $("DGE_reds.csv")
+        glob: "DGE_res.csv"

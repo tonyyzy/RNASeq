@@ -1,4 +1,4 @@
-script:
+input_script:
   class: File
   path: /path/to/file
 tablemaker_output:

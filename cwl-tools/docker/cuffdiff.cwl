@@ -71,7 +71,7 @@ inputs:
       inputBinding:
          position: 10
          prefix: --library-norm-method
-   gtf_file:
+   merged_gtf:
       type: File
       inputBinding:
          position: 11

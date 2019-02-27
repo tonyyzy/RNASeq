@@ -19,7 +19,7 @@ arguments:
     valueFrom: $(runtime.outdir)
 
 inputs:
-  script:
+  input_script:
     type: File
     inputBinding:
       position: 0
@@ -80,4 +80,4 @@ outputs:
   output:
     type: File
     outputBinding:
-      glob: $("gene_count_matrix.csv")
+      glob: "gene_count_matrix.csv"

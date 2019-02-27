@@ -17,7 +17,7 @@ inputs:
       inputBinding:
          position: 1
          prefix: -G
-   output_dir:
+   output:
       type: string
       inputBinding:
          position: 2
@@ -47,7 +47,7 @@ inputs:
       inputBinding:
          position: 7
          prefix: -u
-   alignment_file:
+   bam:
       type: File
       inputBinding:
          position: 8
@@ -56,8 +56,8 @@ outputs:
    cufflink_out:
       type: Directory
       outputBinding:
-         glob: $(inputs.output_dir)
+         glob: $(inputs.output)
    gtf_out:
       type: File
       outputBinding:
-         glob: $(inputs.output_dir+"/transcripts.gtf")
+         glob: $(inputs.output+"/transcripts.gtf")

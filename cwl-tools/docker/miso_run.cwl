@@ -17,7 +17,7 @@ arguments:
    - position: 1
      valueFrom: "&&"
    - position: 2
-     valueFrom: cp -r $(inputs.index.path) $(runtime.outdir)
+     valueFrom: cp -r $(inputs.index_directory.path) $(runtime.outdir)
      shellQuote: False
    - position: 3
      valueFrom: "&&"
@@ -25,18 +25,18 @@ arguments:
      valueFrom: sh /complete_run.sh
      shellQuote: False
    - position: 7
-     valueFrom: $(runtime.outdir+"/"+inputs.index.basename)
+     valueFrom: $(runtime.outdir+"/"+inputs.index_directory.basename)
      shellQuote: False
    - position: 8
      valueFrom: $(runtime.outdir+"/"+inputs.bam.basename)
      shellQuote: False
    - position: 10
-     valueFrom: $(runtime.outdir+"/"+inputs.out_dir)
+     valueFrom: $(runtime.outdir+"/"+inputs.output)
      shellQuote: False
 
 
 inputs:
-   cores:
+   threads:
       type: string
       inputBinding:
          position: 5
@@ -44,7 +44,7 @@ inputs:
       type: string
       inputBinding:
          position: 6
-   index:
+   index_directory:
       type: Directory
    bam:
       type: File
@@ -52,9 +52,9 @@ inputs:
       type: string
       inputBinding:
          position: 9
-   out_dir:
+   output:
       type: string
-   annotation_file:
+   gtf:
       type: File?
       inputBinding:
          position: 11
@@ -67,4 +67,4 @@ outputs:
    output:
       type: Directory
       outputBinding:
-         glob: $(inputs.out_dir)
+         glob: $(inputs.output)
