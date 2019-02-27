@@ -17,7 +17,7 @@ class SessionForm(forms.ModelForm):
 
     class Meta:
         model = Session
-        fields = ['genome_index','select_genome','organism', 'salmon', 'fasta_dna_file', 'fasta_cdna_file', 'gtf_file']
+        fields = ['genome_index','select_genome','organism', 'salmon', 'fasta_dna_file', 'fasta_cdna_file', 'gtf_file', 'status']
         widgets={
             'genome_index': forms.Select(attrs={
                 'class':'form-control',
@@ -45,7 +45,7 @@ class SessionSubmitForm(forms.ModelForm):
 
     class Meta:
         model = Session
-        fields = ['status']
+        fields = []
 
 
 class ConditionsForm(forms.ModelForm):

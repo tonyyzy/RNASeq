@@ -22,23 +22,37 @@
                 <h4>NEW SESSION</h4>
               </div>
               <hr class="my-4">
+              <div id='id_genome_index'>
+                <label for="">{{form.genome_index.label_tag}}</label>
+                {{form.genome_index}}
+              </div>
+              <div id='id_select_genome'>
+                <label for="">{{form.select_genome.label_tag}}</label>
+                {{form.select_genome}}
+              </div>
+              <div id='id_organism'>
+                <label for="">{{form.organism.label_tag}}</label>
+                {{form.organism}}
+              </div>
+              <div id='id_salmon'>
+                <label for="">{{form.salmon.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Will You Require Salmon in Downstream Analysis?"><span class="glyphicon glyphicon-info-sign"></span></a>
+                {{form.salmon}}
+              </div>
+              <div id='id_fasta_dna_file'>
+                <label for="">{{form.fasta_dna_file.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Dont Know What This Is? You Should Not Be Using This Site."><span class="glyphicon glyphicon-info-sign"></span></a>
+                {{form.fasta_dna_file}}
+              </div>
+              <div id='id_fasta_cdna_file'>
+                <label for="">{{form.fasta_cdna_file.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Dont Know What This Is? You Should Not Be Using This Site."><span class="glyphicon glyphicon-info-sign"></span></a>
+                {{form.fasta_dna_file}}
+              </div>
+              <div id='id_gtf_file'>
+                <label for="">{{form.gtf_file.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Dont Know What This Is? You Should Not Be Using This Site."><span class="glyphicon glyphicon-info-sign"></span></a>
+                {{form.fasta_dna_file}}
+              </div>
 
-              <label for="">{{form.genome_index.label_tag}}</label>
-              {{form.genome_index}}
-              <label for="">{{form.select_genome.label_tag}}</label>
-              {{form.select_genome}}
-              <label for="">{{form.organism.label_tag}}</label>
-              {{form.organism}}
-              <label for="">{{form.salmon.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Will You Require Salmon in Downstream Analysis?"><span class="glyphicon glyphicon-info-sign"></span></a>
-              {{form.salmon}}
-              <label for="">{{form.fasta_dna_file.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Dont Know What This Is? You Should Not Be Using This Site."><span class="glyphicon glyphicon-info-sign"></span></a>
-              {{form.fasta_dna_file}}
-              <label for="">{{form.fasta_cdna_file.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Required For Downstream Analysis With Salmon"><span class="glyphicon glyphicon-info-sign"></span></a>
-              {{form.fasta_cdna_file}}
-              <label for="">{{form.gtf_file.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Please Annotate Me"><span class="glyphicon glyphicon-info-sign"></span></a>
-              {{form.gtf_file}}
               <br>
-              <input type="submit" class='create_button' value="Submit">
+              <input type="submit" class='create_btn' value="Submit">
             </form>
           </div>
         </div>

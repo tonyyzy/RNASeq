@@ -13,7 +13,7 @@
       <div class="offset-3 col-md-6">
         <div class="">
           <div class="form-group">
-            <form method="POST"  enctype="multipart/form-data" class="session_form">
+            <form method="POST"  enctype="multipart/form-data" class="create_form">
               {% csrf_token %}
 
               <div class="form_title">
@@ -23,7 +23,7 @@
 
               {{form|crispy}}
               <br>
-              <input type="submit" class='testWidth' value="Submit">
+              <input type="submit" class='create_btn' value="Submit">
             </form>
           </div>
         </div>

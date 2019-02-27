@@ -16,7 +16,6 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
-# TEMPLATES_DIR_output = os.path.join(BASE_DIR, 'templates/output')
 print(BASE_DIR) # for debug
 
 
@@ -158,3 +157,15 @@ STATICFILES_DIRS = [
 DATA_ROOT = os.path.join(BASE_DIR,'data')
 # print(DATA_ROOT)
 DATA_URL = '/data/'
+
+
+
+DATA_DIR = os.path.abspath(os.path.join(BASE_DIR, '../../Data'))
+print(DATA_DIR)
+# may need to add files outside of the base_dire (which points to RNASEQ webportal to the base dir by above method)
+# currently still gives suspicious file Error
+# possible this is fixable by saving this file name from the view
+
+# alternative would be to save data within tmp directory and then move to Data directory
+# this would have added advantage of allowing saveing of model to db which would be we could
+# construct the Data dir using sesison_id rather than uuid.hex field.

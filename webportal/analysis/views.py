@@ -41,15 +41,13 @@ class SessionListView(ListView):
     model = models.Session
 
 
-# in order to update the session status on completion of the Session Detail Page
-# check if it is possible to convert SessionDetailView into a view with get and post methods
-# see if you can store below metthod within the get and post update the status of session
-class SessionDetailView(View):
-    template_name = 'analysis/session_detail.html' # for debug pagu e use: analysis/session_detail_debug.html
 
-    def get(self, request, session_slug):
-        session = Session.objects.filter(identifier=session_slug)
-        form = SessionSubmitForm
+class SessionDetailView(View):
+    template_name = 'analysis/session_detail.html'
+
+    def get(self, request, session_slug): # loads the session_detail template with the selected session object loaded as 'instance' and upload associated with that instance loaded from 'form'
+        instance = get_object_or_404(Session, identifier=session_slug)
+        form = SessionSubmitForm(request.POST or None, instance = instance)
         try:
             session = Session.objects.get(identifier=session_slug)
         except session.DoesNotExist:
@@ -58,10 +56,17 @@ class SessionDetailView(View):
         context = {'session_detail':session, 'key2':'val2', 'form':form}
         return render(request, self.template_name, context)
 
+
     def post(self, request, session_slug):
-        # session_slug = self.kwargs.get('session_slug')
-        post = form.save(commit=False)
-        post.save()
+        instance = get_object_or_404(Session, identifier=session_slug)
+        bound_form = form = SessionSubmitForm(request.POST or None, instance = instance)
+        if bound_form.is_valid():
+            post = bound_form.save(commit=False)
+            post.status = True
+            post.save()
+            messages.success(request, 'Upload Successful')
+            print(f'\n{post}')
+            return redirect('analysis:session_detail', session_slug)
         return redirect('analysis:session_detail', session_slug)
 
 
@@ -79,6 +84,7 @@ class SessionCreateView(CreateView):
             post = bound_form.save()
             return redirect('analysis:session_detail', session_slug=post.identifier)
         return render(request, self.template_name, {'form':form})
+
 
 class SessionUpdateView(UpdateView):
     # fields = ('organism','genome','fasta_file', 'annotation_file',)
@@ -103,48 +109,6 @@ class SessionUpdateView(UpdateView):
 class SessionDeleteView(DeleteView):
     model = models.Session
     # success_url = reverse_lazy("analysis:session_list")
-
-
-
-
-# class SessionSubmitView(View):
-#     template_name = 'analysis/session_form.html'
-#     # form = SessionForm(initial={'status': True})
-#     form = SessionSubmitForm
-#
-#     def get(self, session_slug):
-#
-#         print('object retreived success object retreived success  object retreived success')
-#         return render(request, self.tempalte)
-#         return get_object_or_404(Session, session_slug, {'form':form})
-#
-#     # def post(self, request, session_slug):
-#     #     session_slug = self.kwargs.get('session_slug')
-#     #     post = form.save(commit=False)
-#     #     print(f'\n{post.status}')
-#     #     post.status = True
-#     #     print(f'\n{post.status}')
-#     #     post.save()
-#     #     return redirect('analysis:session_detail', session_slug)
-
-
-#
-# def SessionSubmitView(request, session_slug):
-#     template_name = 'analysis/session_detail.html' # for debug pague use: analysis/session_detail_debug.html
-#     session = Session.objects.filter(identifier=session_slug)
-#     try:
-#         session = Session.objects.get(identifier=session_slug)
-#     except session.DoesNotExist:
-#         raise Http404('Session does not exist')
-#     context = {'session_detail':session, 'key2':'val2'}
-#     return render(request, template_name, context)
-
-
-
-
-
-
-
 
 
 # Conditions

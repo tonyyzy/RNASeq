@@ -1,14 +1,4 @@
 
-
-
-
-
-
-
-
-
-
-
 // // var session_conditions = [];
 // // for (var i = 0; i < 5; i++){
 // //
@@ -38,40 +28,51 @@
 // });
 
 
-// SESSION CREATE JAVASCRIPT
-$( document ).ready(function() {
-  var user_url = window.location.pathname
-  if (user_url.includes('session_create')){ // executes if session_create page loaded
-    console.log('session_create page loaded')
-    // $('#div_id_organism').hide()
-    // $('#div_id_fasta_dna_file').hide()
-    // $('#div_id_fasta_cdna_file').hide()
-    // $('#div_id_gtf_file').hide()
-    // $('#div_id_accession').hide()
-    // $('#div_id_select_genome').hide()
-    $('#div_id_genome').on('click', function(){
-      // console.log('hi')
-      if ($('#div_id_genome option:selected').val() == 'pre_index'){ // executes if pre_index selected from dropdown
-        // console.log('great success with pre index')
-        $('#div_id_organism').hide()
-        $('#div_id_fasta_dna_file').hide()
-        $('#div_id_fasta_cdna_file').hide()
-        $('#div_id_gtf_file').hide()
-        $('#div_id_accession').hide()
-        $('#div_id_select_genome').show()
-      }
-      if ($('#div_id_genome option:selected').val() == 'user_provided'){ // executes if pre_index selected from dropdown
-        // console.log('great success with pre index')
-        $('#div_id_select_genome').hide()
-        $('#div_id_organism').show()
-        $('#div_id_fasta_dna_file').show()
-        $('#div_id_fasta_cdna_file').show()
-        $('#div_id_gtf_file').show()
-        $('#div_id_accession').show()
-      }
-    })
-  }
-})
+// // SESSION CREATE JAVASCRIPT
+// $( document ).ready(function() {
+//   var user_url = window.location.pathname
+//   if (user_url.includes('session_create')){ // executes if session_create page loaded
+//     console.log('session_create page loaded')
+//     $('#id_select_genome').hide()
+//     $('#id_organism').hide()
+//     $('#id_salmon').hide()
+//     $('#id_fasta_dna_file').hide()
+//     $('#id_fasta_cdna_file').hide()
+//     $('#id_gtf_file').hide()
+//     $('#id_genome_index').on('click', function(){
+//       console.log('option selected')
+//       if ($('#id_genome_index option:selected').val() == 'pre_index'){ // executes if pre_index selected from dropdown
+//         console.log('great success with pre index')
+//         $('#id_organism').hide()
+//         $('#id_salmon').hide()
+//         $('#id_fasta_dna_file').hide()
+//         $('#id_fasta_cdna_file').hide()
+//         $('#id_gtf_file').hide()
+//         $('#id_select_genome').show()
+//       }
+//       if ($('#id_genome_index option:selected').val() == 'user_provided'){ // executes if pre_index selected from dropdown
+//         console.log('great success with user provided')
+//         $('#id_select_genome').hide()
+//         $('#id_organism').show()
+//         $('#id_salmon').show()
+//         $('#id_salmon').on('click', function(){
+//           if ($('#id_salmon option:selected').val() == 2){
+//             console.log('salmon selected')
+//             $('#id_fasta_dna_file').show()
+//             $('#id_fasta_cdna_file').show()
+//             $('#id_gtf_file').show()
+//           }
+//           if ($('#id_salmon option:selected').val() == 3){
+//             console.log('salmon NOT selected')
+//             $('#id_fasta_cdna_file').hide()
+//             $('#id_fasta_dna_file').show()
+//             $('#id_gtf_file').show()
+//           }
+//         })
+//       }
+//     })
+//   }
+// })
 
 
 
@@ -102,10 +103,10 @@ $( document ).ready(function() {
 $( document ).ready(function() {
   var user_url = window.location.pathname
   if (user_url.includes('samples_create')){ // executes if samples_create page loaded
-    $('#div_id_read_1').hide()
-    $('#div_id_read_2').hide()
-    $('#div_id_accession').hide()
-    $('#validate_library').hide()
+    // $('#div_id_read_1').hide()
+    // $('#div_id_read_2').hide()
+    // $('#div_id_accession').hide()
+    // $('#validate_library').hide()
     $('#div_id_libtype').on('click', function(){
       if ($('#div_id_libtype option:selected').val() == 'PE'){ // executes if PE selected from dropdown
         $('#div_id_read_1').show()

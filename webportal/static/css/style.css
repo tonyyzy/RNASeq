@@ -129,7 +129,7 @@ html,body{
 }
 
 
-.create_button{
+.create_btn{
    background-color: #4CAF50;
    border: none;
    color: white;
@@ -148,7 +148,7 @@ html,body{
   border: 2px solid red;
   padding: 5px;
   margin: 10px;
-  /* background: blue; */
+  background: blue;
 }
 
 .debug2{
@@ -159,6 +159,7 @@ html,body{
   margin: 10px;
   /* background: blue; */
 }
+
 
 
 /* SESSION DETAIL STYLE */

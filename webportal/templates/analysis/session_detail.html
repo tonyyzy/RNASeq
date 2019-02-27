@@ -1,4 +1,5 @@
 {%extends 'base.html'%}
+{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -10,8 +11,9 @@
   <body>
     {% block body %}
 
-    <div class="jumbotron">
-      <div class="session_detail">
+    <div class="container">
+      <!-- <div class="session_detail offset-1 col-md-10"> -->
+
         {% if messages %}
           {% for message in messages %}
             <div class="alert alert-{{message.tags}}">
@@ -22,7 +24,6 @@
           {% endfor %}
         {% endif %}
 
-
         <div class="card bg-light mb-3" style="max-width: 150rem;">
           <div class="card-header">Session Identifier: {{session_detail.identifier}}</div>
           <div class="card-body">
@@ -30,27 +31,36 @@
             <div class="card-text">
               <!-- <p>{{session_detail.identifier}}</p> -->
               <p>Genome: {{session_detail.genome_index}}</p>
-
+              <p>Organism: {{session_detail.select_genome.organism}}</p>
+              <p>DNA Fasta File: {{session_detail.select_genome.fasta_dna_file}}</p>
+              <p>cDNA Fasta File: {{session_detail.select_genome.fasta_cdna_file}}</p>
+              <p>Annotation File: {{session_detail.select_genome.gtf_file}}</p>
+              <p>Organism: {{session_detail.organism}}</p>
+              <p>Salmon Analysis: {{session_detail.salmon}}</p>
+              <br>
+              <p>cDNA Fasta File: {{session_detail.fasta_cdna_file}}</p>
+              <p>DNA Fasta File: {{session_detail.fasta_dna_file}}</p>
+              <p>Annotation File: {{session_detail.gtf_file}}</p>
+              <h1>{{session_detail.gtf_file}}</h1>
+              <!--
               {% if session_detail.genome_index == 'pre_index' %}
                 <p>Organism: {{session_detail.select_genome.organism}}</p>
-                <p>Salmon Analysis: {{session_detail.salmon}}</pe>
                 <p>DNA Fasta File: {{session_detail.select_genome.fasta_dna_file}}</p>
                 <p>cDNA Fasta File: {{session_detail.select_genome.fasta_cdna_file}}</p>
                 <p>Annotation File: {{session_detail.select_genome.gtf_file}}</p>
-                <!-- <p>{{session_detail.select_genome.organism}}</p> -->
-              {% endif %}
+              {% endif %} -->
 
-              {% if session_detail.genome_index == 'user_provided' %}
-                <p>Organism: {{session_detail.organism}}</pe>
-                  {% if session_detail.salmon %}
-                    <p>Salmon Analysis: {{session_detail.salmon}}</pe>
-                    <p>cDNA Fasta File: {{session_detail.fasta_cdna_file}}</pe>
-                  {% endif %}
-                <p>DNA Fasta File: {{session_detail.fasta_dna_file}}</pe>
-                <p>Annotation File: {{session_detail.gtf_file}}</pe>
-              {% endif %}
-              <h1>{{session_detail.status}}</h1>
-              <h1>{{key2}}</h1>
+              <!-- {% if session_detail.genome_index == 'user_provided' %}
+                <p>Organism: {{session_detail.organism}}</p>
+                {% if session_detail.salmon %}
+                  <p>Salmon Analysis: {{session_detail.salmon}}</p>
+                  <p>cDNA Fasta File: {{session_detail.fasta_cdna_file}}</p>
+                {% endif %}
+
+                <p>DNA Fasta File: {{session_detail.fasta_dna_file}}</p>
+                <p>Annotation File: {{session_detail.gtf_file}}</p>
+              {% endif %} -->
+
               <p></p>
             </div>
           </div>
@@ -180,16 +190,17 @@ analysis/session_detail/2/samples_update/7/ -->
         <br><br>
       </div>
 
-      <h1>the success form</h1>
+      <!-- FORM TO CHANGE STATUS OF SESSION TO TRUE -->
       <form method="POST"  enctype="multipart/form-data" id='id_SessionSubmitForm'>
         {% csrf_token %}
-        <!-- {{form}} -->
+        {{form|crispy}}
         <!-- will need to define individual fields in which case i dont need to use javascript to hide as i can specify fields shown directly! -->
         <br>
-        <input type="submit" class='create_button' value="SUBMIT FOR ANALYSIS">
+        <input type="submit" class='create_btn' value="SUBMIT FOR ANALYSIS">
       </form>
     </div>
-  </div>
+    </div>
+
   {% endblock %}
   </body>
 </html>
