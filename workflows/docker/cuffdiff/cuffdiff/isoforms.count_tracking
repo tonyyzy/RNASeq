@@ -1,4 +1,0 @@
-tracking_id	Normal_count	Normal_count_variance	Normal_count_uncertainty_var	Normal_count_dispersion_var	Normal_status	Tumour_count	Tumour_count_variance	Tumour_count_uncertainty_var	Tumour_count_dispersion_var	Tumour_status
-TCONS_00000001	83.4788	84.823	0	83.4788	OK	76.8755	77	0	76.8755	OK
-TCONS_00000002	224.847	7268	0	224.847	OK	230.656	19379.8	0	230.656	OK
-TCONS_00000003	14.3861	7346.21	0	14.3861	OK	58.2739	19412.6	0	58.2739	OK
