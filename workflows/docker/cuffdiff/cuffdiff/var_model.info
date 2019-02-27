@@ -1,0 +1,5 @@
+condition	locus	compatible_count_mean	compatible_count_var	total_count_mean	total_count_var	fitted_var
+Normal	test1:499-999	80.1772	7954.7	80.1772	7954.7	80.1772
+Normal	test1:2999-5299	265.541	77595.1	319.496	124583	265.541
+Tumour	test1:499-999	80.1772	7954.7	80.1772	7954.7	80.1772
+Tumour	test1:2999-5299	265.541	77595.1	319.496	124583	265.541

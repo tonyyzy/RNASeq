@@ -237,10 +237,10 @@ steps:
     run: ../../cwl-tools/folder.cwl
     in:
       item:
-        - cufflinks_1/gtf_out
-        - cufflinks_2/gtf_out
-        - cufflinks_3/gtf_out
-        - cufflinks_4/gtf_out
+        - cufflinks_1/cufflink_out
+        - cufflinks_2/cufflink_out
+        - cufflinks_3/cufflink_out
+        - cufflinks_4/cufflink_out
       name:
         valueFrom: "cufflinks"
     out: [out]
@@ -317,10 +317,10 @@ steps:
     run: ../../cwl-tools/folder.cwl
     in:
       item:
-        - cuffquant_1/cxb
-        - cuffquant_2/cxb
-        - cuffquant_3/cxb
-        - cuffquant_4/cxb
+        - cuffquant_1/cuffquant_out
+        - cuffquant_2/cuffquant_out
+        - cuffquant_3/cuffquant_out
+        - cuffquant_4/cuffquant_out
       name:
         valueFrom: "cuffquant"
     out: [out]
