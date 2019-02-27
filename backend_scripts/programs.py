@@ -501,7 +501,35 @@ class cwl_writer():
 
 
     def featurecount(self):
-        raise NotImplementedError
+        # inputs
+        self.cwl_workflow["inputs"]["featurecounts_script"] = "File"
+        # outputs
+        self.cwl_workflow["outputs"][f"{self.name}_out"] = {
+            "type": "Directory",
+            "outputSource": f"{self.name}_folder/out"
+        }
+        # steps
+        self.cwl_workflow["steps"][self.name] = {
+            "run": f"{self.conf['root']}/cwl-tools/docker/featurecounts.cwl",
+            "in": {
+                "input_script": "featurecounts_script",
+                "bam_files": [f"{self.previous_name}_{i+1}/samtools_out" for i in range(self.num)],
+                "gtf": "annotation",
+                "threads": "threads",
+                "metadata": "metadata"
+            },
+            "out": ["output"]
+        }
+
+        # foldering
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
+            "run": f"{self.conf['root']}/cwl-tools/folder.cwl/cwl-tools/folder.cwl",
+            "in": {
+                "item": f"{self.name}/output",
+                "name": {"valueFrom": self.name}
+            },
+            "out": ["out"]
+        }
 
 
     #----------analysis----------
