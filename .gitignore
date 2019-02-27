@@ -27,3 +27,7 @@ STARIndex
 STARIndexd
 hisat2_align
 hisat2_build
+test1
+test2
+.vscode/settings.json
+test.py
