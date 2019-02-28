@@ -91,8 +91,9 @@ class database_reader():
                         .filter(Samples.condition_id == Condition.id)\
                         .filter(RSession.id == self.Session_ID)\
                         .with_entities(Condition.conditions, Samples.accession)
-        pd.read_sql(query.statement, session.bind, index_col="accession")\
-            .to_csv(f"{root[:-6]}data/{self.identifier}/metadata.csv")
+        df = pd.read_sql(query.statement, session.bind, index_col="accession")
+        df.index.name = None
+        df.to_csv(f"{root[:-6]}data/{self.identifier}/metadata.csv")
 
 
 

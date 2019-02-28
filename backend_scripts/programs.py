@@ -63,7 +63,7 @@ class cwl_writer():
         self.conditions = {}
         self.cwl_input["metadata"] = {
             "class": "File",
-            "path": self.conf["root"][:-6] + f"data/{database_reader_object.identifier}/metadata.csv"
+            "path": self.conf["root"][:-6] + f"data/{self.reader.identifier}/metadata.csv"
         }
         for name in self.file_names:
             if self.input_files[name]["condition"] not in self.conditions:
@@ -909,13 +909,13 @@ class cwl_writer():
             self.prev = self.previous_name.split("_")[-1]
             getattr(cwl_writer, step.split("_")[-1])(self)
         
-        with open("test.cwl", "w+") as outfile:
+        with open(self.conf["root"][:-6] + f"data/{self.reader.identifier}/workflow.cwl", "w+") as outfile:
             outfile.write("#!/usr/bin/env cwl-runner\n\n")
             yaml.dump(self.cwl_workflow, outfile, default_flow_style=False)
-        with open("test.yml", "w+") as outfile:
+        with open(self.conf["root"][:-6] + f"data/{self.reader.identifier}/input.yml", "w+") as outfile:
             yaml.dump(self.cwl_input, outfile, default_flow_style=False)
 
-        # subprocess.run(["cwl-runner",
-        #             "--outdir=./alessandro",
-        #             "./test.cwl",
-        #             "./test.yml"])
+        subprocess.Popen(["cwl-runner",
+                    f"--outdir={self.conf['root'][:-6]}data/{self.reader.identifier}/output",
+                    f"--outdir={self.conf['root'][:-6]}data/{self.reader.identifier}/workflow.cwl",
+                    f"--outdir={self.conf['root'][:-6]}data/{self.reader.identifier}/input.yml"])
