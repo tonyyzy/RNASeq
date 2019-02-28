@@ -13,6 +13,13 @@ Sure but the docker is strong in me !!!!!!!!
 DESeq2 requires metadata sample name to match gene_count_matrix sample name
 will handle this in workflow to make things consistent
 
+## Session status definition
+0 session initialised  
+1 session submitted (no change to conditions/samples/workflows allowed pass this stage)
+2 workflow generated
+3 workflow submitted to run
+4 workflow finished
+
 ## Some libraries needed to setup local dependencies
 ```bash
 sudo apt-get install zlib1g-dev
