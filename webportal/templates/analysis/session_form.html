@@ -17,6 +17,7 @@
           <div class="form-group">
             <form method="POST"  enctype="multipart/form-data" class="create_form">
               {% csrf_token %}
+              <!-- {{form}} -->
 
               <div class="form_title">
                 <h4>NEW SESSION</h4>
@@ -44,11 +45,11 @@
               </div>
               <div id='id_fasta_cdna_file'>
                 <label for="">{{form.fasta_cdna_file.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Dont Know What This Is? You Should Not Be Using This Site."><span class="glyphicon glyphicon-info-sign"></span></a>
-                {{form.fasta_dna_file}}
+                {{form.fasta_cdna_file}}
               </div>
               <div id='id_gtf_file'>
                 <label for="">{{form.gtf_file.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Dont Know What This Is? You Should Not Be Using This Site."><span class="glyphicon glyphicon-info-sign"></span></a>
-                {{form.fasta_dna_file}}
+                {{form.gtf_file}}
               </div>
 
               <br>

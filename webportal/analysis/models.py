@@ -17,10 +17,10 @@ class Genome(models.Model):
     def __str__(self):
         return self.organism
 
-
-def get_upload_path(instance, filename):
-    return os.path.join(
-      "user_%d" % instance.owner.id, "car_%s" % instance.slug, filename)
+#
+# def get_upload_path(instance, filename):
+#     return os.path.join(
+#       "user_%d" % instance.owner.id, "car_%s" % instance.slug, filename)
 
 
 class Session(models.Model):
@@ -44,7 +44,7 @@ class Session(models.Model):
     # gtf_file = models.FileField(upload_to=get_upload_path, blank=True, null=True)
     fasta_dna_file = models.FileField(upload_to='data', blank=True, null=True)
     fasta_cdna_file = models.FileField(upload_to='data', blank=True, null=True)
-    gtf_file = models.FileField(upload_to='data', blank=True, null=True)    
+    gtf_file = models.FileField(upload_to='data', blank=True, null=True)
     status = models.BooleanField(default=False, blank=True, null=True)
 
     def get_absolute_url(self): # provides a default if Session is called from views.py without a specified reverse or redirect

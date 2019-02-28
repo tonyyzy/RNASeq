@@ -30,18 +30,17 @@
             <!-- <h5 class="card-title">Session Identifier: {{session_detail.identifier}}</h5> -->
             <div class="card-text">
               <!-- <p>{{session_detail.identifier}}</p> -->
-              <p>Genome: {{session_detail.genome_index}}</p>
-              <p>Organism: {{session_detail.select_genome.organism}}</p>
-              <p>DNA Fasta File: {{session_detail.select_genome.fasta_dna_file}}</p>
-              <p>cDNA Fasta File: {{session_detail.select_genome.fasta_cdna_file}}</p>
-              <p>Annotation File: {{session_detail.select_genome.gtf_file}}</p>
-              <p>Organism: {{session_detail.organism}}</p>
-              <p>Salmon Analysis: {{session_detail.salmon}}</p>
-              <br>
-              <p>cDNA Fasta File: {{session_detail.fasta_cdna_file}}</p>
-              <p>DNA Fasta File: {{session_detail.fasta_dna_file}}</p>
-              <p>Annotation File: {{session_detail.gtf_file}}</p>
-              <h1>{{session_detail.gtf_file}}</h1>
+              <p>Index: {{session_detail.genome_index}}</p>
+              <p>{{session_detail.select_genome.organism}}</p>
+              <p>{{session_detail.select_genome.fasta_dna_file}}</p>
+              <p>{{session_detail.select_genome.fasta_cdna_file}}</p>
+              <p>{{session_detail.select_genome.gtf_file}}</p>
+
+              <p>{{session_detail.salmon}}</p>
+              <p>{{session_detail.fasta_dna_file}}</p>
+              <p>{{session_detail.fasta_cdna_file}}</p>
+              <p>{{session_detail.gtf_file}}</p>
+
               <!--
               {% if session_detail.genome_index == 'pre_index' %}
                 <p>Organism: {{session_detail.select_genome.organism}}</p>

@@ -18,6 +18,7 @@ class SessionForm(forms.ModelForm):
     class Meta:
         model = Session
         fields = ['genome_index','select_genome','organism', 'salmon', 'fasta_dna_file', 'fasta_cdna_file', 'gtf_file', 'status']
+        # fields='__all__'
         widgets={
             'genome_index': forms.Select(attrs={
                 'class':'form-control',
@@ -27,18 +28,10 @@ class SessionForm(forms.ModelForm):
                 }),
             'organism': forms.TextInput(attrs={
                 'class':'form-control',
-                'placeholder': 'enter organism here...'
+                'placeholder': 'enter organism name here...'
                 }),
-            'genome': forms.Select(attrs={
-                'class':'form-control',
-                }),
-            'salmon': forms.NullBooleanSelect(attrs={
-                'class':'form-control',
-                }),
-            'fasta_dna_file': forms.FileInput(),
-            'fasta_cdna_file': forms.FileInput(),
-            'gtf_file': forms.FileInput(),
-        }
+}
+
 
 
 class SessionSubmitForm(forms.ModelForm):
