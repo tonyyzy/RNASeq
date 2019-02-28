@@ -908,11 +908,11 @@ class cwl_writer():
             self.prev = self.previous_name.split("_")[-1]
             getattr(cwl_writer, step.split("_")[-1])(self)
         
-        # with open("test.cwl", "w+") as outfile:
-        #     outfile.write("#!/usr/bin/env cwl-runner\n\n")
-        #     yaml.dump(self.cwl_workflow, outfile, default_flow_style=False)
-        # with open("test.yml", "w+") as outfile:
-        #     yaml.dump(self.cwl_input, outfile, default_flow_style=False)
+        with open("test.cwl", "w+") as outfile:
+            outfile.write("#!/usr/bin/env cwl-runner\n\n")
+            yaml.dump(self.cwl_workflow, outfile, default_flow_style=False)
+        with open("test.yml", "w+") as outfile:
+            yaml.dump(self.cwl_input, outfile, default_flow_style=False)
 
         # subprocess.run(["cwl-runner",
         #             "--outdir=./alessandro",

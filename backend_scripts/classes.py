@@ -1,42 +1,42 @@
-import sqlite3 as sql
 import pandas as pd
-import numpy as np
 import yaml
 import time
 import threading
-import backend_scripts.programs
+import programs 
 import copy
+from sqlalchemy import create_engine
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm import Session
 
 class database_checker():
-
-    waiting_time = 100
-
     def __init__(self, database_link):
         self.Database = database_link
 
-    def check_and_run(self):
-        database = sql.connect(self.Database)
-        cur = database.cursor()
-        cur.execute("SELECT Session_ID FROM analysis_workflow WHERE Status = 1")
-        query_result = cur.fetchall()
-        if len(query_result) > 0:
-            unique_Session_ID = [i[0] for i in set(query_result)]
-            for i in unique_Session_ID:
-                self.create_workflow(i)
-        threading.Timer(self.waiting_time, self.check_and_run).start()
+    def check_and_run(self, root):
+        Base = automap_base()
+        engine = create_engine(self.Database)
+        Base.prepare(engine, reflect=True)
+        RSession = Base.classes.analysis_session
+        session = Session(engine)
+        for entry in session.query(RSession).filter(RSession.status == 1):
+            print(entry.id)
+            self.create_workflow(entry.id, root)
+            # unique_Session_ID = [i[0] for i in set(query_result)]
+            # for i in unique_Session_ID:
+            #     self.create_workflow(i)
+        # threading.Timer(self.waiting_time, self.check_and_run).start()
 
-    def create_workflow(self, Session_ID):
+    def create_workflow(self, Session_ID, root):
         reader = database_reader(Session_ID)
-        reader.extract_from_database()
+        reader.extract_from_database(self.Database, root)
         print(reader.Reads_files)
         print(reader.Genome_file)
         print(reader.Annotation_file)
         logic = logic_builder()
         logic.create_workflow_logic(reader)
-        writer = programs.cwl_writer(reader.Reads_files, reader)
+        writer = programs.cwl_writer(reader)
+        writer.conf["root"] = root
         writer.write_workflow(logic)
-
-
 
 
 class database_reader():
@@ -54,40 +54,38 @@ class database_reader():
         self.Session_ID = int(Session_ID)
 
 
-    def extract_from_database(self):
-
-        database = sql.connect(r"C:\Users\tony\Drive\Study\Bioinformatics\RNAseq\RNASeq\webportal\db.sqlite3")
-
-        cur = database.cursor()
-        cur.execute(f"SELECT * FROM analysis_workflow WHERE Session_ID = {self.Session_ID}")
-        column_names = [i[0] for i in cur.description]
-        query_result = cur.fetchall()
-
-        self.Index = [str(i[column_names.index("index")]).upper() for i in query_result]
-        self.Mapper = [str(i[column_names.index("mapper")]).upper() for i in query_result]
-        self.Assembler = [str(i[column_names.index("assembler")]).upper()  for i in query_result]
-        self.Analysis = [str(i[column_names.index("analysis")]).upper()  for i in query_result]
-
-        cur.execute(f"SELECT * FROM analysis_session WHERE ID = {self.Session_ID}")
-        column_names = [i[0] for i in cur.description]
-        query_result = cur.fetchall()
-
-        self.Genome_file = [i[column_names.index("fasta_dna_file")]  for i in query_result]
-        self.Annotation_file = [i[column_names.index("gtf_file")]  for i in query_result]
-        self.Organism_name = [i[column_names.index("organism")]  for i in query_result]
-
-        cur.execute(f"SELECT * FROM analysis_samples WHERE Session_ID = {self.Session_ID}")
-        column_names = [i[0] for i in cur.description]
-        query_result = cur.fetchall()
-
-        for i in query_result:
-            self.Reads_files[i[column_names.index("accession")]] = {
-            "type": i[column_names.index("libtype")],
-            "path": {1: i[column_names.index("read_1")], 2: i[column_names.index("read_2")]},
-            "condition": i[column_names.index("condition_id")]
+    def extract_from_database(self, database, root):
+        Base = automap_base()
+        engine = create_engine(database)
+        Base.prepare(engine, reflect=True)
+        RSession = Base.classes.analysis_session
+        Samples = Base.classes.analysis_samples
+        Workflow = Base.classes.analysis_workflow
+        Condition = Base.classes.analysis_conditions
+        Genome = Base.classes.analysis_genome
+        session = Session(engine)
+        for entry in session.query(Workflow).filter(Workflow.session_id == self.Session_ID):
+            self.Index.append(entry.index.lower())
+            self.Mapper.append(entry.mapper.lower())
+            self.Assembler.append(entry.assembler.lower())
+            self.Analysis.append(entry.analysis.lower())
+            print(self.Index, self.Mapper, self.Assembler, self.Analysis)
+        for s,g in session.query(RSession, Genome).filter(RSession.select_genome_id == Genome.id).filter(RSession.id == self.Session_ID):
+            self.Organism_name = g.organism
+            self.Genome_file = g.fasta_dna_file
+            self.Annotation_file = g.gtf_file
+        for sample, condition in session\
+                .query(Samples, Condition)\
+                .filter(Samples.condition_id == Condition.id)\
+                .filter(Samples.session_id == self.Session_ID):
+            self.Reads_files[sample.accession] = {
+                "type": sample.libtype,
+                "condition": condition.conditions,
+                "path": {
+                    1: root + "/webportal/" + sample.read_1,
+                    2: root + "/webportal/" + sample.read_2
+                }
             }
-
-
     def __repr__(self):
         return f"Session_ID :{self.Session_ID}"
 
@@ -141,5 +139,4 @@ class logic_builder():
 
         for step in steps:
             self.workflow.append("_".join([self.num_to_prog[i] for i in step.split("_")]))
-
         self.Workflow_index = result_index
