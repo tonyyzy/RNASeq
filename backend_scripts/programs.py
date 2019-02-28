@@ -914,8 +914,12 @@ class cwl_writer():
             yaml.dump(self.cwl_workflow, outfile, default_flow_style=False)
         with open(self.conf["root"][:-6] + f"data/{self.reader.identifier}/input.yml", "w+") as outfile:
             yaml.dump(self.cwl_input, outfile, default_flow_style=False)
-
-        subprocess.Popen(["cwl-runner",
+        workflow_log = open(f"{self.conf['root'][:-6]}data/{self.reader.identifier}/workflow.log", "w")
+        proc = subprocess.Popen(["cwl-runner",
                     f"--outdir={self.conf['root'][:-6]}data/{self.reader.identifier}/output",
-                    f"--outdir={self.conf['root'][:-6]}data/{self.reader.identifier}/workflow.cwl",
-                    f"--outdir={self.conf['root'][:-6]}data/{self.reader.identifier}/input.yml"])
+                    "--timestamp",
+                    f"{self.conf['root'][:-6]}data/{self.reader.identifier}/workflow.cwl",
+                    f"{self.conf['root'][:-6]}data/{self.reader.identifier}/input.yml"],
+                    stdout=workflow_log, stderr=workflow_log)
+        print(proc.args)
+        print(proc.pid)

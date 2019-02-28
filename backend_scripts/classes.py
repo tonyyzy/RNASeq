@@ -8,6 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 import os
+import csv
 
 class database_checker():
     def __init__(self, database_link):
@@ -85,15 +86,17 @@ class database_reader():
                 }
             }
         # create metadata.csv
+        # TODO change models, Condition column name should be condition
         if not os.path.exists(f"{root[:-6]}data/{self.identifier}"):
             os.makedirs(f"{root[:-6]}data/{self.identifier}")
         query = session.query(Condition, Samples)\
                         .filter(Samples.condition_id == Condition.id)\
                         .filter(RSession.id == self.Session_ID)\
-                        .with_entities(Condition.conditions, Samples.accession)
+                        .with_entities(Condition.conditions, Samples.accession, Samples.libtype)
         df = pd.read_sql(query.statement, session.bind, index_col="accession")
         df.index.name = None
-        df.to_csv(f"{root[:-6]}data/{self.identifier}/metadata.csv")
+        df = df.rename(columns={"conditions": "condition"}).sort_index()
+        df.to_csv(f"{root[:-6]}data/{self.identifier}/metadata.csv", quoting=csv.QUOTE_ALL)
 
 
 
