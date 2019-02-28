@@ -24,10 +24,10 @@ class cwl_writer():
     # dict for yml file
     cwl_input = {
         "threads": 2,
-        "metadata": {
-            "class": "File",
-            "path": "path"
-        },
+        # "metadata": {
+        #     "class": "File",
+        #     "path": "path"
+        # },
         "annotation": "path"
     }
     # is this still needed?
@@ -40,11 +40,7 @@ class cwl_writer():
     }
     # conf need to hold root path for repo rather than individual files
     conf = {
-        "DESeq2_script": "path/to/script",
-        "folder": "path",
-        "htseq_count_script": "path",
         "metadata": "path/to/metadata",
-        "annotation": "path/to/annotation",
         "root": "/repo/root",
         "salmon_index": "salmonindex",
         "star_genomedir": "test",
@@ -57,12 +53,18 @@ class cwl_writer():
     previous_name = ""
     prev = ""
 
-    def __init__(self, database_reader_object):
+    def __init__(self, database_reader_object, root):
+        self.reader = database_reader_object
         self.input_files = database_reader_object.Reads_files
         self.file_names = list(self.input_files) # list of filenames, fixed order
         self.num = len(self.input_files) # total number of inputs
         self.conf["annotation"] = database_reader_object.Annotation_file
+        self.conf["root"] = root
         self.conditions = {}
+        self.cwl_input["metadata"] = {
+            "class": "File",
+            "path": self.conf["root"][:-6] + f"data/{database_reader_object.identifier}/metadata.csv"
+        }
         for name in self.file_names:
             if self.input_files[name]["condition"] not in self.conditions:
                 self.conditions[self.input_files[name]["condition"]] = [name]
@@ -102,7 +104,7 @@ class cwl_writer():
         self.cwl_workflow["inputs"]["star_genomedir"] = "Directory"
         self.cwl_input["star_genomedir"] = {
             "class": "Directory",
-            "path": self.conf["star_genomedir"]
+            "path": self.reader.indexes["star_genomedir"]
         }
         # output
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
@@ -139,7 +141,7 @@ class cwl_writer():
         self.cwl_workflow["inputs"]["HISAT2Index"] = "Directory"
         self.cwl_input["HISAT2Index"] = {
             "class": "Directory",
-            "path": self.conf["HISAT2Index"]
+            "path": self.reader.indexes["HISAT2Index"]
         }
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
@@ -204,6 +206,11 @@ class cwl_writer():
         # workflow section
         # inputs
         self.cwl_workflow["inputs"]["salmon_index"] = "Directory"
+        self.cwl_input["salmon_index"] = {
+            "class": "Directory",
+            "path": self.reader.indexes["salmon_index"]
+        }
+
         # outputs
         self.cwl_workflow["outputs"]["salmon_quant_out"] = {
             "type": "Directory",
@@ -248,12 +255,6 @@ class cwl_writer():
                             for i in range(self.num)],
                 "name": {"valueFrom": "salmon_quant"}
             }
-        }
-
-        # yml section
-        self.cwl_input["salmon_index"] = {
-            "class": "Directory",
-            "path": self.conf["salmon_index"]
         }
 
         # salmon_count

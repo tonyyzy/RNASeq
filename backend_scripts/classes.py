@@ -21,21 +21,13 @@ class database_checker():
         for entry in session.query(RSession).filter(RSession.status == 1):
             print(entry.id)
             self.create_workflow(entry.id, root)
-            # unique_Session_ID = [i[0] for i in set(query_result)]
-            # for i in unique_Session_ID:
-            #     self.create_workflow(i)
-        # threading.Timer(self.waiting_time, self.check_and_run).start()
 
     def create_workflow(self, Session_ID, root):
         reader = database_reader(Session_ID)
         reader.extract_from_database(self.Database, root)
-        print(reader.Reads_files)
-        print(reader.Genome_file)
-        print(reader.Annotation_file)
         logic = logic_builder()
         logic.create_workflow_logic(reader)
-        writer = programs.cwl_writer(reader)
-        writer.conf["root"] = root
+        writer = programs.cwl_writer(reader, root)
         writer.write_workflow(logic)
 
 
@@ -49,6 +41,8 @@ class database_reader():
     Genome_file = []
     Annotation_file = []
     Reads_files = {}
+    identifier = ""
+    indexes = {}
 
     def __init__(self, Session_ID):
         self.Session_ID = int(Session_ID)
@@ -65,15 +59,19 @@ class database_reader():
         Genome = Base.classes.analysis_genome
         session = Session(engine)
         for entry in session.query(Workflow).filter(Workflow.session_id == self.Session_ID):
-            self.Index.append(entry.index.lower())
             self.Mapper.append(entry.mapper.lower())
             self.Assembler.append(entry.assembler.lower())
             self.Analysis.append(entry.analysis.lower())
             print(self.Index, self.Mapper, self.Assembler, self.Analysis)
         for s,g in session.query(RSession, Genome).filter(RSession.select_genome_id == Genome.id).filter(RSession.id == self.Session_ID):
+            print(s.identifier)
+            self.identifier = s.identifier
             self.Organism_name = g.organism
             self.Genome_file = g.fasta_dna_file
             self.Annotation_file = g.gtf_file
+            self.indexes["star_genomedir"] = g.star
+            self.indexes["HISAT2Index"] = g.hisat2
+            self.indexes["salmon_index"] = g.salmon
         for sample, condition in session\
                 .query(Samples, Condition)\
                 .filter(Samples.condition_id == Condition.id)\
