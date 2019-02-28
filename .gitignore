@@ -29,3 +29,5 @@ hisat2_build
 test1
 test2
 test.py
+test.yml
+test.cwl
