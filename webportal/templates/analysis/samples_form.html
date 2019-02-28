@@ -5,20 +5,30 @@
   <head>
     <meta charset="utf-8">
     {% block head %}
-      <title>Samples Form</title>
+      <title>Samples Create</title>
     {% endblock %}
-
   </head>
   <body>
     {% block body %}
-    <div class="jumbotron">
-      <form method="POST"  enctype="multipart/form-data" onsubmit="return validateLibrary();">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <p id='validate_library' style="color:red;">Paired_end library type selected. Please upload second file.</p>
-        <input type="submit" class='btn btn-primary' value="Submit">
-      </form>
-  {% endblock %}
+      <div class="offset-3 col-md-6">
+        <div class="">
+          <div class="form-group">
+            <form method="POST"  enctype="multipart/form-data" class="create_form">
+              {% csrf_token %}
 
+              <div class="form_title">
+                <h4>NEW SAMPLE</h4>
+              </div>
+              <hr class="my-4">
+
+              {{form|crispy}}
+              <br>
+              <input type="submit" class='create_btn' value="Submit">
+            </form>
+          </div>
+        </div>
+
+      </div>
+    {% endblock %}
   </body>
 </html>

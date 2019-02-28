@@ -1,4 +1,5 @@
 {%extends 'base.html'%}
+{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -9,31 +10,64 @@
   </head>
   <body>
     {% block body %}
-    <div class="jumbotron">
-        <div class="card bg-light mb-3" style="max-width: 120rem;">
+    <div class="session_detail_one container-">
+      <!-- <div class="session_detail offset-1 col-md-10"> -->
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{message.tags}}">
+              <!-- <p>message.tags: {{message.tags}}</p> -->
+              <p>{{message}}</p>
+              {{condition}}
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <div class="session_identifier_one">
+        <div class="card bg-light mb-3">
           <div class="card-header">Session Identifier: {{session_detail.identifier}}</div>
           <div class="card-body">
             <!-- <h5 class="card-title">Session Identifier: {{session_detail.identifier}}</h5> -->
             <div class="card-text">
-              <!-- <p>{{session_detail.identifier}}</p> -->
-              <p>Organism: {{session_detail.organism}}</p>
-              <p>Genome: {{session_detail.genome}}</p>
-              {% if session_detail.fasta_file %}
-                <p>Genome File: {{session_detail.fasta_file}}</p>
-              {% endif %}
-              {% if session_detail.annotation_file %}
-                <p>Annotation File: {{session_detail.annotation_file}}</p>
-              {% endif %}
-              <p></p>
+              <table class="table mb-0">
+                <thead>
+                  <tr>
+                    <th>index</th>
+                    <th>Organism</th>
+                    <th>Salmon</th>
+                    <th>DNA Fasta</th>
+                    <th>cDNA Fasta</th>
+                    <th>GTF</th>
+                    <th>Conditions</th>
+                    <th>Workflows</th>
+                    <th>Uploaded</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      <td>{{session_detail.genome_index}}</td>
+                      <td>{{ session_detail.organism|default_if_none:"" }} {{session_detail.select_genome.organism}}</td>
+                      <td>{{session_detail.salmon}}</td>
+                      <td>{{ session_detail.fasta_dna_file }} {{session_detail.select_genome.fasta_dna_file}}</td>
+                      <td>{{ session_detail.fasta_cdna_file }} {{ session_detail.select_genome.fasta_cdna_file }}</td>
+                      <td>{{ session_detail.gtf_file }} {{ session_detail.select_genome.gtf_file }}</td>
+                      <td><a id='id_conditions_create_btn' class='btn btn-sm btn-success' href="{% url 'analysis:conditions_create' session_slug=session_detail.identifier %}">Add Condition</a></td>
+                      <td><a id='id_workflow_create_btn' class='btn btn-sm btn-success disabled' href="{% url 'analysis:workflow_create' session_slug=session_detail.identifier %}">Add Workflow</a></td>
+                      <th>{{session_detail.status}}</th>
+                    </tr>
+                </tbody>
+            </table>
+
             </div>
           </div>
         </div>
+        </div>
 
         <!-- CONDITIONS -->
+        <div id='id_conditions_div'>
         {% if session_detail.conditions_fk.all %}
-          <p class='lead'>Session Conditions:</p>
-          <table class="table mb-1 condition_table">
-            <thead>
+          <div class='lead'>Session Conditions:</div>
+          <table class="table table-bordered bm-2">
+            <thead class=''>
               <tr>
                 <!-- <th>Key</th> -->
                 <th>Num</th>
@@ -48,9 +82,9 @@
                 {% for condition in session_detail.conditions_fk.all %}
                 <tr>
                   <!-- <td>{{ condition.pk }}</td> -->
-                  <td>{{forloop.counter}}</td>
-                  <td>{{ condition.conditions }}</td>
-                  <td>{{ condition.no_replicates }}</td>
+                  <td class='td_conditions_counter'>{{forloop.counter}}</td>
+                  <td class="td_condition">{{ condition.conditions }}</td>
+                  <td class="td_replicate">{{ condition.no_replicates }}</td>
                   <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:conditions_update' session_slug=condition.session.identifier conditions_pk=condition.pk %}">Update</a></td>
                   <td><a class='btn btn-sm btn-danger' href="{% url 'analysis:conditions_delete' session_slug=condition.session.identifier conditions_pk=condition.pk %}">Delete</a></td>
                   <td><a class='btn btn-sm btn-success' href="{% url 'analysis:samples_create' session_slug=condition.session.identifier conditions_pk=condition.pk %}">Add Sample</a></td>
@@ -60,21 +94,24 @@
           </table>
         {% endif %}
         {% if not session_detail.conditions_fk.all %}
-          <h3>No conditions defined.</h3>
+          <!-- <h3>No conditions defined.</h3> -->
         {% endif %}
-        <a class='btn btn-success' href="{% url 'analysis:conditions_create' session_slug=session_detail.identifier %}">Add Condition</a>
+        </div>
+
+
 <br><br>
       <!-- SAMPLES -->
+      <div id='id_samples_div'>
       {% if session_detail.samples_fk.all %}
-      <p class='lead'>Session Samples:</p>
-      <table class="table mb-1 condition_table">
+      <div class='lead'>Session Samples:</div>
+      <table class="table table-bordered mb-1">
         <thead>
           <tr>
             <!-- <th>Key</th> -->
             <th>Num</th>
             <th>Libtype</th>
             <th>Condition</th>
-            <th>Read One</th>
+            <th style='width: 17%'>Read One</th>
             <th>Read Two</th>
             <th>Accession</th>
             <th>Update</th>
@@ -85,11 +122,13 @@
             {% for sample in session_detail.samples_fk.all %}
             <tr>
               <!-- <td>{{ sample.pk }}</td> -->
-              <td>{{forloop.counter}}</td>
-              <td>{{ sample.libtype }}</td>
+              <td class='td_samples_counter'>{{forloop.counter}}</td>
+              <td class="td_libtype">{{ sample.libtype }}</td>
               <td>{{ sample.condition }}</td>
               <td>{{ sample.read_1 }}</td>
-              <td>{{ sample.read_2 }}</td>
+              {% if not sample.read_2 %}
+                <td>N/a</td>
+              {% endif %}
               <td>{{ sample.accession }}</td>
               <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:samples_update' session_slug=sample.session.identifier samples_pk=sample.pk %}">Update</a></td>
               <td><a class='btn btn-sm btn-danger' href="{% url 'analysis:samples_delete' session_slug=sample.session.identifier samples_pk=sample.pk %}">Delete</a></td>
@@ -102,19 +141,20 @@ analysis/session_detail/2/samples_update/7/ -->
       </table>
       {% endif %}
       {% if not session_detail.samples_fk.all %}
-            <h3>{{'No samples defined.'}}</h3>
+            <!-- <h3>{{'No samples defined.'}}</h3> -->
       {% endif %}
+    </div>
 
 <br><br>
         <!-- WORKFLOW -->
+        <div id='id_workflow_div'>
         {% if session_detail.workflow.all %}
-        <p class='lead'>Session Workflow:</p>
-        <table class="table mb-1 condition_table">
+        <div class='lead'>Session Workflow:</div>
+        <table class="table table-bordered mb-1">
           <thead>
             <tr>
               <!-- <th>Key</th> -->
               <th>Num</th>
-              <th>Index</th>
               <th>Mapper</th>
               <th>Assembler</th>
               <th>Analysis</th>
@@ -127,8 +167,7 @@ analysis/session_detail/2/samples_update/7/ -->
             {% for workflow in session_detail.workflow.all %}
             <tr>
               <!-- <td>{{workflow.pk}}</td> -->
-              <td>{{forloop.counter}}</td>
-              <td>{{ workflow.index }}</td>
+              <td class='td_workflow_counter'>{{forloop.counter}}</td>
               <td>{{ workflow.mapper }}</td>
               <td>{{ workflow.assembler }}</td>
               <td>{{ workflow.analysis }}</td>
@@ -141,10 +180,21 @@ analysis/session_detail/2/samples_update/7/ -->
         </table>
         {% endif %}
         {% if not session_detail.workflow.all %}
-          <h3>No Workflows defined.</h3>
+          <!-- <h3>No Workflows defined.</h3> -->
         {% endif %}
-        <a class='btn btn-success' href="{% url 'analysis:workflow_create' session_slug=session_detail.identifier %}">Add Workflow</a>
-    </div>
+
+        <br><br>
+      </div>
+
+      <!-- FORM TO CHANGE STATUS OF SESSION TO TRUE -->
+      <form method="POST"  enctype="multipart/form-data" id='id_SessionSubmitForm' class='myHidden'>
+        {% csrf_token %}
+        {{form|crispy}}
+        <!-- will need to define individual fields in which case i dont need to use javascript to hide as i can specify fields shown directly! -->
+        <br>
+        <input type="submit" class='create_btn hidden' value="SUBMIT FOR ANALYSIS">
+      </form>
+  </div> <!--END session_one_detail  -->
   {% endblock %}
   </body>
 </html>

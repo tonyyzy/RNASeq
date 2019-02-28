@@ -5,18 +5,57 @@
   <head>
     <meta charset="utf-8">
     {% block head %}
-    <title>Session Form</title>
+      <title>Conditions Create</title>
     {% endblock %}
   </head>
   <body>
     {% block body %}
-    <div class="jumbotron">
-      <h2>this is from session form</h2>
-      <form method="POST"  enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <input type="submit" class='btn btn-primary' value="Submit">
-      </form>
-  {% endblock %}
+      <div class="offset-3 col-md-6">
+        <div class="">
+          <div class="form-group">
+            <form method="POST"  enctype="multipart/form-data" class="create_form">
+              {% csrf_token %}
+              <!-- {{form|crispy}} -->
+
+              <div class="form_title">
+                <h4>NEW SESSION</h4>
+              </div>
+              <hr class="my-4">
+              <div id='id_genome_index'>
+                <label for="">{{form.genome_index.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Use our pre-index organisms or upload your own files.">&#9432;</a>
+                {{form.genome_index}}
+              </div><br>
+              <div id='id_select_genome'>
+                <label for="">{{form.select_genome.label_tag}}</label>
+                {{form.select_genome}}
+              </div><br>
+              <div id='id_organism'>
+                <label for="">{{form.organism.label_tag}}</label>
+                {{form.organism}}
+              </div><br>
+              <div id='id_salmon'>
+                <label for="">{{form.salmon.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Will you be using salmon in your down stream analysis?">&#9432;</a>
+                {{form.salmon}}
+              </div><br>
+              <div id='id_fasta_dna_file'>
+                <label for="">{{form.fasta_dna_file.label_tag}}</label><br>
+                {{form.fasta_dna_file}}
+              </div><br>
+              <div id='id_fasta_cdna_file'>
+                <label for="">{{form.fasta_cdna_file.label_tag}}</label><br>
+                {{form.fasta_cdna_file}}
+              </div><br>
+              <div id='id_gtf_file'>
+                <label for="">{{form.gtf_file.label_tag}}</label><br>
+                {{form.gtf_file}}
+              </div>
+
+              <br>
+              <input type="submit" class='create_btn' value="Submit">
+            </form>
+        </div>
+        </div>
+      </div>
+    {% endblock %}
   </body>
 </html>

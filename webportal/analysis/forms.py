@@ -1,23 +1,61 @@
 from django import forms
 from django.forms import ModelForm
-from analysis.models import Session, Workflow, Samples, Conditions
+from analysis.models import Session, Workflow, Samples, Conditions, The_Debug, Genome
 from django.core.exceptions import ValidationError
 
 class SessionSearchForm(forms.Form):
     user_session = forms.CharField(max_length=100)
 
+
+class GenomeForm(forms.ModelForm):
+    class Meta:
+        model = Genome
+        fields='__all__'
+
+
 class SessionForm(forms.ModelForm):
+
     class Meta:
         model = Session
-        fields = ['organism','genome','fasta_file', 'annotation_file']
+        fields = ['genome_index','select_genome','organism', 'salmon', 'fasta_dna_file', 'fasta_cdna_file', 'gtf_file', 'status']
         # fields='__all__'
+        widgets={
+            'genome_index': forms.Select(attrs={
+                'class':'form-control',
+                }),
+            'select_genome': forms.Select(attrs={
+                'class':'form-control',
+                }),
+            'organism': forms.TextInput(attrs={
+                'class':'form-control',
+                'placeholder': 'enter organism name here...'
+                }),
+            'salmon': forms.NullBooleanSelect(attrs={
+                'class':'form-control',
+                }),
+}
+
+
+
+class SessionSubmitForm(forms.ModelForm):
+
+    class Meta:
+        model = Session
+        fields = []
+
 
 class ConditionsForm(forms.ModelForm):
     class Meta:
         model = Conditions
         fields = ['conditions', 'no_replicates']
-        # fields = ['session', 'conditions', 'no_replicates']
         # fields='__all__'
+        widgets={
+            'conditions': forms.TextInput(attrs={
+                'class':'form-control',
+                'placeholder': 'enter condition here...'
+                }),
+        }
+
 
 
 class SamplesForm(forms.ModelForm):
@@ -28,49 +66,47 @@ class SamplesForm(forms.ModelForm):
         # fields = ['session', 'condition', 'libtype', 'read_1', 'read_2', 'accession']
         # fields='__all__'
 
-# attempted django client side form validation not working currently.
-        # def clean(self):
-            # data = super(SamplesForm, self).clean()
-            # print(f'\n{data}\n')
-        #
-        # def clean(self):
-        #     lib = self.cleaned_data.get('libtype')
-        #     if lib == 'PE':
-        #         msg = forms.ValidationError("This field is required.")
-        #         self.add_error('shipping_destination', msg)
-        #     else:
-        #     # Keep the database consistent. The user may have
-        #     # submitted a shipping_destination even if shipping
-        #     # was not selected
-        #     # self.cleaned_data['shipping_destination'] = ''
-        #         pass
-        #     return self.cleaned_data
-                # raise ValidationError('Telephone is required')
-            # # read_2 = self.cleaned_data.get('read_2')
-            # if not libtype == 'PE':
-            #     raise forms.ValidationError('invalid!')
-            # return libtype
-
 
 class WorkflowForm(forms.ModelForm):
     class Meta:
         model = Workflow
-        fields = ['index', 'mapper', 'assembler', 'analysis', 'status']
+        fields = ['mapper', 'assembler', 'analysis', 'status']
         # fields='__all__'
 
 
 
-# pip install --upgrade django-crispy-forms
-# def clean(self):
-#     shipping = self.cleaned_data.get('shipping')
-#
-#     if shipping:
-#         msg = forms.ValidationError("This field is required.")
-#         self.add_error('shipping_destination', msg)
-#     else:
-#         # Keep the database consistent. The user may have
-#         # submitted a shipping_destination even if shipping
-#         # was not selected
-#         self.cleaned_data['shipping_destination'] = ''
-#
-#     return self.cleaned_data
+class DebugForm(forms.ModelForm):
+    debug_title = forms.CharField(
+            max_length=100,
+            widget=forms.TextInput(
+                attrs={'class':'form-control', 'placeholder':'debug_title'}
+            )
+        )
+
+    debug_body = forms.CharField(
+            max_length=100,
+            widget=forms.Textarea(
+                attrs={'class':'form-control', 'placeholder':'debug_body'}
+            )
+        )
+
+    class Meta:
+        model = The_Debug
+        fields = ['field_one', 'field_two', 'field_three']
+        # fields='__all__'
+        widgets = {
+            'field_one': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'field_one_input',
+                    }),
+            'field_two': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'field_two_input',
+                    }),
+            'field_three': forms. FileInput(
+                attrs={
+                    'placeholder':'field_three_input',
+                    })
+        }

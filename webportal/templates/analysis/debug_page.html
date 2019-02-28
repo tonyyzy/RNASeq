@@ -1,0 +1,35 @@
+{%extends 'base.html'%}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+      <title>Debug Page</title>
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+      <h1>debug page</h1>
+
+      <div class="offset-2 col-md-8">
+        <div class="form-group">
+          <form method="POST"  enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+            <!-- <label for="">{{field.label_tag}}</label>
+              {{field}}
+            {% endfor %} -->
+
+            {{form.debug_title}}
+            {{form.debug_body}}
+            {{form.field_one}}
+            {{form.field_two}}
+            {{form.field_three}}
+            <input type="submit" class='btn btn-primary' value="Submit">
+          </form>
+        </div>
+      </div>
+
+    {% endblock %}
+  </body>
+</html>
