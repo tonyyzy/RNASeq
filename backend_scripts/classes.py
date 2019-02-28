@@ -7,6 +7,7 @@ import copy
 from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
+import os
 
 class database_checker():
     def __init__(self, database_link):
@@ -64,7 +65,6 @@ class database_reader():
             self.Analysis.append(entry.analysis.lower())
             print(self.Index, self.Mapper, self.Assembler, self.Analysis)
         for s,g in session.query(RSession, Genome).filter(RSession.select_genome_id == Genome.id).filter(RSession.id == self.Session_ID):
-            print(s.identifier)
             self.identifier = s.identifier
             self.Organism_name = g.organism
             self.Genome_file = g.fasta_dna_file
@@ -84,6 +84,18 @@ class database_reader():
                     2: root + "/webportal/" + sample.read_2
                 }
             }
+        # create metadata.csv
+        if not os.path.exists(f"{root[:-6]}data/{self.identifier}"):
+            os.makedirs(f"{root[:-6]}data/{self.identifier}")
+        query = session.query(Condition, Samples)\
+                        .filter(Samples.condition_id == Condition.id)\
+                        .filter(RSession.id == self.Session_ID)\
+                        .with_entities(Condition.conditions, Samples.accession)
+        pd.read_sql(query.statement, session.bind, index_col="accession")\
+            .to_csv(f"{root[:-6]}data/{self.identifier}/metadata.csv")
+
+
+
     def __repr__(self):
         return f"Session_ID :{self.Session_ID}"
 
