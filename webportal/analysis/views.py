@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.urls import reverse, reverse_lazy
-from .forms import SessionSearchForm, SessionForm, WorkflowForm, SamplesForm, ConditionsForm
+from .forms import SessionSearchForm, SessionForm, SessionSubmitForm, WorkflowForm, SamplesForm, ConditionsForm, DebugForm, GenomeForm
 from analysis.models import Session, Workflow, Samples, Conditions
 from . import models
 from django.db.models import Q
@@ -41,24 +41,69 @@ class SessionListView(ListView):
     model = models.Session
 
 
-class SessionDetailView(DetailView):
-    context_object_name = 'session_detail'
-    # template_name = 'analysis/session_detail.html'
-    model = models.Session
 
-    def get_object(self):
-        slug = self.kwargs.get('session_slug')
-        return get_object_or_404(Session, identifier=slug)
+class SessionDetailView(View):
+    template_name = 'analysis/session_detail.html'
+
+    def get(self, request, session_slug): # loads the session_detail template with the selected session object loaded as 'instance' and upload associated with that instance loaded from 'form'
+        instance = get_object_or_404(Session, identifier=session_slug)
+        form = SessionSubmitForm(request.POST or None, instance = instance)
+        try:
+            session = Session.objects.get(identifier=session_slug)
+        except session.DoesNotExist:
+            raise Http404('Session does not exist')
+
+        context = {'session_detail':session, 'key2':'val2', 'form':form}
+        return render(request, self.template_name, context)
 
 
-class SessionCreateView(CreateView): # CreateView expects template lower(model_name)_form.html
-    fields = ('organism','genome','fasta_file', 'annotation_file',)
-    model = models.Session
+    def post(self, request, session_slug):
+        instance = get_object_or_404(Session, identifier=session_slug)
+        bound_form = form = SessionSubmitForm(request.POST or None, instance = instance)
+        if bound_form.is_valid():
+            post = bound_form.save(commit=False)
+            post.status = True
+            post.save()
+            messages.success(request, 'Upload Successful')
+            print(f'\n{post}')
+            return redirect('analysis:session_detail', session_slug)
+        return redirect('analysis:session_detail', session_slug)
+
+
+class SessionCreateView(CreateView):
+    template_name = 'analysis/session_form.html'
+
+    def get(self, request):
+        form = SessionForm
+        return render(request, self.template_name, {'form':form})
+
+    def post(self, request):
+        form = SessionForm
+        bound_form = SessionForm(request.POST, request.FILES)
+        if bound_form.is_valid():
+            post = bound_form.save()
+            return redirect('analysis:session_detail', session_slug=post.identifier)
+        return render(request, self.template_name, {'form':form})
 
 
 class SessionUpdateView(UpdateView):
-    fields = ('organism','genome','fasta_file', 'annotation_file',)
-    model = models.Session
+    # fields = ('organism','genome','fasta_file', 'annotation_file',)
+    # model = models.Session
+
+    template_name = 'analysis/session_form.html'
+    form_class = SessionForm
+
+    def get_object(self):
+        session_slug = self.kwargs.get('session_slug')
+        print('object retreived success object retreived success  object retreived success ')
+        return get_object_or_404(Session, identifier=session_slug)
+
+    def form_valid(self, form):
+        session_slug = self.kwargs.get('session_slug')
+        post = form.save(commit=False)
+        post.save()
+        return redirect('analysis:session_detail', session_slug)
+
 
 
 class SessionDeleteView(DeleteView):
@@ -147,14 +192,15 @@ class SamplesCreateView(CreateView):
     def get(self, request, session_slug, conditions_pk):
         form = SamplesForm
         context = {'form':form}
+
         session_pk = Session.objects.get(identifier=session_slug).id
-        condition = Conditions.objects.get(pk=conditions_pk)
-        con = condition.conditions
-        print(f'\ncondition: {con}\n')
-        print(f'replicates: {condition.no_replicates}')
-        con_count = Samples.objects.filter(session_id=session_pk).filter(condition__conditions=con).count()
-        print(f'\n{con_count}')
-        if con_count >= condition.no_replicates:
+        condition_obj = Conditions.objects.get(pk=conditions_pk)
+        row_condition = condition_obj.conditions
+        print(f'\ncondition: {row_condition}\n')
+        print(f'replicates: {condition_obj.no_replicates}')
+        row_condition_count = Samples.objects.filter(session_id=session_pk).filter(condition__conditions=row_condition).count()
+        if row_condition_count >= condition_obj.no_replicates:
+            messages.warning(request, f'Error: {condition_obj.no_replicates} {condition_obj.conditions} sample(s) already uploaded.')
             return redirect('analysis:session_detail', session_slug=session_slug)
         return render(request, self.template_name, context)
 
@@ -255,3 +301,34 @@ class WorkflowDeleteView(DeleteView):
         instance = get_object_or_404(Workflow, pk=workflow_pk)
         instance.delete()
         return redirect('analysis:session_detail', session_slug=session_slug)
+
+
+class GenomeCreateView(CreateView):
+    template_name = 'analysis/genome_form.html'
+
+    def get(self, request):
+        form = GenomeForm
+        # return HttpResponse('success')
+        return render(request, self.template_name, {'form':form})
+
+    def post(self, request):
+        form = GenomeForm
+        bound_form = GenomeForm(request.POST, request.FILES)
+        print(bound_form)
+        # print(bound_form.cleaned_data)
+        print(bound_form.is_valid())
+        if bound_form.is_valid():
+            post = bound_form.save()
+            print(f'\n{post}')
+            post.save()
+            return redirect('analysis:session_index')
+        return render(request, self.template_name, {'form':form})
+
+
+
+
+class DebugView(View):
+    def get(self, request):
+        form = DebugForm
+        return render(request, 'analysis/debug_page.html', {'form':form})
+        return HttpResponse('success debug view loaded')

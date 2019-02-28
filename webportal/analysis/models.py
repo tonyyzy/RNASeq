@@ -3,19 +3,52 @@ import uuid
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.urls import reverse
+from django.core.files.storage import FileSystemStorage
+import os
+
+class Genome(models.Model):
+    organism = models.CharField(max_length=500)
+    source = models.CharField(max_length=500)
+    version = models.CharField(max_length=500)
+    fasta_dna_file = models.CharField(max_length=500, blank=False, null=False)
+    fasta_cdna_file = models.CharField(max_length=500, blank=False, null=False)
+    gtf_file = models.CharField(max_length=500, blank=False, null=False)
+    star = models.CharField(max_length=500)
+    salmon = models.CharField(max_length=500)
+    hisat2 = models.CharField(max_length=500)
+
+
+    def __str__(self):
+        return self.organism
+
+#
+# def get_upload_path(instance, filename):
+#     return os.path.join(
+#       "user_%d" % instance.owner.id, "car_%s" % instance.slug, filename)
 
 
 class Session(models.Model):
-    identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+
+    def get_upload_path(self, filename):
+        return os.path.join(self.identifier.hex, filename)
+        # return os.path.join(settings.DATA_DIR, self.identifier.hex, filename)
+
     GENOME_CHOICES = (
-        ("PreIndex", "Preindexed_Genome"),
-        ("OwnGFF", "User_Provided_Annotation"),
-        ("OwnFASTA", "User_Provided_Genome"),
+        ("pre_index", "Preindexed Genome"),
+        ("user_provided", "Provide Own Index"),
     )
-    organism = models.CharField(max_length=200)
-    genome = models.CharField(max_length=200, choices=GENOME_CHOICES)
-    fasta_file = models.FileField(upload_to='data/', blank=True, null=True)
-    annotation_file = models.FileField(upload_to='data/', blank=True, null=True)
+
+
+    identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+
+    genome_index = models.CharField(max_length=200, choices=GENOME_CHOICES)
+    select_genome = models.ForeignKey(Genome, on_delete=models.PROTECT, related_name='genome_fk', blank=True, null=True)
+    organism = models.CharField(max_length=200, blank=True, null=True)
+    salmon = models.BooleanField(blank=True, null=True)
+    fasta_dna_file = models.FileField(upload_to='data', blank=True, null=True)
+    fasta_cdna_file = models.FileField(upload_to='data', blank=True, null=True)
+    gtf_file = models.FileField(upload_to='data', blank=True, null=True)
+    status = models.BooleanField(default=False, blank=True, null=True)
 
     def get_absolute_url(self): # provides a default if Session is called from views.py without a specified reverse or redirect
         return reverse('analysis:session_detail', kwargs={'session_slug':self.identifier})
@@ -49,37 +82,35 @@ class Samples(models.Model):
     accession = models.CharField(max_length=200, blank=False, null=False)
 
     def get_absolute_url(self):
-        return reverse('analysis:session_detail', kwargs={'session_pk':self.session_pk})
+        return reverse('analysis:session_detail', kwargs={'slug':self.slug})
 
 
 class Workflow(models.Model):
-    INDEX_CHOICES = (
-        ("STAR", "STARAligner"),
-        ("HISAT2", "HISAT2"),
-    )
+    # INDEX_CHOICES = (
+    #     ("star", "STARAligner"),
+    #     ("hisat2", "HISAT2"),
+    #     ('salmon', 'SALMON'),
+    # )
     MAPPER_CHOICES = (
-        ("STAR", "STARAligner"),
-        ("HISAT2", "HISAT2"),
+        ("star", "STARAligner"),
+        ("hisat2", "HISAT2"),
+        ('salmon', 'SALMON'),
     )
     ASSEMLBER_CHOICES = (
-        ("STRINGTIE", "STRINGTIE"),
+        ("stringtie", "STRINGTIE"),
+        ('cufflinks', 'CUFFLINKS'),
+        ('miso', 'MISO'),
+        ('htseq', 'HTSEQ'),
+        ('featurecounts', 'FEATURECOUNTS'),
     )
     ANALYSIS_CHOICES = (
-        ('DESEQ2', 'DESEQ2'),
-        ('DEXEQ', 'DEXEQ'),
-        ('HISAT2', 'HISAT2'),
-        ('HTSEQ', 'HTSEQ'),
-        ('PREPDE', 'PREPDE'),
-        ('SAMTOOLS', 'SAMTOOLS'),
-        ('STAR', 'STAR'),
-        ('STRINGTIE', 'STRINGTIE'),
-        ('MISO', 'MISO'),
-        ('SALMON', 'SALMON'),
-        ('DESEQ', 'DESEQ'),
-        ('CUFFLINKS', 'CUFFLINKS'),
+        ('deseq2', 'DESEQ2'),
+        ('dexseq', 'DEXSEQ'),
+        ('htseq', 'HTSEQ'),
+        ('miso', 'MISO'),
     )
     session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='workflow')
-    index = models.CharField(max_length=200, choices=INDEX_CHOICES)
+    # index = models.CharField(max_length=200, choices=INDEX_CHOICES)
     mapper = models.CharField(max_length=200, choices=MAPPER_CHOICES)
     assembler = models.CharField(max_length=200, choices=ASSEMLBER_CHOICES, blank=True)
     analysis = models.CharField(max_length=200, choices=ANALYSIS_CHOICES)
@@ -87,3 +118,14 @@ class Workflow(models.Model):
 
     def get_absolute_url(self):
         return reverse('analysis:session_detail', kwargs={'pk':self.pk})
+
+
+class The_Debug(models.Model):
+    FIELD_THREE_CHOICES = (
+        ("choice1", "choice1"),
+        ("choice2", "choice2"),
+        ("choice3", "choice3"),
+    )
+    field_one = models.CharField(max_length=200)
+    field_two = models.CharField(max_length=200)
+    field_three = models.CharField(max_length=200, choices=FIELD_THREE_CHOICES)

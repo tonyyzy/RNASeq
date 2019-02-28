@@ -287,7 +287,7 @@ steps:
       requirements:
         InlineJavascriptRequirement: {}
       inputs:
-        file1: File
+        file1: File[]
       outputs:
         out: Directory
       expression: |
@@ -295,7 +295,7 @@ steps:
           return {"out": {
             "class": "Directory",
             "basename": "DESeq2",
-            "listing": [inputs.file1]
+            "listing": inputs.file1
             } };
           }
     in:

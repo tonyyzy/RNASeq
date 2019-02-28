@@ -1,9 +1,0 @@
-tracking_id	condition	replicate	raw_frags	internal_scaled_frags	external_scaled_frags	FPKM	effective_length	status
-TSS1	Normal	0	70	23.8007	23.8007	241662	-	OK
-TSS1	Normal	1	400	143.157	143.157	1.45355e+06	-	OK
-TSS1	Tumour	1	300	143.157	143.157	1.45355e+06	-	OK
-TSS1	Tumour	0	50	10.5941	10.5941	107568	-	OK
-TSS2	Normal	0	1343	456.634	456.634	1.41759e+06	-	OK
-TSS2	Normal	1	61	21.8314	21.8314	73451	-	OK
-TSS2	Tumour	1	247	117.866	117.866	406678	-	OK
-TSS2	Tumour	0	2171	459.995	459.995	1.42442e+06	-	OK

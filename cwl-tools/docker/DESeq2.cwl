@@ -5,6 +5,9 @@ class: CommandLineTool
 hints:
  DockerRequirement:
   dockerPull: biowardrobe2/scidap-deseq:v0.0.5
+requirements:
+ InlineJavascriptRequirement: {}
+
 baseCommand: Rscript
 inputs:
  input_script:
@@ -28,6 +31,6 @@ inputs:
      prefix: --threads
 outputs:
   DESeq2_out:
-   type: File
+   type: File[]
    outputBinding:
-    glob: DGE_results.csv
+    glob: "*DGE_results.csv"

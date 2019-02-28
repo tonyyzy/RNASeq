@@ -1,3 +1,0 @@
-tracking_id	Normal_count	Normal_count_variance	Normal_count_uncertainty_var	Normal_count_dispersion_var	Normal_status	Tumour_count	Tumour_count_variance	Tumour_count_uncertainty_var	Tumour_count_dispersion_var	Tumour_status
-XLOC_000001	83.4788	84.823	0	83.4788	OK	76.8755	77	0	76.8755	OK
-XLOC_000002	239.233	273.442	0	239.233	OK	288.93	293.578	0	288.93	OK

@@ -197,7 +197,7 @@ steps:
       bam: samtools_1/samtools_out
       output:
         source: [subject_name1]
-        valueFrom: $(self + '/')
+        valueFrom: $(self)
     out: [cufflink_out, gtf_out]
 
   cufflinks_2:
@@ -208,7 +208,7 @@ steps:
       bam: samtools_2/samtools_out
       output:
         source: [subject_name2]
-        valueFrom: $(self + '/')
+        valueFrom: $(self)
     out: [cufflink_out, gtf_out]
 
   cufflinks_3:
@@ -219,7 +219,7 @@ steps:
       bam: samtools_3/samtools_out
       output:
         source: [subject_name3]
-        valueFrom: $(self + '/')
+        valueFrom: $(self)
     out: [cufflink_out, gtf_out]
 
   cufflinks_4:
@@ -230,7 +230,7 @@ steps:
       bam: samtools_4/samtools_out
       output:
         source: [subject_name4]
-        valueFrom: $(self + '/')
+        valueFrom: $(self)
     out: [cufflink_out, gtf_out]
 
   cufflink_folder:

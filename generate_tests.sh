@@ -77,7 +77,7 @@ mv ./transcript_count_matrix.csv ./tests/
 
 # test for DESeq2
 cwl-runner --outdir=./test_DESeq2 ./cwl-tools/docker/DESeq2.cwl ./tests/DESeq2.yml
-cp ./test_DESeq2/DGE_results.csv ./tests/
+mv ./test_DESeq2/groupuntreated-grouptreated_DGE_results.csv ./tests/DGE_results.csv
 rm -r ./test_DESeq2
 
 # test for htseq prepare
@@ -120,7 +120,7 @@ tail -n +2 ./test3/quant.sf | awk 'BEGIN{OFS=FS="\t"}{$3=sprintf("%3.0f",$3);$4=
 rm -r test2 test3
 # workflow 4
 cwl-runner --outdir=./workflow4 ./workflows/docker/salmon_DESeq2.cwl ./tests/salmon_DESeq2.yml
-cp ./workflow4/DESeq2/DGE_results.csv ./tests/salmon_DGE_results.csv
+cp ./workflow4/DESeq2/groupuntreated-grouptreated_DGE_results.csv ./tests/salmon_DGE_results.csv
 
 # Salmon count
 cp ./workflow4/salmon_count/gene_count_matrix.csv ./tests/salmon_gene_count.csv
@@ -133,10 +133,10 @@ rm -rf ./workflow2
 
 # workflow3
 cwl-runner --outdir=./workflow3 ./workflows/docker/hisat2-cufflink-cuffmerge-cuffquant-ballgown-cuffdiffs.cwl ./tests/hisat2-cufflink-cuffmerge-cuffquant-ballgown-cuffdiffs.yml
-cp ./workflow3/cuffdiff/cuffdiff/gene_exp.diff ./tests/cuffdiff_res.csv
+cp ./workflow3/cuffdiff/gene_exp.diff ./tests/cuffdiff_res.csv
 cp ./workflow3/ballgown/DGE_res.csv ./tests/ballgown_res.csv
 rm -r ./workflow3
 
 cwl-runner --outdir=./workflow5 ./workflows/docker/star_samtools_featurecounts_edger.cwl ./tests/star_samtools_featurecounts_edger.yml
-cp ./workflow5/edger/DGE_res.csv ./tests/featurecounts_DGE_res.csv
+cp ./workflow5/edger/groupuntreated-grouptreated_DGE_res.csv ./tests/featurecounts_DGE_res.csv
 rm -r ./workflow5

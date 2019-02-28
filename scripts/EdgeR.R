@@ -8,13 +8,6 @@ library(edgeR)
 args <- commandArgs( trailingOnly=TRUE )
 args
 
-if( "--condition" %in% args ){
-  condition.idx <- grep("--condition", args)
-  condition <- args[ condition.idx + 1 ]
-} else {
-  stop("please enter condition with prefix '--condition'")
-}
-
 if( "--counts" %in% args ){
   counts.idx <- grep("--counts", args)
   counts <- args[ counts.idx + 1 ]
@@ -31,30 +24,36 @@ if( "--metadata" %in% args ){
   stop("please enter the path to the metadata with prefix '--metadata'")
 }
 
-DGE <- DGEList(counts = counts)
-samplenames <- colnames(DGE)
-samplenames
+if( "--condition" %in% args ){
+  condition.idx <- grep("--condition", args)
+  condition <- args[ condition.idx + 1 ]
+  colnames(metadata) <- sub(condition, "condition",colnames(metadata))
+}
 
-metadata <- metadata[samplenames,]
-group <- as.factor(metadata[,condition])
-DGE$samples$group <- group
-
-#cpm <- cpm(DGE)
-
-#keep.exprs <- rowSums(cpm>1)>=3
-#DGE <- DGE[keep.exprs,, keep.lib.sizes=FALSE]
-
-DGE <- calcNormFactors(DGE, method = "TMM")
-
-design <- model.matrix(~0+group)
-contr.matrix <- makeContrasts(contrasts = gsub(".$","",paste0(paste0("group", unique(group)),sep="-", collapse = "")), levels = colnames(design))
-
-v <- voom(DGE, design)
-vfit <- lmFit(v, design)
-vfit <- contrasts.fit(vfit, contrasts=contr.matrix)
-efit <- eBayes(vfit)
-
-dge.res <- topTable(efit,sort="none",n=Inf)
-dge.res <- dge.res[,c("AveExpr", "logFC", "t", "P.Value", "adj.P.Val")]
-colnames(dge.res) <- c("baseMean", "log2FoldChange", "stat", "pvalue","padj")
-write.csv(dge.res, paste0("DGE_res.csv"))
+comb <- combn(unique(metadata[,"condition"]), 2)
+for(i in 1:ncol(comb)){
+  metadata.f <- metadata[metadata$condition %in% comb[,i],]
+  count.f <- counts[,rownames(metadata.f)]
+  DGE <- DGEList(counts = count.f)
+  samplenames <- colnames(DGE)
+  samplenames
+  
+  group <- as.factor(metadata.f[,"condition"])
+  DGE$samples$group <- group
+  
+  DGE <- calcNormFactors(DGE, method = "TMM")
+  
+  design <- model.matrix(~0+group)
+  contrast <- gsub(".$","",paste0(paste0("group", unique(group)),sep="-", collapse = ""))
+  contr.matrix <- makeContrasts(contrasts = contrast, levels = colnames(design))
+  
+  v <- voom(DGE, design)
+  vfit <- lmFit(v, design)
+  vfit <- contrasts.fit(vfit, contrasts=contr.matrix)
+  efit <- eBayes(vfit)
+  
+  dge.res <- topTable(efit,sort="none",n=Inf)
+  dge.res <- dge.res[,c("AveExpr", "logFC", "t", "P.Value", "adj.P.Val")]
+  colnames(dge.res) <- c("baseMean", "log2FoldChange", "stat", "pvalue","padj")
+  write.csv(dge.res, paste0(contrast,"_","DGE_res.csv"))
+}

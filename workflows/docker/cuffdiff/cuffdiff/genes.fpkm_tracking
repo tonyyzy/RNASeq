@@ -1,3 +1,0 @@
-tracking_id	class_code	nearest_ref_id	gene_id	gene_short_name	tss_id	locus	length	coverage	Normal_FPKM	Normal_conf_lo	Normal_conf_hi	Normal_status	Tumour_FPKM	Tumour_conf_lo	Tumour_conf_hi	Tumour_status
-XLOC_000001	-	-	XLOC_000001	gene1	TSS1	test1:499-999	-	-	847607	660580	1.03463e+06	OK	780560	602366	958754	OK
-XLOC_000002	-	-	XLOC_000002	gene2	TSS2	test1:2999-5299	-	-	745522	618560	872483	OK	915551	762571	1.06853e+06	OK
