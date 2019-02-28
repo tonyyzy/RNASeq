@@ -13,7 +13,7 @@ inputs:
         inputBinding:
             position: 0
     condition:
-        type: string
+        type: string?
         inputBinding:
             position: 1
             prefix: --condition
@@ -30,6 +30,6 @@ inputs:
 
 outputs:
     output:
-      type: File
+      type: File[]
       outputBinding:
-        glob: "DGE_res.csv"
+        glob: "*DGE_res.csv"

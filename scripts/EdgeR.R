@@ -8,12 +8,6 @@ library(edgeR)
 args <- commandArgs( trailingOnly=TRUE )
 args
 
-if( "--condition" %in% args ){
-  condition.idx <- grep("--condition", args)
-  condition <- args[ condition.idx + 1 ]
-  colnames(sampleTable) <- sub(condition, "condition",colnames(sampleTable))
-}
-
 if( "--counts" %in% args ){
   counts.idx <- grep("--counts", args)
   counts <- args[ counts.idx + 1 ]
@@ -30,8 +24,13 @@ if( "--metadata" %in% args ){
   stop("please enter the path to the metadata with prefix '--metadata'")
 }
 
+if( "--condition" %in% args ){
+  condition.idx <- grep("--condition", args)
+  condition <- args[ condition.idx + 1 ]
+  colnames(metadata) <- sub(condition, "condition",colnames(metadata))
+}
 
-comb <- combn(unique(metadata[,condition]), 2)
+comb <- combn(unique(metadata[,"condition"]), 2)
 for(i in 1:ncol(comb)){
   metadata.f <- metadata[metadata$condition %in% comb[,i],]
   count.f <- counts[,rownames(metadata.f)]
@@ -39,7 +38,7 @@ for(i in 1:ncol(comb)){
   samplenames <- colnames(DGE)
   samplenames
   
-  group <- as.factor(metadata.f[,condition])
+  group <- as.factor(metadata.f[,"condition"])
   DGE$samples$group <- group
   
   DGE <- calcNormFactors(DGE, method = "TMM")

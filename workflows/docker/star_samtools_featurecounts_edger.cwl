@@ -23,7 +23,6 @@ inputs:
   featurecounts_script: File
   EdgeR_script: File
   metadata: File
-  condition: string
 
 outputs:
   star_readmap_out:
@@ -168,8 +167,7 @@ steps:
     in:
       input_script: EdgeR_script
       count_matrix: featurecounts/output
-      metadata: metadata
-      condition: condition
+      metadata: metadata 
     out: [output]
 
   edger_folder:

@@ -22,4 +22,4 @@ outputs:
   DESeq2_out:
    type: File
    outputBinding:
-    glob: DGE_results.csv
+    glob: groupuntreated-grouptreated_DGE_results.csv

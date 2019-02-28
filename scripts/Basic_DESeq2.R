@@ -14,10 +14,10 @@ metadata <- metadata[colnames(data),]
 if( "--condition" %in% args ){
   condition.idx <- grep("--condition", args)
   condition <- args[ condition.idx + 1 ]
-  colnames(sampleTable) <- sub(condition, "condition",colnames(sampleTable))
+  colnames(metadata) <- sub(condition, "condition",colnames(metadata))
 }
 
-comb <- combn(unique(metadata[,condition]), 2)
+comb <- combn(unique(metadata[,"condition"]), 2)
 for(i in 1:ncol(comb)){
   metadata.f <- metadata[metadata$condition %in% comb[,i],]
   count.f <- data[,rownames(metadata.f)]
