@@ -15,11 +15,13 @@
         <thead>
           <tr>
             <th>key</th>
+            <th>Identifier</th>
+            <th>Index</th>
             <th>Organism</th>
-            <th>Genome</th>
-            <th>fasta_file</th>
-            <th>annotaiton_file</th>
-            <th>identifier</th>
+            <th>Salmon</th>
+            <th>DNA Fasta</th>
+            <th>cDNA Fasta</th>
+            <th>GTF</th>
 
           </tr>
         </thead>
@@ -27,13 +29,13 @@
           {% for session in session_list %}
             <tr>
               <td><a href="session_detail/{{ session.identifier }}">Sesison: {{ session.pk }}</a></td>
-              <td>{{ session.organism }}</td>
-              <td>{{ session.genome }}</td>
-              <td>{{ session.fasta_file }}</td>
-              <td>{{ session.annotation_file }}</td>
-              <td>{{ session.identifier }}</td>
-              <td>
-              </td>
+              <td>{{session.identifier}}</td>
+              <td>{{session.genome_index}}</td>
+              <td>{{ session.organism|default_if_none:"" }} {{session.select_genome.organism}}</td>
+              <td>{{session.salmon}}</td>
+              <td>{{ session.fasta_dna_file }} {{session.select_genome.fasta_dna_file}}</td>
+              <td>{{ session.fasta_cdna_file }} {{ session.select_genome.fasta_cdna_file }}</td>
+              <td>{{ session.gtf_file }} {{ session.select_genome.gtf_file }}</td>
             </tr>
           {% endfor %}
         </tbody>

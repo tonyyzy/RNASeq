@@ -1,5 +1,4 @@
 html,body{
-  background-color: #e5e8e7;
   margin:0;
   padding:0;
   height: 100%;
@@ -128,7 +127,6 @@ html,body{
   font-size: 120%;
 }
 
-
 .create_btn{
    background-color: #4CAF50;
    border: none;
@@ -152,17 +150,23 @@ html,body{
 }
 
 .debug2{
-  /* border-style: solid; */
   border-radius: 5px;
   border: 2px solid yellow;
   padding: 5px;
   margin: 10px;
-  /* background: blue; */
 }
 
 
 
 /* SESSION DETAIL STYLE */
+.session_detail_one{
+  margin: 20px;
+  /* background-color: #e4d7e8; */
+  /* background: rgba(90, 100, 100, 0.1); */
+  /* border: 2px solid black; */
+  padding: 10px;
+
+}
 
 #id_conditions_div{
   /* display: none; */
@@ -177,5 +181,14 @@ html,body{
 }
 
 #session_upload{
+  display: none;
+}
+
+/*
+.hidden{
+  display:none;
+} */
+
+.myHidden{
   display: none;
 }

@@ -30,6 +30,9 @@ class SessionForm(forms.ModelForm):
                 'class':'form-control',
                 'placeholder': 'enter organism name here...'
                 }),
+            'salmon': forms.NullBooleanSelect(attrs={
+                'class':'form-control',
+                }),
 }
 
 
@@ -67,7 +70,7 @@ class SamplesForm(forms.ModelForm):
 class WorkflowForm(forms.ModelForm):
     class Meta:
         model = Workflow
-        fields = ['index', 'mapper', 'assembler', 'analysis', 'status']
+        fields = ['mapper', 'assembler', 'analysis', 'status']
         # fields='__all__'
 
 

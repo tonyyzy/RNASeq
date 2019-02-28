@@ -7,12 +7,16 @@ from django.core.files.storage import FileSystemStorage
 import os
 
 class Genome(models.Model):
-    organism = models.CharField(max_length=200)
-    source = models.CharField(max_length=200)
-    version = models.CharField(max_length=200)
-    fasta_dna_file = models.FileField(upload_to='data/', blank=False, null=False)
-    fasta_cdna_file = models.FileField(upload_to='data/', blank=False, null=False)
-    gtf_file = models.FileField(upload_to='data/', blank=False, null=False)
+    organism = models.CharField(max_length=500)
+    source = models.CharField(max_length=500)
+    version = models.CharField(max_length=500)
+    fasta_dna_file = models.CharField(max_length=500, blank=False, null=False)
+    fasta_cdna_file = models.CharField(max_length=500, blank=False, null=False)
+    gtf_file = models.CharField(max_length=500, blank=False, null=False)
+    star = models.CharField(max_length=500)
+    salmon = models.CharField(max_length=500)
+    hisat2 = models.CharField(max_length=500)
+
 
     def __str__(self):
         return self.organism
@@ -33,15 +37,14 @@ class Session(models.Model):
         ("pre_index", "Preindexed Genome"),
         ("user_provided", "Provide Own Index"),
     )
+
+
     identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     genome_index = models.CharField(max_length=200, choices=GENOME_CHOICES)
     select_genome = models.ForeignKey(Genome, on_delete=models.PROTECT, related_name='genome_fk', blank=True, null=True)
     organism = models.CharField(max_length=200, blank=True, null=True)
     salmon = models.BooleanField(blank=True, null=True)
-    # fasta_dna_file = models.FileField(upload_to=get_upload_path, blank=True, null=True)
-    # fasta_cdna_file = models.FileField(upload_to=get_upload_path, blank=True, null=True)
-    # gtf_file = models.FileField(upload_to=get_upload_path, blank=True, null=True)
     fasta_dna_file = models.FileField(upload_to='data', blank=True, null=True)
     fasta_cdna_file = models.FileField(upload_to='data', blank=True, null=True)
     gtf_file = models.FileField(upload_to='data', blank=True, null=True)
@@ -83,31 +86,31 @@ class Samples(models.Model):
 
 
 class Workflow(models.Model):
-    INDEX_CHOICES = (
-        ("STAR", "STARAligner"),
-        ("HISAT2", "HISAT2"),
-        ('SALMON', 'SALMON'),
-    )
+    # INDEX_CHOICES = (
+    #     ("star", "STARAligner"),
+    #     ("hisat2", "HISAT2"),
+    #     ('salmon', 'SALMON'),
+    # )
     MAPPER_CHOICES = (
-        ("STAR", "STARAligner"),
-        ("HISAT2", "HISAT2"),
-        ('SALMON', 'SALMON'),
+        ("star", "STARAligner"),
+        ("hisat2", "HISAT2"),
+        ('salmon', 'SALMON'),
     )
     ASSEMLBER_CHOICES = (
-        ("STRINGTIE", "STRINGTIE"),
-        ('CUFFLINKS', 'CUFFLINKS'),
-        ('MISO', 'MISO'),
-        ('HTSEQ', 'HTSEQ'),
+        ("stringtie", "STRINGTIE"),
+        ('cufflinks', 'CUFFLINKS'),
+        ('miso', 'MISO'),
+        ('htseq', 'HTSEQ'),
+        ('featurecounts', 'FEATURECOUNTS'),
     )
     ANALYSIS_CHOICES = (
-        ('DESEQ2', 'DESEQ2'),
-        ('DEXEQ', 'DEXEQ'),
-        ('HTSEQ', 'HTSEQ'),
-        ('MISO', 'MISO'),
-        ('DESEQ', 'DESEQ'),
+        ('deseq2', 'DESEQ2'),
+        ('dexseq', 'DEXSEQ'),
+        ('htseq', 'HTSEQ'),
+        ('miso', 'MISO'),
     )
     session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='workflow')
-    index = models.CharField(max_length=200, choices=INDEX_CHOICES)
+    # index = models.CharField(max_length=200, choices=INDEX_CHOICES)
     mapper = models.CharField(max_length=200, choices=MAPPER_CHOICES)
     assembler = models.CharField(max_length=200, choices=ASSEMLBER_CHOICES, blank=True)
     analysis = models.CharField(max_length=200, choices=ANALYSIS_CHOICES)

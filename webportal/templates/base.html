@@ -7,7 +7,7 @@
       <!-- REMOTE CSS -->
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" crossorigin="anonymous">
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous">
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+      <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> -->
       <!-- LOCAL CSS -->
       <link rel="stylesheet" href="{% static 'css/style.css' %}">
       <!-- <link rel="stylesheet" href="{% static 'bootstrap-4.3.1-dist/css/bootstrap.min.css' %}"> -->
@@ -16,7 +16,7 @@
     {% endblock %}
     <title>base</title>
   </head>
-
+  
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -39,32 +39,14 @@
           <a class="nav-link" href="{% url 'analysis:workflow_list' %}">Workflow</a>
         </li>
       </ul>
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="#">Login</a>
-        </li>
-        <li class="nav-item">
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Register</a>
-        </li>
-      </ul>
     </div>
   </nav>
   <!-- <h4 class="debug footer">Current user: {{ request.user }}</h4> -->
 <body>
 
-  {% block body %}
-  {% if messages %}
-    {% for message in messages%}
-      <div class="alert alert-{{ message.tags }}">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-  {% endblock %}
-
-
+{% block body %}
+<h2>content loaded from base.html</h2>
+{% endblock %}
 
 
 
@@ -75,10 +57,6 @@
 <!-- LOCAL SCRIPTS -->
   <script src= "{% static 'js/myscript.js' %}"></script>
   <!-- <script src= "{% static 'bootstrap-4.3.1-dist/js/bootstrap.min.js' %}"></script> -->
-
-
-
-
 
 
 </body>

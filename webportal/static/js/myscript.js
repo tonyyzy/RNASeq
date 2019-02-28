@@ -29,50 +29,50 @@
 
 
 // // SESSION CREATE JAVASCRIPT
-// $( document ).ready(function() {
-//   var user_url = window.location.pathname
-//   if (user_url.includes('session_create')){ // executes if session_create page loaded
-//     console.log('session_create page loaded')
-//     $('#id_select_genome').hide()
-//     $('#id_organism').hide()
-//     $('#id_salmon').hide()
-//     $('#id_fasta_dna_file').hide()
-//     $('#id_fasta_cdna_file').hide()
-//     $('#id_gtf_file').hide()
-//     $('#id_genome_index').on('click', function(){
-//       console.log('option selected')
-//       if ($('#id_genome_index option:selected').val() == 'pre_index'){ // executes if pre_index selected from dropdown
-//         console.log('great success with pre index')
-//         $('#id_organism').hide()
-//         $('#id_salmon').hide()
-//         $('#id_fasta_dna_file').hide()
-//         $('#id_fasta_cdna_file').hide()
-//         $('#id_gtf_file').hide()
-//         $('#id_select_genome').show()
-//       }
-//       if ($('#id_genome_index option:selected').val() == 'user_provided'){ // executes if pre_index selected from dropdown
-//         console.log('great success with user provided')
-//         $('#id_select_genome').hide()
-//         $('#id_organism').show()
-//         $('#id_salmon').show()
-//         $('#id_salmon').on('click', function(){
-//           if ($('#id_salmon option:selected').val() == 2){
-//             console.log('salmon selected')
-//             $('#id_fasta_dna_file').show()
-//             $('#id_fasta_cdna_file').show()
-//             $('#id_gtf_file').show()
-//           }
-//           if ($('#id_salmon option:selected').val() == 3){
-//             console.log('salmon NOT selected')
-//             $('#id_fasta_cdna_file').hide()
-//             $('#id_fasta_dna_file').show()
-//             $('#id_gtf_file').show()
-//           }
-//         })
-//       }
-//     })
-//   }
-// })
+$( document ).ready(function() {
+  var user_url = window.location.pathname
+  if (user_url.includes('session_create')){ // executes if session_create page loaded
+    console.log('session_create page loaded')
+    $('#id_select_genome').hide()
+    $('#id_organism').hide()
+    $('#id_salmon').hide()
+    $('#id_fasta_dna_file').hide()
+    $('#id_fasta_cdna_file').hide()
+    $('#id_gtf_file').hide()
+    $('#id_genome_index').on('click', function(){
+      console.log('option selected')
+      if ($('#id_genome_index option:selected').val() == 'pre_index'){ // executes if pre_index selected from dropdown
+        console.log('great success with pre index')
+        $('#id_organism').hide()
+        $('#id_salmon').hide()
+        $('#id_fasta_dna_file').hide()
+        $('#id_fasta_cdna_file').hide()
+        $('#id_gtf_file').hide()
+        $('#id_select_genome').show()
+      }
+      if ($('#id_genome_index option:selected').val() == 'user_provided'){ // executes if pre_index selected from dropdown
+        console.log('great success with user provided')
+        $('#id_select_genome').hide()
+        $('#id_organism').show()
+        $('#id_salmon').show()
+        $('#id_salmon').on('click', function(){
+          if ($('#id_salmon option:selected').val() == 2){
+            console.log('salmon selected')
+            $('#id_fasta_dna_file').show()
+            $('#id_fasta_cdna_file').show()
+            $('#id_gtf_file').show()
+          }
+          if ($('#id_salmon option:selected').val() == 3){
+            console.log('salmon NOT selected')
+            $('#id_fasta_cdna_file').hide()
+            $('#id_fasta_dna_file').show()
+            $('#id_gtf_file').show()
+          }
+        })
+      }
+    })
+  }
+})
 
 
 
@@ -86,13 +86,31 @@ if ($('#div_id_libtype option:selected').val() == 'user_provided'){ // executes 
 
 // SESSION DETAIL JAVASCRIPT
 $( document ).ready(function() {
+  // alert('loaded')
   var user_url = window.location.pathname
   if (user_url.includes('session_detail')){ // executes if session_detail page loaded
+    console.log('session detail javascript active')
+    // $('#id_SessionSubmitForm').hide()
     if($('.td_index').length){
-    	// alert('show samples');
+      // alert('show samples');
       $('#session_upload').show()
     }
-    $('#id_SessionSubmitForm')
+    if($('.td_conditions_counter').length){
+      console.log('condition added')
+      // $('#id_conditions_create_btn').prop('disabled', true);
+      // $('#id_workflow_create_btn').removeClass('disabled')
+    }
+    if($('.td_samples_counter').length){
+      console.log('samples added');
+      // $('#id_conditions_create_btn').prop('disabled', true);
+      $('#id_workflow_create_btn').removeClass('disabled')
+    }
+    if($('.td_workflow_counter').length){
+      console.log('workflow added')
+      // alert('workflow data populated');
+      // $('#id_conditions_create_btn').prop('disabled', true);
+      $('#id_SessionSubmitForm').removeClass('myHidden')
+    }
   }
 });
 
