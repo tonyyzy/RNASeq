@@ -14,7 +14,7 @@
       {% for message in messages %}
         <!-- <div class="alert alert-{{message.tags}}"> -->
         <!-- <p>message.tags: {{message.tags}}</p> -->
-        <p>{{message}}</p>
+        <!-- <p>{{message}}</p> -->
       {% endfor %}
     {% endif %}
     <h3>Note: analysis/genome_create/ to add genomes to pre-indexed database</h3>
@@ -28,12 +28,32 @@
 
       </form>
       {% if session_query %}
-      <div class="jumbotron">
-        <h4>{{session_query}}</h4>
-        <p>Organism: {{session_query.organism}}</p>
-        <p>Genome: {{session_query.genome}}</p>
-        <a class='btn btn-success' href="{% url 'analysis:session_detail' session_slug=session_query.identifier %}">Details</a>
+      <div class="card success_one mb-3">
+        <div class="card-header">Session Identifier: {{session_query.identifier}}</div>
+        <div class="card-body">
+          <!-- <h5 class="card-title">Session Identifier: {{session_detail.identifier}}</h5> -->
+          <div class="card-text">
+            <table class="table mb-0">
+              <thead>
+                <tr>
+                  <th>Organism</th>
+                  <th>Index</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                    <td>{{session_query.organism|default_if_none:""}}{{session_query.select_genome.organism}} </td>
+                    <td>{{session_query.genome_index}}</td>
+                    <td><a class='btn btn-success' href="{% url 'analysis:session_detail' session_slug=session_query.identifier %}">Details</a></td>
+                  </tr>
+              </tbody>
+          </table>
+
+          </div>
+        </div>
       </div>
+      
       {% endif %}
       {% if invalid_query %}
       <div class="jumbotron warning">

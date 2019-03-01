@@ -76,23 +76,23 @@ class WorkflowForm(forms.ModelForm):
 
 
 class DebugForm(forms.ModelForm):
-    debug_title = forms.CharField(
-            max_length=100,
-            widget=forms.TextInput(
-                attrs={'class':'form-control', 'placeholder':'debug_title'}
-            )
-        )
-
-    debug_body = forms.CharField(
-            max_length=100,
-            widget=forms.Textarea(
-                attrs={'class':'form-control', 'placeholder':'debug_body'}
-            )
-        )
+    # debug_title = forms.CharField(
+    #         max_length=100,
+    #         widget=forms.TextInput(
+    #             attrs={'class':'form-control', 'placeholder':'debug_title'}
+    #         )
+    #     )
+    #
+    # debug_body = forms.CharField(
+    #         max_length=100,
+    #         widget=forms.Textarea(
+    #             attrs={'class':'form-control', 'placeholder':'debug_body'}
+    #         )
+    #     )
 
     class Meta:
         model = The_Debug
-        fields = ['field_one', 'field_two', 'field_three']
+        fields = ['field_one', 'field_two']
         # fields='__all__'
         widgets = {
             'field_one': forms.TextInput(
@@ -100,13 +100,13 @@ class DebugForm(forms.ModelForm):
                     'class':'form-control',
                     'placeholder':'field_one_input',
                     }),
-            'field_two': forms.TextInput(
-                attrs={
-                    'class':'form-control',
-                    'placeholder':'field_two_input',
-                    }),
-            'field_three': forms. FileInput(
-                attrs={
-                    'placeholder':'field_three_input',
-                    })
+            # 'field_two': forms.TextInput(
+            #     attrs={
+            #         'class':'form-control',
+            #         'placeholder':'field_two_input',
+            #         }),
+            # 'field_three': forms. TextInput(
+            #     attrs={
+            #         'placeholder':'field_three_input',
+            #         })
         }

@@ -159,7 +159,6 @@ DATA_ROOT = os.path.join(BASE_DIR,'data')
 DATA_URL = '/data/'
 
 
-
 DATA_DIR = os.path.abspath(os.path.join(BASE_DIR, '../../Data'))
 print(DATA_DIR)
 # may need to add files outside of the base_dire (which points to RNASEQ webportal to the base dir by above method)
