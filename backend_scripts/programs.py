@@ -482,7 +482,7 @@ class cwl_writer():
                     "input_format": {"valueFrom": "bam"},
                     "sorted_by": {"valueFrom": "pos"},
                     "gff": "htseq_prepare/output",
-                    "sam": f"{self.previous_name}_{index+1}/samtools_out",
+                    "bam": f"{self.previous_name}_{index+1}/samtools_out",
                     "outname": {
                         "source": [f"subject_name{index+1}"],
                         "valueFrom": "$(self + '_htseq_count.csv')"}

@@ -89,9 +89,9 @@ class database_reader():
         # TODO change models, Condition column name should be condition
         if not os.path.exists(f"{root[:-6]}data/{self.identifier}"):
             os.makedirs(f"{root[:-6]}data/{self.identifier}")
-        query = session.session.query(Samples)\
+        query = session.query(Samples)\
                         .join(Condition, Samples.condition_id == Condition.id)\
-                        .filter(RSession.id == self.Session_ID)\
+                        .filter(Samples.session_id == self.Session_ID)\
                         .with_entities(Condition.conditions, Samples.accession, Samples.libtype)
         df = pd.read_sql(query.statement, session.bind, index_col="accession")
         df.index.name = None
