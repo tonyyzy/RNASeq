@@ -74,6 +74,11 @@ html,body{
   margin: 15px;
 }
 
+.success_one{
+  background: rgba(18, 178, 10, 0.3);
+  margin: 50px;
+}
+
 .text_body_1{
   font-size: 130%;
   line-height: 150%;
@@ -125,6 +130,12 @@ html,body{
   /* display: block; */
   /* width: 100%; */
   font-size: 120%;
+}
+
+.create_form_element{
+  margin-bottom: 28px;
+  margin-top: -10px;
+  /* background:yellow; */
 }
 
 .create_btn{

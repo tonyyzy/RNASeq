@@ -40,7 +40,6 @@ class Session(models.Model):
 
 
     identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-
     genome_index = models.CharField(max_length=200, choices=GENOME_CHOICES)
     select_genome = models.ForeignKey(Genome, on_delete=models.PROTECT, related_name='genome_fk', blank=True, null=True)
     organism = models.CharField(max_length=200, blank=True, null=True)
@@ -121,11 +120,21 @@ class Workflow(models.Model):
 
 
 class The_Debug(models.Model):
+
+    def get_upload_path(self, filename):
+        # return os.path.join(self.identifier.hex, filename)
+        # return os.path.join(str(self.identifier), filename) # version with dash
+        return os.path.join(settings.DATA_DIR, self.identifier.hex, filename)
+
     FIELD_THREE_CHOICES = (
         ("choice1", "choice1"),
         ("choice2", "choice2"),
         ("choice3", "choice3"),
     )
+    identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     field_one = models.CharField(max_length=200)
-    field_two = models.CharField(max_length=200)
-    field_three = models.CharField(max_length=200, choices=FIELD_THREE_CHOICES)
+    field_two = models.FileField(upload_to=get_upload_path, blank=False, null=False)
+    # field_three = models.CharField(max_length=200, choices=FIELD_THREE_CHOICES)
+
+# private_storage = FileSystemStorage(location=settings.PRIVATE_STORAGE_ROOT)
+# https://timonweb.com/posts/saving-file-field-uploads-not-in-media_root-directory/
