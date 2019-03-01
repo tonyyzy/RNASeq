@@ -71,8 +71,8 @@ if ("--s" %in% args){
 if ("--metadata" %in% args){
   metadata.idx <- grep("--e", args)
   metadata <- read.table(args[grep("--metadata", args)+1],header = TRUE, row.names = 1, sep=",")
-  if("libType" %in% colnames(metadata)){
-    libtype <- metadata$libType
+  if("libtype" %in% colnames(metadata)){
+    libtype <- metadata$libtype
   } else {
     stop("libtype must be a column in metadata")
   }
@@ -95,9 +95,9 @@ for(i in 1:length(files)){
   print(i)
   print(x)
   print(PairedEnd)
-  if(PairedEnd == "paired-end"){
+  if(PairedEnd == "PE"){
     PairedEnd <- TRUE
-  } else if(PairedEnd == "single"){
+  } else if(PairedEnd == "SG"){
     PairedEnd <- FALSE
   }
   if(exists("counts")){
