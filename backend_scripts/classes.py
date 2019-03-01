@@ -1,14 +1,12 @@
 import pandas as pd
-import yaml
-import time
-import threading
-import programs 
+import programs
 import copy
 from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 import os
 import csv
+import uuid
 
 class database_checker():
     def __init__(self, database_link):
@@ -23,6 +21,8 @@ class database_checker():
         for entry in session.query(RSession).filter(RSession.status == 1):
             print(entry.id)
             self.create_workflow(entry.id, root)
+            entry.status = 2
+        session.commit()
 
     def create_workflow(self, Session_ID, root):
         reader = database_reader(Session_ID)
@@ -89,8 +89,8 @@ class database_reader():
         # TODO change models, Condition column name should be condition
         if not os.path.exists(f"{root[:-6]}data/{self.identifier}"):
             os.makedirs(f"{root[:-6]}data/{self.identifier}")
-        query = session.query(Condition, Samples)\
-                        .filter(Samples.condition_id == Condition.id)\
+        query = session.session.query(Samples)\
+                        .join(Condition, Samples.condition_id == Condition.id)\
                         .filter(RSession.id == self.Session_ID)\
                         .with_entities(Condition.conditions, Samples.accession, Samples.libtype)
         df = pd.read_sql(query.statement, session.bind, index_col="accession")
