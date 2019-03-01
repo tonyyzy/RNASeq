@@ -11,7 +11,6 @@ test.py
 bootstrap-4.3.1-dist
 transcript_count_matrix.csv
 gene_count_matrix.csv
-test1d
 test3
 test_samtools_out
 test_workflow1_docker
@@ -29,5 +28,6 @@ hisat2_align
 hisat2_build
 test1
 test2
-.vscode/settings.json
 test.py
+test.yml
+test.cwl
