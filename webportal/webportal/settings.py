@@ -160,6 +160,7 @@ DATA_URL = '/data/'
 
 
 DATA_DIR = os.path.abspath(os.path.join(BASE_DIR, '../../Data'))
+GENOME_INDEX_DIR = os.path.abspath(os.path.join(BASE_DIR, '../../Genome_Index'))
 print(DATA_DIR)
 # may need to add files outside of the base_dire (which points to RNASEQ webportal to the base dir by above method)
 # currently still gives suspicious file Error

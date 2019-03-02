@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from analysis.models import Session, Workflow, Samples, Conditions, The_Debug, Genome
+from analysis.models import Session, Workflow, Samples, Condition, The_Debug, Genome
 from django.core.exceptions import ValidationError
 
 class SessionSearchForm(forms.Form):
@@ -46,11 +46,11 @@ class SessionSubmitForm(forms.ModelForm):
 
 class ConditionsForm(forms.ModelForm):
     class Meta:
-        model = Conditions
-        fields = ['conditions', 'no_replicates']
+        model = Condition
+        fields = ['condition', 'no_replicates']
         # fields='__all__'
         widgets={
-            'conditions': forms.TextInput(attrs={
+            'condition': forms.TextInput(attrs={
                 'class':'form-control',
                 'placeholder': 'enter condition here...'
                 }),

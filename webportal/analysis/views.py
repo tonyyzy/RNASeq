@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.urls import reverse, reverse_lazy
 from .forms import SessionSearchForm, SessionForm, SessionSubmitForm, WorkflowForm, SamplesForm, ConditionsForm, DebugForm, GenomeForm
-from analysis.models import Session, Workflow, Samples, Conditions, The_Debug
+from analysis.models import Session, Workflow, Samples, Condition, The_Debug
 from . import models
 from django.db.models import Q
 from django.contrib import messages
@@ -132,21 +132,21 @@ class SessionDeleteView(DeleteView):
     # success_url = reverse_lazy("analysis:session_list")
 
 
-# Conditions
+# Condition
 class ConditionsListView(ListView):
     # context_object_name = 'conditions'
-    model = models.Conditions
+    model = models.Condition
 
 
 class ConditionsDetailView(DetailView):
     context_object_name = 'conditions_detail'
-    model = models.Conditions
+    model = models.Condition
     template_name = 'analysis/conditions_detail.html'
 
 
 class ConditionsCreateView(CreateView):
     template_name = 'analysis/conditions_form.html'
-    # queryset = Conditions.objects.all()
+    # queryset = Condition.objects.all()
 
     def get(self, request, session_slug):
         form = ConditionsForm
@@ -170,7 +170,7 @@ class ConditionsUpdateView(UpdateView):
 
     def get_object(self):
         conditions_pk = self.kwargs.get('conditions_pk')
-        return get_object_or_404(Conditions, id=conditions_pk)
+        return get_object_or_404(Condition, id=conditions_pk)
 
     def form_valid(self, form):
         session_slug = self.kwargs.get('session_slug')
@@ -187,10 +187,10 @@ class ConditionsDeleteView(DeleteView):
     def get_object(self):
         # return HttpResponse('test')
         conditions_pk = self.kwargs.get('conditions_pk')
-        return get_object_or_404(Conditions, pk=conditions_pk)
+        return get_object_or_404(Condition, pk=conditions_pk)
 
     def post(self, request, session_slug, conditions_pk):
-        instance = get_object_or_404(Conditions, pk=conditions_pk)
+        instance = get_object_or_404(Condition, pk=conditions_pk)
         instance.delete()
         return redirect('analysis:session_detail', session_slug=session_slug)
 
@@ -215,13 +215,13 @@ class SamplesCreateView(CreateView):
         context = {'form':form}
 
         session_pk = Session.objects.get(identifier=session_slug).id
-        condition_obj = Conditions.objects.get(pk=conditions_pk)
-        row_condition = condition_obj.conditions
+        condition_obj = Condition.objects.get(pk=conditions_pk)
+        row_condition = condition_obj.condition
         print(f'\ncondition: {row_condition}\n')
         print(f'replicates: {condition_obj.no_replicates}')
-        row_condition_count = Samples.objects.filter(session_id=session_pk).filter(condition__conditions=row_condition).count()
+        row_condition_count = Samples.objects.filter(session_id=session_pk).filter(condition__condition=row_condition).count()
         if row_condition_count >= condition_obj.no_replicates:
-            messages.warning(request, f'Error: {condition_obj.no_replicates} {condition_obj.conditions} sample(s) already uploaded.')
+            messages.warning(request, f'Error: {condition_obj.no_replicates} {condition_obj.condition} sample(s) already uploaded.')
             return redirect('analysis:session_detail', session_slug=session_slug)
         return render(request, self.template_name, context)
 
@@ -232,7 +232,7 @@ class SamplesCreateView(CreateView):
             # print(bound_form.cleaned_data)
             bound_post = bound_form.save(commit=False)
             bound_post.session = Session.objects.get(identifier=session_slug)
-            bound_post.condition = Conditions.objects.get(pk=conditions_pk)
+            bound_post.condition = Condition.objects.get(pk=conditions_pk)
             bound_post.save()
             return redirect('analysis:session_detail', session_slug=session_slug)
         return render(request, self.template_name, {'form':form})
