@@ -82,7 +82,7 @@
                 <tr>
                   <!-- <td>{{ condition.pk }}</td> -->
                   <td class='td_conditions_counter'>{{forloop.counter}}</td>
-                  <td class="td_condition">{{ condition.conditions }}</td>
+                  <td class="td_condition">{{ condition.condition }}</td>
                   <td class="td_replicate">{{ condition.no_replicates }}</td>
                   <td><a class='btn btn-sm btn-success' href="{% url 'analysis:samples_create' session_slug=condition.session.identifier conditions_pk=condition.pk %}">Add Sample</a></td>
                   <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:conditions_update' session_slug=condition.session.identifier conditions_pk=condition.pk %}">Update</a></td>
@@ -111,7 +111,7 @@
             <th>Libtype</th>
             <th>Condition</th>
             <th style='width: 17%'>Read One</th>
-            <th>Read Two</th>
+              <th style='width: 17%'>Read Two</th>
             <th>Accession</th>
             <th>Update</th>
             <th>Delete</th>
@@ -125,6 +125,7 @@
               <td class="td_libtype">{{ sample.libtype }}</td>
               <td>{{ sample.condition }}</td>
               <td>{{ sample.read_1 }}</td>
+              <td>{{ sample.read_2 }}</td>
               {% if not sample.read_2 %}
                 <td>N/a</td>
               {% endif %}
