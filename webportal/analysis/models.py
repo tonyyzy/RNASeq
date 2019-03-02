@@ -6,6 +6,10 @@ from django.urls import reverse
 from django.core.files.storage import FileSystemStorage
 import os
 
+data_root = FileSystemStorage(location=settings.DATA_DIR)
+genome_index_root = FileSystemStorage(location=settings.GENOME_INDEX_DIR)
+
+
 class Genome(models.Model):
     organism = models.CharField(max_length=500)
     source = models.CharField(max_length=500)
@@ -17,36 +21,29 @@ class Genome(models.Model):
     salmon = models.CharField(max_length=500)
     hisat2 = models.CharField(max_length=500)
 
-
     def __str__(self):
         return self.organism
-
-#
-# def get_upload_path(instance, filename):
-#     return os.path.join(
-#       "user_%d" % instance.owner.id, "car_%s" % instance.slug, filename)
 
 
 class Session(models.Model):
 
-    def get_upload_path(self, filename):
-        return os.path.join(self.identifier.hex, filename)
-        # return os.path.join(settings.DATA_DIR, self.identifier.hex, filename)
+    def get_genome_path(self, filename):
+        return os.path.join(str(self.identifier), 'genome', filename) # version with dash
+        # return os.path.join(self.identifier.hex, filename) # version without dash
 
     GENOME_CHOICES = (
         ("pre_index", "Preindexed Genome"),
         ("user_provided", "Provide Own Index"),
     )
 
-
     identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     genome_index = models.CharField(max_length=200, choices=GENOME_CHOICES)
     select_genome = models.ForeignKey(Genome, on_delete=models.PROTECT, related_name='genome_fk', blank=True, null=True)
     organism = models.CharField(max_length=200, blank=True, null=True)
     salmon = models.BooleanField(blank=True, null=True)
-    fasta_dna_file = models.FileField(upload_to='data', blank=True, null=True)
-    fasta_cdna_file = models.FileField(upload_to='data', blank=True, null=True)
-    gtf_file = models.FileField(upload_to='data', blank=True, null=True)
+    fasta_dna_file = models.FileField(storage=data_root, upload_to=get_genome_path, blank=True, null=True)
+    fasta_cdna_file = models.FileField(storage=data_root, upload_to=get_genome_path, blank=True, null=True)
+    gtf_file = models.FileField(storage=data_root, upload_to=get_genome_path, blank=True, null=True)
     status = models.BooleanField(default=False, blank=True, null=True)
 
     def get_absolute_url(self): # provides a default if Session is called from views.py without a specified reverse or redirect
@@ -56,16 +53,16 @@ class Session(models.Model):
         return 'session' + str(self.pk)
 
 
-class Conditions(models.Model):
+class Condition(models.Model):
     session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='conditions_fk')
-    conditions = models.CharField(max_length=50, blank=False)
+    condition = models.CharField(max_length=50, blank=False)
     no_replicates = models.PositiveSmallIntegerField(blank=False, default=1)
 
     def get_absolute_url(self):
         return reverse('analysis:session_detail', kwargs={'pk':self.pk})
 
     def __str__(self):
-        return self.conditions
+        return self.condition
 
 
 class Samples(models.Model):
@@ -73,11 +70,16 @@ class Samples(models.Model):
         ("PE", "Paired_end"),
         ("SG", "Single")
     )
+
+    def get_fastq_path(self, filename):
+        return os.path.join(str(self.session.identifier), 'fastq', filename) # version with dash
+        # return os.path.join(self.identifier.hex, filename) # version without dash
+
     session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='samples_fk')
-    condition = models.ForeignKey(Conditions, on_delete=models.PROTECT)
+    condition = models.ForeignKey(Condition, on_delete=models.PROTECT)
     libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES, blank=False, null=False)
-    read_1 = models.FileField(upload_to='data/', blank=False, null=False)
-    read_2 = models.FileField(upload_to='data/', blank=True, null=True)
+    read_1 = models.FileField(storage=data_root, upload_to=get_fastq_path, blank=False, null=False)
+    read_2 = models.FileField(storage=data_root, upload_to=get_fastq_path, blank=True, null=True)
     accession = models.CharField(max_length=200, blank=False, null=False)
 
     def get_absolute_url(self):
@@ -119,12 +121,12 @@ class Workflow(models.Model):
         return reverse('analysis:session_detail', kwargs={'pk':self.pk})
 
 
+
 class The_Debug(models.Model):
 
     def get_upload_path(self, filename):
+        return os.path.join(str(self.identifier), filename) # version with dash
         # return os.path.join(self.identifier.hex, filename)
-        # return os.path.join(str(self.identifier), filename) # version with dash
-        return os.path.join(settings.DATA_DIR, self.identifier.hex, filename)
 
     FIELD_THREE_CHOICES = (
         ("choice1", "choice1"),
@@ -133,8 +135,5 @@ class The_Debug(models.Model):
     )
     identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     field_one = models.CharField(max_length=200)
-    field_two = models.FileField(upload_to=get_upload_path, blank=False, null=False)
-    # field_three = models.CharField(max_length=200, choices=FIELD_THREE_CHOICES)
-
-# private_storage = FileSystemStorage(location=settings.PRIVATE_STORAGE_ROOT)
-# https://timonweb.com/posts/saving-file-field-uploads-not-in-media_root-directory/
+    # field_two = models.CharField(max_length=200)
+    field_two = models.FileField(storage=data_root, upload_to=get_upload_path)
