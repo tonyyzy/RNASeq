@@ -31,7 +31,7 @@
               <table class="table mb-0">
                 <thead>
                   <tr>
-                    <th>index</th>
+                    <th>Index</th>
                     <th>Organism</th>
                     <th>Salmon</th>
                     <th>DNA Fasta</th>
@@ -52,11 +52,10 @@
                       <td>{{ session_detail.gtf_file }} {{ session_detail.select_genome.gtf_file }}</td>
                       <td><a id='id_conditions_create_btn' class='btn btn-sm btn-success' href="{% url 'analysis:conditions_create' session_slug=session_detail.identifier %}">Add Condition</a></td>
                       <td><a id='id_workflow_create_btn' class='btn btn-sm btn-success disabled' href="{% url 'analysis:workflow_create' session_slug=session_detail.identifier %}">Add Workflow</a></td>
-                      <th>{{session_detail.status}}</th>
+                      <td>{{session_detail.status}}</td>
                     </tr>
                 </tbody>
             </table>
-
             </div>
           </div>
         </div>
@@ -73,9 +72,9 @@
                 <th>Num</th>
                 <th>Condition</th>
                 <th>Replicates</th>
+                <th>Add Sample</th>
                 <th>Update</th>
                 <th>Delete</th>
-                <th>Add Sample</th>
               </tr>
             </thead>
             <tbody>
@@ -83,11 +82,11 @@
                 <tr>
                   <!-- <td>{{ condition.pk }}</td> -->
                   <td class='td_conditions_counter'>{{forloop.counter}}</td>
-                  <td class="td_condition">{{ condition.conditions }}</td>
+                  <td class="td_condition">{{ condition.condition }}</td>
                   <td class="td_replicate">{{ condition.no_replicates }}</td>
+                  <td><a class='btn btn-sm btn-success' href="{% url 'analysis:samples_create' session_slug=condition.session.identifier conditions_pk=condition.pk %}">Add Sample</a></td>
                   <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:conditions_update' session_slug=condition.session.identifier conditions_pk=condition.pk %}">Update</a></td>
                   <td><a class='btn btn-sm btn-danger' href="{% url 'analysis:conditions_delete' session_slug=condition.session.identifier conditions_pk=condition.pk %}">Delete</a></td>
-                  <td><a class='btn btn-sm btn-success' href="{% url 'analysis:samples_create' session_slug=condition.session.identifier conditions_pk=condition.pk %}">Add Sample</a></td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -112,7 +111,7 @@
             <th>Libtype</th>
             <th>Condition</th>
             <th style='width: 17%'>Read One</th>
-            <th>Read Two</th>
+              <th style='width: 17%'>Read Two</th>
             <th>Accession</th>
             <th>Update</th>
             <th>Delete</th>
@@ -126,6 +125,7 @@
               <td class="td_libtype">{{ sample.libtype }}</td>
               <td>{{ sample.condition }}</td>
               <td>{{ sample.read_1 }}</td>
+              <td>{{ sample.read_2 }}</td>
               {% if not sample.read_2 %}
                 <td>N/a</td>
               {% endif %}

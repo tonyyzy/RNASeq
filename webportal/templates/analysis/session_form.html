@@ -16,41 +16,51 @@
             <form method="POST"  enctype="multipart/form-data" class="create_form">
               {% csrf_token %}
               <!-- {{form|crispy}} -->
-
               <div class="form_title">
                 <h4>NEW SESSION</h4>
               </div>
               <hr class="my-4">
-              <div id='id_genome_index'>
-                <label for="">{{form.genome_index.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Use our pre-index organisms or upload your own files.">&#9432;</a>
+
+              <div id='id_genome_index' class='create_form_element'>
+              <label for="">{{form.genome_index.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Use our pre-index organisms or upload your own files.">&#9432;</a>
                 {{form.genome_index}}
-              </div><br>
-              <div id='id_select_genome'>
-                <label for="">{{form.select_genome.label_tag}}</label>
-                {{form.select_genome}}
-              </div><br>
-              <div id='id_organism'>
-                <label for="">{{form.organism.label_tag}}</label>
-                {{form.organism}}
-              </div><br>
-              <div id='id_salmon'>
-                <label for="">{{form.salmon.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Will you be using salmon in your down stream analysis?">&#9432;</a>
-                {{form.salmon}}
-              </div><br>
-              <div id='id_fasta_dna_file'>
-                <label for="">{{form.fasta_dna_file.label_tag}}</label><br>
-                {{form.fasta_dna_file}}
-              </div><br>
-              <div id='id_fasta_cdna_file'>
-                <label for="">{{form.fasta_cdna_file.label_tag}}</label><br>
-                {{form.fasta_cdna_file}}
-              </div><br>
-              <div id='id_gtf_file'>
-                <label for="">{{form.gtf_file.label_tag}}</label><br>
-                {{form.gtf_file}}
               </div>
 
-              <br>
+              <div id='id_select_genome' class='create_form_element'>
+              <label for="">{{form.select_genome.label_tag}}</label>
+                {{form.select_genome}}
+              </div>
+
+              <div id='id_organism' class='create_form_element'>
+              <label for="">{{form.organism.label_tag}}</label>
+                {{form.organism}}
+              </div>
+
+              <div id='id_salmon' class='create_form_element'>
+              <label for="">{{form.salmon.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Will you be using salmon in your down stream analysis?">&#9432;</a>
+                {{form.salmon}}
+              </div>
+
+              <div id='id_fasta_dna_file'>
+                <label for="">{{form.fasta_dna_file.label_tag}}</label>
+                <div class='create_form_element'>
+                  {{form.fasta_dna_file}}
+                </div>
+              </div>
+
+              <div id='id_fasta_cdna_file'>
+                <label for="">{{form.fasta_cdna_file.label_tag}}</label>
+                <div class='create_form_element'>
+                  {{form.fasta_cdna_file}}
+                </div>
+              </div>
+
+              <div id='id_gtf_file'>
+                <label for="">{{form.gtf_file.label_tag}}</label>
+                <div class='create_form_element'>
+                  {{form.gtf_file}}
+                </div>
+              </div>
               <input type="submit" class='create_btn' value="Submit">
             </form>
         </div>
