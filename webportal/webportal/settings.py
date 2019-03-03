@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     #local
     'analysis',
     'users',
+    'visualization',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -162,10 +163,3 @@ DATA_URL = '/data/'
 DATA_DIR = os.path.abspath(os.path.join(BASE_DIR, '../../Data'))
 GENOME_INDEX_DIR = os.path.abspath(os.path.join(BASE_DIR, '../../Genome_Index'))
 print(DATA_DIR)
-# may need to add files outside of the base_dire (which points to RNASEQ webportal to the base dir by above method)
-# currently still gives suspicious file Error
-# possible this is fixable by saving this file name from the view
-
-# alternative would be to save data within tmp directory and then move to Data directory
-# this would have added advantage of allowing saveing of model to db which would be we could
-# construct the Data dir using sesison_id rather than uuid.hex field.
