@@ -5,7 +5,8 @@ class: CommandLineTool
 baseCommand: mkdir
 
 requirements:
-    ShellCommandRequirement: {}
+    - class: ShellCommandRequirement
+    - class: InlineJavascriptRequirement
 
 hints:
     DockerRequirement:
@@ -17,6 +18,18 @@ arguments:
    - position: -3
      prefix: "&&"
      valueFrom: "cuffdiff"
+     shellQuote: false
+   - prefix: "&&"
+     position: 14
+     valueFrom: $("sed -i '1s/log2(fold_change)/log2foldchage/' "+ inputs.output +"/gene_exp.diff")
+     shellQuote: false
+   - prefix: "&&"
+     position: 15
+     valueFrom: $("sed -i '1s/q_value/p_adj/' "+ inputs.output +"/gene_exp.diff")
+     shellQuote: false
+   - prefix: "&&"
+     position: 16
+     valueFrom: $("sed -i '1s/gene/name/' " + inputs.output +"/gene_exp.diff")
      shellQuote: false
 
 inputs:
