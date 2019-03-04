@@ -1,0 +1,5 @@
+name,condition,libtype
+normal1,0,paired
+normal2,0,paired
+tumour1,1,paired
+tumour2,1,paired
