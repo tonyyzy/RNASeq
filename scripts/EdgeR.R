@@ -42,6 +42,8 @@ for(i in 1:ncol(comb)){
   DGE$samples$group <- group
   
   DGE <- calcNormFactors(DGE, method = "TMM")
+
+  norm_count <- cpm(DGE)
   
   design <- model.matrix(~0+group)
   contrast <- gsub(".$","",paste0(paste0("group", unique(group)),sep="-", collapse = ""))
@@ -58,3 +60,6 @@ for(i in 1:ncol(comb)){
   colnames(dge.res) <- c("name","norm_basemean", "log2foldchage", "test_stat", "p_value","p_adj")
   write.csv(dge.res, paste0(contrast,"_","DGE_res.csv"), row.names = FALSE)
 }
+
+norm_count2 <- data.frame("name"=rownames(norm_count),as.data.frame(norm_count))
+write.csv(norm_count, "norm_count.csv", row.names = FALSE)

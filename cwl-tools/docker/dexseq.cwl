@@ -34,7 +34,11 @@ inputs:
         prefix: --threads
 
 outputs:
-   output:
+   DEE_out:
       type: File
       outputBinding:
          glob: "DEE_results.csv"
+   norm_out:
+      type: File
+      outputBinding:
+         glob: "norm_count.csv"

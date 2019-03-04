@@ -35,9 +35,6 @@ if( "--condition" %in% args ){
 } else {
   stop("please provide a valid condition with prefix '--conditions'")
 }
-
-print(data_dir)
-print(list.files(paste0(data_dir, "/normal1")))
 sample_full_path <- paste(data_dir, metadata[,1], sep = "/")
 bg <- ballgown(samples = as.vector(sample_full_path), pData = metadata)
 

@@ -30,7 +30,11 @@ inputs:
      position: 4
      prefix: --threads
 outputs:
-  DESeq2_out:
+  DGE_out:
    type: File[]
    outputBinding:
     glob: "*DGE_results.csv"
+  norm_out:
+   type: File
+   outputBinding:
+    glob: "norm_count.csv"

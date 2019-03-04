@@ -299,12 +299,14 @@ steps:
       counts_matrix: htseq_count_folder/out
       gff: htseq_prepare_folder/out
       metadata: metadata
-    out: [output]
+    out: [DEE_out,norm_out]
 
   dexseq_folder:
     run: ../../cwl-tools/folder.cwl
     in:
-      item: dexseq/output
+      item: 
+      - dexseq/DEE_out
+      - dexseq/norm_out
       name:
         valueFrom: "DEXSeq"
     out: [out]
@@ -393,12 +395,14 @@ steps:
       input_script: DESeq2_script
       count_matrix: prepDE/gene_count_output
       metadata: metadata
-    out: [DESeq2_out]
+    out: [DGE_out, norm_out]
 
   DESeq2_folder:
     run: ../../cwl-tools/folder.cwl
     in:
-      item: DESeq2/DESeq2_out
+      item: 
+      - DESeq2/DGE_out
+      - DESeq2/norm_out
       name:
         valueFrom: "DESeq2"
     out: [out]

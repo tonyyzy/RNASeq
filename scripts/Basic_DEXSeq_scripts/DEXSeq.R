@@ -44,9 +44,13 @@ if("--threads" %in% args){
   dxd = estimateExonFoldChanges(dxd, fitExpToVar="condition")
 }
 
+dxd_norm <- counts(dxd,normalized=T)
+
 # create a results object
 dxr = DEXSeqResults( dxd )
 
 dxr_dataframe = as.data.frame(dxr)
 
 write.csv(dxr_dataframe, "DEE_results.csv")
+dxd_norm2 <- data.frame("name"=rownames(dxd_norm),as.data.frame(dxd_norm))
+write.csv(dxd_norm2, "norm_count.csv", row.names = FALSE)
