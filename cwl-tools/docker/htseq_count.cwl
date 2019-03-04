@@ -48,7 +48,7 @@ inputs:
 
 
 outputs:
-   output:
+   exon_count_output:
       type: File
       outputBinding:
          glob: "*"

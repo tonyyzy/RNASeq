@@ -283,7 +283,7 @@ steps:
       outname:
         source: [subject_name1]
         valueFrom: $(self + "_htseq_count.csv")
-    out: [output]
+    out: [exon_count_output]
 
 
   htseq_count_2:
@@ -303,7 +303,7 @@ steps:
       outname:
         source: [subject_name2]
         valueFrom: $(self + "_htseq_count.csv")
-    out: [output]
+    out: [exon_count_output]
 
   htseq_count_3:
     run: ../../cwl-tools/docker/htseq_count.cwl
@@ -322,7 +322,7 @@ steps:
       outname:
         source: [subject_name3]
         valueFrom: $(self + "_htseq_count.csv")
-    out: [output]
+    out: [exon_count_output]
 
   htseq_count_4:
     run: ../../cwl-tools/docker/htseq_count.cwl
@@ -341,16 +341,16 @@ steps:
       outname:
         source: [subject_name4]
         valueFrom: $(self + "_htseq_count.csv")
-    out: [output]
+    out: [exon_count_output]
 
   htseq_count_folder:
     run: ../../cwl-tools/folder.cwl
     in:
       item:
-      - htseq_count_1/output
-      - htseq_count_2/output
-      - htseq_count_3/output
-      - htseq_count_4/output
+      - htseq_count_1/exon_count_output
+      - htseq_count_2/exon_count_output
+      - htseq_count_3/exon_count_output
+      - htseq_count_4/exon_count_output
       name:
         valueFrom: "htseq_count"
     out: [out]
