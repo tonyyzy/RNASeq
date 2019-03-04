@@ -119,14 +119,12 @@ steps:
       input_script: DESeq2_script
       count_matrix: salmon_count/gene_count_output
       metadata: metadata
-    out: [DGE_out, norm_out]
+    out: [DESeq2_out]
 
   DESeq2_folder:
     run: ../../cwl-tools/folder.cwl
     in:
-      item: 
-      - DESeq2/DGE_out
-      - DESeq2/norm_out
+      item: DESeq2/DESeq2_out
       name:
         valueFrom: "DESeq2"
     out: [out]

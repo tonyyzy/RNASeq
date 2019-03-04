@@ -168,14 +168,12 @@ steps:
       input_script: EdgeR_script
       count_matrix: featurecounts/gene_count_output
       metadata: metadata
-    out: [DGE_out, norm_out]
+    out: [output]
 
   edger_folder:
     run: ../../cwl-tools/folder.cwl
     in:
-      item: 
-      - edger/DGE_out
-      - edger/norm_out
+      item: edger/output
       name:
         valueFrom: "edger"
     out: [out]

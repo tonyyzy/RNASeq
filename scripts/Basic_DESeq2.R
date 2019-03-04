@@ -37,4 +37,4 @@ for(i in 1:ncol(comb)){
 }
 
 norm_count2 <- data.frame("name"=rownames(norm_count),as.data.frame(norm_count))
-write.csv(norm_count, "norm_count.csv", row.names = FALSE)
+write.csv(norm_count2, "norm_count.csv", row.names = FALSE)

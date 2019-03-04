@@ -288,14 +288,12 @@ steps:
       counts_matrix: htseq_count_folder/out
       gff: htseq_prepare_folder/out
       metadata: metadata
-    out: [DEE_out,norm_out]
+    out: [output]
 
   dexseq_folder:
     run: ../../cwl-tools/folder.cwl
     in:
-      item: 
-      - dexseq/DEE_out
-      - dexseq/norm_out
+      item: dexseq/output
       name:
         valueFrom: "DEXSeq"
     out: [out]

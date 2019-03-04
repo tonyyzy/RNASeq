@@ -29,11 +29,7 @@ inputs:
             prefix: --metadata
 
 outputs:
-    DGE_out:
+    output:
       type: File[]
       outputBinding:
-        glob: "*DGE_res.csv"
-    norm_out:
-      type: File
-      outputBinding:
-        glob: "norm_count.csv"
+        glob: "*.csv"
