@@ -36,7 +36,6 @@ class SessionForm(forms.ModelForm):
 }
 
 
-
 class SessionSubmitForm(forms.ModelForm):
 
     class Meta:
@@ -72,6 +71,11 @@ class WorkflowForm(forms.ModelForm):
         model = Workflow
         fields = ['mapper', 'assembler', 'analysis', 'status']
         # fields='__all__'
+        widgets={
+            'salmon': forms.SelectMultiple(attrs={
+                'class':'form-control',
+                }),
+}
 
 
 

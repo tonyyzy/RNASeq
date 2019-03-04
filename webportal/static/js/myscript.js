@@ -55,42 +55,6 @@ if ($('#div_id_libtype option:selected').val() == 'user_provided'){ // executes 
 }
 
 
-// SESSION DETAIL JAVASCRIPT
-$( document ).ready(function() {
-  // alert('loaded')
-  var user_url = window.location.pathname
-  if (user_url.includes('session_detail')){ // executes if session_detail page loaded
-    console.log('session detail javascript active')
-    $('#id_workflow_create_btn')
-    // $('#id_SessionSubmitForm').hide()
-    if($('.td_index').length){
-      // alert('show samples');
-      $('#session_upload').show()
-    }
-    if($('.td_conditions_counter').length){
-      console.log('condition added')
-      // $('#id_conditions_create_btn').prop('disabled', true);
-      // $('#id_workflow_create_btn').removeClass('disabled')
-    }
-    if($('.td_samples_counter').length){
-      console.log('samples added');
-      // $('#id_conditions_create_btn').prop('disabled', true);
-      $('#id_workflow_create_btn').removeClass('disabled')
-    }
-    if($('.td_workflow_counter').length){
-      console.log('workflow added')
-      // alert('workflow data populated');
-      // $('#id_conditions_create_btn').prop('disabled', true);
-      $('#id_SessionSubmitForm').removeClass('myHidden')
-    }
-  }
-});
-
-$('#id_workflow_create_btn').mouseover(function() {
-    // console.log('hi')
-  })
-
-
 // SAMPLES CREATE JAVASCRIPT
 $( document ).ready(function() {
   var user_url = window.location.pathname
@@ -114,14 +78,6 @@ $( document ).ready(function() {
   }
 });
 
-function validateLibrary(){
-  if ($('#div_id_libtype option:selected').val() == 'PE'){ // executes if PE selected from dropdown
-    if ($('#id_read_2').val() == ''){ // checks if read_2 file upload is empty
-      $('#validate_library').show()
-      return false;
-    }
-  }
-}
 
 
 // SAMPLES UPDATE JAVASCRIPT

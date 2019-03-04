@@ -272,3 +272,11 @@ html,body{
   cursor: pointer;
 
 }
+
+.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    margin-top: 10px;
+    margin-bottom: 17px:
+}
