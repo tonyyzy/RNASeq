@@ -92,7 +92,7 @@ steps:
       name:
         valueFrom: "salmon_quant"
     out: [out]
-  
+
   salmon_count:
     run: ../../cwl-tools/docker/salmon_count.cwl
     in:
@@ -100,15 +100,15 @@ steps:
       gtf: annotation
       metadata: metadata
       quant_results: salmon_quant_folder/out
-    out: [count, length, abundance]
+    out: [gene_count_output, gene_length_output, gene_abundance_output]
 
   salmon_count_folder:
     run: ../../cwl-tools/folder.cwl
     in:
       item:
-      - salmon_count/count
-      - salmon_count/length
-      - salmon_count/abundance
+      - salmon_count/gene_count_output
+      - salmon_count/gene_length_output
+      - salmon_count/gene_abundance_output
       name:
         valueFrom: "salmon_count"
     out: [out]
@@ -117,10 +117,10 @@ steps:
     run: ../../cwl-tools/docker/DESeq2.cwl
     in:
       input_script: DESeq2_script
-      count_matrix: salmon_count/count
+      count_matrix: salmon_count/gene_count_output
       metadata: metadata
     out: [DESeq2_out]
-  
+
   DESeq2_folder:
     run: ../../cwl-tools/folder.cwl
     in:

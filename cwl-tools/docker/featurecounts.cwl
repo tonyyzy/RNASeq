@@ -77,7 +77,7 @@ inputs:
       prefix: --metadata
 
 outputs:
-  output:
+  gene_count_output:
     type: File
     outputBinding:
       glob: "gene_count_matrix.csv"

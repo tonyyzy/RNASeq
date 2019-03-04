@@ -99,7 +99,7 @@ steps:
       name:
         valueFrom: "star"
     out: [out]
-  
+
 
 # Samtools
   samtools_1:
@@ -210,7 +210,7 @@ steps:
       name:
         valueFrom: "stringtie"
     out: [out]
-  
+
   prepDE:
     run: ../../cwl-tools/docker/prepDE.cwl
     in:
@@ -220,15 +220,15 @@ steps:
       - stringtie_2/stringtie_out
       - stringtie_3/stringtie_out
       - stringtie_4/stringtie_out
-    out: [gene_output, transcript_output]
-  
+    out: [gene_count_output, transcript_count_output]
+
   prepDE_folder:
     run: ../../cwl-tools/folder.cwl
     in:
       item:
-      - prepDE/gene_output
-      - prepDE/transcript_output
-      name: 
+      - prepDE/gene_count_output
+      - prepDE/transcript_count_output
+      name:
         valueFrom: "prepDE"
     out: [out]
 
@@ -236,10 +236,10 @@ steps:
     run: ../../cwl-tools/docker/DESeq2.cwl
     in:
       script: DESeq2_script
-      count_matrix: prepDE/gene_output
+      count_matrix: prepDE/gene_count_output
       metadata: metadata
     out: [DESeq2_out]
-  
+
   DESeq2_folder:
     run: ../../cwl-tools/folder.cwl
     in:
@@ -257,7 +257,7 @@ steps:
         source: [annotation]
         valueFrom: $(self.nameroot + ".gff")
     out: [output]
-  
+
   htseq_prepare_folder:
     run: ../../cwl-tools/folder.cwl
     in:
@@ -323,7 +323,7 @@ steps:
         source: [subject_name3]
         valueFrom: $(self + "_htseq_count.csv")
     out: [output]
-  
+
   htseq_count_4:
     run: ../../cwl-tools/docker/htseq_count.cwl
     in:
@@ -363,7 +363,7 @@ steps:
       gff: htseq_prepare_folder/out
       metadata: metadata
     out: [output]
-  
+
   dexseq_folder:
     run: ../../cwl-tools/folder.cwl
     in:

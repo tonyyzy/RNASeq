@@ -69,11 +69,11 @@ inputs:
 # if clutering genes that overlap with different gene IDs use "cluster", "cluster_prefix" and "transcript_2_gene_if_clustering" parameters.
 
 outputs:
-  gene_output:
+  gene_count_output:
     type: File
     outputBinding:
       glob: "*gene_count_matrix*"
-  transcript_output:
+  transcript_count_output:
     type: File
     outputBinding:
       glob: "*transcript_count_matrix*"

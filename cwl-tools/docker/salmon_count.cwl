@@ -29,15 +29,15 @@ inputs:
          prefix: --salmon_dir
 
 outputs:
-   count:
+   gene_count_output:
       type: File
       outputBinding:
          glob: "*gene_count_matrix*"
-   length:
+   gene_length_output:
       type: File
       outputBinding:
          glob: "*gene_length_matrix*"
-   abundance:
+   gene_abundance_output:
       type: File
       outputBinding:
          glob: "*gene_abundance_matrix*"

@@ -152,12 +152,12 @@ steps:
       gtf: annotation
       threads: threads
       metadata: metadata
-    out: [output]
+    out: [gene_count_output]
 
   featurecounts_folder:
     run: ../../cwl-tools/folder.cwl
     in:
-      item: featurecounts/output
+      item: featurecounts/gene_count_output
       name:
         valueFrom: "featurecounts"
     out: [out]
@@ -166,8 +166,8 @@ steps:
     run: ../../cwl-tools/docker/edger.cwl
     in:
       input_script: EdgeR_script
-      count_matrix: featurecounts/output
-      metadata: metadata 
+      count_matrix: featurecounts/gene_count_output
+      metadata: metadata
     out: [output]
 
   edger_folder:
