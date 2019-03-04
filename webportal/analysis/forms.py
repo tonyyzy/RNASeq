@@ -17,13 +17,13 @@ class SessionForm(forms.ModelForm):
 
     class Meta:
         model = Session
-        fields = ['genome_index','select_genome','organism', 'salmon', 'fasta_dna_file', 'fasta_cdna_file', 'gtf_file', 'status']
+        fields = ['genome_index','genome','organism', 'salmon', 'fasta_dna_file', 'fasta_cdna_file', 'gtf_file', 'status']
         # fields='__all__'
         widgets={
             'genome_index': forms.Select(attrs={
                 'class':'form-control',
                 }),
-            'select_genome': forms.Select(attrs={
+            'genome': forms.Select(attrs={
                 'class':'form-control',
                 }),
             'organism': forms.TextInput(attrs={

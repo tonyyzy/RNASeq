@@ -125,7 +125,9 @@
               <td class="td_libtype">{{ sample.libtype }}</td>
               <td>{{ sample.condition }}</td>
               <td>{{ sample.read_1 }}</td>
-              <td>{{ sample.read_2 }}</td>
+              {% if sample.read_2 %}
+                <td>{{ sample.read_2 }}</td>
+              {% endif %}
               {% if not sample.read_2 %}
                 <td>N/a</td>
               {% endif %}
