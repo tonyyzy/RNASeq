@@ -1,13 +1,18 @@
 from configparser import ConfigParser
-import classes
 import os
 import sys
+import logging
+import classes
 
-config = ConfigParser()
-print(os.getcwd())
-os.chdir(os.path.join(os.path.dirname(__file__), '..' ))
-print(os.getcwd())
-config.read("../config.ini")
-print(config.get("main", "database"))
-test = classes.database_checker(config.get("main", "database"))
-test.check_and_run(config.get("main", "root"))
+if __name__ == "__main__":
+	# change current working directory to project root
+	root = os.path.realpath(os.path.join(os.path.dirname(__file__), '../..' ))
+	os.chdir(root)
+
+	# read config file
+	config = ConfigParser()
+	config.read("config.ini")
+	database = config.get("main", "database")
+
+	# test = classes.database_checker(database)
+	# test.check_and_run(root)
