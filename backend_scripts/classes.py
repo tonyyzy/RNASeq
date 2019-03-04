@@ -22,19 +22,20 @@ class database_checker():
         for entry in session.query(RSession).filter(RSession.status == 1):
             print(entry.id)
             self.create_workflow(entry.id, root)
-            entry.status = 2
+            entry.status = 1
         session.commit()
 
     def create_workflow(self, Session_ID, root):
         reader = database_reader(Session_ID)
         reader.extract_from_database(self.Database, root)
-        logic = logic_builder()
+        logic = logic_builder(root)
         logic.create_workflow_logic(reader)
         writer = programs.cwl_writer(reader, root)
         writer.write_workflow(logic)
 
 
 class database_reader():
+    Index = []
     Mapper = []
     Assembler = []
     Analysis = []
@@ -65,7 +66,7 @@ class database_reader():
             self.Mapper.append(entry.mapper.lower())
             self.Assembler.append(entry.assembler.lower())
             self.Analysis.append(entry.analysis.lower())
-            print(self.Index, self.Mapper, self.Assembler, self.Analysis)
+            print(self.Mapper, self.Assembler, self.Analysis)
         
         # extract file path from Genome table
         for s,g in session.query(RSession, Genome)\
@@ -114,12 +115,12 @@ class logic_builder():
 
     Workflow_index = []
     workflow = []
-    def __init__(self):
-        self.programs_index = pd.read_csv("./backend_scripts/logic/programs_index.csv")
-        self.programs_connections = pd.read_csv("./backend_scripts/logic/programs_connections.csv")
+    def __init__(self, root):
+        self.programs_index = pd.read_csv(f"{root}/RNASeq/backend_scripts/logic/programs_index.csv")
+        self.programs_connections = pd.read_csv(f"{root}/RNASeq/backend_scripts/logic/programs_connections.csv")
         self.num_to_prog = {}
         self.prog_to_num = {}
-        with open("./backend_scripts/logic/programs_index.csv") as index_file:
+        with open(f"{root}/RNASeq/backend_scripts/logic/programs_index.csv") as index_file:
             for line in index_file.readlines()[1:]:
                 num, prog = line.strip().split(",")
                 self.num_to_prog[num] = prog

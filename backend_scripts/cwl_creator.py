@@ -14,5 +14,5 @@ if __name__ == "__main__":
 	config.read("config.ini")
 	database = config.get("main", "database")
 
-	# test = classes.database_checker(database)
-	# test.check_and_run(root)
+	test = classes.database_checker(database)
+	test.check_and_run(root)

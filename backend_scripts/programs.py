@@ -45,6 +45,7 @@ class cwl_writer():
         self.num = len(self.input_files) # total number of inputs
         self.conf["annotation"] = database_reader_object.Annotation_file
         self.conf["root"] = root
+        self.conf["fasta"] = self.reader.Genome_file
         self.conditions = {}
         self.cwl_input["metadata"] = {
             "class": "File",
@@ -186,8 +187,10 @@ class cwl_writer():
         }
 
 
-    def salmon(self):
-        # salmon_quant
+    def salmonquant(self):
+        print(self.previous_name)
+        print(self.name)
+        # salmonquant
         # workflow section
         # inputs
         self.cwl_workflow["inputs"]["salmon_index"] = "Directory"
@@ -197,18 +200,18 @@ class cwl_writer():
         }
 
         # outputs
-        self.cwl_workflow["outputs"]["salmon_quant_out"] = {
+        self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
-            "outputSource": "salmon_quant_folder/out"
+            "outputSource": f"{self.name}_folder/out"
         }
         # steps
         for index, name in enumerate(self.file_names):
-            if self.input_files[name]["type"] is "pairedend":
-                self.cwl_workflow["steps"][f"salmon_quant_{index+1}"] = {
+            if self.input_files[name]["type"] == "PE":
+                self.cwl_workflow["steps"][f"{self.name}_{index+1}"] = {
                     "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/salmon_quant.cwl",
                     "in": {
-                        "cores" : "threads",
-                        "index" : "salmon_index",
+                        "threads" : "threads",
+                        "index_directory" : "salmon_index",
                         "first_end_fastq": {
                             "source": f"fastq{index+1}",
                             "valueFrom": "$(self[0])"
@@ -217,68 +220,72 @@ class cwl_writer():
                             "source": f"fastq{index+1}",
                             "valueFrom": "$(self[1])"
                         },
-                        "out_dir": f"subject_name{index+1}"
+                        "output": f"subject_name{index+1}"
                     },
                     "out": ["output"]
                 }
-            elif self.input_files[name]["type"] is "single":
-                self.cwl_workflow["steps"][f"salmon_quant_{index+1}"] = {
+            elif self.input_files[name]["type"] == "SG":
+                self.cwl_workflow["steps"][f"{self.name}_{index+1}"] = {
                     "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/salmon_quant.cwl",
                     "in": {
-                        "cores" : "threads",
-                        "index" : "salmon_index",
+                        "threads" : "threads",
+                        "index_directory" : "salmon_index",
                         "single_fastq" : f"fastq{index+1}",
-                        "out_dir": f"subject_name{index+1}"
+                        "output": f"subject_name{index+1}"
                     },
                     "out": ["output"]
                 }
         # foldering
-        self.cwl_workflow["steps"]["salmon_quant_folder"] = {
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
             "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
             "in": {
-                "item": [f"salmon_quant_{i+1}/output"
+                "item": [f"{self.name}_{i+1}/output"
                             for i in range(self.num)],
-                "name": {"valueFrom": "salmon_quant"}
-            }
+                "name": {"valueFrom": "salmonquant"}
+            },
+            "out": ["out"]
         }
 
+
+    def salmoncount(self):
+        print(self.previous_name)
+        print(self.name)
         # salmon_count
         # workflow section
         # inputs
         self.cwl_workflow["inputs"]["salmon_count_script"] = "File"
+        self.cwl_input["salmon_count_script"] = {
+            "class": "File",
+            "path": f"{self.conf['root']}/RNASeq/scripts/salmon_R_script.R"
+        }
         # outputs
-        self.cwl_workflow["outputs"]["salmon_count_out"] = {
+        self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
-            "outputSource": "salmon_count_folder/out"
+            "outputSource": f"{self.name}_folder/out"
         }
         # steps
-        self.cwl_workflow["steps"]["salmon_count"] = {
+        self.cwl_workflow["steps"][self.name] = {
             "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/salmon_count.cwl",
             "in": {
                 "input_script": "salmon_count_script",
                 "gtf": "annotation",
                 "metadata": "metadata",
-                "salmon_dir": "salmon_quant_folder/out"
+                "quant_results": f"{self.previous_name}_folder/out"
             },
             "out": ["count", "length", "abundance"]
         }
         # foldering
-        self.cwl_workflow["steps"]["salmon_count_folder"] = {
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
             "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
             "in": {
                 "item": [
-                    "salmon_count/count",
-                    "salmon_count/length",
-                    "salmon_count/abundance"
+                    f"{self.name}/count",
+                    f"{self.name}/length",
+                    f"{self.name}/abundance"
                 ],
-                "name": {"valueFrom": "salmon_count"}
-            }
-        }
-
-        # yml section
-        self.cwl_input["salmon_count_script"] = {
-            "class": "File",
-            "path": f"{self.conf['root']}/RNASeq/scripts/salmon_R_script.R"
+                "name": {"valueFrom": self.name}
+            },
+            "out": ["out"]
         }
 
 
@@ -492,7 +499,7 @@ class cwl_writer():
         }
 
 
-    def featurecount(self):
+    def featurecounts(self):
         # inputs
         self.cwl_workflow["inputs"]["featurecounts_script"] = "File"
         # outputs
@@ -515,7 +522,7 @@ class cwl_writer():
 
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl/cwl-tools/folder.cwl",
+            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
             "in": {
                 "item": f"{self.name}/output",
                 "name": {"valueFrom": self.name}
@@ -547,7 +554,7 @@ class cwl_writer():
             "in": {
                 "input_script": "DESeq2_script",
                 # TODO need to standardise prepDE, salmon_count outputs
-                "count_matrix": f"{self.previous_name}/gene_output",
+                "count_matrix": f"{self.previous_name}/count",
                 "metadata": "metadata"
             },
             "out": ["DESeq2_out"]
@@ -700,14 +707,14 @@ class cwl_writer():
                 "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/tablemaker.cwl",
                 "in": {
                     "threads": "threads",
-                    "merged_gtf": f"{cuffmerge}_cuffmerge_{index+1}/merged_gtf",
+                    "merged_gtf": f"{cuffmerge}_cuffmerge/merged_gtf",
                     "bam": f"{bam}_{index+1}/samtools_out",
                     "output": {
                         "source": [f"subject_name{index+1}"],
                         "valueFrom": "$(self)"
                     },
+                },
                 "out": ["tablemaker_out"]
-                }
             }
         
         # foldering
@@ -895,17 +902,20 @@ class cwl_writer():
             self.prev = self.previous_name.split("_")[-1]
             getattr(cwl_writer, step.split("_")[-1])(self)
         
-        with open(self.conf["root"][:-6] + f"Data/{self.reader.identifier}/workflow.cwl", "w+") as outfile:
+        with open(self.conf["root"] + f"/Data/{self.reader.identifier}/workflow.cwl", "w+") as outfile:
             outfile.write("#!/usr/bin/env cwl-runner\n\n")
             yaml.dump(self.cwl_workflow, outfile, default_flow_style=False)
-        with open(self.conf["root"][:-6] + f"Data/{self.reader.identifier}/input.yml", "w+") as outfile:
+        with open(self.conf["root"] + f"/Data/{self.reader.identifier}/input.yml", "w+") as outfile:
             yaml.dump(self.cwl_input, outfile, default_flow_style=False)
-        workflow_log = open(f"{self.conf['root'][:-6]}Data/{self.reader.identifier}/workflow.log", "w")
-        proc = subprocess.Popen(["cwl-runner",
-                    f"--outdir={self.conf['root'][:-6]}Data/{self.reader.identifier}/output",
-                    "--timestamp",
-                    f"{self.conf['root'][:-6]}Data/{self.reader.identifier}/workflow.cwl",
-                    f"{self.conf['root'][:-6]}Data/{self.reader.identifier}/input.yml"],
-                    stdout=workflow_log, stderr=workflow_log)
-        print(proc.args)
-        print(proc.pid)
+        workflow_log = open(f"{self.conf['root']}/Data/{self.reader.identifier}/workflow.log", "w")
+        print("Submit workflow")
+        # proc = subprocess.Popen(["cwl-runner",
+        #             f"--outdir={self.conf['root']}/Data/{self.reader.identifier}/output",
+        #             "--timestamp",
+        #             "--validate",
+        #             f"{self.conf['root']}/Data/{self.reader.identifier}/workflow.cwl",
+        #             f"{self.conf['root']}/Data/{self.reader.identifier}/input.yml"],
+        #             stdout=workflow_log, stderr=workflow_log)
+        # print(proc.args)
+        # print(proc.pid)
+        workflow_log.close()

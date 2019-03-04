@@ -95,7 +95,7 @@ class Workflow(models.Model):
     MAPPER_CHOICES = (
         ("star", "STARAligner"),
         ("hisat2", "HISAT2"),
-        ('salmon', 'SALMON'),
+        ('salmonquant', 'SALMON'),
     )
     ASSEMLBER_CHOICES = (
         ("stringtie", "STRINGTIE"),
@@ -103,12 +103,16 @@ class Workflow(models.Model):
         ('miso', 'MISO'),
         ('htseq', 'HTSEQ'),
         ('featurecounts', 'FEATURECOUNTS'),
+        ('salmoncount', 'SALMON')
     )
     ANALYSIS_CHOICES = (
         ('deseq2', 'DESEQ2'),
         ('dexseq', 'DEXSEQ'),
         ('htseq', 'HTSEQ'),
         ('miso', 'MISO'),
+        ('cuffdiff', "CUFFDIFF"),
+        ('edger', "EDGER"),
+        ('ballgown', "BALLGOWN")
     )
     session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='workflow')
     # index = models.CharField(max_length=200, choices=INDEX_CHOICES)
