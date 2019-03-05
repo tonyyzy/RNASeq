@@ -133,7 +133,7 @@ class SessionDeleteView(DeleteView):
 
 
 # Condition
-class ConditionsListView(ListView):
+class ConditionListView(ListView):
     # context_object_name = 'conditions'
     model = models.Condition
 

@@ -200,8 +200,11 @@ html,body{
   display:none;
 } */
 
-.myHidden{
-  display: none;
+.hidden{
+  display:none;
+}
+.unhidden{
+  display:block;
 }
 
 /* SIDEBAR */
@@ -271,12 +274,4 @@ html,body{
   opacity: 0.9;
   cursor: pointer;
 
-}
-
-.alert-warning {
-    color: #856404;
-    background-color: #fff3cd;
-    border-color: #ffeeba;
-    margin-top: 10px;
-    margin-bottom: 17px:
 }

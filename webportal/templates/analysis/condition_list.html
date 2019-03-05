@@ -15,20 +15,17 @@
         <thead>
           <tr>
             <th>Session</th>
-            <th>identifier</th>
-            <th>Con object</th>
             <th>Condition</th>
             <th>Number Replicates</th>
           </tr>
         </thead>
         <tbody>
-            {% for condition in conditions_list %}
+            {% for condition in condition_list %}
             <tr>
-              <td>{{ condition.session }}</td>
-              <td>{{ condition.session.identifier }}</td>
-              <td>{{ condition }}</td>
-              <td><a href="conditions_detail/{{ condition.pk }}">{{ condition.conditions }}</a></td>
+              <td><a href="session_detail/{{ condition.session.identifier }}">{{ condition.session }}</a></td>
+              <td>{{ condition.condition }}</td>
               <td>{{ condition.no_replicates }}</td>
+              <td><a href="conditions_detail/{{ condition.pk }}">{{ condition.conditions }}</a></td>
             </tr>
           {% endfor %}
         </tbody>
@@ -37,8 +34,3 @@
     {% endblock %}
   </body>
 </html>
-
-
-<!-- filtering the list view by foreign key -->
-<!-- session1 = Session.objects.get(pk=1) -->
-<!-- session1_conditions = Conditions.objects.filter(session=session1) -->

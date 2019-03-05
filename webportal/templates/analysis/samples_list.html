@@ -14,21 +14,26 @@
       <table class="table mb-0">
         <thead>
           <tr>
-            <th>Sample Key</th>
+            <th>Session</th>
+            <th>Condition</th>
             <th>Library Type</th>
             <th>Read One</th>
             <th>Read Two</th>
-            <td>Condition</td>
           </tr>
         </thead>
         <tbody>
             {% for sample in samples_list %}
             <tr>
-              <td><a href="samples_detail/{{ sample.pk }}">Sample: {{ sample.pk }}</td></a>
+              <td><a href="session_detail/{{sample.session.identifier}}">{{ sample.session }}</a></td>
+              <td>{{sample.condition}}</td>
               <td>{{ sample.libtype }}</td>
               <td>{{ sample.read_1 }}</td>
-              <td>{{ sample.read_2 }}</td>
-              <td>{{ sample.condition }}</td>
+              {% if sample.read_2 %}
+                <td>{{ sample.read_2 }}</td>
+              {% endif %}
+              {% if not sample.read_2 %}
+                <td>N/a</td>
+              {% endif %}
             </tr>
           {% endfor %}
         </tbody>
@@ -37,4 +42,3 @@
     {% endblock %}
   </body>
 </html>
-<!-- <td><a href="conditions_detail/{{ condition.pk }}">Condition: {{ condition.pk }}</a></td> -->

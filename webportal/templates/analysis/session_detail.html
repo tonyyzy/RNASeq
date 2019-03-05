@@ -23,6 +23,7 @@
         {% endif %}
 
         <div class="session_identifier_one">
+          <h2>{{session_detail.genome}}</h2>
         <div class="card bg-light mb-3">
           <div class="card-header">Session Identifier: {{session_detail.identifier}}</div>
           <div class="card-body">
@@ -45,11 +46,11 @@
                 <tbody>
                     <tr>
                       <td>{{session_detail.genome_index}}</td>
-                      <td>{{ session_detail.organism|default_if_none:"" }} {{session_detail.select_genome.organism}}</td>
+                      <td>{{ session_detail.organism|default_if_none:"" }} {{session_detail.genome.organism}}</td>
                       <td>{{session_detail.salmon}}</td>
-                      <td>{{ session_detail.fasta_dna_file }} {{session_detail.select_genome.fasta_dna_file}}</td>
-                      <td>{{ session_detail.fasta_cdna_file }} {{ session_detail.select_genome.fasta_cdna_file }}</td>
-                      <td>{{ session_detail.gtf_file }} {{ session_detail.select_genome.gtf_file }}</td>
+                      <td>{{ session_detail.fasta_dna_file }} {{session_detail.genome.fasta_dna_file}}</td>
+                      <td>{{ session_detail.fasta_cdna_file }} {{ session_detail.genome.fasta_cdna_file }}</td>
+                      <td>{{ session_detail.gtf_file }} {{ session_detail.genome.gtf_file }}</td>
                       <td><a id='id_conditions_create_btn' class='btn btn-sm btn-success' href="{% url 'analysis:conditions_create' session_slug=session_detail.identifier %}">Add Condition</a></td>
                       <td><a id='id_workflow_create_btn' class='btn btn-sm btn-success disabled' href="{% url 'analysis:workflow_create' session_slug=session_detail.identifier %}">Add Workflow</a></td>
                       <td>{{session_detail.status}}</td>
