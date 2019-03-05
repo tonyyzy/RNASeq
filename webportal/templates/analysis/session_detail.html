@@ -125,7 +125,9 @@
               <td class="td_libtype">{{ sample.libtype }}</td>
               <td>{{ sample.condition }}</td>
               <td>{{ sample.read_1 }}</td>
-              <td>{{ sample.read_2 }}</td>
+              {% if sample.read_2 %}
+                <td>{{ sample.read_2 }}</td>
+              {% endif %}
               {% if not sample.read_2 %}
                 <td>N/a</td>
               {% endif %}
@@ -194,7 +196,43 @@ analysis/session_detail/2/samples_update/7/ -->
         <br>
         <input type="submit" class='create_btn hidden' value="SUBMIT FOR ANALYSIS">
       </form>
-  </div> <!--END session_one_detail  -->
+    </div> <!--END session_one_detail  -->
+
+      <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- jQuery cdn is required prior to using bootstrap -->
+      <script type="text/javascript">
+          $( document ).ready(function() {
+
+          });
+
+          $( document ).ready(function() {
+            console.log('session_detail javascript loaded successfully')
+            console.log('session detail javascript active')
+            $('#id_workflow_create_btn')
+            // $('#id_SessionSubmitForm').hide()
+            if($('.td_index').length){
+              // alert('show samples');
+              $('#session_upload').show()
+            }
+            if($('.td_conditions_counter').length){
+              console.log('condition added')
+              // $('#id_conditions_create_btn').prop('disabled', true);
+              // $('#id_workflow_create_btn').removeClass('disabled')
+            }
+            if($('.td_samples_counter').length){
+              console.log('samples added');
+              // $('#id_conditions_create_btn').prop('disabled', true);
+              $('#id_workflow_create_btn').removeClass('disabled')
+            }
+            if($('.td_workflow_counter').length){
+              console.log('workflow added')
+              // alert('workflow data populated');
+              // $('#id_conditions_create_btn').prop('disabled', true);
+              $('#id_SessionSubmitForm').removeClass('myHidden')
+            }
+        });
+      </script>
+
+
   {% endblock %}
   </body>
 </html>

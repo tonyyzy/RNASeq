@@ -29,7 +29,7 @@ SECRET_KEY = 'tem51!gzk)#%&4#v0)bh*&ano&*0k7n1nr6at3elfdbu4q4ad-'
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['127.0.0.1', '155.198.233.29', '155.198.232.174']
+ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1', '155.198.233.29', '155.198.232.174']
 
 '''
 IP ADDRESS INFO
@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     #local
     'analysis',
     'users',
+    'visualization',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -98,14 +99,14 @@ WSGI_APPLICATION = 'webportal.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'rnaseq',
-        # 'USER': 'rnasequser',
-        # 'PASSWORD': 'RnaSeq123!',
-        # 'HOST': 'bmmbackup',
-        # 'PORT': '3306',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'rnaseq',
+        'USER': 'rnasequser',
+        'PASSWORD': 'RnaSeq123!',
+        'HOST': 'bmmbackup',
+        'PORT': '3306',
     }
 }
 
@@ -162,10 +163,3 @@ DATA_URL = '/data/'
 DATA_DIR = os.path.abspath(os.path.join(BASE_DIR, '../../Data'))
 GENOME_INDEX_DIR = os.path.abspath(os.path.join(BASE_DIR, '../../Genome_Index'))
 print(DATA_DIR)
-# may need to add files outside of the base_dire (which points to RNASEQ webportal to the base dir by above method)
-# currently still gives suspicious file Error
-# possible this is fixable by saving this file name from the view
-
-# alternative would be to save data within tmp directory and then move to Data directory
-# this would have added advantage of allowing saveing of model to db which would be we could
-# construct the Data dir using sesison_id rather than uuid.hex field.

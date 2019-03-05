@@ -38,13 +38,14 @@ class Session(models.Model):
 
     identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     genome_index = models.CharField(max_length=200, choices=GENOME_CHOICES)
-    select_genome = models.ForeignKey(Genome, on_delete=models.PROTECT, related_name='genome_fk', blank=True, null=True)
+    genome = models.ForeignKey(Genome, on_delete=models.PROTECT, related_name='genome_fk', blank=True, null=True)
     organism = models.CharField(max_length=200, blank=True, null=True)
     salmon = models.BooleanField(blank=True, null=True)
     fasta_dna_file = models.FileField(storage=data_root, upload_to=get_genome_path, blank=True, null=True)
     fasta_cdna_file = models.FileField(storage=data_root, upload_to=get_genome_path, blank=True, null=True)
     gtf_file = models.FileField(storage=data_root, upload_to=get_genome_path, blank=True, null=True)
     status = models.BooleanField(default=False, blank=True, null=True)
+    pid = models.IntegerField(blank=True, null=True)
 
     def get_absolute_url(self): # provides a default if Session is called from views.py without a specified reverse or redirect
         return reverse('analysis:session_detail', kwargs={'session_slug':self.identifier})

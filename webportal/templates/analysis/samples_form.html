@@ -10,9 +10,12 @@
   </head>
   <body>
     {% block body %}
+    <div id='validate_library' class='alert-warning'>
+      error with PE
+    </div>
       <div class="offset-3 col-md-6">
         <div class="">
-          <div class="form-group">
+          <div id='id_samples_form' class="form-group">
             <form method="POST"  enctype="multipart/form-data" class="create_form">
               {% csrf_token %}
 
@@ -27,8 +30,27 @@
             </form>
           </div>
         </div>
-
       </div>
+
+      <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- jQuery cdn is required prior to using bootstrap -->
+      <script type="text/javascript">
+        $( document ).ready(function() {
+          console.log('samples_form javascript loaded')
+        });
+
+
+        $( "#id_samples_form" ).submit(function() {
+          alert( "Handler for .submit() called." );
+          if ($('#div_id_libtype option:selected').val() == 'PE'){ // executes if PE selected from dropdown
+            if ($('#id_read_2').val() == ''){ // checks if read_2 file upload is empty
+              $('#validate_library').show()
+              return false;
+            }
+          }
+        });
+
+      </script>
+
     {% endblock %}
   </body>
 </html>
