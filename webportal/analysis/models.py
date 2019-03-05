@@ -101,7 +101,7 @@ class Workflow(models.Model):
     ASSEMLBER_CHOICES = (
         ("stringtie", "STRINGTIE"),
         ('cufflinks', 'CUFFLINKS'),
-        ('miso', 'MISO'),
+        # ('miso', 'MISO'),
         ('htseq', 'HTSEQ'),
         ('featurecounts', 'FEATURECOUNTS'),
         ('salmoncount', 'SALMON')
@@ -109,8 +109,7 @@ class Workflow(models.Model):
     ANALYSIS_CHOICES = (
         ('deseq2', 'DESEQ2'),
         ('dexseq', 'DEXSEQ'),
-        ('htseq', 'HTSEQ'),
-        ('miso', 'MISO'),
+        # ('miso', 'MISO'),
         ('cuffdiff', "CUFFDIFF"),
         ('edger', "EDGER"),
         ('ballgown', "BALLGOWN")
