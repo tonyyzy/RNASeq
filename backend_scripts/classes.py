@@ -70,7 +70,7 @@ class database_reader():
         
         # extract file path from Genome table
         for s,g in session.query(RSession, Genome)\
-                            .filter(RSession.select_genome_id == Genome.id)\
+                            .filter(RSession.genome_id == Genome.id)\
                             .filter(RSession.id == self.Session_ID):
             self.identifier = uuid.UUID(s.identifier)
             self.Organism_name = g.organism

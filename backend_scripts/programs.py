@@ -27,12 +27,11 @@ class cwl_writer():
     output_string = {
         "star": "sam_output",
         "samtools": "samtools_out",
-        "prepde": "gene_output",
+        "prepde": "gene_count_output",
         "stringtie": "stringtie_out",
         "hisat2": "sam_output",
-        "salmoncount": "count",
-        "prepde": "gene_output",
-        "featurecounts": "output"
+        "salmoncount": "gene_count_output",
+        "featurecounts": "gene_count_output"
     }
     conf = {}
     name = ""
@@ -269,16 +268,16 @@ class cwl_writer():
                 "metadata": "metadata",
                 "quant_results": f"{self.previous_name}_folder/out"
             },
-            "out": ["count", "length", "abundance"]
+            "out": ["gene_count_output", "gene_length_output", "gene_abundance_output"]
         }
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
             "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
             "in": {
                 "item": [
-                    f"{self.name}/count",
-                    f"{self.name}/length",
-                    f"{self.name}/abundance"
+                    f"{self.name}/gene_count_output",
+                    f"{self.name}/gene_length_output",
+                    f"{self.name}/gene_abundance_output"
                 ],
                 "name": {"valueFrom": self.name}
             },
@@ -420,6 +419,11 @@ class cwl_writer():
             "class": "File",
             "path": self.conf["annotation"]
         }
+        # yml section
+        self.cwl_input["htseq_prepare_script"] = {
+            "class": "File",
+            "path": f"{self.conf['root']}/RNASeq/scripts/Basic_DEXSeq_scripts/dexseq_prepare.py"
+        }
         # outputs
         self.cwl_workflow["outputs"]["htseq_prepare_out"] = {
             "type": "Directory",
@@ -447,11 +451,7 @@ class cwl_writer():
             },
             "out": ["out"]
         }
-        # yml section
-        self.cwl_input["htseq_prepare_script"] = {
-            "class": "File",
-            "path": f"{self.conf['root']}/RNASeq/scripts/Basic_DEXSeq_scripts/dexseq_prepare.py"
-        }
+
 
         # htseq_count
         # workflow section
@@ -482,14 +482,14 @@ class cwl_writer():
                         "source": [f"subject_name{index+1}"],
                         "valueFrom": "$(self + '_htseq_count.csv')"}
                 },
-                "out": ["output"]
+                "out": ["exon_count_output"]
             }
 
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
             "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
             "in": {
-                "item": [f"{self.name}_{i+1}/output" for i in range(self.num)],
+                "item": [f"{self.name}_{i+1}/exon_count_output" for i in range(self.num)],
                 "name": {"valueFrom": self.name}
             },
             "out": ["out"]
@@ -529,14 +529,14 @@ class cwl_writer():
                 "threads": "threads",
                 "metadata": "metadata"
             },
-            "out": ["output"]
+            "out": ["gene_count_output"]
         }
 
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
             "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
             "in": {
-                "item": f"{self.name}/output",
+                "item": f"{self.name}/gene_count_output",
                 "name": {"valueFrom": self.name}
             },
             "out": ["out"]
@@ -879,13 +879,13 @@ class cwl_writer():
                 "stringtie_out": [f"{self.previous_name}_{i+1}/{self.output_string[self.prev]}"
                             for i in range(self.num)]
             },
-            "out": ["gene_output", "transcript_output"]
+            "out": ["gene_count_output", "transcript_count_output"]
         }
         # foldering
         self.cwl_workflow["steps"]["prepde_folder"] = {
             "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
             "in":{
-                "item":[f"{self.name}/gene_output", f"{self.name}/transcript_output"],
+                "item":[f"{self.name}/gene_count_output", f"{self.name}/transcript_count_output"],
                 "name": {
                     "valueFrom": self.name
                     }
@@ -935,6 +935,47 @@ class cwl_writer():
         with open(self.conf["root"] + f"/Data/{self.reader.identifier}/input.yml", "w+") as outfile:
             yaml.dump(self.cwl_input, outfile, default_flow_style=False)
         workflow_log = open(f"{self.conf['root']}/Data/{self.reader.identifier}/workflow.log", "w")
+        print("Generate dot file")
+        dotfile = open(f"{self.conf['root']}/Data/{self.reader.identifier}/workflow.dot", "w")
+        dotfile.write("""digraph workflow {
+graph [
+    bgcolor = "#eeeeee"
+    color = "black"
+    fontsize = "10"
+    labeljust = "left"
+    clusterrank = "local"
+    ranksep = "0.5"
+    nodesep = "0.5"
+]
+node [
+    fontname = "Helvetica"
+    fontsize = "10"
+    fontcolor = "black"
+    shape = "record"
+    height = "0"
+    width = "0"
+    color = "black"
+    fillcolor = "lightgoldenrodyellow"
+    style = "filled"
+];
+edge [
+    fontname="Helvetica"
+    fontsize="8"
+    fontcolor="black"
+    color="black"
+    arrowsize="0.7"
+];\n""")
+        dotfile.flush()
+        subprocess.run(["cwl-runner",
+                        "--print-dot",
+                        f"{self.conf['root']}/Data/{self.reader.identifier}/workflow.cwl"
+                        ], stdout=dotfile)
+        dotfile.close()
+        subprocess.run(["sed", "-i", "29d", f"{self.conf['root']}/Data/{self.reader.identifier}/workflow.dot"])
+        svgfile = open(f"{self.conf['root']}/Data/{self.reader.identifier}/workflow.svg", "w")
+        subprocess.run(["dot", "-Tsvg", f"{self.conf['root']}/Data/{self.reader.identifier}/workflow.dot"],
+                        stdout=svgfile)
+        svgfile.close()
         print("Submit workflow")
         proc = subprocess.Popen(["cwl-runner",
                     f"--outdir={self.conf['root']}/Data/{self.reader.identifier}/output",
