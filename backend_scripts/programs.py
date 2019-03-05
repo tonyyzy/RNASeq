@@ -666,6 +666,31 @@ class cwl_writer():
                 },
             "out": ["out"]
         }
+
+        # cuffnorm
+        # inputs
+        # outputs
+        self.cwl_workflow["outputs"][f"{self.name}_cuffnorm_out"] = {
+            "type": "Directory",
+            "outputSource": f"{self.name}_cuffnorm/cuffnorm_out"
+        }
+        # steps
+        self.cwl_workflow["steps"][f"{self.name}_cuffnorm"] = {
+            "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/cuffnorm.cwl",
+            "in": {
+                "threads": "threads",
+                "merged_gtf": f"{cuffmerge}/merged_gtf",
+                "output": {"valueFrom": f"{self.name}_cuffnorm"}
+            },
+            "out": ["cuffnorm_out"]
+        }
+        for index, condition in enumerate(self.conditions):
+            self.cwl_workflow["steps"][f"{self.name}_cuffnorm"]["in"][f"condition{index+1}_files"] = [f"{self.name}_{self.file_names.index(name)+1}/cxb" for name in self.conditions[condition]]
+        
+
+
+
+
         # cuffdiff
         # inputs
         self.previous_name = self.name
