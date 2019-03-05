@@ -22,7 +22,7 @@ class database_checker():
         for entry in session.query(RSession).filter(RSession.status == 1):
             print(entry.id)
             self.create_workflow(entry.id, root)
-            entry.status = 1
+            entry.status = None
         session.commit()
 
     def create_workflow(self, Session_ID, root):
@@ -106,7 +106,7 @@ class database_reader():
                                         Samples.accession,
                                         Samples.libtype)
         df = pd.read_sql(query.statement, session.bind, index_col="accession")
-        df.index.name = None
+        df.index.name = "name"
         df = df.sort_index()
         df.to_csv(f"{root}/Data/{self.identifier}/metadata.csv",
                     quoting=csv.QUOTE_ALL)
