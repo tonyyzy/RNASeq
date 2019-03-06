@@ -68,3 +68,7 @@ outputs:
       type: Directory
       outputBinding:
          glob: $(inputs.output)
+   output_summary:
+      type: Directory
+      outputBinding:
+         glob: $(inputs.output + "_summary")

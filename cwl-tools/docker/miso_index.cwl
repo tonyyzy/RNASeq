@@ -22,4 +22,4 @@ outputs:
    output:
       type: Directory
       outputBinding:
-         glob: $(inputs.index_dir)
+         glob: $(inputs.output)
