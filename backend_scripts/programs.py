@@ -127,7 +127,73 @@ class cwl_writer():
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
-            "outputSource": "hisat2_folder/out"
+            "outputSource": f"{self.name}_folder/out"
+        }
+
+        # steps
+        for index, name in enumerate(self.file_names):
+            if self.input_files[name]["type"] == "PE":
+                self.cwl_workflow["steps"][f"{self.name}_{index+1}"] = {
+                    "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/hisat2_align.cwl",
+                    "in": {
+                        "threads" : "threads",
+                        "index_directory" : "HISAT2Index",
+                        "first_pair": {
+                            "source": f"fastq{index+1}",
+                            "valueFrom": "$(self[0])"
+                        },
+                        "second_pair": {
+                            "source": f"fastq{index+1}",
+                            "valueFrom": "$(self[1])"
+                        },
+                        "output": {
+                            "source": f"subject_name{index+1}",
+                            "valueFrom": "$(self + '.sam')"
+                        },
+                        "XSTag": {"valueFrom": "--dta"}
+                    },
+                    "out": ["sam_output", "hisat2_align_out"]
+                }
+            elif self.input_files[name]["type"] == "SG":
+                self.cwl_workflow["steps"][f"{self.name}_{index+1}"] = {
+                    "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/hisat2_align.cwl",
+                    "in": {
+                        "threads" : "threads",
+                        "index_directory" : "HISAT2Index",
+                        "single_file" : f"fastq{index+1}",
+                        "output": {
+                            "source": f"subject_name{index+1}",
+                            "valueFrom": "$(self + '.sam')"
+                        },
+                        "XSTag": {"valueFrom": "--dta"}
+                    },
+                    "out": ["sam_output", "hisat2_align_out"]
+                }
+
+        # foldering
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
+            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "in": {
+                "item": [f"{self.name}_{i+1}/hisat2_align_out"
+                            for i in range(self.num)],
+                "name": {"valueFrom": self.name}
+            },
+            "out": ["out"]
+        }
+
+
+    def hisat2xs(self):
+        # workflow section
+        # inputs
+        self.cwl_workflow["inputs"]["HISAT2Index"] = "Directory"
+        self.cwl_input["HISAT2Index"] = {
+            "class": "Directory",
+            "path": self.reader.indexes["HISAT2Index"]
+        }
+        # outputs
+        self.cwl_workflow["outputs"][f"{self.name}_out"] = {
+            "type": "Directory",
+            "outputSource": f"{self.name}_folder/out"
         }
 
         # steps
