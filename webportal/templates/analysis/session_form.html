@@ -68,31 +68,9 @@
         </div>
       </div>
       <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- jQuery cdn is required prior to using bootstrap -->
+
       <script type="text/javascript">
 
-        var i;
-        function unhide(divID) {
-          console.log('unhiding')
-          for (i = 0; i < divID.length; i++){
-            div = divID[i]
-            console.log(div)
-            var item = document.getElementById(div);
-            if (item) {
-                item.className = 'unhidden' ;
-            }
-          }
-        };
-        function hide(divID) {
-          console.log('hiding')
-          for (i = 0; i < divID.length; i++){
-            div = divID[i]
-            console.log(div)
-            var item = document.getElementById(div);
-            if (item) {
-                item.className = 'hidden';
-            }
-          }
-        }
         $( "#id_session_form" ).submit(function() {
           if ($('#id_genome_index option:selected').val() == 'pre_index'){ // checks pre_index selected
             if ($('#id_genome option:selected').val() == ''){ // checks pre_indexed genome selected

@@ -1,5 +1,30 @@
 
 
+// FUNCTIONS
+var i;
+function unhide(divID) {
+  console.log('unhiding')
+  for (i = 0; i < divID.length; i++){
+    div = divID[i]
+    console.log(div)
+    var item = document.getElementById(div);
+    if (item) {
+        item.className = 'unhidden' ;
+    }
+  }
+};
+function hide(divID) {
+  console.log('hiding')
+  for (i = 0; i < divID.length; i++){
+    div = divID[i]
+    console.log(div)
+    var item = document.getElementById(div);
+    if (item) {
+        item.className = 'hidden';
+    }
+  }
+}
+
 
 // SAMPLES CREATE JAVASCRIPT
 $( document ).ready(function() {

@@ -155,9 +155,9 @@ STATICFILES_DIRS = [
     STATIC_DIR,
 ]
 
-DATA_ROOT = os.path.join(BASE_DIR,'data')
+# DATA_ROOT = os.path.join(BASE_DIR,'data')
 # print(DATA_ROOT)
-DATA_URL = '/data/'
+# DATA_URL = '/data/'
 
 
 DATA_DIR = os.path.abspath(os.path.join(BASE_DIR, '../../Data'))
