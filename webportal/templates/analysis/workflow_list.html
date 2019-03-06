@@ -15,9 +15,6 @@
         <thead>
           <tr>
             <th>Session</th>
-            <th>Identifier</th>
-            <th>Key</th>
-            <th>Index</th>
             <th>Mapper</th>
             <th>Assembler</th>
             <th>Analysis</th>
@@ -27,14 +24,16 @@
         <tbody>
             {% for workflow in workflow_list %}
             <tr>
-              <td>{{ workflow.session }}</td>
-              <td>{{ workflow.session.identifier }}</td>
-              <td><a href="workflow_detail/{{ workflow.pk }}">workflow ID: {{ workflow.id }}</a></td>
-              <td>{{ workflow.index }}</td>
+              <td><a href="session_detail/{{workflow.session.identifier}}">{{ workflow.session }}</a></td>
               <td>{{ workflow.mapper }}</td>
               <td>{{ workflow.assembler }}</td>
               <td>{{ workflow.analysis }}</td>
-              <td>{{ workflow.status }}</td>
+              {% if workflow.status %}
+                <td>Submitted</td>
+              {% endif %}
+              {% if not workflow.status %}
+                <td>Not Submitted</td>
+              {% endif %}
             </tr>
           {% endfor %}
         </tbody>

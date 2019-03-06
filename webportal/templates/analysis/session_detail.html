@@ -5,6 +5,7 @@
   <head>
     <meta charset="utf-8">
     {% block head %}
+    {% load static %}
       <title>Session Detail</title>
     {% endblock %}
   </head>
@@ -22,7 +23,17 @@
           {% endfor %}
         {% endif %}
 
-        <div class="session_identifier_one">
+
+          <!-- <h2>{{my_wf_exists}}</h2> -->
+          <h3>{{session_data_dir}}</h3>
+          <!-- <h3>{{svg_path}}</h3> -->
+          <object id='id_demo_wf' data="{% static "images/my-wf.svg" %}" type="image/svg+xml" class="svg">
+            <!-- <img src="yourfallback.jpg" /> -->
+          </object>
+          <!-- <img id='the_svg' class="svg" src="{% static "images/my-wf.svg" %}" alt="a nice workflow" /> -->
+          <!-- <svg id='the_svg' class="svg" src="{% static "images/my-wf.svg" %}" alt="a nice workflow" svg/> -->
+
+
         <div class="card bg-light mb-3">
           <div class="card-header">Session Identifier: {{session_detail.identifier}}</div>
           <div class="card-body">
@@ -189,24 +200,31 @@ analysis/session_detail/2/samples_update/7/ -->
       </div>
 
       <!-- FORM TO CHANGE STATUS OF SESSION TO TRUE -->
-      <form method="POST"  enctype="multipart/form-data" id='id_SessionSubmitForm' class='myHidden'>
+      <form method="POST"  enctype="multipart/form-data" id='id_session_submit_btn' class='hidden'>
         {% csrf_token %}
         {{form|crispy}}
         <!-- will need to define individual fields in which case i dont need to use javascript to hide as i can specify fields shown directly! -->
         <br>
-        <input type="submit" class='create_btn hidden' value="SUBMIT FOR ANALYSIS">
+        <input type="submit" class='create_btn' value="SUBMIT FOR ANALYSIS">
       </form>
     </div> <!--END session_one_detail  -->
 
       <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- jQuery cdn is required prior to using bootstrap -->
-      <script type="text/javascript">
-          $( document ).ready(function() {
 
-          });
+
+      <script type="text/javascript" src= "{% static 'js/svg-pan-zoom.min.js' %}"></script>
+      <script>
+
+      $( document ).ready(function() {
+        setTimeout(function() { your_func(); }, 200);
+      });
+
+      function your_func(){
+        console.log('hi')
+        svgPanZoom('#id_demo_wf')
+      }
 
           $( document ).ready(function() {
-            console.log('session_detail javascript loaded successfully')
-            console.log('session detail javascript active')
             $('#id_workflow_create_btn')
             // $('#id_SessionSubmitForm').hide()
             if($('.td_index').length){
@@ -224,10 +242,7 @@ analysis/session_detail/2/samples_update/7/ -->
               $('#id_workflow_create_btn').removeClass('disabled')
             }
             if($('.td_workflow_counter').length){
-              console.log('workflow added')
-              // alert('workflow data populated');
-              // $('#id_conditions_create_btn').prop('disabled', true);
-              $('#id_SessionSubmitForm').removeClass('myHidden')
+              unhide(['id_session_submit_btn'])
             }
         });
       </script>

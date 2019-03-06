@@ -14,10 +14,10 @@
       <table class="table mb-0">
         <thead>
           <tr>
-            <th>key</th>
-            <th>Identifier</th>
+            <th style='width: 8%'>Session</th>
+            <th style='width: 20%'>Identifier</th>
             <th>Index</th>
-            <th>Organism</th>
+            <th style='width: 8%'>Organism</th>
             <th>Salmon</th>
             <th>DNA Fasta</th>
             <th>cDNA Fasta</th>
@@ -31,11 +31,11 @@
               <td><a href="session_detail/{{ session.identifier }}">Sesison: {{ session.pk }}</a></td>
               <td>{{session.identifier}}</td>
               <td>{{session.genome_index}}</td>
-              <td>{{ session.organism|default_if_none:"" }} {{session.select_genome.organism}}</td>
+              <td>{{ session.organism|default_if_none:"" }} {{session.genome.organism}}</td>
               <td>{{session.salmon}}</td>
-              <td>{{ session.fasta_dna_file }} {{session.select_genome.fasta_dna_file}}</td>
-              <td>{{ session.fasta_cdna_file }} {{ session.select_genome.fasta_cdna_file }}</td>
-              <td>{{ session.gtf_file }} {{ session.select_genome.gtf_file }}</td>
+              <td>{{ session.fasta_dna_file }} {{session.genome.fasta_dna_file}}</td>
+              <td>{{ session.fasta_cdna_file }} {{ session.genome.fasta_cdna_file }}</td>
+              <td>{{ session.gtf_file }} {{ session.genome.gtf_file }}</td>
             </tr>
           {% endfor %}
         </tbody>

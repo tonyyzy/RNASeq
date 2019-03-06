@@ -10,8 +10,9 @@
   </head>
   <body>
     {% block body %}
-    <div id='validate_library' class='alert-warning'>
-      error with PE
+
+    <div id='validate_library'>
+      <p style='margin:30px;padding-top:14px;padding-bottom:22px;padding-left:14px;border-radius:2%;background:#fceeb3;color:#856404;'>Paired End Read Selected. Please Upload Second File.</p>
     </div>
       <div class="offset-3 col-md-6">
         <div class="">
@@ -40,7 +41,7 @@
 
 
         $( "#id_samples_form" ).submit(function() {
-          alert( "Handler for .submit() called." );
+          // alert( "Handler for .submit() called." );
           if ($('#div_id_libtype option:selected').val() == 'PE'){ // executes if PE selected from dropdown
             if ($('#id_read_2').val() == ''){ // checks if read_2 file upload is empty
               $('#validate_library').show()
@@ -50,7 +51,6 @@
         });
 
       </script>
-
     {% endblock %}
   </body>
 </html>
