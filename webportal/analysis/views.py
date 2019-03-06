@@ -76,23 +76,9 @@ class SessionDetailView(View):
             # session_files = os.listdir(session_data_dir)
             print(f'\n{session_wf_path}')
 
-            def read_svg(file):
-                lines = []
-                for line in f:
-                    lines.append(line)
-                return lines
-
-            with open(session_wf_path, 'r') as f: #open the file
-                # contents = read_svg(f)
-                contents = f.readlines() #put the lines to a variable (list).
-
-
-            # print(contents[0])
-            # contents = str(contents)
-            # contents = contents.replace('\\n','<br>')
 
             session = Session.objects.get(identifier=session_slug)
-            context = {'session_detail':session, 'form':form, 'session_data_dir': session_data_dir, 'session_wf': contents}
+            context = {'session_detail':session, 'form':form, 'session_data_dir': session_data_dir}
             return render(request, self.template_name, context)
             # os.chdir(session_data_dir)
             # my_wf_exists = os.path.isfile('my-wf.svg')
