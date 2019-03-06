@@ -35,7 +35,6 @@ class database_checker():
 
 
 class database_reader():
-    Index = []
     Mapper = []
     Assembler = []
     Analysis = []
@@ -116,15 +115,9 @@ class logic_builder():
     Workflow_index = []
     workflow = []
     def __init__(self, root):
-        self.programs_index = pd.read_csv(f"{root}/RNASeq/backend_scripts/logic/programs_index.csv")
-        self.programs_connections = pd.read_csv(f"{root}/RNASeq/backend_scripts/logic/programs_connections.csv", index_col=0, dtype=str)
-        self.num_to_prog = {}
-        self.prog_to_num = {}
-        with open(f"{root}/RNASeq/backend_scripts/logic/programs_index.csv") as index_file:
-            for line in index_file.readlines()[1:]:
-                num, prog = line.strip().split(",")
-                self.num_to_prog[num] = prog
-                self.prog_to_num[prog] = int(num)
+        self.programs_connections = \
+            pd.read_csv(f"{root}/RNASeq/backend_scripts/logic/programs_connections.csv",
+            index_col=0, dtype=str)
 
     def create_workflow_logic(self, database_reader_object):
         result = []
@@ -153,4 +146,3 @@ class logic_builder():
                 result[i][j] = str(result[i][j-1]) + "_" +  str(result[i][j])
 
         self.workflow = set(item for sublist in result for item in sublist)
-        self.Workflow_index = database_reader_object.Index

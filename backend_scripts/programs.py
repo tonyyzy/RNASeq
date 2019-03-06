@@ -1,9 +1,9 @@
 import yaml
 import subprocess
+from configparser import ConfigParser
 
 class cwl_writer():
     # dict for cwl file
-    # will modify this attribute directly rather than passing it around
     cwl_workflow = {
         "cwlVersion": "v1.0",
         "class": "Workflow",
@@ -15,15 +15,18 @@ class cwl_writer():
         },
         "inputs": {
             "threads": "int",
-            "metadata": "File"
+            "metadata": "File",
+            "annotation": "File"
         },
         "outputs": {},
         "steps": {}
     }
     # dict for yml file
-    cwl_input = {
-        "threads": 2
-    }
+    cwl_input = {}
+
+    # output_string for each program to query the output names from the previous
+    # program. This will be deprecated if all tools' inputs and outputs are
+    # sufficiently standardised
     output_string = {
         "star": "sam_output",
         "samtools": "samtools_out",
@@ -34,51 +37,61 @@ class cwl_writer():
         "salmoncount": "gene_count_output",
         "featurecounts": "gene_count_output"
     }
-    conf = {}
+
     name = ""
     previous_name = ""
     prev = ""
 
     def __init__(self, database_reader_object, root):
-        self.reader = database_reader_object
+        # get number of treads from config.ini
+        config = ConfigParser()
+        config.read(f"{root}/config.ini")
+        self.cwl_input["threads"] = int(config.get("main", "threads"))
+
+        # setup attributes
+        self.identifier = database_reader_object.identifier
+        self.indexes = database_reader_object.indexes
         self.input_files = database_reader_object.Reads_files
         self.file_names = list(self.input_files) # list of filenames, fixed order
         self.num = len(self.input_files) # total number of inputs
-        self.conf["annotation"] = database_reader_object.Annotation_file
-        self.conf["root"] = root
-        self.conf["fasta"] = self.reader.Genome_file
-        self.conditions = {}
+        self.root = root
+        self.genome = database_reader_object.Genome_file
+
+        # add metadata and annotation to cwl_input
         self.cwl_input["metadata"] = {
             "class": "File",
-            "path": self.conf["root"] + f"/Data/{self.reader.identifier}/metadata.csv"
+            "path": self.root + f"/Data/{self.identifier}/metadata.csv"
         }
+        self.cwl_input["annotation"] = {
+            "class": "File",
+            "path": database_reader_object.Annotation_file
+        }
+
+        # generate a dictionary of conditions with input_files as items
+        self.conditions = {}
         for name in self.file_names:
             if self.input_files[name]["condition"] not in self.conditions:
                 self.conditions[self.input_files[name]["condition"]] = [name]
             else:
                 self.conditions[self.input_files[name]["condition"]].append(name)
 
+        # add input files to workflow and input
         for index, name in enumerate(self.file_names):
-            # add subject_name to workflow dict
-            self.cwl_workflow["inputs"][f"subject_name{index+1}"] = "string"
-            # add subject_name to
             self.cwl_input[f"subject_name{index+1}"] = name
-            # add fastq to workflow dict
+            self.cwl_workflow["inputs"][f"subject_name{index+1}"] = "string"
             self.cwl_workflow["inputs"][f"fastq{index+1}"] = "File[]"
+
             if self.input_files[name]["type"] == "PE":
-                self.cwl_input[f"fastq{index+1}"] = [
-                    {
-                        "class": "File",
-                        "path": self.input_files[name]["path"][num + 1]
-                    } for num in range(2)
-                ]
+                counter = 2
             elif self.input_files[name]["type"] == "SG":
-                self.cwl_input[f"fastq{index+1}"] = [
-                    {
-                        "class": "File",
-                        "path": self.input_files[name]["path"][1]
-                    }
-                ]
+                counter = 1
+
+            self.cwl_input[f"fastq{index+1}"] = [
+                {
+                    "class": "File",
+                    "path": self.input_files[name]["path"][num + 1]
+                } for num in range(counter)
+            ]
 
     #----------mappper----------
     def star(self):
@@ -86,7 +99,7 @@ class cwl_writer():
         self.cwl_workflow["inputs"]["star_genomedir"] = "Directory"
         self.cwl_input["star_genomedir"] = {
             "class": "Directory",
-            "path": self.reader.indexes["star_genomedir"]
+            "path": self.indexes["star_genomedir"]
         }
         # output
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
@@ -95,7 +108,7 @@ class cwl_writer():
         }
         for i in range(self.num):
             self.cwl_workflow["steps"][f"{self.name}_{i+1}"] = {
-                "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/STAR_readmap.cwl",
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/STAR_readmap.cwl",
                 "in": {
                     "threads": "threads",
                     "genomeDir": "star_genomedir",
@@ -107,7 +120,7 @@ class cwl_writer():
 
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in": {
                 "item": [f"star_{i+1}/star_read_out"
                             for i in range(self.num)],
@@ -123,7 +136,7 @@ class cwl_writer():
         self.cwl_workflow["inputs"]["HISAT2Index"] = "Directory"
         self.cwl_input["HISAT2Index"] = {
             "class": "Directory",
-            "path": self.reader.indexes["HISAT2Index"]
+            "path": self.indexes["HISAT2Index"]
         }
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
@@ -135,7 +148,7 @@ class cwl_writer():
         for index, name in enumerate(self.file_names):
             if self.input_files[name]["type"] == "PE":
                 self.cwl_workflow["steps"][f"{self.name}_{index+1}"] = {
-                    "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/hisat2_align.cwl",
+                    "run": f"{self.root}/RNASeq/cwl-tools/docker/hisat2_align.cwl",
                     "in": {
                         "threads" : "threads",
                         "index_directory" : "HISAT2Index",
@@ -157,7 +170,7 @@ class cwl_writer():
                 }
             elif self.input_files[name]["type"] == "SG":
                 self.cwl_workflow["steps"][f"{self.name}_{index+1}"] = {
-                    "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/hisat2_align.cwl",
+                    "run": f"{self.root}/RNASeq/cwl-tools/docker/hisat2_align.cwl",
                     "in": {
                         "threads" : "threads",
                         "index_directory" : "HISAT2Index",
@@ -173,7 +186,7 @@ class cwl_writer():
 
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in": {
                 "item": [f"{self.name}_{i+1}/hisat2_align_out"
                             for i in range(self.num)],
@@ -189,7 +202,7 @@ class cwl_writer():
         self.cwl_workflow["inputs"]["HISAT2Index"] = "Directory"
         self.cwl_input["HISAT2Index"] = {
             "class": "Directory",
-            "path": self.reader.indexes["HISAT2Index"]
+            "path": self.indexes["HISAT2Index"]
         }
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
@@ -201,7 +214,7 @@ class cwl_writer():
         for index, name in enumerate(self.file_names):
             if self.input_files[name]["type"] == "PE":
                 self.cwl_workflow["steps"][f"{self.name}_{index+1}"] = {
-                    "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/hisat2_align.cwl",
+                    "run": f"{self.root}/RNASeq/cwl-tools/docker/hisat2_align.cwl",
                     "in": {
                         "threads" : "threads",
                         "index_directory" : "HISAT2Index",
@@ -223,7 +236,7 @@ class cwl_writer():
                 }
             elif self.input_files[name]["type"] == "SG":
                 self.cwl_workflow["steps"][f"{self.name}_{index+1}"] = {
-                    "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/hisat2_align.cwl",
+                    "run": f"{self.root}/RNASeq/cwl-tools/docker/hisat2_align.cwl",
                     "in": {
                         "threads" : "threads",
                         "index_directory" : "HISAT2Index",
@@ -239,7 +252,7 @@ class cwl_writer():
 
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in": {
                 "item": [f"{self.name}_{i+1}/hisat2_align_out"
                             for i in range(self.num)],
@@ -256,7 +269,7 @@ class cwl_writer():
         self.cwl_workflow["inputs"]["salmon_index"] = "Directory"
         self.cwl_input["salmon_index"] = {
             "class": "Directory",
-            "path": self.reader.indexes["salmon_index"]
+            "path": self.indexes["salmon_index"]
         }
 
         # outputs
@@ -268,7 +281,7 @@ class cwl_writer():
         for index, name in enumerate(self.file_names):
             if self.input_files[name]["type"] == "PE":
                 self.cwl_workflow["steps"][f"{self.name}_{index+1}"] = {
-                    "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/salmon_quant.cwl",
+                    "run": f"{self.root}/RNASeq/cwl-tools/docker/salmon_quant.cwl",
                     "in": {
                         "threads" : "threads",
                         "index_directory" : "salmon_index",
@@ -286,7 +299,7 @@ class cwl_writer():
                 }
             elif self.input_files[name]["type"] == "SG":
                 self.cwl_workflow["steps"][f"{self.name}_{index+1}"] = {
-                    "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/salmon_quant.cwl",
+                    "run": f"{self.root}/RNASeq/cwl-tools/docker/salmon_quant.cwl",
                     "in": {
                         "threads" : "threads",
                         "index_directory" : "salmon_index",
@@ -297,7 +310,7 @@ class cwl_writer():
                 }
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in": {
                 "item": [f"{self.name}_{i+1}/output"
                             for i in range(self.num)],
@@ -312,14 +325,9 @@ class cwl_writer():
         # workflow section
         # inputs
         self.cwl_workflow["inputs"]["salmon_count_script"] = "File"
-        self.cwl_workflow["inputs"]["annotation"] = "File"
         self.cwl_input["salmon_count_script"] = {
             "class": "File",
-            "path": f"{self.conf['root']}/RNASeq/scripts/salmon_R_script.R"
-        }
-        self.cwl_input["annotation"] = {
-            "class": "File",
-            "path": self.conf["annotation"]
+            "path": f"{self.root}/RNASeq/scripts/salmon_R_script.R"
         }
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
@@ -328,7 +336,7 @@ class cwl_writer():
         }
         # steps
         self.cwl_workflow["steps"][self.name] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/salmon_count.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/docker/salmon_count.cwl",
             "in": {
                 "input_script": "salmon_count_script",
                 "gtf": "annotation",
@@ -339,7 +347,7 @@ class cwl_writer():
         }
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in": {
                 "item": [
                     f"{self.name}/gene_count_output",
@@ -355,11 +363,6 @@ class cwl_writer():
     #---------assembler-----------
     def stringtie(self):
         # inputs
-        self.cwl_workflow["inputs"]["annotation"] = "File"
-        self.cwl_input["annotation"] = {
-            "class": "File",
-            "path": self.conf["annotation"]
-        }
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
@@ -368,7 +371,7 @@ class cwl_writer():
         # steps
         for i in range(self.num):
             self.cwl_workflow["steps"][f"{self.name}_{i + 1}"] = {
-                "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/stringtie.cwl",
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/stringtie.cwl",
                 "in": {
                     "bam": f"{self.previous_name}_{i+1}/{self.output_string[self.prev]}",
                     "threads": "threads",
@@ -383,7 +386,7 @@ class cwl_writer():
 
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
                 "item":[f"{self.name}_{i + 1}/stringtie_out" for i in range(self.num)],
                 "name": {
@@ -408,7 +411,7 @@ class cwl_writer():
         # steps
         for index in range(self.num):
             self.cwl_workflow["steps"][f"{self.name}_{index+1}"] = {
-                "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/cufflinks.cwl",
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/cufflinks.cwl",
                 "in": {
                     "gtf": "annotation",
                     "threads": "threads",
@@ -420,7 +423,7 @@ class cwl_writer():
         
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
                 "item":[f"{self.name}_{i + 1}/gtf_out" for i in range(self.num)],
                 "name": {
@@ -435,12 +438,7 @@ class cwl_writer():
         self.cwl_workflow["inputs"]["fasta"] = "File"
         self.cwl_input["fasta"] = {
             "class": "File",
-            "path": self.conf["fasta"]
-        }
-        self.cwl_workflow["inputs"]["annotation"] = "File"
-        self.cwl_input["annotation"] = {
-            "class": "File",
-            "path": self.conf["annotation"]
+            "path": self.genome
         }
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_cuffmerge_out"] = {
@@ -450,7 +448,7 @@ class cwl_writer():
 
         # steps
         self.cwl_workflow["steps"][f"{self.name}_cuffmerge"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/cuffmerge.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/docker/cuffmerge.cwl",
             "in": {
                 "threads": "threads",
                 "gtf": "annotation",
@@ -465,7 +463,7 @@ class cwl_writer():
 
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_cuffmerge_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
                 "item": f"{self.name}_cuffmerge/merged_gtf",
                 "name": {
@@ -481,15 +479,10 @@ class cwl_writer():
         # workflow section
         # inputs
         self.cwl_workflow["inputs"]["htseq_prepare_script"] = "File"
-        self.cwl_workflow["inputs"]["annotation"] = "File"
-        self.cwl_input["annotation"] = {
-            "class": "File",
-            "path": self.conf["annotation"]
-        }
         # yml section
         self.cwl_input["htseq_prepare_script"] = {
             "class": "File",
-            "path": f"{self.conf['root']}/RNASeq/scripts/Basic_DEXSeq_scripts/dexseq_prepare.py"
+            "path": f"{self.root}/RNASeq/scripts/Basic_DEXSeq_scripts/dexseq_prepare.py"
         }
         # outputs
         self.cwl_workflow["outputs"]["htseq_prepare_out"] = {
@@ -498,7 +491,7 @@ class cwl_writer():
         }
         # steps
         self.cwl_workflow["steps"]["htseq_prepare"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/htseq_prepare.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/docker/htseq_prepare.cwl",
             "in": {
                 "input_script": "htseq_prepare_script",
                 "gtf": "annotation",
@@ -511,7 +504,7 @@ class cwl_writer():
         }
         # foldering
         self.cwl_workflow["steps"]["htseq_prepare_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in": {
                 "item": "htseq_prepare/output",
                 "name": {"valueFrom": "htseq_prepare"}
@@ -536,7 +529,7 @@ class cwl_writer():
             elif self.input_files[name]["type"] == "SG":
                 pairedend = "no"
             self.cwl_workflow["steps"][f"{self.name}_{index+1}"] = {
-                "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/htseq_count.cwl",
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/htseq_count.cwl",
                 "in": {
                     "input_script": "htseq_count_script",
                     "pairedend": {"valueFrom": pairedend},
@@ -554,7 +547,7 @@ class cwl_writer():
 
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in": {
                 "item": [f"{self.name}_{i+1}/exon_count_output" for i in range(self.num)],
                 "name": {"valueFrom": self.name}
@@ -565,7 +558,7 @@ class cwl_writer():
         # yml section
         self.cwl_input["htseq_count_script"] = {
             "class": "File",
-            "path": f"{self.conf['root']}/RNASeq/scripts/Basic_DEXSeq_scripts/dexseq_count_modified.py"
+            "path": f"{self.root}/RNASeq/scripts/Basic_DEXSeq_scripts/dexseq_count_modified.py"
         }
 
 
@@ -574,12 +567,7 @@ class cwl_writer():
         self.cwl_workflow["inputs"]["featurecounts_script"] = "File"
         self.cwl_input["featurecounts_script"] = {
             "class": "File",
-            "path": f"{self.conf['root']}/RNASeq/scripts/featurecount.R"
-        }
-        self.cwl_workflow["inputs"]["annotation"] = "File"
-        self.cwl_input["annotation"] = {
-            "class": "File",
-            "path": self.conf["annotation"]
+            "path": f"{self.root}/RNASeq/scripts/featurecount.R"
         }
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
@@ -588,7 +576,7 @@ class cwl_writer():
         }
         # steps
         self.cwl_workflow["steps"][self.name] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/featurecounts.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/docker/featurecounts.cwl",
             "in": {
                 "input_script": "featurecounts_script",
                 "bam_files": [f"{self.previous_name}_{i+1}/samtools_out" for i in range(self.num)],
@@ -601,7 +589,7 @@ class cwl_writer():
 
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in": {
                 "item": f"{self.name}/gene_count_output",
                 "name": {"valueFrom": self.name}
@@ -629,7 +617,7 @@ class cwl_writer():
 
         # steps
         self.cwl_workflow["steps"][self.name] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/DESeq2.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/docker/DESeq2.cwl",
             "in": {
                 "input_script": "DESeq2_script",
                 # TODO need to standardise prepDE, salmon_count outputs
@@ -641,7 +629,7 @@ class cwl_writer():
 
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
             "item":f"{self.name}/DESeq2_out",
             "name": {
@@ -654,7 +642,7 @@ class cwl_writer():
         # yml section
         self.cwl_input["DESeq2_script"] = {
             "class": "File",
-            "path": f"{self.conf['root']}/RNASeq/scripts/Basic_DESeq2.R"
+            "path": f"{self.root}/RNASeq/scripts/Basic_DESeq2.R"
         }
 
     def dexseq(self):
@@ -668,7 +656,7 @@ class cwl_writer():
         }
         # steps
         self.cwl_workflow["steps"][self.name] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/dexseq.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/docker/dexseq.cwl",
             "in": {
                 "input_script": "dexseq_script",
                 "counts_matrix": f"{self.previous_name}_folder/out",
@@ -679,7 +667,7 @@ class cwl_writer():
         }
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in": {
                 "item": f"{self.name}/output",
                 "name": {"valueFrom": self.name}
@@ -689,7 +677,7 @@ class cwl_writer():
         # yml section
         self.cwl_input["dexseq_script"] = {
             "class": "File",
-            "path": f"{self.conf['root']}/RNASeq/scripts/Basic_DEXSeq_scripts/DEXSeq.R"
+            "path": f"{self.root}/RNASeq/scripts/Basic_DEXSeq_scripts/DEXSeq.R"
         }
 
 
@@ -712,7 +700,7 @@ class cwl_writer():
         bam = "_".join(self.name.split("_")[:2])
         for i in range(self.num):
             self.cwl_workflow["steps"][f"{self.name}_{i+1}"] = {
-                "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/cuffquant.cwl",
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/cuffquant.cwl",
                 "in": {
                     "threads": "threads",
                     "merged_gtf": f"{cuffmerge}/merged_gtf",
@@ -724,7 +712,7 @@ class cwl_writer():
         
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
                 "item":[f"{self.name}_{i+1}/cuffquant_out" for i in range(self.num)],
                 "name": {
@@ -743,7 +731,7 @@ class cwl_writer():
         }
         # steps
         self.cwl_workflow["steps"][f"{self.name}_cuffnorm"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/cuffnorm.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/docker/cuffnorm.cwl",
             "in": {
                 "threads": "threads",
                 "merged_gtf": f"{cuffmerge}/merged_gtf",
@@ -771,7 +759,7 @@ class cwl_writer():
         }
         # steps
         self.cwl_workflow["steps"][self.name] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/cuffdiff.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/docker/cuffdiff.cwl",
             "in": {
                 "threads": "threads",
                 "merged_gtf": f"{cuffmerge}/merged_gtf",
@@ -799,7 +787,7 @@ class cwl_writer():
         for index in range(self.num):
             bam = "_".join(self.previous_name.split("_")[:2])
             self.cwl_workflow["steps"][f"{self.name}_{index+1}"] = {
-                "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/tablemaker.cwl",
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/tablemaker.cwl",
                 "in": {
                     "threads": "threads",
                     "merged_gtf": f"{self.previous_name}/merged_gtf",
@@ -811,7 +799,7 @@ class cwl_writer():
         
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
                 "item":[f"{self.name}_{i+1}/tablemaker_out" for i in range(self.num)],
                 "name": {
@@ -827,7 +815,7 @@ class cwl_writer():
         self.cwl_workflow["inputs"]["ballgown_script"] = "File"
         self.cwl_input["ballgown_script"] = {
             "class": "File",
-            "path": f"{self.conf['root']}/RNASeq/scripts/ballgown.R"
+            "path": f"{self.root}/RNASeq/scripts/ballgown.R"
         }
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
@@ -836,7 +824,7 @@ class cwl_writer():
         }
         # steps
         self.cwl_workflow["steps"][self.name] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/ballgown.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/docker/ballgown.cwl",
             "in": {
                 "input_script": "ballgown_script",
                 "metadata": "metadata",
@@ -848,7 +836,7 @@ class cwl_writer():
 
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
                 "item":[f"{self.name}/gene_matrix", f"{self.name}/transcript_matrix"],
                 "name": {
@@ -864,7 +852,7 @@ class cwl_writer():
         self.cwl_workflow["inputs"]["EdgeR_script"] = "File"
         self.cwl_input["EdgeR_script"] = {
             "class": "File",
-            "path": f"{self.conf['root']}/RNASeq/scripts/EdgeR.R"
+            "path": f"{self.root}/RNASeq/scripts/EdgeR.R"
         }
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
@@ -874,7 +862,7 @@ class cwl_writer():
         
         # steps
         self.cwl_workflow["steps"][self.name] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/edger.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/docker/edger.cwl",
             "in": {
                 "input_script": "EdgeR_script",
                 "count_matrix": f"{self.previous_name}/{self.output_string[self.prev]}",
@@ -886,7 +874,7 @@ class cwl_writer():
 
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
                 "item": f"{self.name}/output",
                 "name": {
@@ -905,7 +893,7 @@ class cwl_writer():
         # steps
         for i in range(self.num):
             self.cwl_workflow["steps"][f"{self.name}_{i + 1}"] = {
-                "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/samtools.cwl",
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/samtools.cwl",
                 "in": {
                     "samfile": f"{self.previous_name}_{i+1}/{self.output_string[self.prev]}",
                     "threads": "threads",
@@ -916,7 +904,7 @@ class cwl_writer():
             }
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
                 "item":[f"{self.name}_{i + 1}/samtools_out" for i in range(self.num)],
                 "name": {
@@ -931,7 +919,7 @@ class cwl_writer():
         self.cwl_workflow["inputs"]["prepDE_script"] = "File"
         self.cwl_input["prepDE_script"] = {
             "class": "File",
-            "path": f"{self.conf['root']}/RNASeq/scripts/prepDE.py"
+            "path": f"{self.root}/RNASeq/scripts/prepDE.py"
         }
         # outputs
         self.cwl_workflow["outputs"]["prepde_out"] = {
@@ -940,7 +928,7 @@ class cwl_writer():
         }
         # steps
         self.cwl_workflow["steps"][f"{self.name}"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/docker/prepDE.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/docker/prepDE.cwl",
             "in": {
                 "input_script": "prepDE_script",
                 "stringtie_out": [f"{self.previous_name}_{i+1}/{self.output_string[self.prev]}"
@@ -950,7 +938,7 @@ class cwl_writer():
         }
         # foldering
         self.cwl_workflow["steps"]["prepde_folder"] = {
-            "run": f"{self.conf['root']}/RNASeq/cwl-tools/folder.cwl",
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
                 "item":[f"{self.name}/gene_count_output", f"{self.name}/transcript_count_output"],
                 "name": {
@@ -971,7 +959,7 @@ class cwl_writer():
             yaml_file = yaml.load(yaml_file)
 
             yaml_file["genomeFastaFiles"]["path"] = self.conf["genome"]
-            yaml_file["sjdbGTFfile"]["path"] = self.conf["annotation"]
+            yaml_file["sjdbGTFfile"]["path"] = self.annotation
 
             with open(f'STAR_index_{self.conf["session_ID"]}.yml', "w+") as outfile:
                 yaml.dump(yaml_file, outfile, default_flow_style=False)
@@ -996,14 +984,14 @@ class cwl_writer():
             self.prev = self.previous_name.split("_")[-1]
             getattr(cwl_writer, step.split("_")[-1])(self)
         
-        with open(self.conf["root"] + f"/Data/{self.reader.identifier}/workflow.cwl", "w+") as outfile:
+        with open(self.root + f"/Data/{self.identifier}/workflow.cwl", "w+") as outfile:
             outfile.write("#!/usr/bin/env cwl-runner\n\n")
             yaml.dump(self.cwl_workflow, outfile, default_flow_style=False)
-        with open(self.conf["root"] + f"/Data/{self.reader.identifier}/input.yml", "w+") as outfile:
+        with open(self.root + f"/Data/{self.identifier}/input.yml", "w+") as outfile:
             yaml.dump(self.cwl_input, outfile, default_flow_style=False)
-        workflow_log = open(f"{self.conf['root']}/Data/{self.reader.identifier}/workflow.log", "w")
+        workflow_log = open(f"{self.root}/Data/{self.identifier}/workflow.log", "w")
         print("Generate dot file")
-        dotfile = open(f"{self.conf['root']}/Data/{self.reader.identifier}/workflow.dot", "w")
+        dotfile = open(f"{self.root}/Data/{self.identifier}/workflow.dot", "w")
         dotfile.write("""digraph workflow {
 graph [
     bgcolor = "#eeeeee"
@@ -1035,20 +1023,20 @@ edge [
         dotfile.flush()
         subprocess.run(["cwl-runner",
                         "--print-dot",
-                        f"{self.conf['root']}/Data/{self.reader.identifier}/workflow.cwl"
+                        f"{self.root}/Data/{self.identifier}/workflow.cwl"
                         ], stdout=dotfile)
         dotfile.close()
-        subprocess.run(["sed", "-i", "29d", f"{self.conf['root']}/Data/{self.reader.identifier}/workflow.dot"])
-        svgfile = open(f"{self.conf['root']}/Data/{self.reader.identifier}/workflow.svg", "w")
-        subprocess.run(["dot", "-Tsvg", f"{self.conf['root']}/Data/{self.reader.identifier}/workflow.dot"],
+        subprocess.run(["sed", "-i", "29d", f"{self.root}/Data/{self.identifier}/workflow.dot"])
+        svgfile = open(f"{self.root}/Data/{self.identifier}/workflow.svg", "w")
+        subprocess.run(["dot", "-Tsvg", f"{self.root}/Data/{self.identifier}/workflow.dot"],
                         stdout=svgfile)
         svgfile.close()
         print("Submit workflow")
         proc = subprocess.Popen(["cwl-runner",
-                    f"--outdir={self.conf['root']}/Data/{self.reader.identifier}/output",
+                    f"--outdir={self.root}/Data/{self.identifier}/output",
                     "--timestamp",
-                    f"{self.conf['root']}/Data/{self.reader.identifier}/workflow.cwl",
-                    f"{self.conf['root']}/Data/{self.reader.identifier}/input.yml"],
+                    f"{self.root}/Data/{self.identifier}/workflow.cwl",
+                    f"{self.root}/Data/{self.identifier}/input.yml"],
                     stdout=workflow_log, stderr=workflow_log)
         print(proc.args)
         print(proc.pid)
