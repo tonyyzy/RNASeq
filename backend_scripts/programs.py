@@ -30,6 +30,7 @@ class cwl_writer():
         "prepde": "gene_count_output",
         "stringtie": "stringtie_out",
         "hisat2": "sam_output",
+        "hisat2xs": "sam_output",
         "salmoncount": "gene_count_output",
         "featurecounts": "gene_count_output"
     }
