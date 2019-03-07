@@ -11,101 +11,27 @@
   </head>
   <body>
     {% block body %}
-    <div class="session_detail_one container-">
-      <!-- <div class="session_detail offset-1 col-md-10"> -->
-        {% if messages %}
-          {% for message in messages %}
-            <div class="alert alert-{{message.tags}}">
-              <!-- <p>message.tags: {{message.tags}}</p> -->
-              <p>{{message}}</p>
-              {{condition}}
-            </div>
-          {% endfor %}
-        {% endif %}
+    <div id='wrapper'>
+      <div id='sidebar_wrapper'>
+        <ul class='sidebar-nav'>
+          <li>Index: {{session_detail.genome_index}}</li>
+          <li>Organism: {{ session_detail.organism|default_if_none:"" }} {{session_detail.genome.organism}}</li>
 
-
-
-          <!-- <h3>{{session_data_dir}}</h3> -->
-          <!-- <h3>{{session_wf}}</h3> -->
-
-
-
-
-
-        <div class="card bg-light mb-3">
-          <div class="card-header">Session Identifier: {{session_detail.identifier}}</div>
-          <div class="card-body">
-            <!-- <h5 class="card-title">Session Identifier: {{session_detail.identifier}}</h5> -->
-            <div class="card-text">
-              <table class="table mb-0">
-                <thead>
-                  <tr>
-                    <th>Index</th>
-                    <th>Organism</th>
-                    <th>Salmon</th>
-                    <th>DNA Fasta</th>
-                    <th>cDNA Fasta</th>
-                    <th>GTF</th>
-                    <th>Conditions</th>
-                    <th>Workflows</th>
-                    <th>Workflow Graph</th>
-                    <th>Uploaded</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                      <td>{{session_detail.genome_index}}</td>
-                      <td>{{ session_detail.organism|default_if_none:"" }} {{session_detail.genome.organism}}</td>
-                      <td>{{session_detail.salmon}}</td>
-                      <td>{{ session_detail.fasta_dna_file }} {{session_detail.genome.fasta_dna_file}}</td>
-                      <td>{{ session_detail.fasta_cdna_file }} {{ session_detail.genome.fasta_cdna_file }}</td>
-                      <td>{{ session_detail.gtf_file }} {{ session_detail.genome.gtf_file }}</td>
-                      <td><a id='id_conditions_create_btn' class='btn btn-sm btn-success' href="{% url 'analysis:conditions_create' session_slug=session_detail.identifier %}">Add Condition</a></td>
-                      <td><a id='id_workflow_create_btn' class='btn btn-sm btn-success disabled' href="{% url 'analysis:workflow_create' session_slug=session_detail.identifier %}">Add Workflow</a></td>
-                      <td>
-                        <!-- Trigger the modal with a button -->
-                                <button type="button" class="btn btn-sm btn-info" onclick='svg_delay()' data-toggle="modal" data-target="#myModal">Workflow</button>
-
-                                <!-- Modal -->
-                                <div id="myModal" class="modal fade" role="dialog">
-                                  <div class="modal-dialog modal-lg">
-
-                                    <!-- Modal content-->
-                                    <div class="modal-content">
-                                      <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        <h1>Workflow</h1>
-                                      </div>
-                                        {% if session_wf %}
-                                        <object id='id_demo_wf' data="{% static 'images/' %}{{session_detail.identifier}}/my-wf.svg" type="image/svg+xml" class="svg">
-                                          <!-- <img src="yourfallback.jpg" /> -->
-                                        </object>
-                                        {% endif %}
-                                        {% if not session_wf %}
-                                          <h2>Clever stuff happening behind the scenes. Please be patient.</h2>
-                                          <div class="container">
-                                            <div class="loader spinner"></div>
-                                            <div class="icon"></div>
-                                          </div>
-                                        {% endif %}
-
-                                      <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                      </div>
-                                    </div>
-
-                                  </div>
-                                </div>
-                      </td>
-                      <td>{{session_detail.status}}</td>
-                    </tr>
-                </tbody>
-            </table>
-            </div>
-          </div>
+        <li><a id='id_upload_btn' href="#">Add Condition</a></li>
+        <li><a id='id_upload_btn' href="#">Add Sample</a></li>
+        <li><a id='id_upload_btn' href="#">Add Workflow</a></li>
+        <li><a href="#">test</a></li>
+        </ul>
+      </div>
+      <h1 class='hidden'>hi mum</h1>
+      <!-- NAV PANE SELECTION -->
+      <div id='page_content_wrapper'>
+        <div id='sidebar_toggle' class="toggle_btn">
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
-
-
+        <br>
         <!-- CONDITIONS -->
         <div id='id_conditions_div'>
         {% if session_detail.conditions_fk.all %}
@@ -179,9 +105,6 @@
               <td>{{ sample.accession }}</td>
               <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:samples_update' session_slug=sample.session.identifier samples_pk=sample.pk %}">Update</a></td>
               <td><a class='btn btn-sm btn-danger' href="{% url 'analysis:samples_delete' session_slug=sample.session.identifier samples_pk=sample.pk %}">Delete</a></td>
-<!-- session_pk': 2, 'sample_pk': 7
-analysis/session_detail/2/samples_update/7/ -->
-
             </tr>
           {% endfor %}
         </tbody>
@@ -191,7 +114,6 @@ analysis/session_detail/2/samples_update/7/ -->
             <!-- <h3>{{'No samples defined.'}}</h3> -->
       {% endif %}
     </div>
-
 <br><br>
         <!-- WORKFLOW -->
         <div id='id_workflow_div'>
@@ -242,14 +164,35 @@ analysis/session_detail/2/samples_update/7/ -->
         <input type="submit" class='create_btn' value="SUBMIT FOR ANALYSIS">
       </form>
     </div> <!--END session_one_detail  -->
+      </div><!-- content wrapper -->
+      </div>
+
+    <div class="session_detail_one container-">
+      <!-- <div class="session_detail offset-1 col-md-10"> -->
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{message.tags}}">
+              <!-- <p>message.tags: {{message.tags}}</p> -->
+              <p>{{message}}</p>
+              {{condition}}
+            </div>
+          {% endfor %}
+        {% endif %}
+
+
+
+
+
+
+
+
+
+
+
 
       <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- jQuery cdn is required prior to using bootstrap -->
-
-
       <script type="text/javascript" src= "{% static 'js/svg-pan-zoom.min.js' %}"></script>
       <script>
-
-
       function svg_delay(){
         console.log('delay')
         setTimeout(function() { zoomSvg(); }, 200);
@@ -281,6 +224,13 @@ analysis/session_detail/2/samples_update/7/ -->
           unhide(['id_session_submit_btn'])
         }
     });
+
+    $('#sidebar_toggle').click(function(e){
+      // e.preventDefault();
+      $('#wrapper').toggleClass('menuDisplayed')
+      // console.log('hi')
+    });
+
     </script>
 
 

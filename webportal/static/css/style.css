@@ -204,7 +204,6 @@ html,body{
 }
 
 /* SIDEBAR */
-
 #sidebar_wrapper{
   z-index: 1;
   position: absolute;
@@ -213,8 +212,8 @@ html,body{
   overflow-y: hidden;
   background-color: #040405;
   #040405
-  /* border: 2px solid yellow; */
-  opacity: 0.9;
+  border: 2px solid yellow;
+  opacity: 0.8;
   transition: all 250ms linear;
 }
 
@@ -222,16 +221,16 @@ html,body{
   width: 100%;
   position: absolute;
   padding: 15px;
-  /* border: 2px solid green; */
+  border: 2px solid green;
 }
 
 #wrapper.menuDisplayed #sidebar_wrapper{
-  width: 150px;
+  width: 250px;
 }
 
 #wrapper.menuDisplayed #page_content_wrapper{
-  padding: 150px;
-  margin-top: -135px;
+  padding-left: 250px;
+  /* margin-top: -300px; */
 }
 
 .sidebar-nav{
@@ -243,6 +242,7 @@ html,body{
   text-indent: 20px;
   line-height: 40px;
   border-bottom: 1px solid;
+  color: #ddd;
 }
 
 
@@ -255,6 +255,13 @@ html,body{
 .sidebar-nav li a:hover{
   background: #363647;
 }
+
+#id_upload_btn:hover{
+  background: #28a745;
+  opacity:0.8;
+}
+
+
 
 .toggle_btn{
   position: absolute;
@@ -298,13 +305,11 @@ svg:hover path {
 } */
 
 
+/* MODAL STYLE */
 .modal-lg {
     max-width: 99%;
     /* height: 80%!important; */
 }
-
-
-
 
 .loader {
   position: relative;
