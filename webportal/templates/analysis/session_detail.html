@@ -24,14 +24,12 @@
         {% endif %}
 
 
-          <!-- <h2>{{my_wf_exists}}</h2> -->
-          <h3>{{session_data_dir}}</h3>
-          <!-- <h3>{{svg_path}}</h3> -->
-          <object id='id_demo_wf' data="{% static "images/my-wf.svg" %}" type="image/svg+xml" class="svg">
-            <!-- <img src="yourfallback.jpg" /> -->
-          </object>
-          <!-- <img id='the_svg' class="svg" src="{% static "images/my-wf.svg" %}" alt="a nice workflow" /> -->
-          <!-- <svg id='the_svg' class="svg" src="{% static "images/my-wf.svg" %}" alt="a nice workflow" svg/> -->
+
+          <!-- <h3>{{session_data_dir}}</h3> -->
+          <!-- <h3>{{session_wf}}</h3> -->
+
+
+
 
 
         <div class="card bg-light mb-3">
@@ -50,6 +48,7 @@
                     <th>GTF</th>
                     <th>Conditions</th>
                     <th>Workflows</th>
+                    <th>Workflow Graph</th>
                     <th>Uploaded</th>
                   </tr>
                 </thead>
@@ -63,6 +62,41 @@
                       <td>{{ session_detail.gtf_file }} {{ session_detail.genome.gtf_file }}</td>
                       <td><a id='id_conditions_create_btn' class='btn btn-sm btn-success' href="{% url 'analysis:conditions_create' session_slug=session_detail.identifier %}">Add Condition</a></td>
                       <td><a id='id_workflow_create_btn' class='btn btn-sm btn-success disabled' href="{% url 'analysis:workflow_create' session_slug=session_detail.identifier %}">Add Workflow</a></td>
+                      <td>
+                        <!-- Trigger the modal with a button -->
+                                <button type="button" class="btn btn-sm btn-info" onclick='svg_delay()' data-toggle="modal" data-target="#myModal">Workflow</button>
+
+                                <!-- Modal -->
+                                <div id="myModal" class="modal fade" role="dialog">
+                                  <div class="modal-dialog modal-lg">
+
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h1>Workflow</h1>
+                                      </div>
+                                        {% if session_wf %}
+                                        <object id='id_demo_wf' data="{% static 'images/' %}{{session_detail.identifier}}/my-wf.svg" type="image/svg+xml" class="svg">
+                                          <!-- <img src="yourfallback.jpg" /> -->
+                                        </object>
+                                        {% endif %}
+                                        {% if not session_wf %}
+                                          <h2>Clever stuff happening behind the scenes. Please be patient.</h2>
+                                          <div class="container">
+                                            <div class="loader spinner"></div>
+                                            <div class="icon"></div>
+                                          </div>
+                                        {% endif %}
+
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                      </div>
+                                    </div>
+
+                                  </div>
+                                </div>
+                      </td>
                       <td>{{session_detail.status}}</td>
                     </tr>
                 </tbody>
@@ -70,7 +104,7 @@
             </div>
           </div>
         </div>
-        </div>
+
 
         <!-- CONDITIONS -->
         <div id='id_conditions_div'>
@@ -215,37 +249,39 @@ analysis/session_detail/2/samples_update/7/ -->
       <script type="text/javascript" src= "{% static 'js/svg-pan-zoom.min.js' %}"></script>
       <script>
 
-      $( document ).ready(function() {
-        setTimeout(function() { your_func(); }, 200);
-      });
 
-      function your_func(){
-        console.log('hi')
+      function svg_delay(){
+        console.log('delay')
+        setTimeout(function() { zoomSvg(); }, 200);
+      }
+
+      function zoomSvg(){
+        console.log('called')
         svgPanZoom('#id_demo_wf')
       }
 
-          $( document ).ready(function() {
-            $('#id_workflow_create_btn')
-            // $('#id_SessionSubmitForm').hide()
-            if($('.td_index').length){
-              // alert('show samples');
-              $('#session_upload').show()
-            }
-            if($('.td_conditions_counter').length){
-              console.log('condition added')
-              // $('#id_conditions_create_btn').prop('disabled', true);
-              // $('#id_workflow_create_btn').removeClass('disabled')
-            }
-            if($('.td_samples_counter').length){
-              console.log('samples added');
-              // $('#id_conditions_create_btn').prop('disabled', true);
-              $('#id_workflow_create_btn').removeClass('disabled')
-            }
-            if($('.td_workflow_counter').length){
-              unhide(['id_session_submit_btn'])
-            }
-        });
-      </script>
+      $( document ).ready(function() {
+        $('#id_workflow_create_btn')
+        // $('#id_SessionSubmitForm').hide()
+        if($('.td_index').length){
+          // alert('show samples');
+          $('#session_upload').show()
+        }
+        if($('.td_conditions_counter').length){
+          console.log('condition added')
+          // $('#id_conditions_create_btn').prop('disabled', true);
+          // $('#id_workflow_create_btn').removeClass('disabled')
+        }
+        if($('.td_samples_counter').length){
+          console.log('samples added');
+          // $('#id_conditions_create_btn').prop('disabled', true);
+          $('#id_workflow_create_btn').removeClass('disabled')
+        }
+        if($('.td_workflow_counter').length){
+          unhide(['id_session_submit_btn'])
+        }
+    });
+    </script>
 
 
   {% endblock %}

@@ -6,9 +6,9 @@ from analysis.models import Session, Workflow, Samples, Condition, The_Debug
 from . import models
 from django.db.models import Q
 from django.contrib import messages
-import os
 from django.conf import settings
-# from django.core.files.storage import FileSystemStorage
+import os
+from shutil import copyfile
 from django.views.generic import (View,TemplateView,
                                 ListView,DetailView,
                                 CreateView,DeleteView,
@@ -70,26 +70,27 @@ class SessionDetailView(View):
     def get(self, request, session_slug): # loads the session_detail template with the selected session object loaded as 'instance' and upload associated with that instance loaded from 'form'
         instance = get_object_or_404(Session, identifier=session_slug)
         form = SessionSubmitForm(request.POST or None, instance = instance)
-        if os.path.isdir(os.path.join(settings.DATA_DIR, session_slug)): # checks if Data root contains files for a given session
-            session_data_dir = os.path.join(settings.DATA_DIR, session_slug)
-            session_wf_path = session_data_dir + '/my-wf.svg'
-            # session_files = os.listdir(session_data_dir)
-            print(f'\n{session_wf_path}')
-
-
-            session = Session.objects.get(identifier=session_slug)
-            context = {'session_detail':session, 'form':form, 'session_data_dir': session_data_dir}
-            return render(request, self.template_name, context)
-            # os.chdir(session_data_dir)
-            # my_wf_exists = os.path.isfile('my-wf.svg')
-        # if my_wf_exists:
-            # svg_path = os.path.join(session_data_dir, 'my-wf.svg')
+        session_data_dir = os.path.join(settings.DATA_DIR, session_slug)
         try:
             session = Session.objects.get(identifier=session_slug)
         except session.DoesNotExist:
-            raise Http404('Session does not exist')
+            raise Http404('Session not found...!')
 
-        context = {'session_detail':session,'form':form}
+        if os.path.isfile(session_data_dir + '/my-wf.svg'): # check if my-wf.svg has been generated
+            session_wf = session_data_dir + '/my-wf.svg'
+            image_dir = os.path.join(settings.BASE_DIR, 'static/images', session_slug)
+            image_dir_path = os.path.join(image_dir, 'my-wf.svg')
+            try:
+                os.makedirs(image_dir)
+                copyfile(session_wf, image_dir_path)
+            except FileExistsError:
+                print('\nFile exists already')
+
+            session = Session.objects.get(identifier=session_slug)
+            context = {'session_detail':session, 'form':form, 'session_data_dir': session_data_dir, 'session_wf': session_wf}
+            return render(request, self.template_name, context)
+
+        context = {'session_detail':session,'form':form, 'session_data_dir': session_data_dir}
         return render(request, self.template_name, context)
 
 
