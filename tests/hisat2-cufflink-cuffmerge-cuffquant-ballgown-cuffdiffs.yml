@@ -30,3 +30,6 @@ metadata:
   path: ./metadata.csv
 conditions: ["Normal","Tumour"]
 Tag: --dta-cufflinks
+python_script:
+  class: File
+  path: ../scripts/cuffdiff_file_sort.py

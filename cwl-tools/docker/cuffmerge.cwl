@@ -4,7 +4,7 @@ baseCommand: python2
 
 hints:
     DockerRequirement:
-        dockerPull: machalen/cufflinksdocker:latest
+        dockerPull: filipejesus/cufflinks:latest
 
 requirements:
     ShellCommandRequirement: {}

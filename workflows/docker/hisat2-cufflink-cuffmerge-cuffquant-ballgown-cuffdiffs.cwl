@@ -25,6 +25,7 @@ inputs:
     metadata: File
     conditions: string[]
     Tag: string
+    python_script: File
 
 outputs:
     hisat2_align_out:
@@ -328,6 +329,7 @@ steps:
   cuffdiff:
     run: ../../cwl-tools/docker/cuffdiff.cwl
     in:
+      input_script: python_script
       threads: threads
       merged_gtf: cuffmerge/merged_gtf
       #libType:
