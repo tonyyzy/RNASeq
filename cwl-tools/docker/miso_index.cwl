@@ -5,7 +5,7 @@ class: CommandLineTool
 baseCommand: index_gff
 hints:
    DockerRequirement:
-      dockerPull: filipejesus/miso 
+      dockerPull: filipejesus/miso
 
 inputs:
    gtf:
@@ -19,7 +19,7 @@ inputs:
          position: 2
 
 outputs:
-   output:
+   miso_out:
       type: Directory
       outputBinding:
          glob: $(inputs.output)

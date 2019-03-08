@@ -29,7 +29,7 @@ inputs:
             prefix: --metadata
 
 outputs:
-    output:
+    edger_out:
       type: File[]
       outputBinding:
         glob: "*.csv"
