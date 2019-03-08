@@ -159,6 +159,7 @@
           <!-- WORKFLOWS -->
           <div id="workflow" class="container tab-pane fade"><br>
             <div id='id_workflow_div'>
+            <h4>Upload New Workflow: <a class='btn btn-sm btn-success' href="{% url 'analysis:workflow_create' session_detail.identifier %}">Add Workflow</a></h4>
             {% if session_detail.workflow.all %}
             <div class='lead'>Session Workflow:</div>
             <table class="table table-bordered mb-1">
@@ -205,23 +206,33 @@
               <input type="submit" class='create_btn' value="SUBMIT FOR ANALYSIS">
             </form>
           </div>
+          <div class="container">
+            Workflow Schematic
+            <object data="{% static 'images/' %}{{session_detail.identifier}}/my-wf.svg" type="image/svg+xml" id='id_demo_wf' class='svg'>
+            </object>
+          </div>
+
         </div>
  </div> <!-- page-content -->
 </div> <!-- wrapper -->
 
 
-      <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- jQuery cdn is required prior to using bootstrap -->
+      <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
       <script type="text/javascript" src= "{% static 'js/svg-pan-zoom.min.js' %}"></script>
       <script>
-      function svg_delay(){
-        console.log('delay')
-        setTimeout(function() { zoomSvg(); }, 200);
-      }
+
 
       function zoomSvg(){
         console.log('called')
         svgPanZoom('#id_demo_wf')
       }
+
+      function svg_delay(){
+        console.log('delay')
+        setTimeout(function() { zoomSvg(); }, 1000);
+      }
+
+      svg_delay()
 
       $( document ).ready(function() {
         $('#id_workflow_create_btn')
@@ -243,7 +254,12 @@
         if($('.td_workflow_counter').length){
           unhide(['id_session_submit_btn'])
         }
+
     });
+
+
+
+
 
     $('#sidebar_toggle').click(function(e){
       // e.preventDefault();

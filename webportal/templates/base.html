@@ -5,12 +5,13 @@
       <meta charset="utf-8">
       {% load static %}
       <!-- REMOTE CSS -->
-      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" crossorigin="anonymous">
-      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous">
+      <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" crossorigin="anonymous"> -->
+      <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"> -->
       <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> -->
       <!-- LOCAL CSS -->
       <link rel="stylesheet" href="{% static 'css/style.css' %}">
-      <!-- <link rel="stylesheet" href="{% static 'bootstrap-4.3.1-dist/css/bootstrap.min.css' %}"> -->
+      <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+      <!-- <link rel="stylesheet" href="{% static 'js/bootstrap.min.js' %}"> -->
 
     {% block head %}
     {% endblock %}
@@ -51,14 +52,17 @@
 
 
 
-<!-- REMOTE SCRIPTS -->
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- jQuery cdn is required prior to using bootstrap -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-<!-- LOCAL SCRIPTS -->
+
   <script src= "{% static 'js/myscript.js' %}"></script>
-  <!-- <script src= "{% static 'bootstrap-4.3.1-dist/js/bootstrap.min.js' %}"></script> -->
+  <script src= "{% static 'js/bootstrap.min.js' %}"></script>
 
 
 </body>
 </html>
+
+<!-- BOOTSTRAP CRASH - NEED TO CONVERT CDN OVER TO DOWNLOADED FILE USE -->
+<!-- REMOTE SCRIPTS -->
+  <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script> -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script> -->
+  <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> -->
+<!-- LOCAL SCRIPTS -->

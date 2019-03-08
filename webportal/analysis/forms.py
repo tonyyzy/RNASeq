@@ -61,7 +61,7 @@ class SamplesForm(forms.ModelForm):
     class Meta:
         model = Samples
         # fields = ['condition', 'libtype', 'read_1']
-        fields = ['condition','libtype', 'read_1', 'read_2', 'accession']
+        fields = ['libtype', 'read_1', 'read_2', 'accession']
 
         # fields = ['session', 'condition', 'libtype', 'read_1', 'read_2', 'accession']
         # fields='__all__'
