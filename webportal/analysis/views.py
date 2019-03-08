@@ -226,19 +226,19 @@ class SamplesDetailView(DetailView):
 class SamplesCreateView(CreateView):
     template_name = 'analysis/samples_form.html'
 
-    def get(self, request, session_slug, conditions_pk):
-        form = SamplesForm
+    def get(self, request, session_slug):
+        form = SamplesForm()
         context = {'form':form}
 
-        session_pk = Session.objects.get(identifier=session_slug).id
-        condition_obj = Condition.objects.get(pk=conditions_pk)
-        row_condition = condition_obj.condition
-        print(f'\ncondition: {row_condition}\n')
-        print(f'replicates: {condition_obj.no_replicates}')
-        row_condition_count = Samples.objects.filter(session_id=session_pk).filter(condition__condition=row_condition).count()
-        if row_condition_count >= condition_obj.no_replicates:
-            messages.warning(request, f'Error: {condition_obj.no_replicates} {condition_obj.condition} sample(s) already uploaded.')
-            return redirect('analysis:session_detail', session_slug=session_slug)
+        # session_pk = Session.objects.get(identifier=session_slug).id
+        # condition_obj = Condition.objects.get(pk=conditions_pk)
+        # row_condition = condition_obj.condition
+        # print(f'\ncondition: {row_condition}\n')
+        # print(f'replicates: {condition_obj.no_replicates}')
+        # row_condition_count = Samples.objects.filter(session_id=session_pk).filter(condition__condition=row_condition).count()
+        # if row_condition_count >= condition_obj.no_replicates:
+        #     messages.warning(request, f'Error: {condition_obj.no_replicates} {condition_obj.condition} sample(s) already uploaded.')
+        #     return redirect('analysis:session_detail', session_slug=session_slug)
         return render(request, self.template_name, context)
 
     def post(self, request, session_slug, conditions_pk):

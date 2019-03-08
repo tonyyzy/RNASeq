@@ -12,6 +12,15 @@
   <body>
     {% block body %}
     <div id='wrapper'>
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{message.tags}}">
+            <p>{{message}}</p>
+            {{condition}}
+          </div>
+        {% endfor %}
+      {% endif %}
+
       <div id='sidebar_wrapper'>
         <ul class='sidebar-nav'>
           <!-- <li>Index: {{session_detail.genome_index}}</li>
@@ -75,7 +84,7 @@
                     <th>Count</th>
                     <th>Condition</th>
                     <th>Replicates</th>
-                    <!-- <th>Add Sample</th> -->
+                    <th>Add Sample</th>
                     <th>Update</th>
                     <th>Delete</th>
                   </tr>
@@ -87,7 +96,7 @@
                       <td class='td_conditions_counter'>{{forloop.counter}}</td>
                       <td class="td_condition">{{ condition.condition }}</td>
                       <td class="td_replicate">{{ condition.no_replicates }}</td>
-                      <!-- <td><a class='btn btn-sm btn-success' href="{% url 'analysis:samples_create' session_slug=condition.session.identifier conditions_pk=condition.pk %}">Add Sample</a></td> -->
+                      <td><a class='btn btn-sm btn-success' href="{% url 'analysis:samples_create' session_slug=condition.session.identifier conditions_pk=condition.pk %}">Add Sample</a></td>
                       <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:conditions_update' session_slug=condition.session.identifier conditions_pk=condition.pk %}">Update</a></td>
                       <td><a class='btn btn-sm btn-danger' href="{% url 'analysis:conditions_delete' session_slug=condition.session.identifier conditions_pk=condition.pk %}">Delete</a></td>
                     </tr>
@@ -103,8 +112,7 @@
           <!-- SAMPLES -->
           <div id="sample" class="container tab-pane fade"><br>
             <div id='id_samples_div'>
-            <h4>Upload Sample:</h4>
-            <!-- <a class='btn btn-sm btn-success' href="{% url 'analysis:samples_create' session_slug=condition.session.identifier conditions_pk=condition.pk %}">Add Sample</a> -->
+            <!-- <h4>Upload Sample:</h4>  WILL REQUIRE MODEL FORMSET TO REDEFINE THE QUERY SET-->
             {% if session_detail.samples_fk.all %}
             <div class='lead'>Session Samples:</div>
             <table class="table table-bordered mb-1">
@@ -200,17 +208,6 @@
         </div>
  </div> <!-- page-content -->
 </div> <!-- wrapper -->
-
-    <!-- <div class="session_detail_one container-">
-        {% if messages %}
-          {% for message in messages %}
-            <div class="alert alert-{{message.tags}}">
-              <p>{{message}}</p>
-              {{condition}}
-            </div>
-          {% endfor %}
-        {% endif %} -->
-
 
 
       <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- jQuery cdn is required prior to using bootstrap -->
