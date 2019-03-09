@@ -194,6 +194,7 @@
             {% if not session_detail.workflow.all %}
               <!-- <h3>No Workflows defined.</h3> -->
             {% endif %}
+
           </div>
           </div>
           <div id="session_submit" class="container tab-pane fade"><br>
@@ -205,12 +206,23 @@
               <br>
               <input type="submit" class='create_btn' value="SUBMIT FOR ANALYSIS">
             </form>
-          </div>
-          <div class="container">
-            Workflow Schematic
-            <object data="{% static 'images/' %}{{session_detail.identifier}}/my-wf.svg" type="image/svg+xml" id='id_demo_wf' class='svg'>
-            </object>
-          </div>
+
+            {% if session_detail.status %}
+              <h2>submitted</h2>
+              <!-- {{session_wf}} -->
+              {% if session_wf %}
+                <object data="{% static 'images/' %}{{session_detail.identifier}}/my-wf.svg" type="image/svg+xml" id='id_demo_wf' class='svg'>
+                </object>
+              {% else %}
+                <h3>workflow being generated</h3>
+                <div class="spinner-border spinner" role="status">
+                  <span class="sr-only">Loading wf</span>
+                </div>
+              {% endif %}
+            {% else %}
+              <h2>not submitted</h2>
+            {% endif %}
+
 
         </div>
  </div> <!-- page-content -->

@@ -85,7 +85,6 @@ class SessionDetailView(View):
                 copyfile(session_wf, image_dir_path)
             except FileExistsError:
                 print('\nFile exists already')
-
             session = Session.objects.get(identifier=session_slug)
             context = {'session_detail':session, 'form':form, 'session_data_dir': session_data_dir, 'session_wf': session_wf}
             return render(request, self.template_name, context)

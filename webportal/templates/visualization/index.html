@@ -1,0 +1,59 @@
+{%extends 'base.html'%}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+    {% load static %}
+      <title>Session Detail</title>
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    <div id='wrapper'>
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{message.tags}}">
+            <p>{{message}}</p>
+            {{condition}}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <div id='sidebar_wrapper'>
+        <ul class='sidebar-nav'>
+          <!-- <li>Index: {{session_detail.genome_index}}</li>
+          <li>Organism: {{ session_detail.organism|default_if_none:"" }} {{session_detail.genome.organism}}</li> -->
+        <li><a id='id_upload_btn' href="#">Add Condition</a></li>
+        <li><a id='id_upload_btn' href="#">Add Sample</a></li>
+        <li><a id='id_upload_btn' href="#">Add Workflow</a></li>
+        <li><a href="#">test</a></li>
+        </ul>
+      </div>
+
+      <div id='page_content_wrapper'>
+        <div id='sidebar_toggle' class="toggle_btn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <br>
+        test
+      </div><!-- PAGE CONTENT WRAPPER -->
+</div> <!-- WRAPPER -->
+
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script>
+    $('#sidebar_toggle').click(function(e){
+      // e.preventDefault();
+      $('#wrapper').toggleClass('menuDisplayed')
+      // console.log('hi')
+    });
+  </script>
+
+
+  {% endblock %}
+  </body>
+</html>

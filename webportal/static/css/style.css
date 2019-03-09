@@ -311,73 +311,10 @@ svg:hover path {
     /* height: 80%!important; */
 }
 
-.loader {
-  position: relative;
-  top: 49%;
-  left: 54%;
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  border: 5px solid white;
-  border-radius: 50%;
-  animation: spin 0.5s infinite linear;
-  background-color: #72a5ff;
+/* SPINNER  */
+.spinner{
 
+  margin-bottom: 230px;
+  margin-top: 100px;
+  margin-left: 48%;
 }
-
-.loader::before,
-.loader::after {
-  left: -5px;
-  top: -5px;
-  display: none;
-  position: absolute;
-  content: '';
-  width: inherit;
-  height: inherit;
-  border: inherit;
-  border-radius: inherit;
-}
-
-
-.spinner {
-  border-color: transparent;
-  border-top-color: rgba(0,0,0,0.3);
-  animation-duration: 3s;
-}
-
-.spinner::after {
-  display: block;
-  border-color: transparent;
-  border-top-color: #E9EBF0;
-  animation: spin 1.5s infinite ease-in-out;
-}
-
-.icon {
-  width: 29px;
-  height: 20px;
-  position: absolute;
-  top: 490px;
-  left: 307px;
-  background-image: url(https://dl.dropboxusercontent.com/u/43783651/Mozilla/cloud.svg);
-  background-repeat: no-repeat;
-  animation: pulsate 1.5s infinite ease-in-out;
-}
-
-
-@keyframes pulsate {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.75;
-  }
-
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
