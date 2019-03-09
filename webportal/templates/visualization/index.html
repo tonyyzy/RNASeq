@@ -7,6 +7,12 @@
     {% block head %}
     {% load static %}
       <title>Session Detail</title>
+      <meta charset="utf-8">
+      <script src="http://d3js.org/d3.v3.js"></script>
+      <!-- <script src=" https://d3js.org/d3.v5.js"></script> -->
+      <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
+
+
     {% endblock %}
   </head>
   <body>
@@ -40,10 +46,17 @@
         </div>
         <br>
         test
+        <br>
+        <div id = "painting"></div>
+        {% static 'js/d3.js' %}
       </div><!-- PAGE CONTENT WRAPPER -->
 </div> <!-- WRAPPER -->
 
 
+  <script src= "{% static 'js/my_volcano.js' %}"></script>
+
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.1/d3.min.js" integrity="sha256-RtVUDWfx0vF5nrvHDYcQoWSPaOuQ0R8Rq9kUG2kSvH8=" crossorigin="anonymous"></script> -->
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
   <script>
     $('#sidebar_toggle').click(function(e){
