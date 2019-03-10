@@ -62,8 +62,18 @@ class SamplesForm(forms.ModelForm):
         model = Samples
         # fields = ['condition', 'libtype', 'read_1']
         fields = ['libtype', 'read_1', 'read_2', 'accession']
+
         # fields = ['session', 'condition', 'libtype', 'read_1', 'read_2', 'accession']
         # fields='__all__'
+
+        # def __init__(self, session_id, *args, **kwargs):
+        #     print(f'\n{session_id}')
+        #     super(SamplesForm, self).__init__(*args, **kwargs)
+        #     self.fields['condition'].queryset = Conditions.objects.filter(session_id = session_id)
+
+        # widgets={
+            # 'condition': forms.ModelChoiceField(queryset=Session.objects.filter(Session.identifier)
+        # )}
 
 
 class WorkflowForm(forms.ModelForm):
@@ -78,21 +88,20 @@ class WorkflowForm(forms.ModelForm):
 }
 
 
-
 class DebugForm(forms.ModelForm):
-    # debug_title = forms.CharField(
-    #         max_length=100,
-    #         widget=forms.TextInput(
-    #             attrs={'class':'form-control', 'placeholder':'debug_title'}
-    #         )
-    #     )
-    #
-    # debug_body = forms.CharField(
-    #         max_length=100,
-    #         widget=forms.Textarea(
-    #             attrs={'class':'form-control', 'placeholder':'debug_body'}
-    #         )
-    #     )
+    debug_title = forms.CharField(
+            max_length=100,
+            widget=forms.TextInput(
+                attrs={'class':'form-control', 'placeholder':'debug_title'}
+            )
+        )
+
+    debug_body = forms.CharField(
+            max_length=100,
+            widget=forms.Textarea(
+                attrs={'class':'form-control', 'placeholder':'debug_body'}
+            )
+        )
 
     class Meta:
         model = The_Debug

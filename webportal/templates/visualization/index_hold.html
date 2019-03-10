@@ -1,0 +1,187 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      #header{
+				backgvolcround-color: lightblue;
+				width:100%;
+				height:50px;
+				text-align: center;
+			}
+			#sidebar-left{
+				float:left;
+				width:15%;
+				background-color: grey;
+			}
+			#main{
+				float:left;
+				width:70%;
+				background-color: white;
+			}
+			#sidebar-right{
+				float:left;
+				width:15%;
+				background-color: grey;
+			}
+			#footer{
+				clear:both;
+				height: 50px;
+				width: 100%;
+				text-align: center;
+				background-color: lightblue;
+			}
+			#sidebar-left, #main, #sidebar-right{
+				min-height: 600px
+			}
+      .hidden{
+        display:none;
+      }
+      .unhidden{
+        display:block;
+      }
+      .accordion {
+        background-color: #eee;
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        text-align: left;
+        border: none;
+        outline: none;
+        transition: 0.4s;
+      }
+      /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+      .active, .accordion:hover {
+        background-color: #ccc;
+      }
+      /* Style the accordion panel. Note: hidden by default */
+      .panel {
+        padding: 0 18px;
+        background-color: white;
+        display: none;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="divDownload" style="display: none;"></div>
+    <div id="header">Volcano Plot</div>
+		<div id="sidebar-left">
+      Workflows
+      <input type="button" onclick="unhide(this, ['file_volcano','foldchange','pvalue','sig_colour','line_colour','nonsig','volcano_download','volcano_submit']) & hide(this, ['file_dot_plot','gene','dot_plot_submit','dot_plot_download'])" value="Volcano">
+      <input type="button" onclick="unhide(this, ['file_dot_plot','gene','dot_plot_submit','dot_plot_download']) & hide(this, ['file_volcano','foldchange','pvalue','sig_colour','line_colour','nonsig','volcano_download','volcano_submit'])" value="Dot plot">
+    </div>
+    <div id="main"><!-- Plotly chart will be drawn inside this DIV --></div>
+    <div id="sidebar-right">
+      <button class="accordion">Data</button>
+      <div class="panel">
+        <p style="font-size:16px">Select a gene</p>
+        <input name="gene" type="text" maxlength="512" id="gene"  class="hidden" value="ENSG00000169744"/>
+        <!-- <input name="gene" type="text" maxlength="512" id="gene"  class="hidden" value="gene1"/> -->
+        <p style="font-size:16px">Select a file</p>
+        <select name="file" id="file_dot_plot"  class="hidden" onChange="read_data('file_dot_plot')";>
+          <option value="" selected="selected"></option>
+          <option value="./gene_count_matrix.csv">gene_count_matrix</option>
+        </select>
+        <p style="font-size:16px">Select a file</p>
+        <select name="file" id="file_volcano" onChange="read_data('file_volcano')" class="hidden";>
+          <option value="" selected="selected"></option>
+          <option value='./DGE_res/human_DGE_results.csv'>human_DGE_results.csv</option>
+          <option value='./DGE_res/DGE_results.csv'>DGE_results.csv</option>
+          <option value='./DGE_res/workflow1_DGE_results.csv'>workflow1_DGE_results.csv</option>
+        </select><br>
+        <p style="font-size:16px">Foldchange threshold</p>
+        <input name="foldchange" type="text" maxlength="512" id="foldchange" class="hidden" value="logfoldchange threshold"/><br>
+        <p style="font-size:16px">P-Value threshold</p>
+        <input name="pvalue" type="text" maxlength="512" id="pvalue" class="hidden" value="pvalue threshold"/><br>
+      </div><br>
+
+      <button class="accordion">Visual</button>
+      <div class="panel">
+        <p style="font-size:16px">Colour for significant points</p>
+        <select name="significant colour" id="sig_colour" class="hidden";>
+          <option value='rgba(200, 0, 0, 1.0)' selected="selected">red</option>
+          <option value='rgba(0, 200, 0, 1.0)'>green</option>
+          <option value='rgba(0, 0, 200, 1.0)'>blue</option>
+          <option value='rgba(0, 0, 0, 1.0)'>black</option>
+        </select><br>
+        <p style="font-size:16px">Colour for folchange line</p>
+        <select name="line colour" id="line_colour" class="hidden";>
+          <option value='rgba(255,255,255, 1.0)' selected="selected">None</option>
+          <option value='rgba(200, 0, 0, 1.0)'>red</option>
+          <option value='rgba(200, 0, 0, 1.0)'>red</option>
+          <option value='rgba(0, 200, 0, 1.0)'>green</option>
+          <option value='rgba(0, 0, 200, 1.0)'>blue</option>
+          <option value='rgba(0, 0, 0, 1.0)'>black</option>
+        </select><br>
+        <p style="font-size:16px">show non sig points</p>
+        <input type="checkbox" name="nonsig" id="nonsig" class="hidden"><br>
+      </div><br>
+
+      <button class="accordion">Text</button>
+      <div class="panel">
+        <p style="font-size:16px">Font</p>
+        <select name="font" id="font";>
+          <option value='Times New Roman' selected="selected">Times New Roman</option>
+          <option value='Calibri'>Calibri</option>
+          <option value='Arial'>Arial</option>
+        </select><br>
+        <p style="font-size:16px">Text Size</p>
+        <input name="text_size" type="text" maxlength="512" id="text_size" class="searchField" value="18"/><br>
+        <p style="font-size:16px">Title</p>
+        <input name="title" type="text" maxlength="512" id="title" class="searchField" value="Volcano Plot"/><br>
+      </div><br>
+
+      <button class="accordion">Download</button>
+      <div class="panel">
+       <button id="volcano_download" onclick="download_plot(sort_data_volcano)" class="hidden">Download</button>
+       <button id="dot_plot_download" onclick="download_plot(sort_data_dot_plot)" class="hidden">Download</button>
+      </div><br>
+      <button id="volcano_submit" onclick="create_plot(sort_data_volcano)" class="hidden">Submit</button>
+      <button id="dot_plot_submit" onclick="create_plot(sort_data_dot_plot)" class="hidden">Submit</button>
+    </div>
+    <div id="footer">Imperial College TM</div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript" src="./d3.js"></script>
+    <script type="text/javascript" src="./basic_functionality.js"></script>
+    <script>
+      var acc = document.getElementsByClassName("accordion");
+      var i;
+      for (i = 0; i < acc.length; i++) {
+      acc[i].addEventListener("click", function() {
+        /* Toggle between adding and removing the "active" class,
+        to highlight the button that controls the panel */
+        this.classList.toggle("active");
+        /* Toggle between hiding and showing the active panel */
+        var panel = this.nextElementSibling;
+        if (panel.style.display === "block") {
+          panel.style.display = "none";
+        } else {
+          panel.style.display = "block";
+        }
+      });
+      }
+    </script>
+    <script type="text/javascript">
+      var i;
+      function unhide(clickedButton, divID) {
+        for (i = 0; i < divID.length; i++){
+          div = divID[i]
+          var item = document.getElementById(div);
+          if (item) {
+              item.className = 'unhidden' ;
+          }
+        }
+      };
+      function hide(clickedButton, divID) {
+        for (i = 0; i < divID.length; i++){
+          div = divID[i]
+          var item = document.getElementById(div);
+          if (item) {
+              item.className = 'hidden';
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

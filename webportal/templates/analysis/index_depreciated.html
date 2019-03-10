@@ -1,0 +1,239 @@
+{%extends 'base.html'%}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+    {% load static %}
+      <title>Session Detail</title>
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    <div id='wrapper'>
+      <div id='sidebar_wrapper'>
+        <ul class='sidebar-nav'>
+          <li>Index: {{session_detail.genome_index}}</li>
+          <li>Organism: {{ session_detail.organism|default_if_none:"" }} {{session_detail.genome.organism}}</li>
+
+        <li><a id='id_upload_btn' href="#">Add Condition</a></li>
+        <li><a id='id_upload_btn' href="#">Add Sample</a></li>
+        <li><a id='id_upload_btn' href="#">Add Workflow</a></li>
+        <li><a href="#">test</a></li>
+        </ul>
+      </div>
+      <h1 class='hidden'>hi mum</h1>
+      <!-- NAV PANE SELECTION -->
+      <div id='page_content_wrapper'>
+        <div id='sidebar_toggle' class="toggle_btn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <br>
+        <!-- CONDITIONS -->
+        <div id='id_conditions_div'>
+        {% if session_detail.conditions_fk.all %}
+          <div class='lead'>Session Conditions:</div>
+          <table class="table table-bordered bm-2">
+            <thead class=''>
+              <tr>
+                <!-- <th>Key</th> -->
+                <th>Num</th>
+                <th>Condition</th>
+                <th>Replicates</th>
+                <th>Add Sample</th>
+                <th>Update</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for condition in session_detail.conditions_fk.all %}
+                <tr>
+                  <!-- <td>{{ condition.pk }}</td> -->
+                  <td class='td_conditions_counter'>{{forloop.counter}}</td>
+                  <td class="td_condition">{{ condition.condition }}</td>
+                  <td class="td_replicate">{{ condition.no_replicates }}</td>
+                  <td><a class='btn btn-sm btn-success' href="{% url 'analysis:samples_create' session_slug=condition.session.identifier conditions_pk=condition.pk %}">Add Sample</a></td>
+                  <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:conditions_update' session_slug=condition.session.identifier conditions_pk=condition.pk %}">Update</a></td>
+                  <td><a class='btn btn-sm btn-danger' href="{% url 'analysis:conditions_delete' session_slug=condition.session.identifier conditions_pk=condition.pk %}">Delete</a></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+        {% if not session_detail.conditions_fk.all %}
+          <!-- <h3>No conditions defined.</h3> -->
+        {% endif %}
+        </div>
+
+
+<br><br>
+      <!-- SAMPLES -->
+      <div id='id_samples_div'>
+      {% if session_detail.samples_fk.all %}
+      <div class='lead'>Session Samples:</div>
+      <table class="table table-bordered mb-1">
+        <thead>
+          <tr>
+            <!-- <th>Key</th> -->
+            <th>Num</th>
+            <th>Libtype</th>
+            <th>Condition</th>
+            <th style='width: 17%'>Read One</th>
+              <th style='width: 17%'>Read Two</th>
+            <th>Accession</th>
+            <th>Update</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for sample in session_detail.samples_fk.all %}
+            <tr>
+              <!-- <td>{{ sample.pk }}</td> -->
+              <td class='td_samples_counter'>{{forloop.counter}}</td>
+              <td class="td_libtype">{{ sample.libtype }}</td>
+              <td>{{ sample.condition }}</td>
+              <td>{{ sample.read_1 }}</td>
+              {% if sample.read_2 %}
+                <td>{{ sample.read_2 }}</td>
+              {% endif %}
+              {% if not sample.read_2 %}
+                <td>N/a</td>
+              {% endif %}
+              <td>{{ sample.accession }}</td>
+              <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:samples_update' session_slug=sample.session.identifier samples_pk=sample.pk %}">Update</a></td>
+              <td><a class='btn btn-sm btn-danger' href="{% url 'analysis:samples_delete' session_slug=sample.session.identifier samples_pk=sample.pk %}">Delete</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+      {% if not session_detail.samples_fk.all %}
+            <!-- <h3>{{'No samples defined.'}}</h3> -->
+      {% endif %}
+    </div>
+<br><br>
+        <!-- WORKFLOW -->
+        <div id='id_workflow_div'>
+        {% if session_detail.workflow.all %}
+        <div class='lead'>Session Workflow:</div>
+        <table class="table table-bordered mb-1">
+          <thead>
+            <tr>
+              <!-- <th>Key</th> -->
+              <th>Num</th>
+              <th>Mapper</th>
+              <th>Assembler</th>
+              <th>Analysis</th>
+              <th>Status</th>
+              <th>Update</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for workflow in session_detail.workflow.all %}
+            <tr>
+              <!-- <td>{{workflow.pk}}</td> -->
+              <td class='td_workflow_counter'>{{forloop.counter}}</td>
+              <td>{{ workflow.mapper }}</td>
+              <td>{{ workflow.assembler }}</td>
+              <td>{{ workflow.analysis }}</td>
+              <td>{{ workflow.status }}</td>
+              <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:workflow_update' session_slug=workflow.session.identifier workflow_pk=workflow.pk %}">Update</a></td>
+              <td><a class='btn btn-sm btn-danger' href="{% url 'analysis:workflow_delete' session_slug=workflow.session.identifier workflow_pk=workflow.pk %}">Delete</a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+        {% if not session_detail.workflow.all %}
+          <!-- <h3>No Workflows defined.</h3> -->
+        {% endif %}
+
+        <br><br>
+      </div>
+
+      <!-- FORM TO CHANGE STATUS OF SESSION TO TRUE -->
+      <form method="POST"  enctype="multipart/form-data" id='id_session_submit_btn' class='hidden'>
+        {% csrf_token %}
+        {{form|crispy}}
+        <!-- will need to define individual fields in which case i dont need to use javascript to hide as i can specify fields shown directly! -->
+        <br>
+        <input type="submit" class='create_btn' value="SUBMIT FOR ANALYSIS">
+      </form>
+    </div> <!--END session_one_detail  -->
+      </div><!-- content wrapper -->
+      </div>
+
+    <div class="session_detail_one container-">
+      <!-- <div class="session_detail offset-1 col-md-10"> -->
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{message.tags}}">
+              <!-- <p>message.tags: {{message.tags}}</p> -->
+              <p>{{message}}</p>
+              {{condition}}
+            </div>
+          {% endfor %}
+        {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+      <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- jQuery cdn is required prior to using bootstrap -->
+      <script type="text/javascript" src= "{% static 'js/svg-pan-zoom.min.js' %}"></script>
+      <script>
+      function svg_delay(){
+        console.log('delay')
+        setTimeout(function() { zoomSvg(); }, 200);
+      }
+
+      function zoomSvg(){
+        console.log('called')
+        svgPanZoom('#id_demo_wf')
+      }
+
+      $( document ).ready(function() {
+        $('#id_workflow_create_btn')
+        // $('#id_SessionSubmitForm').hide()
+        if($('.td_index').length){
+          // alert('show samples');
+          $('#session_upload').show()
+        }
+        if($('.td_conditions_counter').length){
+          console.log('condition added')
+          // $('#id_conditions_create_btn').prop('disabled', true);
+          // $('#id_workflow_create_btn').removeClass('disabled')
+        }
+        if($('.td_samples_counter').length){
+          console.log('samples added');
+          // $('#id_conditions_create_btn').prop('disabled', true);
+          $('#id_workflow_create_btn').removeClass('disabled')
+        }
+        if($('.td_workflow_counter').length){
+          unhide(['id_session_submit_btn'])
+        }
+    });
+
+    $('#sidebar_toggle').click(function(e){
+      // e.preventDefault();
+      $('#wrapper').toggleClass('menuDisplayed')
+      // console.log('hi')
+    });
+
+    </script>
+
+
+  {% endblock %}
+  </body>
+</html>
