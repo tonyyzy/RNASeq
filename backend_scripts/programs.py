@@ -1,6 +1,7 @@
 import yaml
 import subprocess
 from configparser import ConfigParser
+import pydot
 
 class cwl_writer():
     # dict for cwl file
@@ -21,6 +22,7 @@ class cwl_writer():
         "outputs": {},
         "steps": {}
     }
+
     # dict for yml file
     cwl_input = {}
 
@@ -37,6 +39,52 @@ class cwl_writer():
         "salmoncount": "gene_count_output",
         "featurecounts": "gene_count_output"
     }
+
+
+    # initialise graph
+    nodes = {}
+    graph = pydot.Dot(
+        graph_name="workflow",
+        graph_type="digraph",
+        suppress_disconnected=False
+    )
+    # style according to cwlviewer styling
+    graph.set_node_defaults(
+        style="filled",
+        fontname = "Helvetica",
+        fontsize = "10",
+        fontcolor = "black",
+        shape = "record",
+        height = "0",
+        width = "0",
+        color = "black",
+        fillcolor = "lightgoldenrodyellow"
+    )
+    graph.set_edge_defaults(
+        fontname = "Helvetica",
+        fontsize = "8",
+        fontcolor = "black",
+        color = "black",
+        arrowsize = "0.7"
+    )
+    graph.set_graph_defaults(
+        bgcolor = "#eeeeee",
+        color = "black",
+        fontsize = "10",
+        labeljust = "left",
+        clusterrank = "local",
+        ranksep = "0.5",
+        nodesep = "0.5"
+    )
+    # initialise 
+    # initialise subgraph
+    graph_inputs = pydot.Cluster(graph_name="inputs")
+    graph_inputs.set_style("dashed")
+    graph_inputs.set_label("Workflow Inputs")
+    graph_outputs = pydot.Cluster(graph_name="outputs")
+    graph_outputs.set_style("dashed")
+    graph_outputs.set_label("Workflow Outputs")
+    graph_outputs.set_labelloc("b")
 
     name = ""
     previous_name = ""
@@ -66,7 +114,41 @@ class cwl_writer():
             "class": "File",
             "path": database_reader_object.Annotation_file
         }
-
+        self.graph_inputs.add_node(
+            pydot.Node(
+                "annotation",
+                label="annotation",
+                fillcolor="#94DDF4"
+            )
+        )
+        self.graph_inputs.add_node(
+            pydot.Node(
+                "metadata",
+                label="metadata",
+                fillcolor="#94DDF4"
+            )
+        )
+        self.graph_inputs.add_node(
+            pydot.Node(
+                "input_files",
+                label="Input Files",
+                fillcolor="#94DDF4"
+            )
+        )
+        # self.graph_outputs.add_node(
+        #     pydot.Node(
+        #         "alignment",
+        #         label="Alignment Outputs",
+        #         fillcolor="#94DDF4"
+        #     )
+        # )
+        # self.graph_outputs.add_node(
+        #     pydot.Node(
+        #         "bam",
+        #         label="Samtools Outputs",
+        #         fillcolor="#94DDF4"
+        #     )
+        # )
         # generate a dictionary of conditions with input_files as items
         self.conditions = {}
         for name in self.file_names:
@@ -128,6 +210,29 @@ class cwl_writer():
             },
             "out": ["out"]
             }
+
+        # graph
+        self.graph_inputs.add_node(
+            pydot.Node(
+                "star_index",
+                label="Star Index",
+                fillcolor="#94DDF4"
+            )
+        )
+        self.graph.add_node(pydot.Node("star", label="star"))
+
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph_inputs.get_node("star_index"),
+                *self.graph.get_node("star")
+            )
+        )
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph_inputs.get_node("input_files"),
+                *self.graph.get_node("star")
+            )
+        )
 
 
     def hisat2(self):
@@ -195,6 +300,31 @@ class cwl_writer():
             "out": ["out"]
         }
 
+        # graph
+        if self.graph_inputs.get_node("hisat2_index") == []:
+            self.graph_inputs.add_node(
+                pydot.Node(
+                    "hisat2_index",
+                    label="HISAT2 Index",
+                    fillcolor="#94DDF4"
+                )
+            )
+        self.graph.add_node(
+            pydot.Node("hisat2", label="HISAT2")
+        )
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph_inputs.get_node("hisat2_index"),
+                *self.graph.get_node("hisat2")
+            )
+        )
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph_inputs.get_node("input_files"),
+                *self.graph.get_node("hisat2")
+            )
+        )
+
 
     def hisat2xs(self):
         # workflow section
@@ -261,6 +391,31 @@ class cwl_writer():
             "out": ["out"]
         }
 
+        # graph
+        if self.graph_inputs.get_node("hisat2_index") == []:
+            self.graph_inputs.add_node(
+                pydot.Node(
+                    "hisat2_index",
+                    label="HISAT2 Index",
+                    fillcolor="#94DDF4"
+                )
+            )
+        self.graph.add_node(
+            pydot.Node("hisat2xs", label="HISAT2 with XS tag")
+        )
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph_inputs.get_node("hisat2_index"),
+                *self.graph.get_node("hisat2xs")
+            )
+        )
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph_inputs.get_node("input_files"),
+                *self.graph.get_node("hisat2xs")
+            )
+        )
+
 
     def salmonquant(self):
         # salmonquant
@@ -319,6 +474,29 @@ class cwl_writer():
             "out": ["out"]
         }
 
+        self.graph_inputs.add_node(
+            pydot.Node(
+                "salmon_index",
+                label="Salmon Index",
+                fillcolor="#94DDF4"
+            )
+        )
+        self.graph.add_node(
+            pydot.Node("salmonquant", label="Salmon Quant")
+        )
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph_inputs.get_node("salmon_index"),
+                *self.graph.get_node("salmonquant")
+            )
+        )
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph_inputs.get_node("input_files"),
+                *self.graph.get_node("salmonquant")
+            )
+        )
+
 
     def salmoncount(self):
         # salmon_count
@@ -359,6 +537,11 @@ class cwl_writer():
             "out": ["out"]
         }
 
+        self.graph.add_node(
+            pydot.Node(self.name, label="Salmon Count")
+        )
+        self.add_edge()
+
 
     #---------assembler-----------
     def stringtie(self):
@@ -388,13 +571,18 @@ class cwl_writer():
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
             "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
-                "item":[f"{self.name}_{i + 1}/stringtie_out" for i in range(self.num)],
+                "item":[f"{self.name}_{i + 1}/stringtie_out" \
+                            for i in range(self.num)],
                 "name": {
                     "valueFrom": self.name
                 }
             },
             "out": ["out"]
         }
+
+        self.graph.add_node(pydot.Node(self.name, label="Stringtie"))
+        self.add_edge()
+        self.add_annotation()
 
 
     def cufflinks(self):
@@ -433,7 +621,15 @@ class cwl_writer():
             "out": ["out"]
         }
 
+        # graph
+        self.graph.add_node(pydot.Node(self.name, label="Cufflinks"))
+        self.add_edge()
+        self.add_annotation()
+
         # cuffmerge
+        self.previous_name = self.name
+        self.name += "_cuffmerge"
+        self.name_list = self.name.split("_")
         # inputs
         self.cwl_workflow["inputs"]["fasta"] = "File"
         self.cwl_input["fasta"] = {
@@ -453,7 +649,8 @@ class cwl_writer():
                 "threads": "threads",
                 "gtf": "annotation",
                 "fasta": "fasta",
-                "cufflinks_output": [f"{self.name}_{i+1}/gtf_out" for i in range(self.num)],
+                "cufflinks_output": [f"{self.name}_{i+1}/gtf_out" \
+                                        for i in range(self.num)],
                 "output": {
                     "valueFrom": "cuffmerge"
                 }
@@ -472,6 +669,21 @@ class cwl_writer():
             },
             "out": ["out"]
         }
+
+        # graph
+        self.graph.add_node(pydot.Node(self.name, label="Cuffmerge"))
+        self.add_edge()
+        self.add_annotation()
+        if self.graph_inputs.get_node("genome") == []:
+            self.graph_inputs.add_node(
+                pydot.Node("genome", label="Genome", fillcolor="#94DDF4")
+            )
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph_inputs.get_node("genome"),
+                *self.graph.get_node(self.name)
+            )
+        )
 
 
     def htseq(self):
@@ -511,12 +723,23 @@ class cwl_writer():
             },
             "out": ["out"]
         }
-
+        if self.graph.get_node("htseq_prepare") == []:
+            self.graph.add_node(pydot.Node("htseq_prepare", label="HTSeq prepare"))
+            self.graph.add_edge(
+                pydot.Edge(
+                    *self.graph_inputs.get_node("annotation"),
+                    *self.graph.get_node("htseq_prepare")
+                )
+            )
 
         # htseq_count
         # workflow section
         # inputs
         self.cwl_workflow["inputs"]["htseq_count_script"] = "File"
+        self.cwl_input["htseq_count_script"] = {
+            "class": "File",
+            "path": f"{self.root}/RNASeq/scripts/Basic_DEXSeq_scripts/dexseq_count_modified.py"
+        }
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
@@ -555,11 +778,16 @@ class cwl_writer():
             "out": ["out"]
         }
 
-        # yml section
-        self.cwl_input["htseq_count_script"] = {
-            "class": "File",
-            "path": f"{self.root}/RNASeq/scripts/Basic_DEXSeq_scripts/dexseq_count_modified.py"
-        }
+        # graph
+        self.graph.add_node(pydot.Node(self.name, label="HTSeq"))
+        self.add_edge()
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph.get_node("htseq_prepare"),
+                *self.graph.get_node(self.name)
+            )
+        )
+
 
 
     def featurecounts(self):
@@ -579,7 +807,8 @@ class cwl_writer():
             "run": f"{self.root}/RNASeq/cwl-tools/docker/featurecounts.cwl",
             "in": {
                 "input_script": "featurecounts_script",
-                "bam_files": [f"{self.previous_name}_{i+1}/samtools_out" for i in range(self.num)],
+                "bam_files": [f"{self.previous_name}_{i+1}/samtools_out" \
+                                for i in range(self.num)],
                 "gtf": "annotation",
                 "threads": "threads",
                 "metadata": "metadata"
@@ -597,6 +826,11 @@ class cwl_writer():
             "out": ["out"]
         }
 
+        self.graph.add_node(pydot.Node(self.name, label="Featurecounts"))
+        self.add_edge()
+        self.add_annotation()
+        self.add_metadata()
+
 
     #----------analysis----------
     def deseq2(self):
@@ -606,8 +840,10 @@ class cwl_writer():
         # workflow section
         # inputs
         self.cwl_workflow["inputs"]["DESeq2_script"] = "File"
-        # handle metadata in __init__
-        # self.cwl_workflow["inputs"]["metadata"] = "File"
+        self.cwl_input["DESeq2_script"] = {
+            "class": "File",
+            "path": f"{self.root}/RNASeq/scripts/Basic_DESeq2.R"
+        }
 
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
@@ -620,7 +856,6 @@ class cwl_writer():
             "run": f"{self.root}/RNASeq/cwl-tools/docker/DESeq2.cwl",
             "in": {
                 "input_script": "DESeq2_script",
-                # TODO need to standardise prepDE, salmon_count outputs
                 "count_matrix": f"{self.previous_name}/{self.output_string[self.prev]}",
                 "metadata": "metadata"
             },
@@ -639,11 +874,12 @@ class cwl_writer():
             "out": ["out"]
         }
 
-        # yml section
-        self.cwl_input["DESeq2_script"] = {
-            "class": "File",
-            "path": f"{self.root}/RNASeq/scripts/Basic_DESeq2.R"
-        }
+        self.graph.add_node(pydot.Node(self.name, label="DESeq2"))
+        self.add_edge()
+        self.add_gene_count()
+        self.add_norm()
+        self.add_metadata()
+
 
     def dexseq(self):
         # workflow section
@@ -680,6 +916,11 @@ class cwl_writer():
             "path": f"{self.root}/RNASeq/scripts/Basic_DEXSeq_scripts/DEXSeq.R"
         }
 
+        self.graph.add_node(pydot.Node(self.name, label="DEXSeq"))
+        self.add_edge()
+        self.add_metadata()
+        self.add_exon_count()
+        self.add_norm()
 
     def deseq(self):
         raise NotImplementedError
@@ -689,15 +930,18 @@ class cwl_writer():
         # cuffquant
         # inputs
         # outputs
-        self.previous_name += "_cuffmerge"
-        self.name = self.previous_name + "_cuffquant"
+        self.name_list = self.name_list[:-1]
+        self.name_list.append("cuffmerge")
+        self.name_list.append("cuffquant")
+        self.previous_name = "_".join(self.name_list[:-1])
+        self.name = "_".join(self.name_list)
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
             "outputSource": f"{self.name}_folder/out"
         }
         # steps
         cuffmerge = self.previous_name
-        bam = "_".join(self.name.split("_")[:2])
+        bam = "_".join(self.name_list[:2])
         for i in range(self.num):
             self.cwl_workflow["steps"][f"{self.name}_{i+1}"] = {
                 "run": f"{self.root}/RNASeq/cwl-tools/docker/cuffquant.cwl",
@@ -714,7 +958,8 @@ class cwl_writer():
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
             "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
-                "item":[f"{self.name}_{i+1}/cuffquant_out" for i in range(self.num)],
+                "item":[f"{self.name}_{i+1}/cuffquant_out" \
+                        for i in range(self.num)],
                 "name": {
                     "valueFrom": self.name
                     }
@@ -722,12 +967,18 @@ class cwl_writer():
             "out": ["out"]
         }
 
+        self.graph.add_node(pydot.Node(self.name, label="Cuffquant"))
+        self.add_edge()
+
         # cuffnorm
+        self.name_list.append("cuffnorm")
+        self.previous_name = "_".join(self.name_list[:-1])
+        self.name = "_".join(self.name_list)
         # inputs
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_cuffnorm_out"] = {
             "type": "Directory",
-            "outputSource": f"{self.name}_cuffnorm/cuffnorm_out"
+            "outputSource": f"{self.name}/cuffnorm_out"
         }
         # steps
         self.cwl_workflow["steps"][f"{self.name}_cuffnorm"] = {
@@ -740,18 +991,27 @@ class cwl_writer():
             "out": ["cuffnorm_out"]
         }
         for index, condition in enumerate(self.conditions):
-            self.cwl_workflow["steps"][f"{self.name}_cuffnorm"]["in"][f"condition{index+1}_files"] = [f"{self.name}_{self.file_names.index(name)+1}/cxb" for name in self.conditions[condition]]
+            self.cwl_workflow["steps"][f"{self.name}_cuffnorm"]\
+                ["in"][f"condition{index+1}_files"] = \
+                [f"{self.name}_{self.file_names.index(name)+1}/cxb" \
+                    for name in self.conditions[condition]]
         
-
-
-
+        self.graph.add_node(pydot.Node(self.name, label="Cuffnorm"))
+        self.add_edge()
+        self.add_norm()
 
         # cuffdiff
         # inputs
-        self.previous_name = self.name
-        self.name += "_cuffdiff"
+        self.name_list[-1] = "cuffdiff"
+        self.previous_name = "_".join(self.name_list[:-1])
+        self.name = "_".join(self.name_list)
         self.cwl_workflow["inputs"]["conditions"] = "string[]"
+        self.cwl_workflow["inputs"]["cuffdif_file_sort"] = "File"
         self.cwl_input["conditions"] = list(self.conditions)
+        self.cwl_input["cuffdiff_file_sort"] = {
+            "class": "File",
+            "path": f"{self.root}/RNASeq/scripts/cuffdiff_file_sort.py"
+        }
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
@@ -765,18 +1025,28 @@ class cwl_writer():
                 "merged_gtf": f"{cuffmerge}/merged_gtf",
                 "FDR": {"valueFrom": "1"},
                 "label": "conditions",
-                "output": {"valueFrom": self.name}
+                "output": {"valueFrom": self.name},
+                "input_script": "cuffdiff_file_sort"
             },
             "out": ["cuffdiff_out"]
         }
         for index, condition in enumerate(self.conditions):
-            self.cwl_workflow["steps"][self.name]["in"][f"condition{index+1}_files"] = [f"{self.previous_name}_{self.file_names.index(name)+1}/cxb" for name in self.conditions[condition]]
-        
+            self.cwl_workflow["steps"][self.name]["in"]\
+                [f"condition{index+1}_files"] = \
+                [f"{self.previous_name}_{self.file_names.index(name)+1}/cxb" \
+                    for name in self.conditions[condition]]
+
+        self.graph.add_node(pydot.Node(self.name, label="Cuffdiff"))
+        self.add_edge()
+        self.add_gene_count()
 
 
     def ballgown(self):
-        self.previous_name += "_cuffmerge"
-        self.name = self.previous_name + "_tablemaker"
+        self.name_list = self.name_list[:-1]
+        self.name_list.append("cuffmerge")
+        self.name_list.append("tablemaker")
+        self.previous_name = "_".join(self.name_list[:-1])
+        self.name = "_".join(self.name_list)
         # tablemaker
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
@@ -801,16 +1071,22 @@ class cwl_writer():
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
             "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
-                "item":[f"{self.name}_{i+1}/tablemaker_out" for i in range(self.num)],
+                "item":[f"{self.name}_{i+1}/tablemaker_out" \
+                        for i in range(self.num)],
                 "name": {
                     "valueFrom": self.name
                     }
                 },
             "out": ["out"]
         }
+
+        self.graph.add_node(pydot.Node(self.name, label="Tablemaker"))
+        self.add_edge()
+
         # ballgown
-        self.previous_name = self.name
-        self.name += "_ballgown"
+        self.name_list.append("ballgown")
+        self.previous_name = "_".join(self.name_list[:-1])
+        self.name = "_".join(self.name_list)
         # inputs
         self.cwl_workflow["inputs"]["ballgown_script"] = "File"
         self.cwl_input["ballgown_script"] = {
@@ -838,13 +1114,20 @@ class cwl_writer():
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
             "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
-                "item":[f"{self.name}/gene_matrix", f"{self.name}/transcript_matrix"],
+                "item":[f"{self.name}/gene_matrix",
+                        f"{self.name}/transcript_matrix"],
                 "name": {
                     "valueFrom": self.name
                     }
                 },
             "out": ["out"]
         }
+
+        self.graph.add_node(pydot.Node(self.name, label="Ballgown"))
+        self.add_edge()
+        self.add_gene_count()
+        self.add_norm()
+        self.add_metadata()
     
 
     def edger(self):
@@ -884,6 +1167,12 @@ class cwl_writer():
             "out": ["out"]
         }
 
+        self.graph.add_node(pydot.Node(self.name, label="EdgeR"))
+        self.add_edge()
+        self.add_gene_count()
+        self.add_norm()
+        self.add_metadata()
+
     #----------utility-----------
     def samtools(self):
         # outputs
@@ -906,13 +1195,18 @@ class cwl_writer():
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
             "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
-                "item":[f"{self.name}_{i + 1}/samtools_out" for i in range(self.num)],
+                "item":[f"{self.name}_{i + 1}/samtools_out" \
+                        for i in range(self.num)],
                 "name": {
                     "valueFrom": self.name
                     }
                 },
             "out": ["out"]
         }
+
+        # graph
+        self.graph.add_node(pydot.Node(self.name, label="Samtools"))
+        self.add_edge()
 
     def prepde(self):
         # inputs
@@ -940,13 +1234,93 @@ class cwl_writer():
         self.cwl_workflow["steps"]["prepde_folder"] = {
             "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
-                "item":[f"{self.name}/gene_count_output", f"{self.name}/transcript_count_output"],
+                "item":[f"{self.name}/gene_count_output",
+                        f"{self.name}/transcript_count_output"],
                 "name": {
                     "valueFrom": self.name
                     }
             },
             "out": ["out"]
         }
+
+        self.graph.add_node(pydot.Node(self.name, label="PrepDE"))
+        self.add_edge()
+
+
+    def add_edge(self):
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph.get_node(self.previous_name),
+                *self.graph.get_node(self.name)
+            )
+        )
+
+
+    def add_gene_count(self):
+        if self.graph_outputs.get_node("gene_count") == []:
+            self.graph_outputs.add_node(
+                pydot.Node(
+                    "gene_count",
+                    label="Differential gene expression result",
+                    fillcolor="#94DDF4"
+                )
+            )
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph.get_node(self.name),
+                *self.graph_outputs.get_node("gene_count")
+            )
+        )
+
+    def add_exon_count(self):
+        if self.graph_outputs.get_node("exon_count") == []:
+            self.graph_outputs.add_node(
+                pydot.Node(
+                    "exon_count",
+                    label="Differential exon expression result",
+                    fillcolor="#94DDF4"
+                )
+            )
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph.get_node(self.name),
+                *self.graph_outputs.get_node("exon_count")
+            )
+        )
+
+
+    def add_norm(self):
+        if self.graph_outputs.get_node("norm") == []:
+            self.graph_outputs.add_node(
+                pydot.Node(
+                    "norm",
+                    label="Normalised count result",
+                    fillcolor="#94DDF4"
+                )
+            )
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph.get_node(self.name),
+                *self.graph_outputs.get_node("norm")
+            )
+        )
+
+    def add_metadata(self):
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph_inputs.get_node("metadata"),
+                *self.graph.get_node(self.name)
+            )
+        )
+
+    
+    def add_annotation(self):
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph_inputs.get_node("annotation"),
+                *self.graph.get_node(self.name)
+            )
+        )
 
 
     # TODO fix this!!!
@@ -979,58 +1353,28 @@ class cwl_writer():
     def write_workflow(self, logic_object):
         print("writing cwl")
         for step in logic_object.workflow:
-            self.previous_name = "_".join(step.split("_")[:-1])
+            self.name_list = step.split("_")
+            self.previous_name = "_".join(self.name_list[:-1])
             self.name = step
-            self.prev = self.previous_name.split("_")[-1]
+            if len(self.name_list) > 1:
+                self.prev = self.name_list[-2]
+            else:
+                self.prev = ""
             getattr(cwl_writer, step.split("_")[-1])(self)
-        
-        with open(self.root + f"/Data/{self.identifier}/workflow.cwl", "w+") as outfile:
-            outfile.write("#!/usr/bin/env cwl-runner\n\n")
-            yaml.dump(self.cwl_workflow, outfile, default_flow_style=False)
-        with open(self.root + f"/Data/{self.identifier}/input.yml", "w+") as outfile:
-            yaml.dump(self.cwl_input, outfile, default_flow_style=False)
-        workflow_log = open(f"{self.root}/Data/{self.identifier}/workflow.log", "w")
-        print("Generate dot file")
-        dotfile = open(f"{self.root}/Data/{self.identifier}/workflow.dot", "w")
-        dotfile.write("""digraph workflow {
-graph [
-    bgcolor = "#eeeeee"
-    color = "black"
-    fontsize = "10"
-    labeljust = "left"
-    clusterrank = "local"
-    ranksep = "0.5"
-    nodesep = "0.5"
-]
-node [
-    fontname = "Helvetica"
-    fontsize = "10"
-    fontcolor = "black"
-    shape = "record"
-    height = "0"
-    width = "0"
-    color = "black"
-    fillcolor = "lightgoldenrodyellow"
-    style = "filled"
-];
-edge [
-    fontname="Helvetica"
-    fontsize="8"
-    fontcolor="black"
-    color="black"
-    arrowsize="0.7"
-];\n""")
-        dotfile.flush()
-        subprocess.run(["cwl-runner",
-                        "--print-dot",
-                        f"{self.root}/Data/{self.identifier}/workflow.cwl"
-                        ], stdout=dotfile)
-        dotfile.close()
-        subprocess.run(["sed", "-i", "29d", f"{self.root}/Data/{self.identifier}/workflow.dot"])
+        self.graph.add_subgraph(self.graph_inputs)
+        self.graph.add_subgraph(self.graph_outputs)
+        self.graph.write(f"{self.root}/Data/{self.identifier}/workflow.dot")
         svgfile = open(f"{self.root}/Data/{self.identifier}/workflow.svg", "w")
-        subprocess.run(["dot", "-Tsvg", f"{self.root}/Data/{self.identifier}/workflow.dot"],
+        subprocess.run(["dot", "-Tsvg",
+                        f"{self.root}/Data/{self.identifier}/workflow.dot"],
                         stdout=svgfile)
         svgfile.close()
+        with open(f"{self.root}/Data/{self.identifier}/workflow.cwl", "w+") as outfile:
+            outfile.write("#!/usr/bin/env cwl-runner\n\n")
+            yaml.dump(self.cwl_workflow, outfile, default_flow_style=False)
+        with open(f"{self.root}/Data/{self.identifier}/input.yml", "w+") as outfile:
+            yaml.dump(self.cwl_input, outfile, default_flow_style=False)
+        workflow_log = open(f"{self.root}/Data/{self.identifier}/workflow.log", "w")
         print("Submit workflow")
         proc = subprocess.Popen(["cwl-runner",
                     f"--outdir={self.root}/Data/{self.identifier}/output",
@@ -1041,3 +1385,4 @@ edge [
         print(proc.args)
         print(proc.pid)
         workflow_log.close()
+

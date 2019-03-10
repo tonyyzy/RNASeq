@@ -31,3 +31,5 @@ test2
 test.py
 test.yml
 test.cwl
+test.dot
+.vscode/.ropeproject/config.py

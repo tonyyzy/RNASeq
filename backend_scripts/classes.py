@@ -145,4 +145,4 @@ class logic_builder():
             for j in range(1, len(result[i])):
                 result[i][j] = str(result[i][j-1]) + "_" +  str(result[i][j])
 
-        self.workflow = set(item for sublist in result for item in sublist)
+        self.workflow = sorted(set(item for sublist in result for item in sublist))
