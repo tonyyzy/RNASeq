@@ -450,7 +450,7 @@ class cwl_writer():
                         },
                         "output": f"subject_name{index+1}"
                     },
-                    "out": ["output"]
+                    "out": ["salmon_out"]
                 }
             elif self.input_files[name]["type"] == "SG":
                 self.cwl_workflow["steps"][f"{self.name}_{index+1}"] = {
@@ -461,13 +461,13 @@ class cwl_writer():
                         "single_fastq" : f"fastq{index+1}",
                         "output": f"subject_name{index+1}"
                     },
-                    "out": ["output"]
+                    "out": ["salmon_out"]
                 }
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
             "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in": {
-                "item": [f"{self.name}_{i+1}/output"
+                "item": [f"{self.name}_{i+1}/salmon_out"
                             for i in range(self.num)],
                 "name": {"valueFrom": "salmonquant"}
             },
@@ -627,9 +627,9 @@ class cwl_writer():
         self.add_annotation()
 
         # cuffmerge
-        self.previous_name = self.name
-        self.name += "_cuffmerge"
-        self.name_list = self.name.split("_")
+        self.name_list.append("cuffmerge")
+        self.previous_name = "_".join(self.name_list[:-1])
+        self.name = "_".join(self.name_list)
         # inputs
         self.cwl_workflow["inputs"]["fasta"] = "File"
         self.cwl_input["fasta"] = {
@@ -637,19 +637,19 @@ class cwl_writer():
             "path": self.genome
         }
         # outputs
-        self.cwl_workflow["outputs"][f"{self.name}_cuffmerge_out"] = {
+        self.cwl_workflow["outputs"][f"{self.name}out"] = {
             "type": "Directory",
-            "outputSource": f"{self.name}_cuffmerge_folder/out"
+            "outputSource": f"{self.name}_folder/out"
         }
 
         # steps
-        self.cwl_workflow["steps"][f"{self.name}_cuffmerge"] = {
+        self.cwl_workflow["steps"][f"{self.name}"] = {
             "run": f"{self.root}/RNASeq/cwl-tools/docker/cuffmerge.cwl",
             "in": {
                 "threads": "threads",
                 "gtf": "annotation",
                 "fasta": "fasta",
-                "cufflinks_output": [f"{self.name}_{i+1}/gtf_out" \
+                "cufflinks_output": [f"{self.previous_name}_{i+1}/gtf_out" \
                                         for i in range(self.num)],
                 "output": {
                     "valueFrom": "cuffmerge"
@@ -659,12 +659,12 @@ class cwl_writer():
         }
 
         # foldering
-        self.cwl_workflow["steps"][f"{self.name}_cuffmerge_folder"] = {
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
             "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
-                "item": f"{self.name}_cuffmerge/merged_gtf",
+                "item": f"{self.name}/merged_gtf",
                 "name": {
-                    "valueFrom": f"{self.name}_cuffmerge"
+                    "valueFrom": f"{self.name}"
                 }
             },
             "out": ["out"]
@@ -712,13 +712,13 @@ class cwl_writer():
                     "valueFrom": "$(self.nameroot + '.gff')"
                 }
             },
-            "out": ["output"]
+            "out": ["ht_prep_out"]
         }
         # foldering
         self.cwl_workflow["steps"]["htseq_prepare_folder"] = {
             "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in": {
-                "item": "htseq_prepare/output",
+                "item": "htseq_prepare/ht_prep_out",
                 "name": {"valueFrom": "htseq_prepare"}
             },
             "out": ["out"]
@@ -759,7 +759,7 @@ class cwl_writer():
                     "stranded": {"valueFrom": "no"},
                     "input_format": {"valueFrom": "bam"},
                     "sorted_by": {"valueFrom": "pos"},
-                    "gff": "htseq_prepare/output",
+                    "gff": "htseq_prepare/ht_prep_out",
                     "bam": f"{self.previous_name}_{index+1}/samtools_out",
                     "outname": {
                         "source": [f"subject_name{index+1}"],
@@ -899,13 +899,13 @@ class cwl_writer():
                 "gff": "htseq_prepare_folder/out",
                 "metadata": "metadata"
             },
-            "out": ["output"]
+            "out": ["dexseq_out"]
         }
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
             "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in": {
-                "item": f"{self.name}/output",
+                "item": f"{self.name}/dexseq_out",
                 "name": {"valueFrom": self.name}
             },
             "out": ["out"]
@@ -976,24 +976,24 @@ class cwl_writer():
         self.name = "_".join(self.name_list)
         # inputs
         # outputs
-        self.cwl_workflow["outputs"][f"{self.name}_cuffnorm_out"] = {
+        self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
             "outputSource": f"{self.name}/cuffnorm_out"
         }
         # steps
-        self.cwl_workflow["steps"][f"{self.name}_cuffnorm"] = {
+        self.cwl_workflow["steps"][f"{self.name}"] = {
             "run": f"{self.root}/RNASeq/cwl-tools/docker/cuffnorm.cwl",
             "in": {
                 "threads": "threads",
                 "merged_gtf": f"{cuffmerge}/merged_gtf",
-                "output": {"valueFrom": f"{self.name}_cuffnorm"}
+                "output": {"valueFrom": f"{self.name}"}
             },
             "out": ["cuffnorm_out"]
         }
         for index, condition in enumerate(self.conditions):
-            self.cwl_workflow["steps"][f"{self.name}_cuffnorm"]\
+            self.cwl_workflow["steps"][f"{self.name}"]\
                 ["in"][f"condition{index+1}_files"] = \
-                [f"{self.name}_{self.file_names.index(name)+1}/cxb" \
+                [f"{self.previous_name}_{self.file_names.index(name)+1}/cxb" \
                     for name in self.conditions[condition]]
         
         self.graph.add_node(pydot.Node(self.name, label="Cuffnorm"))
@@ -1006,7 +1006,7 @@ class cwl_writer():
         self.previous_name = "_".join(self.name_list[:-1])
         self.name = "_".join(self.name_list)
         self.cwl_workflow["inputs"]["conditions"] = "string[]"
-        self.cwl_workflow["inputs"]["cuffdif_file_sort"] = "File"
+        self.cwl_workflow["inputs"]["cuffdiff_file_sort"] = "File"
         self.cwl_input["conditions"] = list(self.conditions)
         self.cwl_input["cuffdiff_file_sort"] = {
             "class": "File",
@@ -1152,14 +1152,14 @@ class cwl_writer():
                 "metadata": "metadata",
                 "condition": {"valueFrom": "condition"}
             },
-            "out": ["output"]
+            "out": ["edger_out"]
         }
 
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
             "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
-                "item": f"{self.name}/output",
+                "item": f"{self.name}/edger_out",
                 "name": {
                     "valueFrom": self.name
                     }
