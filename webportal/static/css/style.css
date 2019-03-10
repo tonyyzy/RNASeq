@@ -221,7 +221,7 @@ html,body{
   width: 100%;
   position: absolute;
   padding: 15px;
-  border: 2px solid green;
+  /* border: 2px solid green; */
 }
 
 #wrapper.menuDisplayed #sidebar_wrapper{

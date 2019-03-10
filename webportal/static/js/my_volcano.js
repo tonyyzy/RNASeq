@@ -3,9 +3,9 @@ var p_threshold = - Math.log10(0.05);
 var log2_threshold = 1;
 
 console.log('my_volcano js active')
-var in_file = 'head_DGE_1.csv'
+// var in_file = 'head_DGE_1.csv'
 
-// var in_file = 'DGE_results_1_head.csv'
+var in_file = 'DGE_results_1_head.csv'
 
 
 

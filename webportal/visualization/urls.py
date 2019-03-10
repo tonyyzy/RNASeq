@@ -8,4 +8,5 @@ urlpatterns = [
 
     path('', views.VisualizationIndexView.as_view(), name='visualization_index'),
     path('debug/', views.DebugView.as_view(), name='debug_view'),
+    path('api/data/', views.GetDataView, name='api_data'),
 ]

@@ -209,9 +209,10 @@
 
             {% if session_detail.status %}
               <h2>submitted</h2>
-              <!-- {{session_wf}} -->
+              {{no_svg}} 
+              static/images/{{session_detail.identifier}}/workflow.svg
               {% if session_wf %}
-                <object data="{% static 'images/' %}{{session_detail.identifier}}/my-wf.svg" type="image/svg+xml" id='id_demo_wf' class='svg'>
+                <object data="{% static 'images/' %}{{session_detail.identifier}}/workflow.svg" type="image/svg+xml" id='id_demo_wf' class='svg'>
                 </object>
               {% else %}
                 <h3>workflow being generated</h3>

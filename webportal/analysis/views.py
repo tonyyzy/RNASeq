@@ -76,10 +76,10 @@ class SessionDetailView(View):
         except session.DoesNotExist:
             raise Http404('Session not found...!')
 
-        if os.path.isfile(session_data_dir + '/my-wf.svg'): # check if my-wf.svg has been generated
-            session_wf = session_data_dir + '/my-wf.svg'
+        if os.path.isfile(session_data_dir + '/workflow.svg'): # check if workflow.svg has been generated
+            session_wf = session_data_dir + '/workflow.svg'
             image_dir = os.path.join(settings.BASE_DIR, 'static/images', session_slug)
-            image_dir_path = os.path.join(image_dir, 'my-wf.svg')
+            image_dir_path = os.path.join(image_dir, 'workflow.svg')
             try:
                 os.makedirs(image_dir)
                 copyfile(session_wf, image_dir_path)
@@ -89,7 +89,7 @@ class SessionDetailView(View):
             context = {'session_detail':session, 'form':form, 'session_data_dir': session_data_dir, 'session_wf': session_wf}
             return render(request, self.template_name, context)
 
-        context = {'session_detail':session,'form':form, 'session_data_dir': session_data_dir}
+        context = {'session_detail':session,'form':form, 'session_data_dir': session_data_dir, 'no_svg':'no_svg'}
         return render(request, self.template_name, context)
 
 

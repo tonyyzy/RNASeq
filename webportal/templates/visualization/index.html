@@ -1,17 +1,16 @@
 {%extends 'base.html'%}
-{% load crispy_forms_tags %}
 <!DOCTYPE html>
+<html lang="en">
 <html>
   <head>
     <meta charset="utf-8">
     {% block head %}
     {% load static %}
-      <title>Session Detail</title>
-      <meta charset="utf-8">
-      <script src="http://d3js.org/d3.v3.js"></script>
-      <!-- <script src=" https://d3js.org/d3.v5.js"></script> -->
-      <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
-
+    <title>D3 Page Template</title>
+    <!-- <script type="text/javascript" src="/home/patrick/Code/GitWorkSpace/RNASeq/webportal/static/js/d3.js"></script> -->
+    <!-- <script src="http://d3js.org/d3.v3.js"></script> -->
+    <!-- <script src=" https://d3js.org/d3.v5.js"></script> -->
+    <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
 
     {% endblock %}
   </head>
@@ -35,6 +34,7 @@
         <li><a id='id_upload_btn' href="#">Add Sample</a></li>
         <li><a id='id_upload_btn' href="#">Add Workflow</a></li>
         <li><a href="#">test</a></li>
+
         </ul>
       </div>
 
@@ -45,26 +45,49 @@
           <span></span>
         </div>
         <br>
-        test
-        <br>
-        <div id = "painting"></div>
-        {% static 'js/d3.js' %}
+        <button type="button" name="button" onclick="script_one()">Script One</button>
+        <button type="button", onclick="script_one()">Click Me!</button>
       </div><!-- PAGE CONTENT WRAPPER -->
 </div> <!-- WRAPPER -->
 
 
-  <script src= "{% static 'js/my_volcano.js' %}"></script>
-
-
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.1/d3.min.js" integrity="sha256-RtVUDWfx0vF5nrvHDYcQoWSPaOuQ0R8Rq9kUG2kSvH8=" crossorigin="anonymous"></script> -->
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.1/d3.min.js" integrity="sha256-RtVUDWfx0vF5nrvHDYcQoWSPaOuQ0R8Rq9kUG2kSvH8=" crossorigin="anonymous"></script> -->
+  <script src= "{% static 'js/d3.js' %}"></script>
+  <script src= "{% static 'js/my_volcano.js' %}"></script>
   <script>
+  {% block jquery %}
+  var endpoint = 'api/data'
+  dataset = []
+  function script_one(){
+    console.log('script one called')
+    var default_data = []
+    $.ajax({
+      method: 'GET',
+      url: endpoint,
+      success: function(data){
+        // console.log(data);
+        dataset.push(data)
+        d3.json(endpoint, function(data) {
+          console.log(data[0]);
+        });
+      },
+      error: function(error_data){
+        console.log('error')
+        console.log(error_data)
+      }
+    })
+  }
+
+  {% endblock %}
+
     $('#sidebar_toggle').click(function(e){
       // e.preventDefault();
       $('#wrapper').toggleClass('menuDisplayed')
       // console.log('hi')
     });
   </script>
+
 
 
   {% endblock %}
