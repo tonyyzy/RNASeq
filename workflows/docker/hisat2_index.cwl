@@ -33,7 +33,7 @@ steps:
          gtf: gtf
       out: [exons]
    hisat2_build:
-      run: ../../cwl-tools/docker/hisat2_exon.cwl
+      run: ../../cwl-tools/docker/hisat2_build.cwl
       in:
          threads: threads
          splice_sites: hisat2_ss/splice_sites
