@@ -13,13 +13,13 @@ outputs:
       type: File[]
       outputSource: hisat2_build/ht
    log_out:
-      type: Directory
+      type: File
       outputSource: hisat2_build/log
    splice_sites_out:
       type: File
       outputSource: hisat2_ss/splice_sites
    exon_out:
-      type: File[]
+      type: File
       outputSource: hisat2_exon/exons
 steps:
    hisat2_ss:
