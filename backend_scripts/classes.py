@@ -22,7 +22,7 @@ class database_checker():
         for entry in session.query(RSession).filter(RSession.status == 1):
             print(entry.id)
             self.create_workflow(entry.id, root)
-            entry.status = None
+            entry.status = 2
         session.commit()
 
     def create_workflow(self, Session_ID, root):

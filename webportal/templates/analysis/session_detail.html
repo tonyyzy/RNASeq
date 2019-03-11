@@ -207,7 +207,7 @@
               <input type="submit" class='create_btn' value="SUBMIT FOR ANALYSIS">
             </form>
 
-            {% if session_detail.status %}
+            {% if session_detail.status > 0 %}
               <h2>submitted</h2>
               {{no_svg}} 
               static/images/{{session_detail.identifier}}/workflow.svg
