@@ -33,3 +33,4 @@ test.yml
 test.cwl
 test.dot
 .vscode/.ropeproject/config.py
+settings.py
