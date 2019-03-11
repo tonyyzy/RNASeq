@@ -16,28 +16,20 @@ class VisualizationIndexView(View):
         return render(request, 'visualization/index.html', context)
 
 
-def WorkFlowOneView(request, session_slug, *args, **kwargs):
+def WorkFlowOneView(request, session_slug, wf_key, *args, **kwargs):
     # fcd72896-218a-45f8-be02-361b3c94e192
-    session_output_dir = os.path.join(settings.DATA_DIR, session_slug, 'output')
-    star_out = os.path.join(session_output_dir, 'star_samtools_stringtie_prepde_deseq2')
-    star_DGE_csv = os.path.join(star_out, os.listdir(star_out)[0])
-    print(f'\n{star_DGE_csv}')
-    arr = []
-    with open (star_DGE_csv) as csvFile:
-        csvReader = csv.DictReader(csvFile)
-        print(csvReader)
-        for csvRow in csvReader:
-            arr.append(csvRow)
-        return JsonResponse(arr, safe=False)
+    print(wf_key)
+    wf_dir = ['star_samtools_stringtie_prepde_deseq2', 'hisat2_samtools_stringtie_prepde_deseq2']
+    if wf_key == 1:
+        wf_infile = wf_dir[0]
+    else:
+        wf_infile = wf_dir[1]
 
-def WorkFlowTwoView(request, session_slug, *args, **kwargs):
-    # fcd72896-218a-45f8-be02-361b3c94e192
-    session_output_dir = os.path.join(settings.DATA_DIR, session_slug, 'output')
-    hisat_out = os.path.join(session_output_dir, 'hisat2_samtools_stringtie_prepde_deseq2')
-    hisat_DGE_csv = os.path.join(hisat_out, os.listdir(hisat_out)[0])
-    print(f'\n{hisat_DGE_csv}')
+    session_output_dir = os.path.join(settings.DATA_DIR, session_slug, 'output', wf_infile)
+    session_output_csv = os.path.join(session_output_dir, os.listdir(session_output_dir)[0])
+    print(f'\n{session_output_csv}')
     arr = []
-    with open (hisat_DGE_csv) as csvFile:
+    with open (session_output_csv) as csvFile:
         csvReader = csv.DictReader(csvFile)
         print(csvReader)
         for csvRow in csvReader:

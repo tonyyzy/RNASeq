@@ -39,8 +39,11 @@
           <span></span>
         </div>
         <br>
-        <button type="button" name="button" onclick="which(1)">Workflow One</button>
-        <button type="button" name="button" onclick="which(2)">Workflow Two</button>
+        <button type="button" name="button" onclick="wf_select(1)">Workflow One</button>
+        <button type="button" name="button" onclick="wf_select(2)">Workflow Two</button>
+        <div id='painting'>
+          painting
+        </div>
         <!-- <button type="button", onclick="script_one()">Click Me!</button> -->
       </div><!-- PAGE CONTENT WRAPPER -->
 </div> <!-- WRAPPER -->
@@ -53,34 +56,8 @@
   <script>
   {% block jquery %}
   // var endpoint = 'api/data'
-  dataset = []
-  function workflowOne(){
-    var endpoint = 'api/data'
-    d3_run()
-  }
-  function workflowTwo(){
-    var endpoint = 'wf_two'
-    d3_run()
-  }
   {% endblock %}
 
-  function which(param){
-    if(param == 1 ){
-      console.log('1 chosen')
-      var endpoint = 'wf_one'
-    }
-    if(param == 2 ){
-      console.log('2 chosen')
-      var endpoint = 'wf_two'
-    }
-    function d3_run(){
-      d3.json(endpoint).then(function(data) {
-        console.log('d3_run called')
-        console.log(data)
-      });
-    }
-    d3_run()
-  }
 
   $('#sidebar_toggle').click(function(e){
     // e.preventDefault();
