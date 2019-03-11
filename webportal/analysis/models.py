@@ -120,6 +120,7 @@ class Workflow(models.Model):
     assembler = models.CharField(max_length=200, choices=ASSEMLBER_CHOICES, blank=True)
     analysis = models.CharField(max_length=200, choices=ANALYSIS_CHOICES)
     status = models.BooleanField(default=False, null=False)
+    paths = models.TextField(null=False)
 
     def get_absolute_url(self):
         return reverse('analysis:session_detail', kwargs={'pk':self.pk})
