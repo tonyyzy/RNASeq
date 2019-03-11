@@ -8,19 +8,30 @@ hints:
       dockerPull: quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2 
 stdout: log.txt
 inputs:
+   threads:
+      type: int
+      inputBinding:
+         position: 1
+         prefix: -p
+   splice_sites:
+      type: File?
+      inputBinding:
+         position: 2
+         prefix: --ss
+   exon:
+      type: File?
+      inputBinding:
+         position: 3
+         prefix: --exon
    fasta:
       type: File
       inputBinding:
-         position: 1
+         position: 4
          prefix: -f
    output:
       type: string
       inputBinding:
-         position: 2
-   threads:
-      type: int
-      inputBinding:
-         prefix: -p
+         position: 5
 
 outputs:
    ht:
