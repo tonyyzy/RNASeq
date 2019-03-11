@@ -1,0 +1,10 @@
+condition1bam:
+   - {class: File, path: ../../samtools/normal1.bam}
+   - {class: File, path: ../../samtools/normal2.bam}
+condition2bam:
+   - {class: File, path: ../../samtools/tumour1.bam}
+   - {class: File, path: ../../samtools/tumour2.bam}
+output: ["normal.bam","tumour.bam"]
+input_script:
+   class: File
+   path : ../../../../../home18/fmj18/Documents/RNASeq/scripts/merge.sh

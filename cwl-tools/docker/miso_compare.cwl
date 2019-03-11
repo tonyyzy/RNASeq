@@ -2,35 +2,28 @@
 
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: perl
+baseCommand: compare_miso
 hints:
    DockerRequirement:
       dockerPull: genomicpariscentre/miso
 
-requirements:
-  InlineJavascriptRequirement: {}
-  ShellCommandRequirement: {}
-
-arguments:
-   - position: 3
-     prefix: "|"
-     valueFrom: $("tee " + runtime.outdir + "/" + inputs.output)
-     shellQuote: False
-
 inputs:
-   perl_input:
-      type: File
+   group1:
+      type: Directory
       inputBinding:
          position: 1
-   gtf:
-      type: File
+         prefix: "--compare-samples"
+   group2:
+      type: Directory
       inputBinding:
          position: 2
    output:
       type: string
+      inputBinding:
+         position: 3
 
 outputs:
    miso_out:
-      type: File
+      type: Directory
       outputBinding:
          glob: $(inputs.output)

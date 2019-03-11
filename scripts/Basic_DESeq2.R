@@ -9,15 +9,14 @@ suppressMessages(library("DESeq2"))
 data <- read.table(args[grep("--count_matrix", args)+1],header = TRUE, row.names = 1, sep=",")
 metadata <- read.table(args[grep("--metadata", args)+1],header = TRUE, row.names = 1, sep=",")
 
-metadata <- metadata[colnames(data),]
-
 if( "--condition" %in% args ){
   condition.idx <- grep("--condition", args)
   condition <- args[ condition.idx + 1 ]
   colnames(metadata) <- sub(condition, "condition",colnames(metadata))
 }
-
-comb <- combn(unique(metadata[,"condition"]), 2)
+print(metadata)
+print(data)
+comb <- combn(unique(as.character(metadata[,"condition"])), 2)
 for(i in 1:ncol(comb)){
   metadata.f <- metadata[metadata$condition %in% comb[,i],]
   count.f <- data[,rownames(metadata.f)]
@@ -32,7 +31,7 @@ for(i in 1:ncol(comb)){
   res <- data.frame(res@rownames,as.data.frame(res))
   colnames(res) <- c("name","basemean","log2foldchange","lfcSE","test_stat","p_value","p_adj")
   
-  contrast <- gsub(".$","",paste0(paste0("group", unique(metadata$condition)),sep="-", collapse = ""))
+  contrast <- gsub(".$","",paste0(paste0("group", unique(metadata.f$condition)),sep="-", collapse = ""))
   write.csv(res,paste0(contrast,"_","DGE_results.csv"), row.names = FALSE)
 }
 

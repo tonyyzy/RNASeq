@@ -1,15 +1,12 @@
-threads: "2"
-#options are "Single" or "Paired_end"
-lib_type: "Paired_end"
-index_directory:
-   class: Directory
-   path: ./indexed_test
-bam:
+lib_type: "PE"
+sam:
    class: File
-   path: ./test1.bam
-read_len: "101"
-output: "miso_out"
-gtf:
+   path: ./tumour.bam
+output: "tumour_out"
+gff:
    class: File
-   path: ./test.gff3
+   path: ./tmp.gff3
 min_exon_size: "50"
+input_script: 
+   class: File
+   path : ../../../../../home18/fmj18/Documents/RNASeq/scripts/complete_run.sh

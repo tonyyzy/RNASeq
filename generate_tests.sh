@@ -140,3 +140,7 @@ rm -r ./workflow3
 cwl-runner --outdir=./workflow5 ./workflows/docker/star_samtools_featurecounts_edger.cwl ./tests/star_samtools_featurecounts_edger.yml
 cp ./workflow5/edger/groupuntreated-grouptreated_DGE_res.csv ./tests/featurecounts_DGE_res.csv
 rm -r ./workflow5
+
+cwl-runner --outdir=./workflow6 ./workflows/docker/star_samtools_miso.cwl ./tests/star_samtools_miso.yml
+mv ./workflow6/miso/miso_compare/normal_out_vs_tumour_out/bayes-factors/normal_out_vs_tumour_out.miso_bf ./tests/normal_out_vs_tumour_out.miso_bf
+rm -r ./workflow6

@@ -2,10 +2,23 @@
 
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: stringtie
+baseCommand:
 hints:
   DockerRequirement:
     dockerPull: quay.io/biocontainers/stringtie:1.3.0--hd28b015_2
+
+requirements:
+ ShellCommandRequirement: {}
+ InlineJavascriptRequirement: {}
+
+arguments:
+ - position: -4
+   valueFrom: "stringtie"
+   shellQuote: False
+ - position: 4
+   prefix: -o
+   valueFrom: $(inputs.output + "/" + inputs.output + ".gtf")
+
 inputs:
  bam:
   type: File
@@ -13,10 +26,10 @@ inputs:
    position: 1
    prefix: -eB
  threads:
-   type: int
-   inputBinding:
-     position: 2
-     prefix: -p
+  type: int
+  inputBinding:
+   position: 2
+   prefix: -p
  gtf:
   type: File
   inputBinding:
@@ -24,12 +37,9 @@ inputs:
    prefix: -G
  output:
   type: string
-  inputBinding:
-    position: 4
-    prefix: -o
 
 outputs:
  stringtie_out:
-  type: File
+  type: Directory
   outputBinding:
    glob: $(inputs.output)

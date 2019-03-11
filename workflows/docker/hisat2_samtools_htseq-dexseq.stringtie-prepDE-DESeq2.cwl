@@ -216,7 +216,7 @@ steps:
       sorted_by:
         valueFrom: "pos"
       gff: htseq_prepare/ht_prep_out
-      sam: samtools_1/samtools_out
+      bam: samtools_1/samtools_out
       outname:
         source: [subject_name1]
         valueFrom: $(self + '_htseq_count.csv')
@@ -236,7 +236,7 @@ steps:
       sorted_by:
         valueFrom: "pos"
       gff: htseq_prepare/ht_prep_out
-      sam: samtools_2/samtools_out
+      bam: samtools_2/samtools_out
       outname:
         source: [subject_name2]
         valueFrom: $(self + '_htseq_count.csv')
@@ -255,7 +255,7 @@ steps:
       sorted_by:
         valueFrom: "pos"
       gff: htseq_prepare/ht_prep_out
-      sam: samtools_3/samtools_out
+      bam: samtools_3/samtools_out
       outname:
         source: [subject_name3]
         valueFrom: $(self + '_htseq_count.csv')
@@ -274,7 +274,7 @@ steps:
       sorted_by:
         valueFrom: "pos"
       gff: htseq_prepare/ht_prep_out
-      sam: samtools_4/samtools_out
+      bam: samtools_4/samtools_out
       outname:
         source: [subject_name4]
         valueFrom: $(self + '_htseq_count.csv')
@@ -313,45 +313,45 @@ steps:
   stringtie_1:
     run: ../../cwl-tools/docker/stringtie.cwl
     in:
-      input_bam: samtools_1/samtools_out
+      bam: samtools_1/samtools_out
       threads: threads
-      annotation: annotation
-      outfilename:
+      gtf: annotation
+      output:
         source: [subject_name1]
-        valueFrom: $(self + '.gtf')
+        valueFrom: $(self)
     out: [stringtie_out]
 
   stringtie_2:
     run: ../../cwl-tools/docker/stringtie.cwl
     in:
-      input_bam: samtools_2/samtools_out
+      bam: samtools_2/samtools_out
       threads: threads
-      annotation: annotation
-      outfilename:
+      gtf: annotation
+      output:
         source: [subject_name2]
-        valueFrom: $(self + '.gtf')
+        valueFrom: $(self)
     out: [stringtie_out]
 
   stringtie_3:
     run: ../../cwl-tools/docker/stringtie.cwl
     in:
-      input_bam: samtools_3/samtools_out
+      bam: samtools_3/samtools_out
       threads: threads
-      annotation: annotation
-      outfilename:
+      gtf: annotation
+      output:
         source: [subject_name3]
-        valueFrom: $(self + '.gtf')
+        valueFrom: $(self)
     out: [stringtie_out]
 
   stringtie_4:
     run: ../../cwl-tools/docker/stringtie.cwl
     in:
-      input_bam: samtools_4/samtools_out
+      bam: samtools_4/samtools_out
       threads: threads
-      annotation: annotation
-      outfilename:
+      gtf: annotation
+      output:
         source: [subject_name4]
-        valueFrom: $(self + '.gtf')
+        valueFrom: $(self)
     out: [stringtie_out]
 
   stringtie_folder:
@@ -369,12 +369,8 @@ steps:
   prepDE:
     run: ../../cwl-tools/docker/prepDE.cwl
     in:
-     program: prepDE_script
-     gtfs:
-     - stringtie_1/stringtie_out
-     - stringtie_2/stringtie_out
-     - stringtie_3/stringtie_out
-     - stringtie_4/stringtie_out
+     input_script: prepDE_script
+     stringtie_out: stringtie_folder/out
     out: [gene_count_output, transcript_count_output]
 
   prepDE_folder:

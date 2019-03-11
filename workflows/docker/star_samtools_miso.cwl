@@ -20,9 +20,10 @@ inputs:
   fastq2: File[]
   fastq3: File[]
   fastq4: File[]
-  prepDE_script: File
-  DESeq2_script: File
   metadata: File
+  perl_script: File
+  miso_script: File
+  conditions: string[]
 
 outputs:
   star_readmap_out:
@@ -31,15 +32,10 @@ outputs:
   samtools_out:
     type: Directory
     outputSource: samtools_folder/out
-  stringtie_out:
+  miso_out:
     type: Directory
-    outputSource: stringtie_folder/out
-  prepDE_out:
-    type: Directory
-    outputSource: prepDE_folder/out
-  DESeq2_out:
-    type: Directory
-    outputSource: DESeq2_folder/out
+    outputSource: miso_folder/out
+
 steps:
 # STAR
   star_readmap_1:
@@ -59,6 +55,7 @@ steps:
       readFilesIn: fastq2
       outFileNamePrefix: subject_name2
     out: [sam_output, star_read_out]
+
   star_readmap_3:
     run: ../../cwl-tools/docker/STAR_readmap.cwl
     in:
@@ -67,6 +64,7 @@ steps:
       readFilesIn: fastq3
       outFileNamePrefix: subject_name3
     out: [sam_output, star_read_out]
+
   star_readmap_4:
     run: ../../cwl-tools/docker/STAR_readmap.cwl
     in:
@@ -87,7 +85,6 @@ steps:
       name:
         valueFrom: "star"
     out: [out]
-
 
 # Samtools
   samtools_1:
@@ -142,92 +139,74 @@ steps:
         valueFrom: "samtools"
     out: [out]
 
-#Stringtie
-  stringtie_1:
-    run: ../../cwl-tools/docker/stringtie.cwl
+  miso_index:
+    run: ../../cwl-tools/docker/miso_index.cwl
     in:
-      bam: samtools_1/samtools_out
-      threads: threads
       gtf: annotation
       output:
-        source: [subject_name1]
-        valueFrom: $(self)
-    out: [stringtie_out]
+        valueFrom: "miso_output"
+      perl_input: perl_script
+    out: [miso_out]
 
-  stringtie_2:
-    run: ../../cwl-tools/docker/stringtie.cwl
+  miso_merge:
+    run: ../../cwl-tools/docker/miso_merge.cwl
     in:
-      bam: samtools_2/samtools_out
-      threads: threads
-      gtf: annotation
-      output:
-        source: [subject_name2]
-        valueFrom: $(self)
-    out: [stringtie_out]
+      condition1bam:
+      - samtools_1/samtools_out
+      - samtools_2/samtools_out
+      condition2bam:
+      - samtools_3/samtools_out
+      - samtools_4/samtools_out
+      output: conditions
+    out: [condition1, condition2]
 
-  stringtie_3:
-    run: ../../cwl-tools/docker/stringtie.cwl
+  miso_run_normal:
+    run: ../../cwl-tools/docker/miso_run.cwl
     in:
-      bam: samtools_3/samtools_out
-      threads: threads
-      gtf: annotation
-      output:
-        source: [subject_name3]
-        valueFrom: $(self)
-    out: [stringtie_out]
+      input_script: miso_script
+      gff: miso_index/miso_out
+      bam: miso_merge/condition1
+      lib_type: 
+        valueFrom: "PE"
+      min_exon_size:
+        valueFrom: "50"
+      output: 
+        valueFrom: "normal_out"
+    out: [miso_out]
 
-  stringtie_4:
-    run: ../../cwl-tools/docker/stringtie.cwl
+  miso_run_tumour:
+    run: ../../cwl-tools/docker/miso_run.cwl
     in:
-      bam: samtools_4/samtools_out
-      threads: threads
-      gtf: annotation
+      input_script: miso_script
+      gff: miso_index/miso_out
+      bam: miso_merge/condition2
+      lib_type: 
+        valueFrom: "SG"
+      min_exon_size: 
+        valueFrom: "50"
       output:
-        source: [subject_name4]
-        valueFrom: $(self)
-    out: [stringtie_out]
+        valueFrom: "tumour_out"
+    out: [miso_out]
 
-  stringtie_folder:
+  miso_compare:
+    run: ../../cwl-tools/docker/miso_compare.cwl
+    in:
+      group1: miso_run_normal/miso_out
+      group2: miso_run_tumour/miso_out
+      output: 
+        valueFrom: "miso_compare"
+    out: [miso_out]
+
+  miso_folder:
     run: ../../cwl-tools/folder.cwl
     in:
       item:
-      - stringtie_1/stringtie_out
-      - stringtie_2/stringtie_out
-      - stringtie_3/stringtie_out
-      - stringtie_4/stringtie_out
+      - miso_index/miso_out
+      - miso_merge/condition1
+      - miso_merge/condition2
+      - miso_run_normal/miso_out
+      - miso_run_tumour/miso_out
+      - miso_compare/miso_out
       name:
-        valueFrom: "stringtie"
-    out: [out]
-
-  prepDE:
-    run: ../../cwl-tools/docker/prepDE.cwl
-    in:
-     input_script: prepDE_script
-     stringtie_out: stringtie_folder/out
-    out: [gene_count_output, transcript_count_output]
-
-  prepDE_folder:
-    run: ../../cwl-tools/folder.cwl
-    in:
-      item:
-      - prepDE/gene_count_output
-      - prepDE/transcript_count_output
-      name:
-        valueFrom: "prepDE"
-    out: [out]
-
-  DESeq2:
-    run: ../../cwl-tools/docker/DESeq2.cwl
-    in:
-      input_script: DESeq2_script
-      count_matrix: prepDE/gene_count_output
-      metadata: metadata
-    out: [DESeq2_out]
-
-  DESeq2_folder:
-    run: ../../cwl-tools/folder.cwl
-    in:
-      item: DESeq2/DESeq2_out
-      name:
-        valueFrom: "DESeq2"
+        valueFrom: "miso"
     out: [out]

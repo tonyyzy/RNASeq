@@ -8,7 +8,7 @@ def test_prepDE_nodocker():
     subprocess.run(["cwl-runner",
                     "--outdir=./test_prepDE_nodocker",
                     "./cwl-tools/nodocker/prepDE.cwl",
-                    "./tests/prepDE.yml"])
+                    "./tests/prepDE_nodocker.yml"])
 
     assert filecmp.cmp("./test_prepDE_nodocker/gene_count_matrix.csv",
                         "./tests/gene_count_matrix.csv")

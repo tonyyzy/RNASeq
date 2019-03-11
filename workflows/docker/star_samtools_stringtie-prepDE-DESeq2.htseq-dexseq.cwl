@@ -163,7 +163,7 @@ steps:
       gtf: annotation
       output:
         source: [subject_name1]
-        valueFrom: $(self + ".gtf")
+        valueFrom: $(self)
     out: [stringtie_out]
 
   stringtie_2:
@@ -174,7 +174,7 @@ steps:
       gtf: annotation
       output:
         source: [subject_name2]
-        valueFrom: $(self + ".gtf")
+        valueFrom: $(self)
     out: [stringtie_out]
 
   stringtie_3:
@@ -185,7 +185,7 @@ steps:
       gtf: annotation
       output:
         source: [subject_name3]
-        valueFrom: $(self + ".gtf")
+        valueFrom: $(self)
     out: [stringtie_out]
 
   stringtie_4:
@@ -196,7 +196,7 @@ steps:
       gtf: annotation
       output:
         source: [subject_name4]
-        valueFrom: $(self + ".gtf")
+        valueFrom: $(self)
     out: [stringtie_out]
 
   stringtie_folder:
@@ -214,12 +214,8 @@ steps:
   prepDE:
     run: ../../cwl-tools/docker/prepDE.cwl
     in:
-      program: prepDE_script
-      gtfs:
-      - stringtie_1/stringtie_out
-      - stringtie_2/stringtie_out
-      - stringtie_3/stringtie_out
-      - stringtie_4/stringtie_out
+      input_script: prepDE_script
+      stringtie_out: stringtie_folder/out
     out: [gene_count_output, transcript_count_output]
 
   prepDE_folder:
@@ -235,7 +231,7 @@ steps:
   DESeq2:
     run: ../../cwl-tools/docker/DESeq2.cwl
     in:
-      script: DESeq2_script
+      input_script: DESeq2_script
       count_matrix: prepDE/gene_count_output
       metadata: metadata
     out: [DESeq2_out]
@@ -367,7 +363,7 @@ steps:
   dexseq_folder:
     run: ../../cwl-tools/folder.cwl
     in:
-      item: dexseq/dexseq_outdexseq_out
+      item: dexseq/dexseq_out
       name:
         valueFrom: "DEXSeq"
     out: [out]

@@ -9,37 +9,40 @@ hints:
 
 requirements:
   ShellCommandRequirement: {}
-  InitialWorkDirRequirement:
-    listing:
-      - entry: '{"inputs": $(inputs.stringtie_out)}'
-        entryname: inputs.json
+#  InitialWorkDirRequirement: {}
+#    listing:
+#      - entry: '{"inputs": $(inputs.stringtie_out)}'
+#        entryname: inputs.json
 
 arguments:
-  - prefix: -c
-    position: 2
-    valueFrom: |
-      import json
-      with open("inputs.json") as file:
-          inputs = json.load(file)
-      with open("sample_lst.txt", "w") as txt:
-          for i in range(len(inputs["inputs"])):
-              txt.write(inputs["inputs"][i]["nameroot"]
-                        + " "
-                        + inputs["inputs"][i]["path"]
-                        + "\n")
-  - prefix: "&&"
-    position: 3
-    valueFrom: "python2"
-  - prefix: -i
-    position: 5
-    valueFrom: sample_lst.txt
+#  - prefix: -c
+#    position: 2
+#    valueFrom: |
+#      import json
+##      with open("inputs.json") as file:
+  #        inputs = json.load(file)
+  #    with open("sample_lst.txt", "w") as txt:
+  #        for i in range(len(inputs["inputs"])):
+  #            txt.write(inputs["inputs"][i]["nameroot"]
+  #                      + " "
+  #                      + inputs["inputs"][i]["path"]
+  #                      + "\n")
+#  - prefix: "&&"
+#    position: 3
+#    valueFrom: "python2"
+#  - prefix: -i#
+#    position: 5
+#    valueFrom: sample_lst.txt
 inputs:
   input_script:
     type: File
     inputBinding:
       position: 4
   stringtie_out:
-    type: File[]
+    type: Directory
+    inputBinding:
+      prefix: -i
+      position: 5
   length:
     type: string?
     inputBinding:

@@ -1,0 +1,31 @@
+threads: 2
+genomeDir:
+  class: Directory
+  path: ./GenomeIndex
+subject_name1: test1
+subject_name2: test2
+subject_name3: test3
+subject_name4: test4
+fastq1:
+  - {class: File, path: ./test1.1.fastq}
+  - {class: File, path: ./test1.2.fastq}
+fastq2:
+  - {class: File, path: ./test2.1.fastq}
+  - {class: File, path: ./test2.2.fastq}
+fastq3:
+  - {class: File, path: ./test3.fastq}
+fastq4:
+  - {class: File, path: ./test4.fastq}
+annotation:
+  class: File
+  path: ./test.gtf
+perl_script:
+  class: File
+  path: ../scripts/gtf2gff3.pl
+miso_script:
+  class: File
+  path: ../scripts/complete_run.sh
+metadata:
+  class: File
+  path: ./metadata.csv
+conditions: ["normal","tumour"]
