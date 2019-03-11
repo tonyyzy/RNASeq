@@ -14,5 +14,5 @@ inputs:
          position: 1
 
 outputs:
-	exons:
+   exons:
       type: stdout
