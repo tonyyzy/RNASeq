@@ -6,12 +6,7 @@
     <meta charset="utf-8">
     {% block head %}
     {% load static %}
-    <title>D3 Page Template</title>
-    <!-- <script type="text/javascript" src="/home/patrick/Code/GitWorkSpace/RNASeq/webportal/static/js/d3.js"></script> -->
-    <!-- <script src="http://d3js.org/d3.v3.js"></script> -->
-    <!-- <script src=" https://d3js.org/d3.v5.js"></script> -->
-    <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
-
+      <title>D3 Page Template</title>
     {% endblock %}
   </head>
   <body>
@@ -34,7 +29,6 @@
         <li><a id='id_upload_btn' href="#">Add Sample</a></li>
         <li><a id='id_upload_btn' href="#">Add Workflow</a></li>
         <li><a href="#">test</a></li>
-
         </ul>
       </div>
 
@@ -45,8 +39,9 @@
           <span></span>
         </div>
         <br>
-        <button type="button" name="button" onclick="script_one()">Script One</button>
-        <button type="button", onclick="script_one()">Click Me!</button>
+        <button type="button" name="button" onclick="which(1)">Workflow One</button>
+        <button type="button" name="button" onclick="which(2)">Workflow Two</button>
+        <!-- <button type="button", onclick="script_one()">Click Me!</button> -->
       </div><!-- PAGE CONTENT WRAPPER -->
 </div> <!-- WRAPPER -->
 
@@ -57,39 +52,55 @@
   <script src= "{% static 'js/my_volcano.js' %}"></script>
   <script>
   {% block jquery %}
-  var endpoint = 'api/data'
+  // var endpoint = 'api/data'
   dataset = []
-  function script_one(){
-    console.log('script one called')
-    var default_data = []
-    $.ajax({
-      method: 'GET',
-      url: endpoint,
-      success: function(data){
-        // console.log(data);
-        dataset.push(data)
-        d3.json(endpoint, function(data) {
-          console.log(data[0]);
-        });
-      },
-      error: function(error_data){
-        console.log('error')
-        console.log(error_data)
-      }
-    })
+  function workflowOne(){
+    var endpoint = 'api/data'
+    d3_run()
   }
-
+  function workflowTwo(){
+    var endpoint = 'wf_two'
+    d3_run()
+  }
   {% endblock %}
 
-    $('#sidebar_toggle').click(function(e){
-      // e.preventDefault();
-      $('#wrapper').toggleClass('menuDisplayed')
-      // console.log('hi')
-    });
-  </script>
+  function which(param){
+    if(param == 1 ){
+      console.log('1 chosen')
+      var endpoint = 'wf_one'
+    }
+    if(param == 2 ){
+      console.log('2 chosen')
+      var endpoint = 'wf_two'
+    }
+    function d3_run(){
+      d3.json(endpoint).then(function(data) {
+        console.log('d3_run called')
+        console.log(data)
+      });
+    }
+    d3_run()
+  }
 
+  $('#sidebar_toggle').click(function(e){
+    // e.preventDefault();
+    $('#wrapper').toggleClass('menuDisplayed')
+    // console.log('hi')
+  });
+  </script>
 
 
   {% endblock %}
   </body>
 </html>
+<!-- $.ajax({
+  method: 'GET',
+  url: endpoint,
+  success: function(data){
+    // console.log(data)
+  },
+  error: function(error_data){
+    console.log('error')
+    console.log(error_data)
+  }
+}) -->

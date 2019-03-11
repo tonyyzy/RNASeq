@@ -198,19 +198,10 @@
           </div>
           </div>
           <div id="session_submit" class="container tab-pane fade"><br>
-            <!-- FORM TO CHANGE STATUS OF SESSION TO TRUE -->
-            <form method="POST"  enctype="multipart/form-data" id='id_session_submit_btn' class='hidden'>
-              {% csrf_token %}
-              {{form|crispy}}
-              <!-- will need to define individual fields in which case i dont need to use javascript to hide as i can specify fields shown directly! -->
-              <br>
-              <input type="submit" class='create_btn' value="SUBMIT FOR ANALYSIS">
-            </form>
-
             {% if session_detail.status %}
-              <h2>submitted</h2>
-              {{no_svg}} 
-              static/images/{{session_detail.identifier}}/workflow.svg
+              {{no_svg}}
+              <!-- {{session_wf}} -->
+              <!-- static/images/{{session_detail.identifier}}/workflow.svg -->
               {% if session_wf %}
                 <object data="{% static 'images/' %}{{session_detail.identifier}}/workflow.svg" type="image/svg+xml" id='id_demo_wf' class='svg'>
                 </object>
@@ -224,6 +215,15 @@
               <h2>not submitted</h2>
             {% endif %}
 
+            <!-- FORM TO CHANGE STATUS OF SESSION TO TRUE -->
+            <form method="POST"  enctype="multipart/form-data" id='id_session_submit_btn' class='hidden'>
+              {% csrf_token %}
+              {{form|crispy}}
+              <!-- will need to define individual fields in which case i dont need to use javascript to hide as i can specify fields shown directly! -->
+              <br>
+              <input type="submit" class='create_btn' value="SUBMIT FOR ANALYSIS">
+            </form>
+
 
         </div>
  </div> <!-- page-content -->
@@ -234,18 +234,9 @@
       <script type="text/javascript" src= "{% static 'js/svg-pan-zoom.min.js' %}"></script>
       <script>
 
-
-      function zoomSvg(){
-        console.log('called')
-        svgPanZoom('#id_demo_wf')
-      }
-
-      function svg_delay(){
-        console.log('delay')
-        setTimeout(function() { zoomSvg(); }, 1000);
-      }
-
-      svg_delay()
+      $('#id_demo_wf').mouseover(function(){
+          svgPanZoom('#id_demo_wf')
+      })
 
       $( document ).ready(function() {
         $('#id_workflow_create_btn')
@@ -269,8 +260,6 @@
         }
 
     });
-
-
 
 
 

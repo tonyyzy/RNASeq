@@ -2,27 +2,27 @@
 var p_threshold = - Math.log10(0.05);
 var log2_threshold = 1;
 
-console.log('my_volcano js active')
+// console.log('my_volcano js active')
 // var in_file = 'head_DGE_1.csv'
 
-var in_file = 'DGE_results_1_head.csv'
+// var in_file = 'DGE_results_1_head.csv'
 
 
 
 dataset = []
-d3.csv(in_file, function(d) {
-  return {
-    gene_name : d[""],
-    Base_Mean : +d.Base_Mean,
-    log2FoldChange : +d.log2FoldChange,
-    pvalue : +d.pvalue,
-    padj : +d.padj
-  };
-}).then(function(data) {
-  console.log(data[0]);
-  dataset.push(data)
-  arr_delay()
-});
+// d3.csv(in_file, function(d) {
+//   return {
+//     gene_name : d[""],
+//     Base_Mean : +d.Base_Mean,
+//     log2FoldChange : +d.log2FoldChange,
+//     pvalue : +d.pvalue,
+//     padj : +d.padj
+//   };
+// }).then(function(data) {
+//   console.log(data[0]);
+//   dataset.push(data)
+//   arr_delay()
+// });
 
 
 function dataFilter(){

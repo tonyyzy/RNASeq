@@ -7,28 +7,43 @@ from django.views.generic import (View,TemplateView,
                                 UpdateView)
 from django.http import JsonResponse
 import csv , json
-
+from django.conf import settings
+import os
 
 class VisualizationIndexView(View):
-    def get(self, request):
+    def get(self, request, session_slug):
         context = {'inject':'im the injection'}
         return render(request, 'visualization/index.html', context)
 
 
-def GetDataView(request, *args, **kwargs):
-    json_data = {"greeting": "world", "foo": "bar", "gatsby": "hello old sport"}
-    csvFilePath = "/home/patrick/Code/GitWorkSpace/myApp/testPlot/DGE_results_1_head.csv" # will convert to use session specifi path once d3.json(data) is working
-    # jsonFilePath = "j_test.json"
+def WorkFlowOneView(request, session_slug, *args, **kwargs):
+    # fcd72896-218a-45f8-be02-361b3c94e192
+    session_output_dir = os.path.join(settings.DATA_DIR, session_slug, 'output')
+    star_out = os.path.join(session_output_dir, 'star_samtools_stringtie_prepde_deseq2')
+    star_DGE_csv = os.path.join(star_out, os.listdir(star_out)[0])
+    print(f'\n{star_DGE_csv}')
     arr = []
-    #read the csv and add the arr to a array
-    with open (csvFilePath) as csvFile:
+    with open (star_DGE_csv) as csvFile:
         csvReader = csv.DictReader(csvFile)
         print(csvReader)
         for csvRow in csvReader:
             arr.append(csvRow)
-    print(arr)
-    # return JsonResponse(json_data)
-    return JsonResponse(arr, safe=False)
+        return JsonResponse(arr, safe=False)
+
+def WorkFlowTwoView(request, session_slug, *args, **kwargs):
+    # fcd72896-218a-45f8-be02-361b3c94e192
+    session_output_dir = os.path.join(settings.DATA_DIR, session_slug, 'output')
+    hisat_out = os.path.join(session_output_dir, 'hisat2_samtools_stringtie_prepde_deseq2')
+    hisat_DGE_csv = os.path.join(hisat_out, os.listdir(hisat_out)[0])
+    print(f'\n{hisat_DGE_csv}')
+    arr = []
+    with open (hisat_DGE_csv) as csvFile:
+        csvReader = csv.DictReader(csvFile)
+        print(csvReader)
+        for csvRow in csvReader:
+            arr.append(csvRow)
+        return JsonResponse(arr, safe=False)
+
 
 
 class DebugView(View):
