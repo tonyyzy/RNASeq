@@ -1379,6 +1379,8 @@ class cwl_writer():
         proc = subprocess.Popen(["cwl-runner",
                     f"--outdir={self.root}/Data/{self.identifier}/output",
                     "--timestamp",
+                    "--tmpdir-prefix=/tmp/",
+                    "--tmp-outdir-prefix=/tmp/",
                     f"{self.root}/Data/{self.identifier}/workflow.cwl",
                     f"{self.root}/Data/{self.identifier}/input.yml"],
                     stdout=workflow_log, stderr=workflow_log)
