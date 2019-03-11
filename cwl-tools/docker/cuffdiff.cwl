@@ -10,7 +10,7 @@ requirements:
 
 hints:
     DockerRequirement:
-        dockerPull: machalen/cufflinksdocker:latest
+        dockerPull: filipejesus/cufflinks:latest
 
 arguments:
    - position: -4
@@ -21,18 +21,17 @@ arguments:
      shellQuote: false
    - prefix: "&&"
      position: 14
-     valueFrom: $("sed -i '1s/log2(fold_change)/log2foldchage/' "+ inputs.output +"/gene_exp.diff")
+     valueFrom: "python"
      shellQuote: false
-   - prefix: "&&"
-     position: 15
-     valueFrom: $("sed -i '1s/q_value/p_adj/' "+ inputs.output +"/gene_exp.diff")
-     shellQuote: false
-   - prefix: "&&"
-     position: 16
-     valueFrom: $("sed -i '1s/gene/name/' " + inputs.output +"/gene_exp.diff")
+   - position : 16
+     valueFrom: $(inputs.output +"/gene_exp.diff")
      shellQuote: false
 
 inputs:
+   input_script:
+      type: File
+      inputBinding:
+         position: 15
    output:
       type: string
       inputBinding:

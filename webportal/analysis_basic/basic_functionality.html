@@ -64,46 +64,48 @@
   </head>
   <body>
     <div id="divDownload" style="display: none;"></div>
-    <div id="header">Volcano Plot</div>
+    <div id="header">Analysis Portal</div>
 		<div id="sidebar-left">
       Workflows
-      <input type="button" onclick="unhide(this, ['file_volcano','foldchange','pvalue','sig_colour','line_colour','nonsig','volcano_download','volcano_submit']) & hide(this, ['file_dot_plot','gene','dot_plot_submit','dot_plot_download'])" value="Volcano">
-      <input type="button" onclick="unhide(this, ['file_dot_plot','gene','dot_plot_submit','dot_plot_download']) & hide(this, ['file_volcano','foldchange','pvalue','sig_colour','line_colour','nonsig','volcano_download','volcano_submit'])" value="Dot plot">
+      <input type="button" onclick="unhide(this, ['file_volcano','foldchange','pvalue','sig_colour','line_colour','nonsig','volcano_download','volcano_submit','file_volcano_p','foldchange_p','pvalue_p','sig_colour_p','line_colour_p','nonsig_p']) & hide(this, ['file_dot_plot','gene','dot_plot_submit','dot_plot_download','file_dot_plot_p','gene_p'])" value="Volcano">
+      <input type="button" onclick="unhide(this, ['file_dot_plot','gene','dot_plot_submit','dot_plot_download','file_dot_plot_p','gene_p']) & hide(this, ['file_volcano','foldchange','pvalue','sig_colour','line_colour','nonsig','volcano_download','volcano_submit','file_volcano_p','foldchange_p','pvalue_p','sig_colour_p','line_colour_p','nonsig_p'])" value="Dot plot">
+      <input type="button" onclick="heat_map_data() & hide(this, ['file_dot_plot','gene','dot_plot_submit','dot_plot_download','file_dot_plot_p','gene_p','file_volcano','foldchange','pvalue','sig_colour','line_colour','nonsig','volcano_download','volcano_submit','file_volcano_p','foldchange_p','pvalue_p','sig_colour_p','line_colour_p','nonsig_p'])" value="Heatmap">
+
     </div>
     <div id="main"><!-- Plotly chart will be drawn inside this DIV --></div>
     <div id="sidebar-right">
       <button class="accordion">Data</button>
       <div class="panel">
-        <p style="font-size:16px">Select a gene</p>
+        <p id="gene_p" class="hidden" style="font-size:16px">Select a gene</p>
         <input name="gene" type="text" maxlength="512" id="gene"  class="hidden" value="ENSG00000169744"/>
-        <p style="font-size:16px">Select a file</p>
+        <p id="file_dot_plot_p"  class="hidden" style="font-size:16px">Select a file</p>
         <select name="file" id="file_dot_plot"  class="hidden" onChange="read_data('file_dot_plot')";>
           <option value="" selected="selected"></option>
           <option value="./gene_count_matrix.csv">gene_count_matrix</option>
         </select>
-        <p style="font-size:16px">Select a file</p>
+        <p id="file_volcano_p"  class="hidden" style="font-size:16px">Select a file</p>
         <select name="file" id="file_volcano" onChange="read_data('file_volcano')" class="hidden";>
           <option value="" selected="selected"></option>
           <option value='./DGE_res/human_DGE_results.csv'>human_DGE_results.csv</option>
           <option value='./DGE_res/DGE_results.csv'>DGE_results.csv</option>
           <option value='./DGE_res/workflow1_DGE_results.csv'>workflow1_DGE_results.csv</option>
         </select><br>
-        <p style="font-size:16px">Foldchange threshold</p>
+        <p id="foldchange_p"  class="hidden" style="font-size:16px">Foldchange threshold</p>
         <input name="foldchange" type="text" maxlength="512" id="foldchange" class="hidden" value="logfoldchange threshold"/><br>
-        <p style="font-size:16px">P-Value threshold</p>
+        <p id="pvalue_p"  class="hidden" style="font-size:16px">P-Value threshold</p>
         <input name="pvalue" type="text" maxlength="512" id="pvalue" class="hidden" value="pvalue threshold"/><br>
       </div><br>
 
       <button class="accordion">Visual</button>
       <div class="panel">
-        <p style="font-size:16px">Colour for significant points</p>
+        <p id="sig_colour_p"  class="hidden" style="font-size:16px">Colour for significant points</p>
         <select name="significant colour" id="sig_colour" class="hidden";>
           <option value='rgba(200, 0, 0, 1.0)' selected="selected">red</option>
           <option value='rgba(0, 200, 0, 1.0)'>green</option>
           <option value='rgba(0, 0, 200, 1.0)'>blue</option>
           <option value='rgba(0, 0, 0, 1.0)'>black</option>
         </select><br>
-        <p style="font-size:16px">Colour for folchange line</p>
+        <p id="line_colour_p"  class="hidden" style="font-size:16px">Colour for folchange line</p>
         <select name="line colour" id="line_colour" class="hidden";>
           <option value='rgba(255,255,255, 1.0)' selected="selected">None</option>
           <option value='rgba(200, 0, 0, 1.0)'>red</option>
@@ -112,7 +114,7 @@
           <option value='rgba(0, 0, 200, 1.0)'>blue</option>
           <option value='rgba(0, 0, 0, 1.0)'>black</option>
         </select><br>
-        <p style="font-size:16px">show non sig points</p>
+        <p id="nonsig_p" class="hidden" style="font-size:16px">show non sig points</p>
         <input type="checkbox" name="nonsig" id="nonsig" class="hidden"><br>
       </div><br>
 
@@ -142,6 +144,9 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type="text/javascript" src="./d3.js"></script>
     <script type="text/javascript" src="./basic_functionality.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="http://www.cloudformatter.com/Resources/Pages/CSS2Pdf/Script/xeponline.jqplugin.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
     <script>
       var acc = document.getElementsByClassName("accordion");
       var i;

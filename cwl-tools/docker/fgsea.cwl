@@ -24,7 +24,7 @@ inputs:
          prefix: --gene_set
 
 outputs:
-   example_out:
+   gsea_out:
       type: File
       outputBinding:
          glob: "gsea_res.csv"

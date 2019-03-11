@@ -57,7 +57,7 @@ for(i in 1:ncol(comb)){
   dge.res <- topTable(efit,sort="none",n=Inf)
   dge.res <- dge.res[,c("AveExpr", "logFC", "t", "P.Value", "adj.P.Val")]
   dge.res <- data.frame(rownames(dge.res),dge.res)
-  colnames(dge.res) <- c("name","norm_basemean", "log2foldchage", "test_stat", "p_value","p_adj")
+  colnames(dge.res) <- c("name","norm_basemean", "log2foldchange", "test_stat", "p_value","p_adj")
   write.csv(dge.res, paste0(contrast,"_","DGE_res.csv"), row.names = FALSE)
 }
 

@@ -44,7 +44,7 @@ class Session(models.Model):
     fasta_dna_file = models.FileField(storage=data_root, upload_to=get_genome_path, blank=True, null=True)
     fasta_cdna_file = models.FileField(storage=data_root, upload_to=get_genome_path, blank=True, null=True)
     gtf_file = models.FileField(storage=data_root, upload_to=get_genome_path, blank=True, null=True)
-    status = models.BooleanField(default=False, blank=True, null=True)
+    status = models.PositiveSmallIntegerField(default=False, blank=True, null=True)
     pid = models.IntegerField(blank=True, null=True)
 
     def get_absolute_url(self): # provides a default if Session is called from views.py without a specified reverse or redirect
@@ -96,20 +96,23 @@ class Workflow(models.Model):
     MAPPER_CHOICES = (
         ("star", "STARAligner"),
         ("hisat2", "HISAT2"),
-        ('salmon', 'SALMON'),
+        ('salmonquant', 'SALMON'),
     )
     ASSEMLBER_CHOICES = (
         ("stringtie", "STRINGTIE"),
         ('cufflinks', 'CUFFLINKS'),
-        ('miso', 'MISO'),
+        # ('miso', 'MISO'),
         ('htseq', 'HTSEQ'),
         ('featurecounts', 'FEATURECOUNTS'),
+        ('salmoncount', 'SALMON')
     )
     ANALYSIS_CHOICES = (
         ('deseq2', 'DESEQ2'),
         ('dexseq', 'DEXSEQ'),
-        ('htseq', 'HTSEQ'),
-        ('miso', 'MISO'),
+        # ('miso', 'MISO'),
+        ('cuffdiff', "CUFFDIFF"),
+        ('edger', "EDGER"),
+        ('ballgown', "BALLGOWN")
     )
     session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='workflow')
     # index = models.CharField(max_length=200, choices=INDEX_CHOICES)

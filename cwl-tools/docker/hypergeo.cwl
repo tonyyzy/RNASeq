@@ -23,7 +23,7 @@ inputs:
      prefix: --gene_set
 
 outputs:
-  DESeq2_out:
+  hypergeo_out:
    type: File
    outputBinding:
     glob: "hypergeo_res.csv"

@@ -11,7 +11,7 @@ inputs:
    input_script:
       type: File
       inputBinding:
-         position: 1 
+         position: 1
    gtf:
       type: File?
       inputBinding:
@@ -23,7 +23,7 @@ inputs:
 
 
 outputs:
-   output:
+   ht_prep_out:
       type: File
       outputBinding:
          glob: "*"

@@ -193,12 +193,12 @@ steps:
       gff_name:
         source: [annotation]
         valueFrom: $(self.nameroot + '.gff')
-    out: [output]
+    out: [ht_prep_out]
 
   htseq_prepare_folder:
     run: ../../cwl-tools/folder.cwl
     in:
-      item: htseq_prepare/output
+      item: htseq_prepare/ht_prep_out
       name:
         valueFrom: "htseq_prepare"
     out: [out]
@@ -215,7 +215,7 @@ steps:
         valueFrom: "bam"
       sorted_by:
         valueFrom: "pos"
-      gff: htseq_prepare/output
+      gff: htseq_prepare/ht_prep_out
       sam: samtools_1/samtools_out
       outname:
         source: [subject_name1]
@@ -235,7 +235,7 @@ steps:
         valueFrom: "bam"
       sorted_by:
         valueFrom: "pos"
-      gff: htseq_prepare/output
+      gff: htseq_prepare/ht_prep_out
       sam: samtools_2/samtools_out
       outname:
         source: [subject_name2]
@@ -254,7 +254,7 @@ steps:
         valueFrom: "bam"
       sorted_by:
         valueFrom: "pos"
-      gff: htseq_prepare/output
+      gff: htseq_prepare/ht_prep_out
       sam: samtools_3/samtools_out
       outname:
         source: [subject_name3]
@@ -273,7 +273,7 @@ steps:
         valueFrom: "bam"
       sorted_by:
         valueFrom: "pos"
-      gff: htseq_prepare/output
+      gff: htseq_prepare/ht_prep_out
       sam: samtools_4/samtools_out
       outname:
         source: [subject_name4]
@@ -299,12 +299,12 @@ steps:
       counts_matrix: htseq_count_folder/out
       gff: htseq_prepare_folder/out
       metadata: metadata
-    out: [output]
+    out: [dexseq_out]
 
   dexseq_folder:
     run: ../../cwl-tools/folder.cwl
     in:
-      item: dexseq/output
+      item: dexseq/dexseq_out
       name:
         valueFrom: "DEXSeq"
     out: [out]

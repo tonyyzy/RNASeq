@@ -2,6 +2,7 @@ var dataset;
 var metadata;
 var data_sorted;
 var layout;
+var merged;
 function sort_data_dot_plot() {
   var ids = dataset.gene_id
   var newData = dataset.filter(function(obj){return obj.gene_id === document.getElementById("gene").value})[0];
@@ -240,6 +241,42 @@ function sort_data_volcano() {
   };
   return [data, layout]
 }
+function heat_map_data(){
+  var files = ['./DGE_res/human_DGE_results.csv', "./DGE_res/workflow1_DGE_results.csv"];
+  var dataset = [];
+  for (i = 0; i < files.length; i++) {
+    var file = files[i];
+    console.log(file);
+    d3.csv(String(file)).then(function(data){
+      dataset.gene_name=data.name;
+      dataset.lfc=parseFloat(data.log2FoldChange);
+      dataset.padj=parseFloat(data.padj);
+      dataset.dataset=file;
+      console.log(dataset);
+      return dataset
+    })
+  };
+  dataset = Promise.all(dataset);
+  dataset.then(function(dataset){
+    // dataset = dataset.flat();
+    console.log(dataset);
+  });
+
+  // var file = files[0]
+  // d3.csv(file).then(function(data){
+  //     merged = data;
+  // });
+  // console.log(merged);
+  // for (i = 1; i < files.length; i++){
+  //   file = files[i];
+  //   console.log(file);
+  //   d3.csv(file).then(function(data){
+  //       merged = merged + data;
+  //   });
+  //   console.log(merged);
+  // }
+}
+
 function read_data(file) {
   var e = document.getElementById(file);
   var strUser = e.options[e.selectedIndex].value;
@@ -264,9 +301,5 @@ function create_plot(func){
   Plotly.newPlot('main', out[0], out[1], {displayModeBar: false});
 }
 function download_plot(func){
-  var img_jpg= d3.select('#jpg-export');
-  out = func();
-  Plotly.plot('divDownload', out[0], out[1]).then(function(gd){
-    Plotly.downloadImage(gd,{format:'jpeg',height:300,width:300, filename:'newPlot'})
-  });
+  return xepOnline.Formatter.Format('main',{pageWidth:'11in', pageHeight:'8.5in',render:'download', srctype:'svg'});
 }

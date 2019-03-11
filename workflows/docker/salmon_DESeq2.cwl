@@ -47,7 +47,7 @@ steps:
       second_end_fastq:
         source: [fastq1]
         valueFrom: $(self[1])
-    out: [output]
+    out: [salmon_out]
 
   salmon_quant_2:
     run: ../../cwl-tools/docker/salmon_quant.cwl
@@ -61,7 +61,7 @@ steps:
       second_end_fastq:
         source: [fastq2]
         valueFrom: $(self[1])
-    out: [output]
+    out: [salmon_out]
 
   salmon_quant_3:
     run: ../../cwl-tools/docker/salmon_quant.cwl
@@ -70,7 +70,7 @@ steps:
       output: subject_name3
       threads: threads
       single_fastq: fastq3
-    out: [output]
+    out: [salmon_out]
 
   salmon_quant_4:
     run: ../../cwl-tools/docker/salmon_quant.cwl
@@ -79,16 +79,16 @@ steps:
       output: subject_name4
       threads: threads
       single_fastq: fastq4
-    out: [output]
+    out: [salmon_out]
 
   salmon_quant_folder:
     run: ../../cwl-tools/folder.cwl
     in:
       item:
-      - salmon_quant_1/output
-      - salmon_quant_2/output
-      - salmon_quant_3/output
-      - salmon_quant_4/output
+      - salmon_quant_1/salmon_out
+      - salmon_quant_2/salmon_out
+      - salmon_quant_3/salmon_out
+      - salmon_quant_4/salmon_out
       name:
         valueFrom: "salmon_quant"
     out: [out]

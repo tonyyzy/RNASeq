@@ -9,7 +9,7 @@ requirements:
 
 hints:
     DockerRequirement:
-        dockerPull: machalen/cufflinksdocker:latest
+        dockerPull: filipejesus/cufflinks:latest
 
 arguments:
   - position: -4

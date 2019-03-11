@@ -33,7 +33,7 @@ inputs:
          prefix: -p
 
 outputs:
-   output:
+   salmon_out:
       type: Directory
       outputBinding:
          glob: $(inputs.output)
