@@ -34,7 +34,7 @@ inputs:
         prefix: --threads
 
 outputs:
-   output:
+   dexseq_out:
       type: File[]
       outputBinding:
          glob: "*.csv"

@@ -30,7 +30,7 @@ for(i in 1:ncol(comb)){
   
   res <- results(dds) 
   res <- data.frame(res@rownames,as.data.frame(res))
-  colnames(res) <- c("name","basemean","log2foldchage","lfcSE","test_stat","p_value","p_adj")
+  colnames(res) <- c("name","basemean","log2foldchange","lfcSE","test_stat","p_value","p_adj")
   
   contrast <- gsub(".$","",paste0(paste0("group", unique(metadata$condition)),sep="-", collapse = ""))
   write.csv(res,paste0(contrast,"_","DGE_results.csv"), row.names = FALSE)

@@ -26,8 +26,8 @@ if (! "--de_res" %in% args) {
   if (file.exists(de.file.path)) {
     cat("\nLoading _serialised_ 'differential expression' results from \"", de.file.path ,"\" ... ", sep="")
     Deseq.results <- read.csv(de.file.path, row.names = 1, header = TRUE)
-    if(!"padj" %in% colnames(Deseq.results)){
-      stop("padj must be a column in de results file")
+    if(!"p_adj" %in% colnames(Deseq.results)){
+      stop("p_adj must be a column in de results file")
     }
     if(!"log2FoldChange" %in% colnames(Deseq.results)){
       stop("log2FoldChange must be a column in de results file")
@@ -48,7 +48,7 @@ names(Gene_Sets) <- unique(gs[,2])
 
 print("step 2")
 
-stats <- Deseq.results[!is.na(Deseq.results$padj),]
+stats <- Deseq.results[!is.na(Deseq.results$p_adj),]
 tmp <- stats[,"log2FoldChange"]
 names(tmp) <- rownames(stats)
 print(head(tmp))

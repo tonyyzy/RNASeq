@@ -64,7 +64,11 @@ inputs:
          position: 12
 
 outputs:
-   output:
+   miso_out:
       type: Directory
       outputBinding:
          glob: $(inputs.output)
+   output_summary:
+      type: Directory
+      outputBinding:
+         glob: $(inputs.output + "_summary")

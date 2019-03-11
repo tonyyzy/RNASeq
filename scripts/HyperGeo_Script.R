@@ -27,8 +27,8 @@ if (! "--de_res" %in% args) {
   if (file.exists(de.file.path)) {
     cat("\nLoading _serialised_ 'differential expression' results from \"", de.file.path ,"\" ... ", sep="")
     Deseq.results <- read.csv(de.file.path, row.names = 1, header = TRUE)
-    if(!"padj" %in% colnames(Deseq.results)){
-      stop("padj must be a column in de results file")
+    if(!"p_adj" %in% colnames(Deseq.results)){
+      stop("p_adj must be a column in de results file")
     }
     if(!"log2FoldChange" %in% colnames(Deseq.results)){
       stop("log2FoldChange must be a column in de results file")
@@ -48,8 +48,8 @@ Gene_Sets <- lapply(unique(gs[,2]), function(x) gs[gs[,2] == x,1])
 names(Gene_Sets) <- unique(gs[,2])
 
 print("step 2")
-Deseq.results <- Deseq.results[!is.na(Deseq.results$padj),]
-list2 <- Deseq.results[Deseq.results$padj <= 0.05,]
+Deseq.results <- Deseq.results[!is.na(Deseq.results$p_adj),]
+list2 <- Deseq.results[Deseq.results$p_adj <= 0.05,]
 results <- c()
 for(list1 in Gene_Sets){
   overlap <- list1[list1 %in% rownames(list2)]

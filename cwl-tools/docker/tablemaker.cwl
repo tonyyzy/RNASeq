@@ -6,7 +6,7 @@ baseCommand: tablemaker
 
 hints:
   DockerRequirement:
-    dockerPull: filipejesus/tablemaker.2.1.1:latest
+    dockerPull: filipejesus/cufflinks:latest
 
 requirements:
    InlineJavascriptRequirement: {}

@@ -1,0 +1,8 @@
+threads: 12
+fasta:
+  class: File
+  path: path
+gtf:
+  class: File
+  path: path
+ht2base: H.Sapiens
