@@ -14,5 +14,5 @@ inputs:
          position: 1
 
 outputs:
-	splice_sites:
+   splice_sites:
       type: stdout
