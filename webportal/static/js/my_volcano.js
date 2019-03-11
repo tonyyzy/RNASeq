@@ -1,6 +1,28 @@
 
-var p_threshold = - Math.log10(0.05);
-var log2_threshold = 1;
+var p_threshold = - Math.log10(0.005);
+var log2_threshold = 2;
+console.log(p_threshold)
+
+
+$("#id_p_threshold").change(function() {
+  var p_val = $("#id_p_threshold").val()/100
+  var p_thresh = - Math.log10(p_val);
+  console.log(p_threshold)
+});
+
+
+// var initial = 10
+// function one(initial){
+//   intermediate = initial * 2
+//   return intermediate
+// }
+//
+// function two(param){
+//   old = param /2
+//   return old
+// }
+
+// note to morning self, calling the var param wrecks shit!
 colours = [
   "#000000",
   "#009292",
@@ -32,11 +54,12 @@ function wf_select(param){
   function d3_run(){
     d3.json(endpoint).then(function(data) {
       console.log('d3_run called')
-      // console.log(data)
+      console.log(p_threshold)
       dataset.push(data)
       dataFilter()
     });
   }
+  console.log(p_threshold)
   d3_run()
 }
 

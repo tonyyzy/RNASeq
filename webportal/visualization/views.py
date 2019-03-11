@@ -26,6 +26,7 @@ def WorkFlowOneView(request, session_slug, wf_key, *args, **kwargs):
         wf_infile = wf_dir[1]
 
     session_output_dir = os.path.join(settings.DATA_DIR, session_slug, 'output', wf_infile)
+    print(session_output_dir)
     session_output_csv = os.path.join(session_output_dir, os.listdir(session_output_dir)[0])
     print(f'\n{session_output_csv}')
     arr = []
