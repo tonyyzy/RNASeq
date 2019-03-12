@@ -71,13 +71,16 @@ class database_reader():
                             .filter(RSession.genome_id == Genome.id)\
                             .filter(RSession.id == self.Session_ID):
             self.identifier = uuid.UUID(s.identifier)
-            self.Organism_name = g.organism
             self.Genome_file = g.fasta_dna_file
             self.Annotation_file = g.gtf_file
             self.indexes["star_genomedir"] = g.star
             self.indexes["HISAT2Index"] = g.hisat2
             self.indexes["salmon_index"] = g.salmon
             self.genome_index = s.genome_index
+            if self.genome_index == "pre_index":
+                self.Organism_name = g.organism
+            else:
+                self.Organism_name = s.organism
         
         # extract fastq file path and coditions
         for sample, condition in session\

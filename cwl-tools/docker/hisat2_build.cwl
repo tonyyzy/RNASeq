@@ -6,7 +6,7 @@ baseCommand: hisat2-build
 hints:
    DockerRequirement:
       dockerPull: quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2 
-stdout: log.txt
+stdout: hisat2_build.log
 inputs:
    threads:
       type: int
