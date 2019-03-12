@@ -25,10 +25,11 @@
         <ul class='sidebar-nav'>
           <!-- <li>Index: {{session_detail.genome_index}}</li>
           <li>Organism: {{ session_detail.organism|default_if_none:"" }} {{session_detail.genome.organism}}</li> -->
-        <li><a id='id_upload_btn' href="#">Add Condition</a></li>
-        <li><a id='id_upload_btn' href="#">Add Sample</a></li>
-        <li><a id='id_upload_btn' href="#">Add Workflow</a></li>
-        <li><a href="#">test</a></li>
+        <li><a onclick="wf_select(1)">star workflow</a></li>
+        <li><a onclick="wf_select(2)">hisat workflow</a></li>
+        <!-- <li><a id='id_upload_btn' href="#">Add Sample</a></li> -->
+        <!-- <li><a id='id_upload_btn' href="#">Add Workflow</a></li> -->
+        <li><a href="#">further wofkflows</a></li>
         </ul>
       </div>
 
@@ -39,18 +40,19 @@
           <span></span>
         </div>
         <br>
-        <button type="button" name="button" onclick="wf_select(1)">Workflow One</button>
-        <button type="button" name="button" onclick="wf_select(2)">Workflow Two</button>
+        <!-- <button type="button" name="button" onclick="wf_select(1)">Workflow One</button> -->
+        <!-- <button type="button" name="button" onclick="wf_select(2)">Workflow Two</button> -->
         <div id='painting'>
-          painting
         </div>
         <div class="slidecontainer">
-          <label for=""> P value Threshold</label>
+          <!-- <label for=""> P value Threshold</label> -->
           <input type="range" min="1" max="10" class="slider" id="id_p_threshold">
+          <p>Value: <span id="id_p_threshold_out"></span></p>
           <br>
-          <label for=""> Log Fold Change Threshold</label>
-          <input type="range" min="1" max="100" class="slider" id="id_log2_threshold">
+          <input type="range" min="1" max="10" class="slider" id="id_log2_threshold">
+          <p>Value: <span id="id_log2_threshold_out"></span></p>
         </div>
+
         <!-- <button type="button", onclick="script_one()">Click Me!</button> -->
       </div><!-- PAGE CONTENT WRAPPER -->
 </div> <!-- WRAPPER -->
@@ -62,9 +64,20 @@
   <script src= "{% static 'js/my_volcano.js' %}"></script>
   <script>
   {% block jquery %}
-  // var endpoint = 'api/data'
-  {% endblock %}
 
+  // var endpoint = 'api/data' $.ajax({
+  //   method: 'GET',
+  //   url: endpoint,
+  //   success: function(data){
+  //     // console.log(data)
+  //   },
+  //   error: function(error_data){
+  //     console.log('error')
+  //     console.log(error_data)
+  //   }
+  // })
+
+  {% endblock %}
 
   $('#sidebar_toggle').click(function(e){
     // e.preventDefault();
@@ -77,14 +90,3 @@
   {% endblock %}
   </body>
 </html>
-<!-- $.ajax({
-  method: 'GET',
-  url: endpoint,
-  success: function(data){
-    // console.log(data)
-  },
-  error: function(error_data){
-    console.log('error')
-    console.log(error_data)
-  }
-}) -->

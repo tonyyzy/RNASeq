@@ -1,16 +1,40 @@
 
-var p_threshold = - Math.log10(0.005);
-var log2_threshold = 2;
-console.log(p_threshold)
 
+$( document ).ready(function() {
+  var p_val = 0.05
+  var p_threshold = - Math.log10(p_val);
+  var log2_threshold = 2;
+  // console.log(p_threshold)
+  var p_out = document.getElementById("id_p_threshold_out");
+  p_out.innerHTML = p_val;
+  var lfc = document.getElementById("id_log2_threshold_out");
+  lfc.innerHTML = log2_threshold;
+});
 
 $("#id_p_threshold").change(function() {
-  var p_val = $("#id_p_threshold").val()/100
-  var p_thresh = - Math.log10(p_val);
-  console.log(p_threshold)
+  p_val = $("#id_p_threshold").val()/100
+  p_threshold = - Math.log10(p_val);
+  var output = document.getElementById("id_p_threshold_out");
+  output.innerHTML = p_val;
+  // console.log(p_threshold)
+  hLines()
+  return p_threshold
 });
 
 
+$("#id_log2_threshold").change(function() {
+  log2_threshold = $("#id_log2_threshold").val()
+  console.log(log2_threshold)
+  vLines()
+  return log2_threshold
+});
+
+//
+// function say(param){
+//   console.log(param)
+// }
+// say(p_thresh)
+//
 // var initial = 10
 // function one(initial){
 //   intermediate = initial * 2
@@ -21,8 +45,11 @@ $("#id_p_threshold").change(function() {
 //   old = param /2
 //   return old
 // }
+//
+// function three(param){
+//   console.log(param)
+// }
 
-// note to morning self, calling the var param wrecks shit!
 colours = [
   "#000000",
   "#009292",
@@ -54,12 +81,10 @@ function wf_select(param){
   function d3_run(){
     d3.json(endpoint).then(function(data) {
       console.log('d3_run called')
-      console.log(p_threshold)
       dataset.push(data)
       dataFilter()
     });
   }
-  console.log(p_threshold)
   d3_run()
 }
 
@@ -73,10 +98,10 @@ function dataFilter(){
 function newPlot(){
   var margin = {top: 40, right: 20, bottom: 20, left: 40};
       //Width and height
-      var w = 800 - margin.right - margin.left;
-      var h = 800 - margin.top - margin.bottom;
+      w = 800 - margin.right - margin.left;
+      h = 800 - margin.top - margin.bottom;
 
-      var xScale = d3.scaleLinear()
+      xScale = d3.scaleLinear()
       // .domain([d3.min(dataset, function(d) { return d.log2FoldChange - 0.5;}),
                // d3.max(dataset, function(d) { return d.log2FoldChange + 0.5;})])
 
@@ -84,19 +109,19 @@ function newPlot(){
                d3.max(dataset, function(d) { return - d.log2FoldChange + 5;})])
       .range([0, w]);
 
-      var yScale = d3.scaleLinear()
+      yScale = d3.scaleLinear()
       .domain([d3.min(dataset, function(d) { return - Math.log10(d.padj) - 0.5;}),
                d3.max(dataset, function(d) { return - Math.log10(d.padj) + 0.5;})])
       .range([h, 0]);
 
-      var xAxis = d3.axisBottom()
+      xAxis = d3.axisBottom()
       .scale(xScale);
       // .ticks(5)
 
-      var yAxis = d3.axisLeft()
+      yAxis = d3.axisLeft()
       .scale(yScale);
 
-      var svg = d3.select("#painting")
+      svg = d3.select("#painting")
       .append("svg")
       .attr("width", w + margin.right + margin.left) // <-- Here
       .attr("height", h + margin.top + margin.bottom)
@@ -111,63 +136,80 @@ function newPlot(){
       svg.append("g")
       .attr("class", "axis") //Assign "axis" class
       .call(yAxis)
+      circles()
+}
 
-      var circles = svg.selectAll('circle')
-          .data(dataset)
-          .enter().append('circle')
-        .attr('cx',function (d) { return xScale(d.log2FoldChange) })
-        .attr('cy',function (d) { return yScale(- Math.log10(d.padj)) })
-        .attr('r','5')
-        // .attr('cy',function (d) { return yScale(d.aror) })
-        // .attr('stroke','black')
-        // .attr('stroke-width',1)
-        // .attr('fill',function (d,i) { return colorScale(i) })
+function circles(){
+  svg.selectAll("circle").remove()
+  var circles = svg.selectAll('circle')
+      .data(dataset)
+      .enter().append('circle')
+    .attr('cx',function (d) { return xScale(d.log2FoldChange) })
+    .attr('cy',function (d) { return yScale(- Math.log10(d.padj)) })
+    .attr('r','5')
+    // .attr('cy',function (d) { return yScale(d.aror) })
+    // .attr('stroke','black')
+    // .attr('stroke-width',1)
+    // .attr('fill',function (d,i) { return colorScale(i) })
 
-          circles.attr("cx", function(d) {
-          return xScale(d.log2FoldChange);
-          })
-          .attr("cy",function(d){
-            return yScale(- Math.log10(d.padj));
-          })
-          .attr("r", 5)
-          .attr("fill", function(d){
-            if(- Math.log10(d.padj) > p_threshold && (d.log2FoldChange > log2_threshold || d.log2FoldChange <  - log2_threshold)){
-              return colours[d.dataset];
-            } else {
-              return "grey";
-            };
-          });
+      circles.attr("cx", function(d) {
+      return xScale(d.log2FoldChange);
+      })
+      .attr("cy",function(d){
+        return yScale(- Math.log10(d.padj));
+      })
+      .attr("r", 5)
+      .attr("fill", function(d){
+        if(- Math.log10(d.padj) > p_threshold && (d.log2FoldChange > log2_threshold || d.log2FoldChange <  - log2_threshold)){
+          return colours[d.dataset];
+        } else {
+          return "grey";
+        };
+      });
+      // vLines()
+      // hLines()
+}
 
-        var v_lines_g = svg.append("g")
-        .attr("class", "lines");
 
-        var h_lines_g = svg.append("g")
-        .attr("class", "lines");
 
-        v_lines = [- log2_threshold, log2_threshold]
-        var v_lines = v_lines_g.selectAll("line")
-        .data(v_lines)
-        .enter()
-        .append("line")
-        .attr("x1", function(d){
-          return xScale(d);})
-        .attr("y1", "0")
-        .attr("x2", function(d){
-          return xScale(d);})
-        .attr("y2", "" + h)
-        .attr("stroke", "red")
-        .attr("stroke-width", "2");
 
-        h_line = [p_threshold]
-        var h_lines = h_lines_g.selectAll("line")
-        .data(h_line)
-        .enter()
-        .append("line")
-        .attr("x1", "0")
-        .attr("y1", function(d){
-          return yScale(d);})
-        .attr("x2", "" + w)
-        .attr("y2",function(d){ return yScale(d);})
-        .attr("stroke", "red")
-        .attr("stroke-width", "2");
+function vLines(){
+  svg.selectAll("line").remove()
+  var v_lines_g = svg.append("g")
+  .attr("class", "lines");
+
+  v_lines = [- log2_threshold, log2_threshold]
+  var v_lines = v_lines_g.selectAll("line")
+  .data(v_lines)
+  .enter()
+  .append("line")
+  .attr("x1", function(d){
+    return xScale(d);})
+  .attr("y1", "0")
+  .attr("x2", function(d){
+    return xScale(d);})
+  .attr("y2", "" + h)
+  .attr("stroke", "red")
+  .attr("stroke-width", "2");
+  circles()
+}
+
+function hLines(){
+  svg.selectAll("line").remove()
+  var h_lines_g = svg.append("g")
+  .attr("class", "lines");
+
+  h_line = [p_threshold]
+  var h_lines = h_lines_g.selectAll("line")
+  .data(h_line)
+  .enter()
+  .append("line")
+  .attr("x1", "0")
+  .attr("y1", function(d){
+    return yScale(d);})
+  .attr("x2", "" + w)
+  .attr("y2",function(d){ return yScale(d);})
+  .attr("stroke", "red")
+  .attr("stroke-width", "2");
+  circles()
 }
