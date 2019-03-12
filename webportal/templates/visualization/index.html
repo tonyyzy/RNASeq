@@ -6,12 +6,7 @@
     <meta charset="utf-8">
     {% block head %}
     {% load static %}
-    <title>D3 Page Template</title>
-    <!-- <script type="text/javascript" src="/home/patrick/Code/GitWorkSpace/RNASeq/webportal/static/js/d3.js"></script> -->
-    <!-- <script src="http://d3js.org/d3.v3.js"></script> -->
-    <!-- <script src=" https://d3js.org/d3.v5.js"></script> -->
-    <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
-
+      <title>D3 Page Template</title>
     {% endblock %}
   </head>
   <body>
@@ -30,11 +25,11 @@
         <ul class='sidebar-nav'>
           <!-- <li>Index: {{session_detail.genome_index}}</li>
           <li>Organism: {{ session_detail.organism|default_if_none:"" }} {{session_detail.genome.organism}}</li> -->
-        <li><a id='id_upload_btn' href="#">Add Condition</a></li>
-        <li><a id='id_upload_btn' href="#">Add Sample</a></li>
-        <li><a id='id_upload_btn' href="#">Add Workflow</a></li>
-        <li><a href="#">test</a></li>
-
+        <li><a onclick="wf_select(1)">star workflow</a></li>
+        <li><a onclick="wf_select(2)">hisat workflow</a></li>
+        <!-- <li><a id='id_upload_btn' href="#">Add Sample</a></li> -->
+        <!-- <li><a id='id_upload_btn' href="#">Add Workflow</a></li> -->
+        <li><a href="#">further wofkflows</a></li>
         </ul>
       </div>
 
@@ -45,8 +40,20 @@
           <span></span>
         </div>
         <br>
-        <button type="button" name="button" onclick="script_one()">Script One</button>
-        <button type="button", onclick="script_one()">Click Me!</button>
+        <!-- <button type="button" name="button" onclick="wf_select(1)">Workflow One</button> -->
+        <!-- <button type="button" name="button" onclick="wf_select(2)">Workflow Two</button> -->
+        <div id='painting'>
+        </div>
+        <div class="slidecontainer">
+          <!-- <label for=""> P value Threshold</label> -->
+          <input type="range" min="1" max="10" class="slider" id="id_p_threshold">
+          <p>Value: <span id="id_p_threshold_out"></span></p>
+          <br>
+          <input type="range" min="1" max="10" class="slider" id="id_log2_threshold">
+          <p>Value: <span id="id_log2_threshold_out"></span></p>
+        </div>
+
+        <!-- <button type="button", onclick="script_one()">Click Me!</button> -->
       </div><!-- PAGE CONTENT WRAPPER -->
 </div> <!-- WRAPPER -->
 
@@ -57,37 +64,27 @@
   <script src= "{% static 'js/my_volcano.js' %}"></script>
   <script>
   {% block jquery %}
-  var endpoint = 'api/data'
-  dataset = []
-  function script_one(){
-    console.log('script one called')
-    var default_data = []
-    $.ajax({
-      method: 'GET',
-      url: endpoint,
-      success: function(data){
-        // console.log(data);
-        dataset.push(data)
-        d3.json(endpoint, function(data) {
-          console.log(data[0]);
-        });
-      },
-      error: function(error_data){
-        console.log('error')
-        console.log(error_data)
-      }
-    })
-  }
+
+  // var endpoint = 'api/data' $.ajax({
+  //   method: 'GET',
+  //   url: endpoint,
+  //   success: function(data){
+  //     // console.log(data)
+  //   },
+  //   error: function(error_data){
+  //     console.log('error')
+  //     console.log(error_data)
+  //   }
+  // })
 
   {% endblock %}
 
-    $('#sidebar_toggle').click(function(e){
-      // e.preventDefault();
-      $('#wrapper').toggleClass('menuDisplayed')
-      // console.log('hi')
-    });
+  $('#sidebar_toggle').click(function(e){
+    // e.preventDefault();
+    $('#wrapper').toggleClass('menuDisplayed')
+    // console.log('hi')
+  });
   </script>
-
 
 
   {% endblock %}
