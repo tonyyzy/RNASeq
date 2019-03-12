@@ -8,7 +8,7 @@ def test_workflow5_docker():
                     "./workflows/docker/star_samtools_featurecounts_edger.cwl",
                     "./tests/star_samtools_featurecounts_edger.yml"])
 
-    assert filecmp.cmp("./test_workflow5_docker/edger/groupuntreated-grouptreated_DGE_res.csv", "./tests/featurecounts_DGE_res.csv")
+    assert filecmp.cmp("./test_workflow5_docker/edger/untreated-treated_DGE_res.csv", "./tests/featurecounts_DGE_res.csv")
 
 
 if __name__ == "__main__":

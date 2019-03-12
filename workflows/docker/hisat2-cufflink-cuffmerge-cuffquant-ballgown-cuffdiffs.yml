@@ -24,7 +24,7 @@ fastq4:
   - {class: File, path: ../../tests/test4.fastq}
 ballgown_script:
   class: File
-  path: ../../tests/ballgown.R
+  path: ../../scripts/ballgown.R
 metadata:
   class: File
   path: ../../tests/metadata.csv

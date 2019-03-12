@@ -33,8 +33,8 @@ outputs:
   gene_matrix:
     type: File
     outputBinding:
-      glob: "DGE_res.csv"
+      glob: "*DGE_res.csv"
   transcript_matrix:
     type: File
     outputBinding:
-      glob: "DTE_res.csv"
+      glob: "*DTE_res.csv"
