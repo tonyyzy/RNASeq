@@ -2,6 +2,8 @@ import yaml
 import subprocess
 from configparser import ConfigParser
 import pydot
+import json
+from itertools import combinations
 
 class cwl_writer():
     # dict for cwl file
@@ -880,6 +882,18 @@ class cwl_writer():
         self.add_norm()
         self.add_metadata()
 
+        files = []
+        for condition_pair in combinations(self.conditions.keys(), 2):
+            files.append(
+                self.root + 
+                f"/Data/{self.identifier}/" + 
+                self.name +
+                f"/group{condition_pair[0]}-group{condition_pair[1]}_DGE_results.csv")
+
+        self.sql_session.query(self.Workflow)\
+                        .filter(self.Workflow.id == self.analysis_id[self.name])\
+                        .first().paths = json.dumps(files)
+
 
     def dexseq(self):
         # workflow section
@@ -922,12 +936,24 @@ class cwl_writer():
         self.add_exon_count()
         self.add_norm()
 
+        files = []
+        files.append(
+            self.root + 
+            f"/Data/{self.identifier}/" + 
+            self.name +
+            f"/DEE_results.csv")
+
+        self.sql_session.query(self.Workflow)\
+                        .filter(self.Workflow.id == self.analysis_id[self.name])\
+                        .first().paths = json.dumps(files)
+
     def deseq(self):
         raise NotImplementedError
 
 
     def cuffdiff(self):
         # cuffquant
+        original_name = self.name
         # inputs
         # outputs
         self.name_list = self.name_list[:-1]
@@ -1040,8 +1066,20 @@ class cwl_writer():
         self.add_edge()
         self.add_gene_count()
 
+        files = []
+        files.append(
+            self.root + 
+            f"/Data/{self.identifier}/" + 
+            self.name +
+            f"/DGE_res.csv")
+
+        self.sql_session.query(self.Workflow)\
+                        .filter(self.Workflow.id == self.analysis_id[original_name])\
+                        .first().paths = json.dumps(files)
+
 
     def ballgown(self):
+        original_name = self.name
         self.name_list = self.name_list[:-1]
         self.name_list.append("cuffmerge")
         self.name_list.append("tablemaker")
@@ -1128,6 +1166,17 @@ class cwl_writer():
         self.add_gene_count()
         self.add_norm()
         self.add_metadata()
+
+        files = []
+        files.append(
+            self.root + 
+            f"/Data/{self.identifier}/" + 
+            self.name +
+            f"/DGE_res.csv")
+
+        self.sql_session.query(self.Workflow)\
+                        .filter(self.Workflow.id == self.analysis_id[original_name])\
+                        .first().paths = json.dumps(files)
     
 
     def edger(self):
@@ -1172,6 +1221,18 @@ class cwl_writer():
         self.add_gene_count()
         self.add_norm()
         self.add_metadata()
+
+        files = []
+        for condition_pair in combinations(self.conditions.keys(), 2):
+            files.append(
+                self.root + 
+                f"/Data/{self.identifier}/" + 
+                self.name +
+                f"/group{condition_pair[0]}-group{condition_pair[1]}_DGE_results.csv")
+
+        self.sql_session.query(self.Workflow)\
+                        .filter(self.Workflow.id == self.analysis_id[self.name])\
+                        .first().paths = json.dumps(files)
 
     #----------utility-----------
     def samtools(self):
@@ -1350,8 +1411,12 @@ class cwl_writer():
                 yaml.dump(yaml_file, outfile, default_flow_style=False)
 
 
-    def write_workflow(self, logic_object):
+    def write_workflow(self, logic_object, session, Workflow):
+        self.sql_session = session
+        self.Workflow = Workflow
+        self.analysis_id = logic_object.analysis_id
         print("writing cwl")
+        print(logic_object.analysis_id)
         for step in logic_object.workflow:
             self.name_list = step.split("_")
             self.previous_name = "_".join(self.name_list[:-1])
@@ -1387,4 +1452,5 @@ class cwl_writer():
         print(proc.args)
         print(proc.pid)
         workflow_log.close()
+        self.sql_session.commit()
 
