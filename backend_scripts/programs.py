@@ -6,28 +6,6 @@ import json
 from itertools import combinations
 
 class cwl_writer():
-    # dict for cwl file
-    cwl_workflow = {
-        "cwlVersion": "v1.0",
-        "class": "Workflow",
-        "requirements":{
-            "ScatterFeatureRequirement": {},
-            "MultipleInputFeatureRequirement": {},
-            "StepInputExpressionRequirement": {},
-            "InlineJavascriptRequirement": {}
-        },
-        "inputs": {
-            "threads": "int",
-            "metadata": "File",
-            "annotation": "File"
-        },
-        "outputs": {},
-        "steps": {}
-    }
-
-    # dict for yml file
-    cwl_input = {}
-
     # output_string for each program to query the output names from the previous
     # program. This will be deprecated if all tools' inputs and outputs are
     # sufficiently standardised
@@ -41,58 +19,79 @@ class cwl_writer():
         "salmoncount": "gene_count_output",
         "featurecounts": "gene_count_output"
     }
-
-
-    # initialise graph
-    nodes = {}
-    graph = pydot.Dot(
-        graph_name="workflow",
-        graph_type="digraph",
-        suppress_disconnected=False
-    )
-    # style according to cwlviewer styling
-    graph.set_node_defaults(
-        style="filled",
-        fontname = "Helvetica",
-        fontsize = "10",
-        fontcolor = "black",
-        shape = "record",
-        height = "0",
-        width = "0",
-        color = "black",
-        fillcolor = "lightgoldenrodyellow"
-    )
-    graph.set_edge_defaults(
-        fontname = "Helvetica",
-        fontsize = "8",
-        fontcolor = "black",
-        color = "black",
-        arrowsize = "0.7"
-    )
-    graph.set_graph_defaults(
-        bgcolor = "#eeeeee",
-        color = "black",
-        fontsize = "10",
-        labeljust = "left",
-        clusterrank = "local",
-        ranksep = "0.5",
-        nodesep = "0.5"
-    )
-    # initialise 
-    # initialise subgraph
-    graph_inputs = pydot.Cluster(graph_name="inputs")
-    graph_inputs.set_style("dashed")
-    graph_inputs.set_label("Workflow Inputs")
-    graph_outputs = pydot.Cluster(graph_name="outputs")
-    graph_outputs.set_style("dashed")
-    graph_outputs.set_label("Workflow Outputs")
-    graph_outputs.set_labelloc("b")
-
-    name = ""
-    previous_name = ""
-    prev = ""
-
     def __init__(self, database_reader_object, root):
+        # dict for cwl file
+        self.cwl_workflow = {
+            "cwlVersion": "v1.0",
+            "class": "Workflow",
+            "requirements":{
+                "ScatterFeatureRequirement": {},
+                "MultipleInputFeatureRequirement": {},
+                "StepInputExpressionRequirement": {},
+                "InlineJavascriptRequirement": {}
+            },
+            "inputs": {
+                "threads": "int",
+                "metadata": "File",
+                "annotation": "File"
+            },
+            "outputs": {},
+            "steps": {}
+        }
+
+        # dict for yml file
+        self.cwl_input = {}
+
+
+
+        # initialise graph
+        self.nodes = {}
+        self.graph = pydot.Dot(
+            graph_name="workflow",
+            graph_type="digraph",
+            suppress_disconnected=False
+        )
+        # style according to cwlviewer styling
+        self.graph.set_node_defaults(
+            style="filled",
+            fontname = "Helvetica",
+            fontsize = "10",
+            fontcolor = "black",
+            shape = "record",
+            height = "0",
+            width = "0",
+            color = "black",
+            fillcolor = "lightgoldenrodyellow"
+        )
+        self.graph.set_edge_defaults(
+            fontname = "Helvetica",
+            fontsize = "8",
+            fontcolor = "black",
+            color = "black",
+            arrowsize = "0.7"
+        )
+        self.graph.set_graph_defaults(
+            bgcolor = "#eeeeee",
+            color = "black",
+            fontsize = "10",
+            labeljust = "left",
+            clusterrank = "local",
+            ranksep = "0.5",
+            nodesep = "0.5"
+        )
+        # initialise 
+        # initialise subgraph
+        self.graph_inputs = pydot.Cluster(graph_name="inputs")
+        self.graph_inputs.set_style("dashed")
+        self.graph_inputs.set_label("Workflow Inputs")
+        self.graph_outputs = pydot.Cluster(graph_name="outputs")
+        self.graph_outputs.set_style("dashed")
+        self.graph_outputs.set_label("Workflow Outputs")
+        self.graph_outputs.set_labelloc("b")
+
+        self.name = ""
+        self.previous_name = ""
+        self.prev = ""
         # get number of treads from config.ini
         config = ConfigParser()
         config.read(f"{root}/config.ini")
@@ -137,21 +136,6 @@ class cwl_writer():
                 fillcolor="#94DDF4"
             )
         )
-        # self.graph_outputs.add_node(
-        #     pydot.Node(
-        #         "alignment",
-        #         label="Alignment Outputs",
-        #         fillcolor="#94DDF4"
-        #     )
-        # )
-        # self.graph_outputs.add_node(
-        #     pydot.Node(
-        #         "bam",
-        #         label="Samtools Outputs",
-        #         fillcolor="#94DDF4"
-        #     )
-        # )
-        # generate a dictionary of conditions with input_files as items
         self.conditions = {}
         for name in self.file_names:
             if self.input_files[name]["condition"] not in self.conditions:
@@ -882,13 +866,16 @@ class cwl_writer():
         self.add_norm()
         self.add_metadata()
 
-        files = []
+        files = {}
+        files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
+                        f"/norm_count.csv"
+        files["DGE"] = []
         for condition_pair in combinations(self.conditions.keys(), 2):
-            files.append(
+            files["DGE"].append(
                 self.root + 
-                f"/Data/{self.identifier}/" + 
+                f"/Data/{self.identifier}/output//" + 
                 self.name +
-                f"/group{condition_pair[0]}-group{condition_pair[1]}_DGE_results.csv")
+                f"/{condition_pair[0]}-{condition_pair[1]}_DGE_res.csv")
 
         self.sql_session.query(self.Workflow)\
                         .filter(self.Workflow.id == self.analysis_id[self.name])\
@@ -936,12 +923,12 @@ class cwl_writer():
         self.add_exon_count()
         self.add_norm()
 
-        files = []
-        files.append(
-            self.root + 
-            f"/Data/{self.identifier}/" + 
-            self.name +
-            f"/DEE_results.csv")
+        files = {}
+        files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
+                        f"/norm_count.csv"
+
+        files["DEE"] = [self.root + f"/Data/{self.identifier}/output/" + self.name + \
+                        f"/DEE_results.csv"]
 
         self.sql_session.query(self.Workflow)\
                         .filter(self.Workflow.id == self.analysis_id[self.name])\
@@ -1025,6 +1012,9 @@ class cwl_writer():
         self.graph.add_node(pydot.Node(self.name, label="Cuffnorm"))
         self.add_edge()
         self.add_norm()
+        files = {}
+        files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
+                        f"/genes.fpkm_table"
 
         # cuffdiff
         # inputs
@@ -1066,12 +1056,9 @@ class cwl_writer():
         self.add_edge()
         self.add_gene_count()
 
-        files = []
-        files.append(
-            self.root + 
-            f"/Data/{self.identifier}/" + 
-            self.name +
-            f"/DGE_res.csv")
+
+        files["DGE"] = [self.root + f"/Data/{self.identifier}/output/" + self.name + \
+                        f"/DGE_res.csv"]
 
         self.sql_session.query(self.Workflow)\
                         .filter(self.Workflow.id == self.analysis_id[original_name])\
@@ -1167,12 +1154,13 @@ class cwl_writer():
         self.add_norm()
         self.add_metadata()
 
-        files = []
-        files.append(
-            self.root + 
-            f"/Data/{self.identifier}/" + 
-            self.name +
-            f"/DGE_res.csv")
+        files = {}
+        files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
+                        f"/norm_count.csv"
+        files["DGE"] = [self.root + f"/Data/{self.identifier}/output/" + self.name + \
+                        f"/DGE_res.csv"]
+        files["DTE"] = [self.root + f"/Data/{self.identifier}/output/" + self.name + \
+                        f"/DTE_res.csv"]
 
         self.sql_session.query(self.Workflow)\
                         .filter(self.Workflow.id == self.analysis_id[original_name])\
@@ -1222,13 +1210,16 @@ class cwl_writer():
         self.add_norm()
         self.add_metadata()
 
-        files = []
+        files = {}
+        files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
+                        f"/norm_count.csv"
+        files["DGE"] = []
         for condition_pair in combinations(self.conditions.keys(), 2):
-            files.append(
+            files["DGE"].append(
                 self.root + 
-                f"/Data/{self.identifier}/" + 
+                f"/Data/{self.identifier}/output/" + 
                 self.name +
-                f"/group{condition_pair[0]}-group{condition_pair[1]}_DGE_results.csv")
+                f"/{condition_pair[0]}-{condition_pair[1]}_DGE_res.csv")
 
         self.sql_session.query(self.Workflow)\
                         .filter(self.Workflow.id == self.analysis_id[self.name])\

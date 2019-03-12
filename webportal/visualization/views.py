@@ -7,28 +7,36 @@ from django.views.generic import (View,TemplateView,
                                 UpdateView)
 from django.http import JsonResponse
 import csv , json
-
+from django.conf import settings
+import os
 
 class VisualizationIndexView(View):
-    def get(self, request):
+    def get(self, request, session_slug):
         context = {'inject':'im the injection'}
         return render(request, 'visualization/index.html', context)
 
 
-def GetDataView(request, *args, **kwargs):
-    json_data = {"greeting": "world", "foo": "bar", "gatsby": "hello old sport"}
-    csvFilePath = "/home/patrick/Code/GitWorkSpace/myApp/testPlot/DGE_results_1_head.csv" # will convert to use session specifi path once d3.json(data) is working
-    # jsonFilePath = "j_test.json"
+def WorkFlowOneView(request, session_slug, wf_key, *args, **kwargs):
+    # fcd72896-218a-45f8-be02-361b3c94e192
+    print(wf_key)
+    wf_dir = ['star_samtools_stringtie_prepde_deseq2', 'hisat2_samtools_stringtie_prepde_deseq2']
+    if wf_key == 1:
+        wf_infile = wf_dir[0]
+    else:
+        wf_infile = wf_dir[1]
+
+    session_output_dir = os.path.join(settings.DATA_DIR, session_slug, 'output', wf_infile)
+    print(session_output_dir)
+    session_output_csv = os.path.join(session_output_dir, os.listdir(session_output_dir)[0])
+    print(f'\n{session_output_csv}')
     arr = []
-    #read the csv and add the arr to a array
-    with open (csvFilePath) as csvFile:
+    with open (session_output_csv) as csvFile:
         csvReader = csv.DictReader(csvFile)
         print(csvReader)
         for csvRow in csvReader:
             arr.append(csvRow)
-    print(arr)
-    # return JsonResponse(json_data)
-    return JsonResponse(arr, safe=False)
+        return JsonResponse(arr, safe=False)
+
 
 
 class DebugView(View):

@@ -261,10 +261,13 @@ html,body{
   opacity:0.8;
 }
 
-
-
 .toggle_btn{
   position: absolute;
+}
+
+.toggle_btn:hover{
+  background: #e0e5e5;
+  border-radius: 5%;
 }
 
 .toggle_btn span{
@@ -272,11 +275,10 @@ html,body{
   width: 28px;
   height: 4px;
   margin: 4px 4px;
-  background: #040405;
+  background: #212529;
   border-radius: 13%;
   opacity: 0.9;
   cursor: pointer;
-
 }
 
 /* #the_svg: {

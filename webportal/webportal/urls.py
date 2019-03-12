@@ -25,7 +25,7 @@ urlpatterns = [
     path('', include('analysis.urls')),
     # path('', include('pages.urls')),
     path('users/', include('users.urls')),
-    path('visualization/', include('visualization.urls'))
+    path('visualization/<slug:session_slug>/', include('visualization.urls'))
 ]
 
 # if settings.DEBUG:
