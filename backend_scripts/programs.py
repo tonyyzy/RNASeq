@@ -42,8 +42,6 @@ class cwl_writer():
         # dict for yml file
         self.cwl_input = {}
 
-
-
         # initialise graph
         self.nodes = {}
         self.graph = pydot.Dot(
@@ -79,7 +77,6 @@ class cwl_writer():
             ranksep = "0.5",
             nodesep = "0.5"
         )
-        # initialise 
         # initialise subgraph
         self.graph_inputs = pydot.Cluster(graph_name="inputs")
         self.graph_inputs.set_style("dashed")
@@ -92,12 +89,14 @@ class cwl_writer():
         self.name = ""
         self.previous_name = ""
         self.prev = ""
+
         # get number of treads from config.ini
         config = ConfigParser()
         config.read(f"{root}/config.ini")
         self.cwl_input["threads"] = int(config.get("main", "threads"))
 
         # setup attributes
+        self.genome_index = database_reader_object.genome_index
         self.identifier = database_reader_object.identifier
         self.indexes = database_reader_object.indexes
         self.input_files = database_reader_object.Reads_files
@@ -988,6 +987,8 @@ class cwl_writer():
         self.previous_name = "_".join(self.name_list[:-1])
         self.name = "_".join(self.name_list)
         # inputs
+        self.cwl_workflow["inputs"]["cuffnorm_table"] = "File"
+        self.cwl_input["cuffnorm_table"] = f"{self.root}/RNASeq/scripts/cuffnorm_table.py"
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
@@ -999,7 +1000,10 @@ class cwl_writer():
             "in": {
                 "threads": "threads",
                 "merged_gtf": f"{cuffmerge}/merged_gtf",
-                "output": {"valueFrom": f"{self.name}"}
+                "output": {"valueFrom": f"{self.name}"},
+                "input_script": "cuffnorm_table",
+                "label": "conditions",
+                "metadata": "metadata"
             },
             "out": ["cuffnorm_out"]
         }
@@ -1277,8 +1281,7 @@ class cwl_writer():
             "run": f"{self.root}/RNASeq/cwl-tools/docker/prepDE.cwl",
             "in": {
                 "input_script": "prepDE_script",
-                "stringtie_out": [f"{self.previous_name}_{i+1}/{self.output_string[self.prev]}"
-                            for i in range(self.num)]
+                "stringtie_out": f"{self.previous_name}_folder/out"
             },
             "out": ["gene_count_output", "transcript_count_output"]
         }
@@ -1443,5 +1446,6 @@ class cwl_writer():
         print(proc.args)
         print(proc.pid)
         workflow_log.close()
+        print(self.genome_index)
         self.sql_session.commit()
 
