@@ -77,6 +77,7 @@ class database_reader():
             self.indexes["star_genomedir"] = g.star
             self.indexes["HISAT2Index"] = g.hisat2
             self.indexes["salmon_index"] = g.salmon
+            self.genome_index = s.genome_index
         
         # extract fastq file path and coditions
         for sample, condition in session\
