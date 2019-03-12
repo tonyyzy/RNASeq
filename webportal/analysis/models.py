@@ -114,7 +114,7 @@ class Workflow(models.Model):
         ('edger', "EDGER"),
         ('ballgown', "BALLGOWN")
     )
-    session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='workflow')
+    session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='workflow_fk')
     # index = models.CharField(max_length=200, choices=INDEX_CHOICES)
     wofkflow_label = models.CharField(max_length=50, blank=False, null=False)
     mapper = models.CharField(max_length=200, choices=MAPPER_CHOICES)
