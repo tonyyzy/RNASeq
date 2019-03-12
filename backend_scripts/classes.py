@@ -12,13 +12,13 @@ import uuid
 class database_checker():
     def __init__(self, database_link):
         self.Database = database_link
+        self.Base = automap_base()
+        self.engine = create_engine(self.Database)
+        self.Base.prepare(self.engine, reflect=True)
 
     def check_and_run(self, root):
-        Base = automap_base()
-        engine = create_engine(self.Database)
-        Base.prepare(engine, reflect=True)
-        RSession = Base.classes.analysis_session
-        session = Session(engine)
+        RSession = self.Base.classes.analysis_session
+        session = Session(self.engine)
         for entry in session.query(RSession).filter(RSession.status == 1):
             print(entry.id)
             self.create_workflow(entry.id, root)
@@ -26,24 +26,23 @@ class database_checker():
         session.commit()
 
     def create_workflow(self, Session_ID, root):
+        Workflow = self.Base.classes.analysis_workflow
         reader = database_reader(Session_ID)
         reader.extract_from_database(self.Database, root)
         logic = logic_builder(root)
         logic.create_workflow_logic(reader)
         writer = programs.cwl_writer(reader, root)
-        writer.write_workflow(logic)
+        writer.write_workflow(logic, Session(self.engine), Workflow)
 
 
 class database_reader():
-    Mapper = []
-    Assembler = []
-    Analysis = []
     Organism_name = ""
     Genome_file = ""
     Annotation_file = ""
     Reads_files = {}
     identifier = ""
     indexes = {}
+    workflows = {}
 
     def __init__(self, Session_ID):
         self.Session_ID = int(Session_ID)
@@ -62,10 +61,10 @@ class database_reader():
         # extract steps in workflows of session
         for entry in session.query(Workflow)\
                 .filter(Workflow.session_id == self.Session_ID):
-            self.Mapper.append(entry.mapper.lower())
-            self.Assembler.append(entry.assembler.lower())
-            self.Analysis.append(entry.analysis.lower())
-            print(self.Mapper, self.Assembler, self.Analysis)
+            self.workflows[entry.id] = [entry.mapper.lower(),
+                                        entry.assembler.lower(),
+                                        entry.analysis.lower()]
+            print(self.workflows)
         
         # extract file path from Genome table
         for s,g in session.query(RSession, Genome)\
@@ -112,7 +111,7 @@ class database_reader():
 
 class logic_builder():
 
-    Workflow_index = []
+    analysis_id = {}
     workflow = []
     def __init__(self, root):
         self.programs_connections = \
@@ -120,29 +119,20 @@ class logic_builder():
             index_col=0, dtype=str)
 
     def create_workflow_logic(self, database_reader_object):
-        result = []
-        zipped = zip(database_reader_object.Mapper,
-                        database_reader_object.Assembler,
-                        database_reader_object.Analysis)
-
-        for workflow in map(list, zipped):
-            if workflow[1] == "cufflinks" and workflow[0] == "hisat2":
-                workflow[0] = "hisat2xs"
-            result.append(workflow)
-        result_copy = copy.deepcopy(result)
-        for index, r in enumerate(result):
-            prev_prog = r[0]
-            for prog in r[1:]:
+        result = copy.deepcopy(database_reader_object.workflows)
+        for key, progs in database_reader_object.workflows.items():
+            if progs[1] == "cufflinks" and progs[0] == "hisat2":
+                progs[0] = "hisat2xs"
+            prev_prog = progs[0]
+            for prog in progs[1:]:
                 value = self.programs_connections[prog][prev_prog]
                 if value == "-1":
                     raise ValueError("Invalid step connection")
                 elif value != "0":
-                    result_copy[index].insert(result_copy[index].index(prog), value)
+                    result[key].insert(result[key].index(prog), value)
                 prev_prog = prog
-        result = copy.deepcopy(result_copy)
-        for i in range(len(result)):
-            result[i][0] = str(result[i][0])
-            for j in range(1, len(result[i])):
-                result[i][j] = str(result[i][j-1]) + "_" +  str(result[i][j])
+            for j in range(1, len(result[key])):
+                result[key][j] = "_".join(result[key][j-1:j+1])
+            self.analysis_id[result[key][j]] = key
 
-        self.workflow = sorted(set(item for sublist in result for item in sublist))
+        self.workflow = sorted(set(item for sublist in result.values() for item in sublist))
