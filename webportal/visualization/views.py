@@ -37,6 +37,8 @@ def WorkFlowOneView(request, session_slug, wf_key, *args, **kwargs):
             arr.append(csvRow)
         return JsonResponse(arr, safe=False)
 
+# analysis_workflow paths
+# {"norm": "/project/data/rnaseq/Data/51c0bbfd-5f53-4f56-be15-f18dbc221b05/output/salmonquant_salmoncount_deseq2/norm_count.csv", "DGE": ["/project/data/rnaseq/Data/51c0bbfd-5f53-4f56-be15-f18dbc221b05/output//salmonquant_salmoncount_deseq2/Normal-Tumour_DGE_res.csv"]} 
 
 
 class DebugView(View):
