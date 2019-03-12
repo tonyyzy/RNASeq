@@ -105,7 +105,7 @@ class database_reader():
                                         Samples.libtype)
         df = pd.read_sql(query.statement, session.bind, index_col="accession")
         df.index.name = "name"
-        df = df.sort_index()
+        # df = df.sort_index()
         df.to_csv(f"{root}/Data/{self.identifier}/metadata.csv",
                     quoting=csv.QUOTE_ALL)
 
