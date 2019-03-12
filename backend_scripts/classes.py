@@ -36,16 +36,16 @@ class database_checker():
 
 
 class database_reader():
-    Organism_name = ""
-    Genome_file = ""
-    Annotation_file = ""
-    Reads_files = {}
-    identifier = ""
-    indexes = {}
-    workflows = {}
 
     def __init__(self, Session_ID):
         self.Session_ID = int(Session_ID)
+        self.workflows = {}
+        self.Reads_files = {}
+        self.Organism_name = ""
+        self.Genome_file = ""
+        self.Annotation_file = ""
+        self.identifier = ""
+        self.indexes = {}
 
     def extract_from_database(self, database, root):
         Base = automap_base()
@@ -64,7 +64,7 @@ class database_reader():
             self.workflows[entry.id] = [entry.mapper.lower(),
                                         entry.assembler.lower(),
                                         entry.analysis.lower()]
-            print(self.workflows)
+        print(self.workflows)
         
         # extract file path from Genome table
         for s,g in session.query(RSession, Genome)\
@@ -105,18 +105,17 @@ class database_reader():
                                         Samples.libtype)
         df = pd.read_sql(query.statement, session.bind, index_col="accession")
         df.index.name = "name"
-        df = df.sort_index()
+        # df = df.sort_index()
         df.to_csv(f"{root}/Data/{self.identifier}/metadata.csv",
                     quoting=csv.QUOTE_ALL)
 
 class logic_builder():
-
-    analysis_id = {}
-    workflow = []
     def __init__(self, root):
         self.programs_connections = \
             pd.read_csv(f"{root}/RNASeq/backend_scripts/logic/programs_connections.csv",
             index_col=0, dtype=str)
+        self.analysis_id = {}
+        self.workflow = []
 
     def create_workflow_logic(self, database_reader_object):
         result = copy.deepcopy(database_reader_object.workflows)
