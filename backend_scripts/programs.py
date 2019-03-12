@@ -1423,29 +1423,29 @@ class cwl_writer():
         self.graph.add_subgraph(self.graph_inputs)
         self.graph.add_subgraph(self.graph_outputs)
         self.graph.write(f"{self.root}/Data/{self.identifier}/workflow.dot")
-        # svgfile = open(f"{self.root}/Data/{self.identifier}/workflow.svg", "w")
-        # subprocess.run(["dot", "-Tsvg",
-        #                 f"{self.root}/Data/{self.identifier}/workflow.dot"],
-        #                 stdout=svgfile)
-        # svgfile.close()
-        # with open(f"{self.root}/Data/{self.identifier}/workflow.cwl", "w+") as outfile:
-        #     outfile.write("#!/usr/bin/env cwl-runner\n\n")
-        #     yaml.dump(self.cwl_workflow, outfile, default_flow_style=False)
-        # with open(f"{self.root}/Data/{self.identifier}/input.yml", "w+") as outfile:
-        #     yaml.dump(self.cwl_input, outfile, default_flow_style=False)
-        # workflow_log = open(f"{self.root}/Data/{self.identifier}/workflow.log", "w")
-        # print("Submit workflow")
-        # proc = subprocess.Popen(["cwl-runner",
-        #             f"--outdir={self.root}/Data/{self.identifier}/output",
-        #             "--timestamp",
-        #             "--tmpdir-prefix=/tmp/",
-        #             "--tmp-outdir-prefix=/tmp/",
-        #             f"{self.root}/Data/{self.identifier}/workflow.cwl",
-        #             f"{self.root}/Data/{self.identifier}/input.yml"],
-        #             stdout=workflow_log, stderr=workflow_log)
-        # print(proc.args)
-        # print(proc.pid)
-        # workflow_log.close()
+        svgfile = open(f"{self.root}/Data/{self.identifier}/workflow.svg", "w")
+        subprocess.run(["dot", "-Tsvg",
+                        f"{self.root}/Data/{self.identifier}/workflow.dot"],
+                        stdout=svgfile)
+        svgfile.close()
+        with open(f"{self.root}/Data/{self.identifier}/workflow.cwl", "w+") as outfile:
+            outfile.write("#!/usr/bin/env cwl-runner\n\n")
+            yaml.dump(self.cwl_workflow, outfile, default_flow_style=False)
+        with open(f"{self.root}/Data/{self.identifier}/input.yml", "w+") as outfile:
+            yaml.dump(self.cwl_input, outfile, default_flow_style=False)
+        workflow_log = open(f"{self.root}/Data/{self.identifier}/workflow.log", "w")
+        print("Submit workflow")
+        proc = subprocess.Popen(["cwl-runner",
+                    f"--outdir={self.root}/Data/{self.identifier}/output",
+                    "--timestamp",
+                    "--tmpdir-prefix=/tmp/",
+                    "--tmp-outdir-prefix=/tmp/",
+                    f"{self.root}/Data/{self.identifier}/workflow.cwl",
+                    f"{self.root}/Data/{self.identifier}/input.yml"],
+                    stdout=workflow_log, stderr=workflow_log)
+        print(proc.args)
+        print(proc.pid)
+        workflow_log.close()
         print(self.genome_index)
         self.sql_session.commit()
 
