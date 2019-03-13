@@ -39,10 +39,27 @@
           <span></span>
           <span></span>
         </div>
-        <br>
+        <br><br>
         <!-- <button type="button" name="button" onclick="wf_select(1)">Workflow One</button> -->
         <!-- <button type="button" name="button" onclick="wf_select(2)">Workflow Two</button> -->
-        <div id='painting'>
+      <fieldset>
+          {% for workflow in workflows %}
+            {{forloop.counter}}:
+            <label for="">{{workflow.label}}</label>
+            <input type="checkbox" name="" class='checkbox_wf' value="{{forloop.counter}}"><br>
+          {% endfor %}
+          <input type="submit" onclick='wf_select()' value="Susbmit" />
+      </fieldset>
+
+
+
+      <!-- <h2>{{session.identifier}}</h2> -->
+      <!-- <h2>{{session.workflow_fk.all}}</h2> -->
+      <h2>{{label}}</h2>
+        <div>
+          <svg id='painting'>
+
+          </svg>
         </div>
         <div class="slidecontainer">
           <!-- <label for=""> P value Threshold</label> -->
