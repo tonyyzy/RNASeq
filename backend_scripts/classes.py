@@ -92,7 +92,7 @@ class database_reader():
                 self.identifier = uuid.UUID(s.identifier)
                 data_path = f"{root}/Data/{self.identifier}/genome/"
                 self.Genome_file = f"{root}/Data/" + s.fasta_dna_file
-                self.cnda_file = f"{root}/Data/" + s.fasta_cdna_file
+                self.cdna_file = f"{root}/Data/" + s.fasta_cdna_file
                 self.Annotation_file = f"{root}/Data/" + s.gtf_file
                 self.indexes["star_genomedir"] = data_path + "STARIndex"
                 self.indexes["HISAT2Index"] = data_path + "HISAT2Index"
