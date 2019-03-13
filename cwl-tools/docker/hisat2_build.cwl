@@ -24,10 +24,13 @@ inputs:
          position: 3
          prefix: --exon
    fasta:
-      type: File
+      type: File[]
       inputBinding:
+         itemSeparator: ","
+         separate: True
          position: 4
          prefix: -f
+         shellQuote: False
    output:
       type: string
       inputBinding:
@@ -37,6 +40,6 @@ outputs:
    ht:
       type: File[]
       outputBinding:
-         glob: "*"
+         glob: "*.ht2*"
    log:
       type: stdout

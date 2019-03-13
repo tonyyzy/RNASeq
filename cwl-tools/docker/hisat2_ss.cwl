@@ -8,10 +8,10 @@ requirements:
 hints:
    DockerRequirement:
       dockerPull: quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2 
-stdout: $(inputs.gtf.basename + ".splice_sites")
+stdout: $(inputs.gtf[0].basename + ".splice_sites")
 inputs:
    gtf:
-      type: File
+      type: File[]
       inputBinding:
          position: 1
 

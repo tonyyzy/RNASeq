@@ -5,12 +5,12 @@ class: Workflow
 
 inputs:
    threads: int
-   fasta: File
+   fasta: File[]
    ht2base: string
-   gtf: File
+   gtf: File[]
 outputs:
    ht_out:
-      type: directory
+      type: Directory
       outputSource: hisat2_build_folder/out
    log_out:
       type: File
