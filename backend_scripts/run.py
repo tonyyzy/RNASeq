@@ -53,10 +53,3 @@ if __name__ == "__main__":
         
         session.commit()
         logfile.close()
-        
-
-        
-        
-
-    
-

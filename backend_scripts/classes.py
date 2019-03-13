@@ -22,8 +22,8 @@ class database_checker():
         for entry in session.query(RSession).filter(RSession.status == 1):
             print(entry.id)
             self.create_workflow(entry.id, root)
-            entry.status = 2
-        session.commit()
+        #     entry.status = 2
+        # session.commit()
 
     def create_workflow(self, Session_ID, root):
         Workflow = self.Base.classes.analysis_workflow
@@ -47,6 +47,7 @@ class database_reader():
         self.Annotation_file = ""
         self.identifier = ""
         self.indexes = {}
+        self.cdna_file = ""
 
     def extract_from_database(self, database, root):
         Base = automap_base()
@@ -149,7 +150,9 @@ class logic_builder():
                 if value == "-1":
                     raise ValueError("Invalid step connection")
                 elif value != "0":
-                    result[key].insert(result[key].index(prog), value)
+                    pos = prog
+                    for i in value.split("_"):
+                        result[key].insert(result[key].index(pos), i)
                 prev_prog = prog
             for j in range(1, len(result[key])):
                 result[key][j] = "_".join(result[key][j-1:j+1])

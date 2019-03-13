@@ -574,10 +574,6 @@ class cwl_writer():
 
 
     def cufflinks(self):
-        # cufflinks 
-        # workflow section
-        # inputs
-
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
@@ -614,10 +610,8 @@ class cwl_writer():
         self.add_edge()
         self.add_annotation()
 
-        # cuffmerge
-        self.name_list.append("cuffmerge")
-        self.previous_name = "_".join(self.name_list[:-1])
-        self.name = "_".join(self.name_list)
+
+    def cuffmerge(self):
         # inputs
         self.cwl_workflow["inputs"]["fasta"] = "File"
         self.cwl_input["fasta"] = {
@@ -673,55 +667,9 @@ class cwl_writer():
             )
         )
 
-
     def htseq(self):
-        # htseq_prepare
-        # workflow section
-        # inputs
-        self.cwl_workflow["inputs"]["htseq_prepare_script"] = "File"
-        # yml section
-        self.cwl_input["htseq_prepare_script"] = {
-            "class": "File",
-            "path": f"{self.root}/RNASeq/scripts/Basic_DEXSeq_scripts/dexseq_prepare.py"
-        }
-        # outputs
-        self.cwl_workflow["outputs"]["htseq_prepare_out"] = {
-            "type": "Directory",
-            "outputSource": "htseq_prepare_folder/out"
-        }
-        # steps
-        self.cwl_workflow["steps"]["htseq_prepare"] = {
-            "run": f"{self.root}/RNASeq/cwl-tools/docker/htseq_prepare.cwl",
-            "in": {
-                "input_script": "htseq_prepare_script",
-                "gtf": "annotation",
-                "gff_name": {
-                    "source": ["annotation"],
-                    "valueFrom": "$(self.nameroot + '.gff')"
-                }
-            },
-            "out": ["ht_prep_out"]
-        }
-        # foldering
-        self.cwl_workflow["steps"]["htseq_prepare_folder"] = {
-            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
-            "in": {
-                "item": "htseq_prepare/ht_prep_out",
-                "name": {"valueFrom": "htseq_prepare"}
-            },
-            "out": ["out"]
-        }
-        if self.graph.get_node("htseq_prepare") == []:
-            self.graph.add_node(pydot.Node("htseq_prepare", label="HTSeq prepare"))
-            self.graph.add_edge(
-                pydot.Edge(
-                    *self.graph_inputs.get_node("annotation"),
-                    *self.graph.get_node("htseq_prepare")
-                )
-            )
+        self.htseq_prepare()
 
-        # htseq_count
-        # workflow section
         # inputs
         self.cwl_workflow["inputs"]["htseq_count_script"] = "File"
         self.cwl_input["htseq_count_script"] = {
@@ -777,6 +725,50 @@ class cwl_writer():
         )
 
 
+    def htseq_prepare(self):
+        # inputs
+        self.cwl_workflow["inputs"]["htseq_prepare_script"] = "File"
+        self.cwl_input["htseq_prepare_script"] = {
+            "class": "File",
+            "path": f"{self.root}/RNASeq/scripts/Basic_DEXSeq_scripts/dexseq_prepare.py"
+        }
+        # outputs
+        self.cwl_workflow["outputs"]["htseq_prepare_out"] = {
+            "type": "Directory",
+            "outputSource": "htseq_prepare_folder/out"
+        }
+        # steps
+        self.cwl_workflow["steps"]["htseq_prepare"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/docker/htseq_prepare.cwl",
+            "in": {
+                "input_script": "htseq_prepare_script",
+                "gtf": "annotation",
+                "gff_name": {
+                    "source": ["annotation"],
+                    "valueFrom": "$(self.nameroot + '.gff')"
+                }
+            },
+            "out": ["ht_prep_out"]
+        }
+        # foldering
+        self.cwl_workflow["steps"]["htseq_prepare_folder"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
+            "in": {
+                "item": "htseq_prepare/ht_prep_out",
+                "name": {"valueFrom": "htseq_prepare"}
+            },
+            "out": ["out"]
+        }
+        # graph
+        if self.graph.get_node("htseq_prepare") == []:
+            self.graph.add_node(pydot.Node("htseq_prepare", label="HTSeq prepare"))
+            self.graph.add_edge(
+                pydot.Edge(
+                    *self.graph_inputs.get_node("annotation"),
+                    *self.graph.get_node("htseq_prepare")
+                )
+            )
+
 
     def featurecounts(self):
         # inputs
@@ -822,10 +814,6 @@ class cwl_writer():
 
     #----------analysis----------
     def deseq2(self):
-        """
-        func to add deseq2 step
-        """
-        # workflow section
         # inputs
         self.cwl_workflow["inputs"]["DESeq2_script"] = "File"
         self.cwl_input["DESeq2_script"] = {
@@ -862,12 +850,14 @@ class cwl_writer():
             "out": ["out"]
         }
 
+        # graph
         self.graph.add_node(pydot.Node(self.name, label="DESeq2"))
         self.add_edge()
         self.add_gene_count()
         self.add_norm()
         self.add_metadata()
 
+        # paths
         files = {}
         files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
                         f"/norm_count.csv"
@@ -885,9 +875,12 @@ class cwl_writer():
 
 
     def dexseq(self):
-        # workflow section
         # inputs
         self.cwl_workflow["inputs"]["dexseq_script"] = "File"
+        self.cwl_input["dexseq_script"] = {
+            "class": "File",
+            "path": f"{self.root}/RNASeq/scripts/Basic_DEXSeq_scripts/DEXSeq.R"
+        }
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
@@ -913,18 +906,15 @@ class cwl_writer():
             },
             "out": ["out"]
         }
-        # yml section
-        self.cwl_input["dexseq_script"] = {
-            "class": "File",
-            "path": f"{self.root}/RNASeq/scripts/Basic_DEXSeq_scripts/DEXSeq.R"
-        }
 
+        # graph
         self.graph.add_node(pydot.Node(self.name, label="DEXSeq"))
         self.add_edge()
         self.add_metadata()
         self.add_exon_count()
         self.add_norm()
 
+        # paths
         files = {}
         files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
                         f"/norm_count.csv"
@@ -936,20 +926,19 @@ class cwl_writer():
                         .filter(self.Workflow.id == self.analysis_id[self.name])\
                         .first().paths = json.dumps(files)
 
+
     def deseq(self):
         raise NotImplementedError
 
 
-    def cuffdiff(self):
-        # cuffquant
-        original_name = self.name
+    def cuffquant(self):
         # inputs
         # outputs
-        self.name_list = self.name_list[:-1]
-        self.name_list.append("cuffmerge")
-        self.name_list.append("cuffquant")
-        self.previous_name = "_".join(self.name_list[:-1])
-        self.name = "_".join(self.name_list)
+        # self.name_list = self.name_list[:-1]
+        # self.name_list.append("cuffmerge")
+        # self.name_list.append("cuffquant")
+        # self.previous_name = "_".join(self.name_list[:-1])
+        # self.name = "_".join(self.name_list)
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
             "outputSource": f"{self.name}_folder/out"
@@ -985,7 +974,11 @@ class cwl_writer():
         self.graph.add_node(pydot.Node(self.name, label="Cuffquant"))
         self.add_edge()
 
-        # cuffnorm
+        self.cuffnorm()
+
+
+    def cuffnorm(self):
+        cuffmerge = "_".join(self.name_list[:self.name_list.index("cuffmerge") + 1])
         self.name_list.append("cuffnorm")
         self.previous_name = "_".join(self.name_list[:-1])
         self.name = "_".join(self.name_list)
@@ -1019,15 +1012,17 @@ class cwl_writer():
         self.graph.add_node(pydot.Node(self.name, label="Cuffnorm"))
         self.add_edge()
         self.add_norm()
-        files = {}
-        files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
+        self.files = {}
+        self.files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
                         f"/genes.fpkm_table"
 
-        # cuffdiff
+
+    def cuffdiff(self):
+        cuffmerge = "_".join(self.name_list[:self.name_list.index("cuffmerge") + 1])
         # inputs
-        self.name_list[-1] = "cuffdiff"
-        self.previous_name = "_".join(self.name_list[:-1])
-        self.name = "_".join(self.name_list)
+        # self.name_list[-1] = "cuffdiff"
+        # self.previous_name = "_".join(self.name_list[:-1])
+        # self.name = "_".join(self.name_list)
         self.cwl_workflow["inputs"]["conditions"] = "string[]"
         self.cwl_workflow["inputs"]["cuffdiff_file_sort"] = "File"
         self.cwl_input["conditions"] = list(self.conditions)
@@ -1064,22 +1059,15 @@ class cwl_writer():
         self.add_gene_count()
 
 
-        files["DGE"] = [self.root + f"/Data/{self.identifier}/output/" + self.name + \
+        self.files["DGE"] = [self.root + f"/Data/{self.identifier}/output/" + self.name + \
                         f"/DGE_res.csv"]
 
         self.sql_session.query(self.Workflow)\
-                        .filter(self.Workflow.id == self.analysis_id[original_name])\
-                        .first().paths = json.dumps(files)
+                        .filter(self.Workflow.id == self.analysis_id[self.name])\
+                        .first().paths = json.dumps(self.files)
 
 
-    def ballgown(self):
-        original_name = self.name
-        self.name_list = self.name_list[:-1]
-        self.name_list.append("cuffmerge")
-        self.name_list.append("tablemaker")
-        self.previous_name = "_".join(self.name_list[:-1])
-        self.name = "_".join(self.name_list)
-        # tablemaker
+    def tablemaker(self):
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
@@ -1115,10 +1103,19 @@ class cwl_writer():
         self.graph.add_node(pydot.Node(self.name, label="Tablemaker"))
         self.add_edge()
 
+
+    def ballgown(self):
+        # self.name_list = self.name_list[:-1]
+        # self.name_list.append("cuffmerge")
+        # self.name_list.append("tablemaker")
+        # self.previous_name = "_".join(self.name_list[:-1])
+        # self.name = "_".join(self.name_list)
+
+
         # ballgown
-        self.name_list.append("ballgown")
-        self.previous_name = "_".join(self.name_list[:-1])
-        self.name = "_".join(self.name_list)
+        # self.name_list.append("ballgown")
+        # self.previous_name = "_".join(self.name_list[:-1])
+        # self.name = "_".join(self.name_list)
         # inputs
         self.cwl_workflow["inputs"]["ballgown_script"] = "File"
         self.cwl_input["ballgown_script"] = {
@@ -1170,7 +1167,7 @@ class cwl_writer():
                         f"/DTE_res.csv"]
 
         self.sql_session.query(self.Workflow)\
-                        .filter(self.Workflow.id == self.analysis_id[original_name])\
+                        .filter(self.Workflow.id == self.analysis_id[self.name])\
                         .first().paths = json.dumps(files)
     
 
@@ -1506,7 +1503,6 @@ class cwl_writer():
         if self.genome_index == "user_provided":
             self.create_indexing(logic_object.workflow)
         print("writing cwl")
-        print(logic_object.analysis_id)
         for step in logic_object.workflow:
             self.name_list = step.split("_")
             self.previous_name = "_".join(self.name_list[:-1])
@@ -1531,7 +1527,6 @@ class cwl_writer():
             yaml.dump(self.cwl_workflow, outfile, default_flow_style=False)
         with open(yml, "w+") as outfile:
             yaml.dump(self.cwl_input, outfile, default_flow_style=False)
-        workflow_log = open(f"{self.root}/Data/{self.identifier}/workflow.log", "w")
         print("Add workflow to jobs queue")
         q = self.Queue()
         q.session_id = self.id
@@ -1541,17 +1536,5 @@ class cwl_writer():
         q.jobtype = "workflow"
         q.result = "empty"
         self.sql_session.add(q)
-        # proc = subprocess.Popen(["cwl-runner",
-        #             f"--outdir={self.root}/Data/{self.identifier}/output",
-        #             "--timestamp",
-        #             "--tmpdir-prefix=/tmp/",
-        #             "--tmp-outdir-prefix=/tmp/",
-        #             f"{self.root}/Data/{self.identifier}/workflow.cwl",
-        #             f"{self.root}/Data/{self.identifier}/input.yml"],
-        #             stdout=workflow_log, stderr=workflow_log)
-        # print(proc.args)
-        # print(proc.pid)
-        workflow_log.close()
-        print(self.genome_index)
         self.sql_session.commit()
 
