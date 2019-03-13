@@ -984,7 +984,10 @@ class cwl_writer():
         self.name = "_".join(self.name_list)
         # inputs
         self.cwl_workflow["inputs"]["cuffnorm_table"] = "File"
-        self.cwl_input["cuffnorm_table"] = f"{self.root}/RNASeq/scripts/cuffnorm_table.py"
+        self.cwl_input["cuffnorm_table"] = {
+            "class": "File",
+            "path": f"{self.root}/RNASeq/scripts/cuffnorm_table.py"
+        }
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
