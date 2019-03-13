@@ -109,6 +109,7 @@ class cwl_writer():
         self.organism = database_reader_object.Organism_name
         self.Queue = database_reader_object.Queue
         self.id = database_reader_object.id
+        self.cdna = database_reader_object.cdna_file
 
         # add metadata and annotation to cwl_input
         self.cwl_input["metadata"] = {
@@ -1462,7 +1463,7 @@ class cwl_writer():
         if "salmonquant" in programs:
             indexing_input["cdna"] = [{
                 "class": "File",
-                "path": self.genome
+                "path": self.cdna
             }]
             indexing_workflow["inputs"]["cdna"] = "File[]"
             indexing_workflow["outputs"]["salmon_out"] = {
