@@ -22,8 +22,8 @@ class database_checker():
         for entry in session.query(RSession).filter(RSession.status == 1):
             print(entry.id)
             self.create_workflow(entry.id, root)
-            entry.status = 2
-        session.commit()
+        #     entry.status = 2
+        # session.commit()
 
     def create_workflow(self, Session_ID, root):
         Workflow = self.Base.classes.analysis_workflow
@@ -31,6 +31,7 @@ class database_checker():
         reader.extract_from_database(self.Database, root)
         logic = logic_builder(root)
         logic.create_workflow_logic(reader)
+        print(reader.genome_index)
         writer = programs.cwl_writer(reader, root)
         writer.write_workflow(logic, Session(self.engine), Workflow)
 
@@ -67,21 +68,34 @@ class database_reader():
         print(self.workflows)
         
         # extract file path from Genome table
-        for s,g in session.query(RSession, Genome)\
-                            .filter(RSession.genome_id == Genome.id)\
-                            .filter(RSession.id == self.Session_ID):
-            self.identifier = uuid.UUID(s.identifier)
-            self.Genome_file = g.fasta_dna_file
-            self.Annotation_file = g.gtf_file
-            self.indexes["star_genomedir"] = g.star
-            self.indexes["HISAT2Index"] = g.hisat2
-            self.indexes["salmon_index"] = g.salmon
-            self.genome_index = s.genome_index
-            if self.genome_index == "pre_index":
+        self.genome_index = session.query(RSession)\
+                                    .filter(RSession.id == self.Session_ID)\
+                                    .first()\
+                                    .genome_index
+        if self.genome_index == "pre_index":
+            for s,g in session.query(RSession, Genome)\
+                                .filter(RSession.genome_id == Genome.id)\
+                                .filter(RSession.id == self.Session_ID):
+                self.identifier = uuid.UUID(s.identifier)
+                self.Genome_file = g.fasta_dna_file
+                self.Annotation_file = g.gtf_file
+                self.indexes["star_genomedir"] = g.star
+                self.indexes["HISAT2Index"] = g.hisat2
+                self.indexes["salmon_index"] = g.salmon
                 self.Organism_name = g.organism
-            else:
+        elif self.genome_index == "user_provided":
+            for s in session.query(RSession)\
+                            .filter(RSession.id == self.Session_ID):
                 self.Organism_name = s.organism
-        
+                self.identifier = uuid.UUID(s.identifier)
+                data_path = f"{root}/Data/{self.identifier}/genome/"
+                self.Genome_file = f"{root}/Data/" + s.fasta_dna_file
+                self.cnda_file = f"{root}/Data/" + s.fasta_cdna_file
+                self.Annotation_file = f"{root}/Data/" + s.gtf_file
+                self.indexes["star_genomedir"] = data_path + "STARIndex"
+                self.indexes["HISAT2Index"] = data_path + "HISAT2Index"
+                self.indexes["salmon_index"] = data_path + "Salmonindex"
+
         # extract fastq file path and coditions
         for sample, condition in session\
                 .query(Samples, Condition)\
