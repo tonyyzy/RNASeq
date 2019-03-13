@@ -160,7 +160,7 @@
           <div id="workflow" class="container tab-pane fade"><br>
             <div id='id_workflow_div'>
             <h4>Upload New Workflow: <a class='btn btn-sm btn-success' href="{% url 'analysis:workflow_create' session_detail.identifier %}">Add Workflow</a></h4>
-            {% if session_detail.workflow.all %}
+            {% if session_detail.workflow_fk.all %}
             <div class='lead'>Session Workflow:</div>
             <table class="table table-bordered mb-1">
               <thead>
@@ -176,7 +176,7 @@
                 </tr>
               </thead>
               <tbody>
-                {% for workflow in session_detail.workflow.all %}
+                {% for workflow in session_detail.workflow_fk.all %}
                 <tr>
                   <!-- <td>{{workflow.pk}}</td> -->
                   <td class='td_workflow_counter'>{{forloop.counter}}</td>
@@ -191,7 +191,7 @@
               </tbody>
             </table>
             {% endif %}
-            {% if not session_detail.workflow.all %}
+            {% if not session_detail.workflow_fk.all %}
               <!-- <h3>No Workflows defined.</h3> -->
             {% endif %}
 

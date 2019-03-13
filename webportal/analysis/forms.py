@@ -79,9 +79,13 @@ class SamplesForm(forms.ModelForm):
 class WorkflowForm(forms.ModelForm):
     class Meta:
         model = Workflow
-        fields = ['mapper', 'assembler', 'analysis', 'status']
+        fields = ['wofkflow_label', 'mapper', 'assembler', 'analysis', 'status']
         # fields='__all__'
         widgets={
+            'wofkflow_label': forms.TextInput(attrs={
+                'class':'form-control',
+                'placeholder': 'provide label for workflow here...'
+                }),
             'salmon': forms.SelectMultiple(attrs={
                 'class':'form-control',
                 }),
