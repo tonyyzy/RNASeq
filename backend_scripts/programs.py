@@ -1520,11 +1520,11 @@ class cwl_writer():
         self.graph.add_subgraph(self.graph_inputs)
         self.graph.add_subgraph(self.graph_outputs)
         self.graph.write(f"{self.root}/Data/{self.identifier}/workflow.dot")
-        # svgfile = open(f"{self.root}/Data/{self.identifier}/workflow.svg", "w")
-        # subprocess.run(["dot", "-Tsvg",
-        #                 f"{self.root}/Data/{self.identifier}/workflow.dot"],
-        #                 stdout=svgfile)
-        # svgfile.close()
+        svgfile = open(f"{self.root}/Data/{self.identifier}/workflow.svg", "w")
+        subprocess.run(["dot", "-Tsvg",
+                        f"{self.root}/Data/{self.identifier}/workflow.dot"],
+                        stdout=svgfile)
+        svgfile.close()
         cwl = f"{self.root}/Data/{self.identifier}/workflow.cwl"
         yml = f"{self.root}/Data/{self.identifier}/input.yml"
         with open(cwl, "w+") as outfile:

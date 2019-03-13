@@ -43,6 +43,17 @@ if __name__ == "__main__":
                                 q.cwl,
                                 q.yml],
                                 stdout=logfile, stderr=logfile)
+        
+        if proc.returncode == 0:
+            q.status = 0
+            q.result = "success"
+        else:
+            q.status = 0
+            q.result = "failed"
+        
+        session.commit()
+        logfile.close()
+        
 
         
         
