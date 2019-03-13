@@ -58,6 +58,7 @@ class database_reader():
         Condition = Base.classes.analysis_condition
         Genome = Base.classes.analysis_genome
         session = Session(engine)
+        self.Queue = Base.classes.analysis_queue
 
         # extract steps in workflows of session
         for entry in session.query(Workflow)\
@@ -83,6 +84,7 @@ class database_reader():
                 self.indexes["HISAT2Index"] = g.hisat2
                 self.indexes["salmon_index"] = g.salmon
                 self.Organism_name = g.organism
+                self.id = s.id
         elif self.genome_index == "user_provided":
             for s in session.query(RSession)\
                             .filter(RSession.id == self.Session_ID):
@@ -95,6 +97,7 @@ class database_reader():
                 self.indexes["star_genomedir"] = data_path + "STARIndex"
                 self.indexes["HISAT2Index"] = data_path + "HISAT2Index"
                 self.indexes["salmon_index"] = data_path + "Salmonindex"
+                self.id = s.id
 
         # extract fastq file path and coditions
         for sample, condition in session\

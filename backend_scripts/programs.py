@@ -107,6 +107,8 @@ class cwl_writer():
         self.genome = database_reader_object.Genome_file
         self.annotation = database_reader_object.Annotation_file
         self.organism = database_reader_object.Organism_name
+        self.Queue = database_reader_object.Queue
+        self.id = database_reader_object.id
 
         # add metadata and annotation to cwl_input
         self.cwl_input["metadata"] = {
@@ -1380,8 +1382,6 @@ class cwl_writer():
             )
         )
 
-
-    # TODO fix this!!!
     def create_indexing(self, programs):
         print("Generate indexing workflow")
         indexing_input = {
@@ -1480,20 +1480,32 @@ class cwl_writer():
                 },
                 "out": ["salmon_out"]
             }
-        with open(f"{self.root}/Data/{self.identifier}/indexing.cwl", "w+") as outfile:
+        cwl = f"{self.root}/Data/{self.identifier}/indexing.cwl"
+        yml = f"{self.root}/Data/{self.identifier}/indexing.yml"
+        with open(cwl, "w+") as outfile:
             outfile.write("#!/usr/bin/env cwl-runner\n\n")
             yaml.dump(indexing_workflow, outfile, default_flow_style=False)
-        with open(f"{self.root}/Data/{self.identifier}/indexing.yml", "w+") as outfile:
+        with open(yml, "w+") as outfile:
             yaml.dump(indexing_input, outfile, default_flow_style=False)
+        
+        q = self.Queue()
+        q.session_id = self.id
+        q.cwl = cwl
+        q.yml = yml
+        q.status = 1
+        q.jobtype = "index"
+        q.result = "empty"
+        self.sql_session.add(q)
+
         
 
     def write_workflow(self, logic_object, session, Workflow):
         print(logic_object.workflow)
-        if self.genome_index == "user_provided":
-            self.create_indexing(logic_object.workflow)
         self.sql_session = session
         self.Workflow = Workflow
         self.analysis_id = logic_object.analysis_id
+        if self.genome_index == "user_provided":
+            self.create_indexing(logic_object.workflow)
         print("writing cwl")
         print(logic_object.analysis_id)
         for step in logic_object.workflow:
@@ -1508,28 +1520,38 @@ class cwl_writer():
         self.graph.add_subgraph(self.graph_inputs)
         self.graph.add_subgraph(self.graph_outputs)
         self.graph.write(f"{self.root}/Data/{self.identifier}/workflow.dot")
-        svgfile = open(f"{self.root}/Data/{self.identifier}/workflow.svg", "w")
-        subprocess.run(["dot", "-Tsvg",
-                        f"{self.root}/Data/{self.identifier}/workflow.dot"],
-                        stdout=svgfile)
-        svgfile.close()
-        with open(f"{self.root}/Data/{self.identifier}/workflow.cwl", "w+") as outfile:
+        # svgfile = open(f"{self.root}/Data/{self.identifier}/workflow.svg", "w")
+        # subprocess.run(["dot", "-Tsvg",
+        #                 f"{self.root}/Data/{self.identifier}/workflow.dot"],
+        #                 stdout=svgfile)
+        # svgfile.close()
+        cwl = f"{self.root}/Data/{self.identifier}/workflow.cwl"
+        yml = f"{self.root}/Data/{self.identifier}/input.yml"
+        with open(cwl, "w+") as outfile:
             outfile.write("#!/usr/bin/env cwl-runner\n\n")
             yaml.dump(self.cwl_workflow, outfile, default_flow_style=False)
-        with open(f"{self.root}/Data/{self.identifier}/input.yml", "w+") as outfile:
+        with open(yml, "w+") as outfile:
             yaml.dump(self.cwl_input, outfile, default_flow_style=False)
         workflow_log = open(f"{self.root}/Data/{self.identifier}/workflow.log", "w")
-        print("Submit workflow")
-        proc = subprocess.Popen(["cwl-runner",
-                    f"--outdir={self.root}/Data/{self.identifier}/output",
-                    "--timestamp",
-                    "--tmpdir-prefix=/tmp/",
-                    "--tmp-outdir-prefix=/tmp/",
-                    f"{self.root}/Data/{self.identifier}/workflow.cwl",
-                    f"{self.root}/Data/{self.identifier}/input.yml"],
-                    stdout=workflow_log, stderr=workflow_log)
-        print(proc.args)
-        print(proc.pid)
+        print("Add workflow to jobs queue")
+        q = self.Queue()
+        q.session_id = self.id
+        q.cwl = cwl
+        q.yml = yml
+        q.status = 1
+        q.jobtype = "workflow"
+        q.result = "empty"
+        self.sql_session.add(q)
+        # proc = subprocess.Popen(["cwl-runner",
+        #             f"--outdir={self.root}/Data/{self.identifier}/output",
+        #             "--timestamp",
+        #             "--tmpdir-prefix=/tmp/",
+        #             "--tmp-outdir-prefix=/tmp/",
+        #             f"{self.root}/Data/{self.identifier}/workflow.cwl",
+        #             f"{self.root}/Data/{self.identifier}/input.yml"],
+        #             stdout=workflow_log, stderr=workflow_log)
+        # print(proc.args)
+        # print(proc.pid)
         workflow_log.close()
         print(self.genome_index)
         self.sql_session.commit()
