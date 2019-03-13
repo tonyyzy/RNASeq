@@ -1506,6 +1506,9 @@ class cwl_writer():
         self.analysis_id = logic_object.analysis_id
         if self.genome_index == "user_provided":
             self.create_indexing(logic_object.workflow)
+        
+        old_queues = self.sql_session.query(self.Queue).where(self.Queue.session_id == self.id)
+        old_queues.delete()
         print("writing cwl")
         print(logic_object.analysis_id)
         for step in logic_object.workflow:
