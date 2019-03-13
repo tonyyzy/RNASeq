@@ -1500,15 +1500,13 @@ class cwl_writer():
         
 
     def write_workflow(self, logic_object, session, Workflow):
-        print(logic_object.workflow)
+        old_queues = self.sql_session.query(self.Queue).filter(self.Queue.session_id == self.id)
+        old_queues.delete()
         self.sql_session = session
         self.Workflow = Workflow
         self.analysis_id = logic_object.analysis_id
         if self.genome_index == "user_provided":
             self.create_indexing(logic_object.workflow)
-        
-        old_queues = self.sql_session.query(self.Queue).where(self.Queue.session_id == self.id)
-        old_queues.delete()
         print("writing cwl")
         print(logic_object.analysis_id)
         for step in logic_object.workflow:
