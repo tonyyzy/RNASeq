@@ -144,6 +144,7 @@ class logic_builder():
         for key, progs in database_reader_object.workflows.items():
             if progs[1] == "cufflinks" and progs[0] == "hisat2":
                 progs[0] = "hisat2xs"
+                result[key][0] = "hisat2xs"
             prev_prog = progs[0]
             for prog in progs[1:]:
                 value = self.programs_connections[prog][prev_prog]
