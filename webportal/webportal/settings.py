@@ -29,7 +29,7 @@ SECRET_KEY = 'tem51!gzk)#%&4#v0)bh*&ano&*0k7n1nr6at3elfdbu4q4ad-'
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1', '155.198.233.29', '155.198.232.174']
+ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1', '155.198.233.29', '155.198.232.174', 'isar19.bc.ic.ac.uk']
 
 '''
 IP ADDRESS INFO

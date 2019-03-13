@@ -66,11 +66,12 @@ function wf_select(param){
   }
   console.log(endpoint)
   console.log('hi there old sport')
-  d3_run()
+  d3_run(endpoint)
 }
 
 
 function d3_run(endpoint){
+  console.log(endpoint)
   d3.json(endpoint).then(function(data) {
     console.log('d3_run called')
     dataset.push(data)
