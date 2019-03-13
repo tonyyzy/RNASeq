@@ -550,10 +550,7 @@ class cwl_writer():
                     "bam": f"{self.previous_name}_{i+1}/{self.output_string[self.prev]}",
                     "threads": "threads",
                     "gtf": "annotation",
-                    "output": {
-                        "source": [f"subject_name{i+1}"],
-                        "valueFrom": "$(self + \".gtf\")"
-                    }
+                    "output": f"subject_name{i+1}"
                 },
                 "out": ["stringtie_out"]
             }
