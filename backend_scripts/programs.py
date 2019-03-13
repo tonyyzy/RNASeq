@@ -1430,15 +1430,6 @@ class cwl_writer():
                 },
                 "out": ["index_out"]
             }
-
-            # indexing_workflow["steps"]["star_folder"] = {
-            #     "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
-            #     "in":{
-            #         "item": "star/index_out",
-            #         "name": {"valueFrom": "STARIndex"}
-            #     },
-            #     "out": ["out"]
-            # }
         
         if "hisat2" in programs or "hisat2xs" in programs:
             indexing_workflow["outputs"]["hisat2_ht_out"] = {
@@ -1468,15 +1459,6 @@ class cwl_writer():
                 "out": ["ht_out", "log_out", "splice_sites_out", "exon_out"]
             }
 
-            # indexing_workflow["steps"]["hisat2_folder"] = {
-            #     "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
-            #     "in":{
-            #         "item": "hisat2/ht_out",
-            #         "name": {"valueFrom": "HISAT2Index"}
-            #     },
-            #     "out": ["out"]
-            # }
-
         if "salmonquant" in programs:
             indexing_input["cdna"] = [{
                 "class": "File",
@@ -1505,9 +1487,6 @@ class cwl_writer():
             yaml.dump(indexing_input, outfile, default_flow_style=False)
         
 
-
-
-
     def write_workflow(self, logic_object, session, Workflow):
         print(logic_object.workflow)
         if self.genome_index == "user_provided":
@@ -1529,29 +1508,29 @@ class cwl_writer():
         self.graph.add_subgraph(self.graph_inputs)
         self.graph.add_subgraph(self.graph_outputs)
         self.graph.write(f"{self.root}/Data/{self.identifier}/workflow.dot")
-        # svgfile = open(f"{self.root}/Data/{self.identifier}/workflow.svg", "w")
-        # subprocess.run(["dot", "-Tsvg",
-        #                 f"{self.root}/Data/{self.identifier}/workflow.dot"],
-        #                 stdout=svgfile)
-        # svgfile.close()
+        svgfile = open(f"{self.root}/Data/{self.identifier}/workflow.svg", "w")
+        subprocess.run(["dot", "-Tsvg",
+                        f"{self.root}/Data/{self.identifier}/workflow.dot"],
+                        stdout=svgfile)
+        svgfile.close()
         with open(f"{self.root}/Data/{self.identifier}/workflow.cwl", "w+") as outfile:
             outfile.write("#!/usr/bin/env cwl-runner\n\n")
             yaml.dump(self.cwl_workflow, outfile, default_flow_style=False)
         with open(f"{self.root}/Data/{self.identifier}/input.yml", "w+") as outfile:
             yaml.dump(self.cwl_input, outfile, default_flow_style=False)
-        # workflow_log = open(f"{self.root}/Data/{self.identifier}/workflow.log", "w")
-        # print("Submit workflow")
-        # proc = subprocess.Popen(["cwl-runner",
-        #             f"--outdir={self.root}/Data/{self.identifier}/output",
-        #             "--timestamp",
-        #             "--tmpdir-prefix=/tmp/",
-        #             "--tmp-outdir-prefix=/tmp/",
-        #             f"{self.root}/Data/{self.identifier}/workflow.cwl",
-        #             f"{self.root}/Data/{self.identifier}/input.yml"],
-        #             stdout=workflow_log, stderr=workflow_log)
-        # print(proc.args)
-        # print(proc.pid)
-        # workflow_log.close()
+        workflow_log = open(f"{self.root}/Data/{self.identifier}/workflow.log", "w")
+        print("Submit workflow")
+        proc = subprocess.Popen(["cwl-runner",
+                    f"--outdir={self.root}/Data/{self.identifier}/output",
+                    "--timestamp",
+                    "--tmpdir-prefix=/tmp/",
+                    "--tmp-outdir-prefix=/tmp/",
+                    f"{self.root}/Data/{self.identifier}/workflow.cwl",
+                    f"{self.root}/Data/{self.identifier}/input.yml"],
+                    stdout=workflow_log, stderr=workflow_log)
+        print(proc.args)
+        print(proc.pid)
+        workflow_log.close()
         print(self.genome_index)
         self.sql_session.commit()
 
