@@ -29,26 +29,7 @@ $("#id_log2_threshold").change(function() {
   return log2_threshold
 });
 
-//
-// function say(param){
-//   console.log(param)
-// }
-// say(p_thresh)
-//
-// var initial = 10
-// function one(initial){
-//   intermediate = initial * 2
-//   return intermediate
-// }
-//
-// function two(param){
-//   old = param /2
-//   return old
-// }
-//
-// function three(param){
-//   console.log(param)
-// }
+
 
 colours = [
   "#000000",
@@ -84,79 +65,70 @@ function wf_select(param){
     endpoint += '_'
   }
   console.log(endpoint)
+  console.log('hi there old sport')
+  d3_run()
 }
 
 
+function d3_run(endpoint){
+  d3.json(endpoint).then(function(data) {
+    console.log('d3_run called')
+    dataset.push(data)
+    dataFilter()
+  });
+}
 
-//   if(param == 1 ){
-//     console.log('wf_1 chosen')
-//     var endpoint = 'wf_one/1'
-//   }
-//   if(param == 2 ){
-//     console.log('wf_2 chosen')
-//     var endpoint = 'wf_one/2'
-//   }
-//
-//   function d3_run(){
-//     d3.json(endpoint).then(function(data) {
-//       console.log('d3_run called')
-//       dataset.push(data)
-//       dataFilter()
-//     });
-//   }
-//   d3_run()
-// }
-//
-// function dataFilter(){
-//   dataset = dataset[0]
-//   dataset = dataset.filter(function(d){return ! isNaN(d.padj)});
-//   // myPlot()
-//   newPlot(dataset)
-// }
-//
-// function newPlot(){
-//   var margin = {top: 40, right: 20, bottom: 20, left: 40};
-//       //Width and height
-//       w = 800 - margin.right - margin.left;
-//       h = 800 - margin.top - margin.bottom;
-//
-//       xScale = d3.scaleLinear()
-//       // .domain([d3.min(dataset, function(d) { return d.log2FoldChange - 0.5;}),
-//                // d3.max(dataset, function(d) { return d.log2FoldChange + 0.5;})])
-//
-//       .domain([d3.min(dataset, function(d) { return - d.log2FoldChange - 5;}),
-//                d3.max(dataset, function(d) { return - d.log2FoldChange + 5;})])
-//       .range([0, w]);
-//
-//       yScale = d3.scaleLinear()
-//       .domain([d3.min(dataset, function(d) { return - Math.log10(d.padj) - 0.5;}),
-//                d3.max(dataset, function(d) { return - Math.log10(d.padj) + 0.5;})])
-//       .range([h, 0]);
-//
-//       xAxis = d3.axisBottom()
-//       .scale(xScale);
-//       // .ticks(5)
-//
-//       yAxis = d3.axisLeft()
-//       .scale(yScale);
-//
-//       svg = d3.select("#painting")
-//       .append("svg")
-//       .attr("width", w + margin.right + margin.left) // <-- Here
-//       .attr("height", h + margin.top + margin.bottom)
-//       // .attr("width", "100%") // <-- Here
-//       // .attr("height", "100%")
-//       .append("g")
-//       .attr("transform", "translate(" + margin.left + "," + margin.bottom + ")");// <-- and here!
-//       svg.append("g")
-//       .attr("class", "axis") //Assign "axis" class
-//       .attr("transform", "translate(0," + h + ")") // <-- and here!
-//       .call(xAxis);
-//       svg.append("g")
-//       .attr("class", "axis") //Assign "axis" class
-//       .call(yAxis)
-//       circles()
-// }
+
+function dataFilter(){
+  dataset = dataset[0]
+  dataset = dataset.filter(function(d){return ! isNaN(d.padj)});
+  // myPlot()
+  newPlot(dataset)
+}
+
+function newPlot(){
+  var margin = {top: 40, right: 20, bottom: 20, left: 40};
+      //Width and height
+      w = 800 - margin.right - margin.left;
+      h = 800 - margin.top - margin.bottom;
+
+      xScale = d3.scaleLinear()
+      // .domain([d3.min(dataset, function(d) { return d.log2FoldChange - 0.5;}),
+               // d3.max(dataset, function(d) { return d.log2FoldChange + 0.5;})])
+
+      .domain([d3.min(dataset, function(d) { return - d.log2FoldChange - 5;}),
+               d3.max(dataset, function(d) { return - d.log2FoldChange + 5;})])
+      .range([0, w]);
+
+      yScale = d3.scaleLinear()
+      .domain([d3.min(dataset, function(d) { return - Math.log10(d.padj) - 0.5;}),
+               d3.max(dataset, function(d) { return - Math.log10(d.padj) + 0.5;})])
+      .range([h, 0]);
+
+      xAxis = d3.axisBottom()
+      .scale(xScale);
+      // .ticks(5)
+
+      yAxis = d3.axisLeft()
+      .scale(yScale);
+
+      svg = d3.select("#painting")
+      .append("svg")
+      .attr("width", w + margin.right + margin.left) // <-- Here
+      .attr("height", h + margin.top + margin.bottom)
+      // .attr("width", "100%") // <-- Here
+      // .attr("height", "100%")
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.bottom + ")");// <-- and here!
+      svg.append("g")
+      .attr("class", "axis") //Assign "axis" class
+      .attr("transform", "translate(0," + h + ")") // <-- and here!
+      .call(xAxis);
+      svg.append("g")
+      .attr("class", "axis") //Assign "axis" class
+      .call(yAxis)
+      circles()
+}
 //
 // function circles(){
 //   svg.selectAll("circle").remove()
@@ -191,27 +163,27 @@ function wf_select(param){
 //
 //
 //
-//
-// function vLines(){
-//   svg.selectAll("line").remove()
-//   var v_lines_g = svg.append("g")
-//   .attr("class", "lines");
-//
-//   v_lines = [- log2_threshold, log2_threshold]
-//   var v_lines = v_lines_g.selectAll("line")
-//   .data(v_lines)
-//   .enter()
-//   .append("line")
-//   .attr("x1", function(d){
-//     return xScale(d);})
-//   .attr("y1", "0")
-//   .attr("x2", function(d){
-//     return xScale(d);})
-//   .attr("y2", "" + h)
-//   .attr("stroke", "red")
-//   .attr("stroke-width", "2");
-//   circles()
-// }
+
+function vLines(){
+  svg.selectAll("line").remove()
+  var v_lines_g = svg.append("g")
+  .attr("class", "lines");
+
+  v_lines = [- log2_threshold, log2_threshold]
+  var v_lines = v_lines_g.selectAll("line")
+  .data(v_lines)
+  .enter()
+  .append("line")
+  .attr("x1", function(d){
+    return xScale(d);})
+  .attr("y1", "0")
+  .attr("x2", function(d){
+    return xScale(d);})
+  .attr("y2", "" + h)
+  .attr("stroke", "red")
+  .attr("stroke-width", "2");
+  circles()
+}
 //
 // function hLines(){
 //   svg.selectAll("line").remove()
