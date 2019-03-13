@@ -143,3 +143,12 @@ class The_Debug(models.Model):
     field_one = models.CharField(max_length=200)
     # field_two = models.CharField(max_length=200)
     field_two = models.FileField(storage=data_root, upload_to=get_upload_path)
+
+
+class Queue(models.Model):
+    session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='queue_fk')
+    cwl = models.TextField(null=False)
+    yml = models.TextField(null=False)
+    status = models.BooleanField(default=False, null=False)
+    jobtype = models.CharField(max_length=200)
+    result = models.CharField(max_length=200)
