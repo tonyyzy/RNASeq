@@ -93,7 +93,8 @@ class cwl_writer():
         # get number of treads from config.ini
         config = ConfigParser()
         config.read(f"{root}/config.ini")
-        self.cwl_input["threads"] = int(config.get("main", "threads"))
+        self.threads = int(config.get("main", "threads"))
+        self.cwl_input["threads"] = self.threads
 
         # setup attributes
         self.genome_index = database_reader_object.genome_index
@@ -104,6 +105,8 @@ class cwl_writer():
         self.num = len(self.input_files) # total number of inputs
         self.root = root
         self.genome = database_reader_object.Genome_file
+        self.annotation = database_reader_object.Annotation_file
+        self.organism = database_reader_object.Organism_name
 
         # add metadata and annotation to cwl_input
         self.cwl_input["metadata"] = {
@@ -112,7 +115,7 @@ class cwl_writer():
         }
         self.cwl_input["annotation"] = {
             "class": "File",
-            "path": database_reader_object.Annotation_file
+            "path": self.annotation
         }
         self.graph_inputs.add_node(
             pydot.Node(
@@ -1272,9 +1275,9 @@ class cwl_writer():
             "path": f"{self.root}/RNASeq/scripts/prepDE.py"
         }
         # outputs
-        self.cwl_workflow["outputs"]["prepde_out"] = {
+        self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
-            "outputSource": "prepde_folder/out"
+            "outputSource": f"{self.name}_folder/out"
         }
         # steps
         self.cwl_workflow["steps"][f"{self.name}"] = {
@@ -1286,7 +1289,7 @@ class cwl_writer():
             "out": ["gene_count_output", "transcript_count_output"]
         }
         # foldering
-        self.cwl_workflow["steps"]["prepde_folder"] = {
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
             "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
                 "item":[f"{self.name}/gene_count_output",
@@ -1379,33 +1382,136 @@ class cwl_writer():
 
 
     # TODO fix this!!!
-    def create_indexing(self, database_reader_object):
-        print("Reading program index")
+    def create_indexing(self, programs):
+        print("Generate indexing workflow")
+        indexing_input = {
+            "threads": self.threads,
+            "fasta": [{
+                "class": "File",
+                "path": self.genome
+            }],
+            "gtf": [{
+                "class": "File",
+                "path": self.annotation
+            }],
+            "ht2base": self.organism
+        }
+        indexing_workflow = {
+            "cwlVersion": "v1.0",
+            "class": "Workflow",
+            "requirements":{
+                "StepInputExpressionRequirement": {},
+                "InlineJavascriptRequirement": {},
+                "SubworkflowFeatureRequirement": {}
+            },
+            "inputs": {
+                "threads": "int",
+                "gtf": "File[]",
+                "fasta": "File[]",
+                "ht2base": "string"
+            },
+            "outputs": {},
+            "steps": {}
+        }
 
-        if self.Workflow_index[0] == 8:
-            print("Creating STAR Index workflow")
-            yaml_file = open("./cwl-tools/docker/STAR_index.yml")
-            yaml_file = yaml.load(yaml_file)
+        if "star" in programs:
+            indexing_workflow["outputs"]["star_out"] = {
+                "type": "Directory",
+                "outputSource": "star/index_out"
+            }
 
-            yaml_file["genomeFastaFiles"]["path"] = self.conf["genome"]
-            yaml_file["sjdbGTFfile"]["path"] = self.annotation
+            indexing_workflow["steps"]["star"] = {
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/STAR_index.cwl",
+                "in": {
+                    "threads": "threads",
+                    "Mode": {"valueFrom": "genomeGenerate"},
+                    "fasta": "fasta",
+                    "gtf": "gtf"
+                },
+                "out": ["index_out"]
+            }
 
-            with open(f'STAR_index_{self.conf["session_ID"]}.yml', "w+") as outfile:
-                yaml.dump(yaml_file, outfile, default_flow_style=False)
+            # indexing_workflow["steps"]["star_folder"] = {
+            #     "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
+            #     "in":{
+            #         "item": "star/index_out",
+            #         "name": {"valueFrom": "STARIndex"}
+            #     },
+            #     "out": ["out"]
+            # }
+        
+        if "hisat2" in programs or "hisat2xs" in programs:
+            indexing_workflow["outputs"]["hisat2_ht_out"] = {
+                "type": "Directory",
+                "outputSource": "hisat2/ht_out"
+            }
+            indexing_workflow["outputs"]["hisat2_log_out"] = {
+                "type": "File",
+                "outputSource": "hisat2/log_out"
+            }
+            indexing_workflow["outputs"]["hisat2_splice_sites_out"] = {
+                "type": "File",
+                "outputSource": "hisat2/splice_sites_out"
+            }
+            indexing_workflow["outputs"]["hisat2_exon_out"] = {
+                "type": "File",
+                "outputSource": "hisat2/exon_out"
+            }
+            indexing_workflow["steps"]["hisat2"] = {
+                "run": f"{self.root}/RNASeq/workflows/docker/hisat2_index.cwl",
+                "in": {
+                    "threads": "threads",
+                    "fasta": "fasta",
+                    "ht2base": "ht2base",
+                    "gtf": "gtf"
+                },
+                "out": ["ht_out", "log_out", "splice_sites_out", "exon_out"]
+            }
 
-        elif self.Workflow_index[0] == 4:
-            print("Creating HISAT 2 Index workflow")
-            yaml_file = open("./cwl-tools/docker/hisat2_build.yml")
-            yaml_file = yaml.load(yaml_file)
+            # indexing_workflow["steps"]["hisat2_folder"] = {
+            #     "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
+            #     "in":{
+            #         "item": "hisat2/ht_out",
+            #         "name": {"valueFrom": "HISAT2Index"}
+            #     },
+            #     "out": ["out"]
+            # }
 
-            yaml_file["reference"]["path"] = self.conf["genome"]
-            yaml_file["basename"] = self.conf["organism_name"]
+        if "salmonquant" in programs:
+            indexing_input["cdna"] = [{
+                "class": "File",
+                "path": self.genome
+            }]
+            indexing_workflow["inputs"]["cdna"] = "File[]"
+            indexing_workflow["outputs"]["salmon_out"] = {
+                "type": "Directory",
+                "outputSource": "salmon/salmon_out"
+            }
 
-            with open(f'HISAT2_index_{self.conf["session_ID"]}.yml', "w+") as outfile:
-                yaml.dump(yaml_file, outfile, default_flow_style=False)
+            indexing_workflow["steps"]["salmon"] = {
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/salmon_index.cwl",
+                "in": {
+                    "fasta": "cdna",
+                    "output": {"valueFrom": "Salmonindex"},
+                    "index_type": {"valueFrom": "quasi"},
+                    "threads": "threads"
+                },
+                "out": ["salmon_out"]
+            }
+        with open(f"{self.root}/Data/{self.identifier}/indexing.cwl", "w+") as outfile:
+            outfile.write("#!/usr/bin/env cwl-runner\n\n")
+            yaml.dump(indexing_workflow, outfile, default_flow_style=False)
+        with open(f"{self.root}/Data/{self.identifier}/indexing.yml", "w+") as outfile:
+            yaml.dump(indexing_input, outfile, default_flow_style=False)
+        
+
+
 
 
     def write_workflow(self, logic_object, session, Workflow):
+        print(logic_object.workflow)
+        if self.genome_index == "user_provided":
+            self.create_indexing(logic_object.workflow)
         self.sql_session = session
         self.Workflow = Workflow
         self.analysis_id = logic_object.analysis_id
@@ -1423,29 +1529,29 @@ class cwl_writer():
         self.graph.add_subgraph(self.graph_inputs)
         self.graph.add_subgraph(self.graph_outputs)
         self.graph.write(f"{self.root}/Data/{self.identifier}/workflow.dot")
-        svgfile = open(f"{self.root}/Data/{self.identifier}/workflow.svg", "w")
-        subprocess.run(["dot", "-Tsvg",
-                        f"{self.root}/Data/{self.identifier}/workflow.dot"],
-                        stdout=svgfile)
-        svgfile.close()
+        # svgfile = open(f"{self.root}/Data/{self.identifier}/workflow.svg", "w")
+        # subprocess.run(["dot", "-Tsvg",
+        #                 f"{self.root}/Data/{self.identifier}/workflow.dot"],
+        #                 stdout=svgfile)
+        # svgfile.close()
         with open(f"{self.root}/Data/{self.identifier}/workflow.cwl", "w+") as outfile:
             outfile.write("#!/usr/bin/env cwl-runner\n\n")
             yaml.dump(self.cwl_workflow, outfile, default_flow_style=False)
         with open(f"{self.root}/Data/{self.identifier}/input.yml", "w+") as outfile:
             yaml.dump(self.cwl_input, outfile, default_flow_style=False)
-        workflow_log = open(f"{self.root}/Data/{self.identifier}/workflow.log", "w")
-        print("Submit workflow")
-        proc = subprocess.Popen(["cwl-runner",
-                    f"--outdir={self.root}/Data/{self.identifier}/output",
-                    "--timestamp",
-                    "--tmpdir-prefix=/tmp/",
-                    "--tmp-outdir-prefix=/tmp/",
-                    f"{self.root}/Data/{self.identifier}/workflow.cwl",
-                    f"{self.root}/Data/{self.identifier}/input.yml"],
-                    stdout=workflow_log, stderr=workflow_log)
-        print(proc.args)
-        print(proc.pid)
-        workflow_log.close()
+        # workflow_log = open(f"{self.root}/Data/{self.identifier}/workflow.log", "w")
+        # print("Submit workflow")
+        # proc = subprocess.Popen(["cwl-runner",
+        #             f"--outdir={self.root}/Data/{self.identifier}/output",
+        #             "--timestamp",
+        #             "--tmpdir-prefix=/tmp/",
+        #             "--tmp-outdir-prefix=/tmp/",
+        #             f"{self.root}/Data/{self.identifier}/workflow.cwl",
+        #             f"{self.root}/Data/{self.identifier}/input.yml"],
+        #             stdout=workflow_log, stderr=workflow_log)
+        # print(proc.args)
+        # print(proc.pid)
+        # workflow_log.close()
         print(self.genome_index)
         self.sql_session.commit()
 
