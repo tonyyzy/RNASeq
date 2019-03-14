@@ -23,8 +23,6 @@
 
       <div id='sidebar_wrapper'>
         <ul class='sidebar-nav'>
-          <!-- <li>Index: {{session_detail.genome_index}}</li>
-          <li>Organism: {{ session_detail.organism|default_if_none:"" }} {{session_detail.genome.organism}}</li> -->
         <li><a id='id_upload_btn' href="#">Add Condition</a></li>
         <li><a id='id_upload_btn' href="#">Add Sample</a></li>
         <li><a id='id_upload_btn' href="#">Add Workflow</a></li>
@@ -34,11 +32,11 @@
 
       <!-- NAV PANE SELECTION -->
       <div id='page_content_wrapper'>
-        <div id='sidebar_toggle' class="toggle_btn">
+        <!-- <div id='sidebar_toggle' class="toggle_btn">
           <span></span>
           <span></span>
           <span></span>
-        </div>
+        </div> -->
         <br>
         <ul class="nav nav-tabs nav-justified" role="tablist">
           <li class="nav-item">
@@ -205,6 +203,7 @@
               {% if session_wf %}
                 <object data="{% static 'images/' %}{{session_detail.identifier}}/workflow.svg" type="image/svg+xml" id='id_demo_wf' class='svg'>
                 </object>
+                <a class='btn btn-sm btn-info' href="{% url 'visualization:visualization_index' session_slug=session_detail.identifier %}">Visualization</a>
               {% else %}
                 <h3>workflow being generated</h3>
                 <div class="spinner-border spinner" role="status">

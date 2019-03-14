@@ -16,61 +16,77 @@
         {% for message in messages %}
           <div class="alert alert-{{message.tags}}">
             <p>{{message}}</p>
-            {{condition}}
           </div>
         {% endfor %}
       {% endif %}
 
       <div id='sidebar_wrapper'>
+
         <ul class='sidebar-nav'>
-          <!-- <li>Index: {{session_detail.genome_index}}</li>
-          <li>Organism: {{ session_detail.organism|default_if_none:"" }} {{session_detail.genome.organism}}</li> -->
-        <li><a onclick="wf_select(1)">star workflow</a></li>
-        <li><a onclick="wf_select(2)">hisat workflow</a></li>
-        <!-- <li><a id='id_upload_btn' href="#">Add Sample</a></li> -->
-        <!-- <li><a id='id_upload_btn' href="#">Add Workflow</a></li> -->
-        <li><a href="#">further wofkflows</a></li>
+        <!-- <li><a onclick="wf_select(1)">star workflow</a></li> -->
+        <!-- <li><a onclick="wf_select(2)">hisat workflow</a></li> -->
+        <!-- <li><a href="#">further wofkflows</a></li> -->
+        <fieldset>
+        <li>
+          {% for workflow in workflows %}
+            <input  type="checkbox"  name="" class='checkbox_wf' value="{{forloop.counter}}" checked>
+            <label  for="">{{workflow.label}}</label><br>
+          {% endfor %}
+        </li>
+      </fieldset>
         </ul>
       </div>
 
-      <div id='page_content_wrapper'>
-        <div id='sidebar_toggle' class="toggle_btn">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        <br><br>
-        <!-- <button type="button" name="button" onclick="wf_select(1)">Workflow One</button> -->
-        <!-- <button type="button" name="button" onclick="wf_select(2)">Workflow Two</button> -->
-      <fieldset>
-          {% for workflow in workflows %}
-            {{forloop.counter}}:
-            <label for="">{{workflow.label}}</label>
-            <input type="checkbox" name="" class='checkbox_wf' value="{{forloop.counter}}"><br>
-          {% endfor %}
-          <input type="submit" onclick='wf_select()' value="Susbmit" />
-      </fieldset>
+<div id='page_content_wrapper'>
+  <div id='sidebar_toggle' class="toggle_btn">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+<ul class="nav nav-tabs nav-justified" role="tablist">
+  <li class="nav-item">
+    <a id='id_volcano_tab' class="nav-link active" data-toggle="tab" href="#id_href_volcano">Volcano Plot</a>
+  </li>
+  <li class="nav-item">
+    <a  id='id_barplot_tab' class="nav-link" data-toggle="tab" href="#id_barplot">Bar Plot</a>
+  </li>
+</ul>
 
 
+  <div class="tab-content">
+    <div id="id_href_volcano" class="container tab-pane active"><br>
+      volc test
+      <div style="height: 1000px;width:1000px;">
+        <svg id='id_painting_volcano' style="height: 100%;width: 100%">
+        </svg>
+      </div>
+    </div>
+    <div id="id_barplot" class="container tab-pane fade"><br>
+      bar test
+      <div style="height: 1000px;width:1000px;">
+        <svg id='id_painting_barplot' style="height: 100%;width: 100%">
+        </svg>
+      </div>
+    </div>
+  </div>
 
-      <!-- <h2>{{session.identifier}}</h2> -->
-      <!-- <h2>{{session.workflow_fk.all}}</h2> -->
-      <h2>{{label}}</h2>
-        <div>
-          <svg id='painting'>
+<!-- <input type="submit" class='btn btn-success' onclick='wf_select_barplot()' value="Bar Plot" /> -->
 
-          </svg>
-        </div>
-        <div class="slidecontainer">
-          <!-- <label for=""> P value Threshold</label> -->
-          <input type="range" min="1" max="10" class="slider" id="id_p_threshold">
-          <p>Value: <span id="id_p_threshold_out"></span></p>
-          <br>
-          <input type="range" min="1" max="10" class="slider" id="id_log2_threshold">
-          <p>Value: <span id="id_log2_threshold_out"></span></p>
-        </div>
+<div class="dataFilterControls">
+  <div class="slidecontainer jumbotron">
+    <!-- <input type="text" name="" value=""> -->
+    <label for="">P Value</label>
+    <input type="range" min="1" max="50" class="slider" id="id_p_threshold">
+    <p>Value: <span id="id_p_threshold_out"></span></p>
+    <br>
+    <label for="">Log Fold Change</label>
+    <input type="range" min="1" max="9" class="slider" id="id_log2_threshold">
+    <p>Value: <span id="id_log2_threshold_out"></span></p>
+  </div>
+</div>
 
-        <!-- <button type="button", onclick="script_one()">Click Me!</button> -->
+
       </div><!-- PAGE CONTENT WRAPPER -->
 </div> <!-- WRAPPER -->
 
@@ -79,6 +95,7 @@
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.1/d3.min.js" integrity="sha256-RtVUDWfx0vF5nrvHDYcQoWSPaOuQ0R8Rq9kUG2kSvH8=" crossorigin="anonymous"></script> -->
   <script src= "{% static 'js/d3.js' %}"></script>
   <script src= "{% static 'js/my_volcano.js' %}"></script>
+  <script src= "{% static 'js/my_barplot.js' %}"></script>
   <script>
   {% block jquery %}
 
@@ -101,9 +118,23 @@
     $('#wrapper').toggleClass('menuDisplayed')
     // console.log('hi')
   });
+  $( "#id_volcano_tab" ).click(function() {
+    wf_select()
+    console.log('called wf_select')
+    // alert( "Handler for .click() called." );
+    console.log('loading volcano')
+  });
+  $( "#id_barplot_tab" ).click(function() {
+    // wf_select()
+    // alert( "Handler for barplot called." );
+    wf_select_barplot()
+    console.log('loading barplot')
+    wf_select()
+  });
   </script>
 
 
   {% endblock %}
   </body>
 </html>
+<input type="submit" class='btn btn-success' onclick='wf_select()' value="Bar Plot" />

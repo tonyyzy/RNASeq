@@ -33,13 +33,17 @@ def WorkFlowOneView(request, session_slug, workflow_slug):
         selected_DGE.append(wf_csv)
 
     arr = []
-    for DGE_csv in selected_DGE:
+    for index, DGE_csv in enumerate(selected_DGE):
         print(f'\n{DGE_csv}')
         with open (DGE_csv) as in_file:
             csvReader = csv.DictReader(in_file)
             # print(csvReader)
             for csvRow in csvReader:
+                csvRow['dataset_index'] = index
+                print(csvRow)
+                # print(csvRow)
                 arr.append(csvRow)
+
     # print(arr)
     return JsonResponse(arr, safe=False)
 
