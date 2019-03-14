@@ -70,6 +70,8 @@ for(i in 1:ncol(comb)){
   dxr = DEXSeqResults( dxd )
   dxr_dataframe = as.data.frame(dxr)
   dxr_dataframe <- data.frame("name"=rownames(dxr_dataframe),dxr_dataframe)
+  dxr_dataframe <- dxr_dataframe[,1:12]
+  colnames(dxr_dataframe) <- c("name", "groupID", "featureID","exonBaseMean","dispersion","test_stat","p_value","p_adj","Normal","Tumour","log2foldchange","genomicData")
   write.csv(dxr_dataframe, paste0(contrast,"_DEE_results.csv"), row.names = FALSE)
 
   dxd_norm <- counts(dxd,normalized=T)
