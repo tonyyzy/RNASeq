@@ -50,19 +50,11 @@
           {% endfor %}
           <input type="submit" onclick='wf_select()' value="Susbmit" />
       </fieldset>
-
-
-
-      <!-- <h2>{{session.identifier}}</h2> -->
-      <!-- <h2>{{session.workflow_fk.all}}</h2> -->
-      <h2>{{label}}</h2>
-        <div>
-          <svg id='painting'>
-
-          </svg>
-        </div>
+      <div style="height: 800px;width:800px;">
+        <svg id='painting' style="height: 100%;width: 100%">
+        </svg>
+      </div>
         <div class="slidecontainer">
-          <!-- <label for=""> P value Threshold</label> -->
           <input type="range" min="1" max="10" class="slider" id="id_p_threshold">
           <p>Value: <span id="id_p_threshold_out"></span></p>
           <br>

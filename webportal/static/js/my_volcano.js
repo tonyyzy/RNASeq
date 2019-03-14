@@ -1,13 +1,13 @@
 
 
 $( document ).ready(function() {
-  var p_val = 0.05
-  var p_threshold = - Math.log10(p_val);
-  var log2_threshold = 2;
+   p_val = 0.05
+   p_threshold = - Math.log10(p_val);
+   log2_threshold = 2;
   // console.log(p_threshold)
-  var p_out = document.getElementById("id_p_threshold_out");
+   p_out = document.getElementById("id_p_threshold_out");
   p_out.innerHTML = p_val;
-  var lfc = document.getElementById("id_log2_threshold_out");
+   lfc = document.getElementById("id_log2_threshold_out");
   lfc.innerHTML = log2_threshold;
 });
 
@@ -90,15 +90,15 @@ function dataFilter(){
 function newPlot(){
   var margin = {top: 40, right: 20, bottom: 20, left: 40};
       //Width and height
-      w = 800 - margin.right - margin.left;
-      h = 800 - margin.top - margin.bottom;
+      w = 500 - margin.right - margin.left;
+      h = 500 - margin.top - margin.bottom;
 
       xScale = d3.scaleLinear()
       // .domain([d3.min(dataset, function(d) { return d.log2FoldChange - 0.5;}),
                // d3.max(dataset, function(d) { return d.log2FoldChange + 0.5;})])
 
-      .domain([d3.min(dataset, function(d) { return - d.log2FoldChange - 5;}),
-               d3.max(dataset, function(d) { return - d.log2FoldChange + 5;})])
+      .domain([d3.min(dataset, function(d) { return - d.log2FoldChange - 7;}),
+               d3.max(dataset, function(d) { return - d.log2FoldChange + 7;})])
       .range([0, w]);
 
       yScale = d3.scaleLinear()
@@ -130,40 +130,40 @@ function newPlot(){
       .call(yAxis)
       circles()
 }
-//
-// function circles(){
-//   svg.selectAll("circle").remove()
-//   var circles = svg.selectAll('circle')
-//       .data(dataset)
-//       .enter().append('circle')
-//     .attr('cx',function (d) { return xScale(d.log2FoldChange) })
-//     .attr('cy',function (d) { return yScale(- Math.log10(d.padj)) })
-//     .attr('r','5')
-//     // .attr('cy',function (d) { return yScale(d.aror) })
-//     // .attr('stroke','black')
-//     // .attr('stroke-width',1)
-//     // .attr('fill',function (d,i) { return colorScale(i) })
-//
-//       circles.attr("cx", function(d) {
-//       return xScale(d.log2FoldChange);
-//       })
-//       .attr("cy",function(d){
-//         return yScale(- Math.log10(d.padj));
-//       })
-//       .attr("r", 5)
-//       .attr("fill", function(d){
-//         if(- Math.log10(d.padj) > p_threshold && (d.log2FoldChange > log2_threshold || d.log2FoldChange <  - log2_threshold)){
-//           return colours[d.dataset];
-//         } else {
-//           return "grey";
-//         };
-//       });
-//       // vLines()
-//       // hLines()
-// }
-//
-//
-//
+
+function circles(){
+  svg.selectAll("circle").remove()
+  var circles = svg.selectAll('circle')
+      .data(dataset)
+      .enter().append('circle')
+    .attr('cx',function (d) { return xScale(d.log2FoldChange) })
+    .attr('cy',function (d) { return yScale(- Math.log10(d.padj)) })
+    .attr('r','5')
+    // .attr('cy',function (d) { return yScale(d.aror) })
+    // .attr('stroke','black')
+    // .attr('stroke-width',1)
+    // .attr('fill',function (d,i) { return colorScale(i) })
+
+      circles.attr("cx", function(d) {
+      return xScale(d.log2FoldChange);
+      })
+      .attr("cy",function(d){
+        return yScale(- Math.log10(d.padj));
+      })
+      .attr("r", 5)
+      .attr("fill", function(d){
+        if(- Math.log10(d.padj) > p_threshold && (d.log2FoldChange > log2_threshold || d.log2FoldChange <  - log2_threshold)){
+          return colours[d.dataset];
+        } else {
+          return "grey";
+        };
+      });
+      // vLines()
+      // hLines()
+}
+
+
+
 
 function vLines(){
   svg.selectAll("line").remove()
