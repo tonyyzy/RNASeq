@@ -1,0 +1,1 @@
+03/14/2019 04:22:32 PM - miso_main - ERROR - Error: The given read length (222) does not match the read length found in BAM (101). Please re-run and pass the correct --read-len argument. Note that MISO does not support mixed read lengths in the same BAM file.

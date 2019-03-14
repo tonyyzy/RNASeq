@@ -5,52 +5,74 @@
 args <- commandArgs( trailingOnly=TRUE )
 
 suppressPackageStartupMessages(library("DEXSeq"))
+suppressPackageStartupMessages(library("BiocParallel"))
+library(GenomicRanges)
+library(GenomicFeatures)
+library(GenomicAlignments)
 
 #load files
 countFiles <- list.files(args[grep("--count_matrix_dir", args)+1], pattern = "htseq_count.csv$", full.names = TRUE)
-flattenedFile <- list.files(args[grep("--gff_file_dir", args)+1], pattern = "gff$", full.names = TRUE)
-sampleTable <- read.table(args[grep("--metadata", args)+1], row.names = 1, header = TRUE, sep = ",")
+metadata <- read.table(args[grep("--metadata", args)+1], row.names = 1, header = TRUE, sep = ",")
 
 if( "--condition" %in% args ){
   condition.idx <- grep("--condition", args)
   condition <- args[ condition.idx + 1 ]
-  colnames(sampleTable) <- sub(condition, "condition",colnames(sampleTable))
+  colnames(metadata) <- sub(condition, "condition",colnames(metadata))
 }
 
-#construct an DEXSeqDataSet object
-dxd <- DEXSeqDataSetFromHTSeq(countfiles = countFiles, sampleData = sampleTable, design = ~ sample + exon + condition:exon, flattenedfile = flattenedFile)
-
-if("--threads" %in% args){
-  threads.idx <- grep("--threads", args)
-  threads <- args[ threads.idx + 1 ]
-  # Set up workers
-  BPPARAM = MultiCoreParam(workers = as.numeric(threads))
-  # normalisation
-  dxd = estimateSizeFactors( dxd )
-  # dispertion estimation. estimate the variability of the data not explained by the biological variation.
-  dxd = estimateDispersions( dxd, BPPARAM=BPPARAM)
-  # test for each exon in each gene
-  dxd = testForDEU( dxd, BPPARAM=BPPARAM)
-  # calculate relative exon usage fold change
-  dxd = estimateExonFoldChanges(dxd, BPPARAM=BPPARAM)
-} else {
-  # normalisation
-  dxd = estimateSizeFactors(dxd)
-  # dispertion estimation. estimate the variability of the data not explained by the biological variation.
-  dxd = estimateDispersions( dxd)
-  # test for each exon in each gene
-  dxd = testForDEU( dxd)
-  # calculate relative exon usage fold change
-  dxd = estimateExonFoldChanges(dxd, fitExpToVar="condition")
+df <- read.table(countFiles[1], sep = "\t")
+df <- df[!df$V1 %in% c("_ambiguous", "_ambiguous_readpair_position", "_empty", "_lowaqual", "_notaligned"),]
+colnames(df) <- c("V1", sub("_htseq_count.csv","",basename(countFiles[1])))
+for (x in countFiles[2:length(countFiles)]){
+  tmp.df <- read.table(x, sep = "\t")
+  tmp.df <- tmp.df[!tmp.df$V1 %in% c("_ambiguous", "_ambiguous_readpair_position", "_empty", "_lowaqual", "_notaligned"),]
+  colnames(tmp.df) <- c("V1", sub("_htseq_count.csv","",basename(x)))
+  df <- full_join(df, tmp.df, by = "V1")
 }
+df[is.na(df)] <- 0
+rownames(df) <- df$V1
+df$V1 <- NULL
 
-dxd_norm <- counts(dxd,normalized=T)
+comb <- combn(unique(as.character(metadata[,"condition"])), 2)
+for(i in 1:ncol(comb)){
+  metadata.f <- metadata[metadata$condition %in% comb[,i],]
+  count.f <- df[,rownames(metadata.f)]
+  #construct an DEXSeqDataSet object
+  ids <- t(as.data.frame(strsplit(rownames(count.f),":")))
+  dxd <- DEXSeqDataSet(count.f, metadata, design= ~ sample + exon + condition:exon, featureID = ids[,2], groupID = ids[,1])
 
-# create a results object
-dxr = DEXSeqResults( dxd )
+  if("--threads" %in% args){
+    threads.idx <- grep("--threads", args)
+    threads <- args[ threads.idx + 1 ]
+    # Set up workers
+    BPPARAM = BiocParallel::MulticoreParam(workers = as.numeric(threads))
+    # normalisation
+    dxd = estimateSizeFactors( dxd )
+    # dispertion estimation. estimate the variability of the data not explained by the biological variation.
+    dxd = estimateDispersions( dxd, BPPARAM=BPPARAM)
+    # test for each exon in each gene
+    dxd = testForDEU( dxd, BPPARAM=BPPARAM)
+    # calculate relative exon usage fold change
+    dxd = estimateExonFoldChanges(dxd, BPPARAM=BPPARAM, fitExpToVar="condition")
+  } else {
+    # normalisation
+    dxd = estimateSizeFactors(dxd)
+    # dispertion estimation. estimate the variability of the data not explained by the biological variation.
+    dxd = estimateDispersions( dxd)
+    # test for each exon in each gene
+    dxd = testForDEU( dxd)
+    # calculate relative exon usage fold change
+    dxd = estimateExonFoldChanges(dxd, fitExpToVar="condition")
+  }
+  # create a results object
+  contrast <- gsub(".$","",paste0(paste0(unique(metadata.f$condition)),sep="-", collapse = ""))
 
-dxr_dataframe = as.data.frame(dxr)
+  dxr = DEXSeqResults( dxd )
+  dxr_dataframe = as.data.frame(dxr)
+  dxr_dataframe <- data.frame("name"=rownames(dxr_dataframe),dxr_dataframe)
+  write.csv(dxr_dataframe, paste0(contrast,"_DEE_results.csv"), row.names = FALSE)
 
-write.csv(dxr_dataframe, "DEE_results.csv")
-dxd_norm2 <- data.frame("name"=rownames(dxd_norm),as.data.frame(dxd_norm))
-write.csv(dxd_norm2, "norm_count.csv", row.names = FALSE)
+  dxd_norm <- counts(dxd,normalized=T)
+  dxd_norm2 <- data.frame("name"=rownames(dxd_norm),as.data.frame(dxd_norm))
+  write.csv(dxd_norm2, paste0(contrast,"_norm_count.csv"), row.names = FALSE)
+}

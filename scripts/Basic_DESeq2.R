@@ -26,14 +26,13 @@ for(i in 1:ncol(comb)){
   norm_count <- counts(dds, normalized=TRUE)
 
   dds <- DESeq(dds)
-  
-  res <- results(dds) 
+
+  res <- results(dds)
   res <- data.frame(res@rownames,as.data.frame(res))
   colnames(res) <- c("name","basemean","log2foldchange","lfcSE","test_stat","p_value","p_adj")
-  
+
   contrast <- gsub(".$","",paste0(paste0(unique(metadata.f$condition)),sep="-", collapse = ""))
   write.csv(res,paste0(contrast,"_","DGE_res.csv"), row.names = FALSE)
+  norm_count2 <- data.frame("name"=rownames(norm_count),as.data.frame(norm_count))
+  write.csv(norm_count2, paste0(contrast,"_norm_count.csv"), row.names = FALSE)
 }
-
-norm_count2 <- data.frame("name"=rownames(norm_count),as.data.frame(norm_count))
-write.csv(norm_count2, "norm_count.csv", row.names = FALSE)

@@ -148,24 +148,32 @@ steps:
       perl_input: perl_script
     out: [miso_out]
 
-  miso_merge:
+  miso_merge1:
     run: ../../cwl-tools/docker/miso_merge.cwl
     in:
-      condition1bam:
+      bam:
       - samtools_1/samtools_out
       - samtools_2/samtools_out
-      condition2bam:
+      output: 
+         valueFrom: "untreated"
+    out: [miso_out]
+  
+  miso_merge2:
+    run: ../../cwl-tools/docker/miso_merge.cwl
+    in:
+      bam:
       - samtools_3/samtools_out
       - samtools_4/samtools_out
-      output: conditions
-    out: [condition1, condition2]
+      output: 
+         valueFrom: "treated"
+    out: [miso_out]  
 
   miso_run_normal:
     run: ../../cwl-tools/docker/miso_run.cwl
     in:
       input_script: miso_script
       gff: miso_index/miso_out
-      bam: miso_merge/condition1
+      bam: miso_merge1/miso_out
       lib_type: 
         valueFrom: "PE"
       min_exon_size:
@@ -179,7 +187,7 @@ steps:
     in:
       input_script: miso_script
       gff: miso_index/miso_out
-      bam: miso_merge/condition2
+      bam: miso_merge2/miso_out
       lib_type: 
         valueFrom: "SG"
       min_exon_size: 
@@ -202,8 +210,8 @@ steps:
     in:
       item:
       - miso_index/miso_out
-      - miso_merge/condition1
-      - miso_merge/condition2
+      - miso_merge1/miso_out
+      - miso_merge2/miso_out
       - miso_run_normal/miso_out
       - miso_run_tumour/miso_out
       - miso_compare/miso_out

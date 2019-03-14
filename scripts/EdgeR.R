@@ -37,32 +37,30 @@ for(i in 1:ncol(comb)){
   DGE <- DGEList(counts = count.f)
   samplenames <- colnames(DGE)
   samplenames
-  
+
   group <- as.factor(metadata.f[,"condition"])
   DGE$samples$group <- group
-  
+
   DGE <- calcNormFactors(DGE, method = "TMM")
 
   norm_count <- cpm(DGE)
-  
+
   design <- model.matrix(~0+group)
   contrast <- gsub(".$","",paste0(paste0("group", unique(group)),sep="-", collapse = ""))
   contr.matrix <- makeContrasts(contrasts = contrast, levels = colnames(design))
-  
+
   v <- voom(DGE, design)
   vfit <- lmFit(v, design)
   vfit <- contrasts.fit(vfit, contrasts=contr.matrix)
   efit <- eBayes(vfit)
-  
+
   dge.res <- topTable(efit,sort="none",n=Inf)
   dge.res <- dge.res[,c("AveExpr", "logFC", "t", "P.Value", "adj.P.Val")]
   dge.res <- data.frame(rownames(dge.res),dge.res)
   colnames(dge.res) <- c("name","norm_basemean", "log2foldchange", "test_stat", "p_value","p_adj")
   contrast <- gsub(".$","",paste0(paste0(unique(group)),sep="-", collapse = ""))
   write.csv(dge.res, paste0(contrast,"_","DGE_res.csv"), row.names = FALSE)
+
+  norm_count2 <- data.frame("name"=rownames(norm_count),as.data.frame(norm_count))
+  write.csv(norm_count2, paste0(contrast,"_","norm_count.csv"), row.names = FALSE)
 }
-
-norm_count
-
-norm_count2 <- data.frame("name"=rownames(norm_count),as.data.frame(norm_count))
-write.csv(norm_count2, "norm_count.csv", row.names = FALSE)
