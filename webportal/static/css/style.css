@@ -207,13 +207,13 @@ html,body{
 #sidebar_wrapper{
   z-index: 1;
   position: absolute;
-  width: 0;
+  width: 0px;
   height: 100%;
   overflow-y: hidden;
+  border: 2px, yellow, solid;
   background-color: #040405;
-  #040405
-  border: 2px solid yellow;
-  opacity: 0.8;
+  /* border: 2px solid yellow; */
+  opacity: 0.9;
   transition: all 250ms linear;
 }
 
@@ -232,22 +232,37 @@ html,body{
   padding-left: 250px;
   /* margin-top: -300px; */
 }
+#sidebar_wrapper{
+  background-color: #b3b3b3;
 
+}
 .sidebar-nav{
   padding: 1px;
   list-style: 0;
 }
 
 .sidebar-nav li{
-  text-indent: 20px;
-  line-height: 40px;
-  border-bottom: 1px solid;
+  /* text-indent: 10px; */
+  margin-left: 10px;
+  /* line-height: 30px; */
+  /* border-bottom: 1px solid; */
+  color: #000000;
+  display: block;
+  padding: 20px;
+}
+
+.sidebar-nav label{
+  padding-bottom: 10px;
+}
+
+.checkbox_wf{
+  /* display: block; */
+  text-decoration: none;
   color: #ddd;
 }
 
-
-.sidebar-nav li a{
-  display: block;
+.checkbox_wf{
+  /* display: block; */
   text-decoration: none;
   color: #ddd;
 }
