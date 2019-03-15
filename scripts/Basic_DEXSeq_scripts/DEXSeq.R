@@ -6,9 +6,6 @@ args <- commandArgs( trailingOnly=TRUE )
 
 suppressPackageStartupMessages(library("DEXSeq"))
 suppressPackageStartupMessages(library("BiocParallel"))
-library(GenomicRanges)
-library(GenomicFeatures)
-library(GenomicAlignments)
 
 #load files
 countFiles <- list.files(args[grep("--count_matrix_dir", args)+1], pattern = "htseq_count.csv$", full.names = TRUE)
