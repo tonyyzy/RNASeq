@@ -29,3 +29,5 @@ then
 fi
 
 summarize_miso --summarize $4/ $4/summary
+
+rm -rf $4/batch-logs/*
