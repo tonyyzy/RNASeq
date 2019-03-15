@@ -845,6 +845,16 @@ class cwl_writer():
             },
             "out": ["out"]
         }
+
+        # graph
+        if self.graph.get_node("miso_index") == []:
+            self.graph.add_node(pydot.Node("miso_index", label="MISO Index"))
+            self.graph.add_edge(
+                pydot.Edge(
+                    *self.graph_inputs.get_node("annotation"),
+                    *self.graph.get_node("miso_index")
+                )
+            )
     
 
 
@@ -862,7 +872,7 @@ class cwl_writer():
                 "in": {
                     "bam": [f"{samtools}_{self.file_names.index(name) + 1}/samtools_out" 
                                 for name in self.conditions[condition]],
-                    "output": {"valueFrom": condition}
+                    "output": {"valueFrom": condition + ".bam"}
                 },
                 "out": ["miso_out"]
             }
@@ -875,6 +885,10 @@ class cwl_writer():
             },
             "out": ["out"]
         }
+
+        self.graph.add_node(pydot.Node(self.name, label="Merge BAM files"))
+        self.previous_name = "_".join(self.name_list[:2])
+        self.add_edge()
 
 
     def misorun(self):
@@ -890,7 +904,6 @@ class cwl_writer():
             "outputSource": f"{self.name}_folder/out"
         }
         # steps
-        print(self.reader.libtype)
         for condition in self.conditions:
             self.cwl_workflow["steps"][f"{self.name}_{condition}"] = {
                 "run": f"{self.root}/RNASeq/cwl-tools/docker/miso_run.cwl",
@@ -912,6 +925,11 @@ class cwl_writer():
             },
             "out": ["out"]
         }
+
+        self.graph.add_node(pydot.Node(self.name, label="MISO Run"))
+        self.add_edge()
+        self.previous_name = "miso_index"
+        self.add_edge()
 
     #----------analysis----------
     def deseq2(self):
@@ -1342,6 +1360,25 @@ class cwl_writer():
             },
             "out": ["out"]
         }
+
+        self.graph.add_node(pydot.Node(self.name, label="MISO Compare"))
+        self.add_edge()
+        self.add_metadata()
+
+        if self.graph_outputs.get_node("isoform_count") == []:
+            self.graph_outputs.add_node(
+                pydot.Node(
+                    "isoform_count",
+                    label="Differential isoform expression result",
+                    fillcolor="#94DDF4"
+                )
+            )
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph.get_node(self.name),
+                *self.graph_outputs.get_node("isoform_count")
+            )
+        )
 
     #----------utility-----------
     def samtools(self):
