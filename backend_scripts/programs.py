@@ -1,9 +1,11 @@
-import yaml
+import json
 import subprocess
 from configparser import ConfigParser
-import pydot
-import json
 from itertools import combinations
+
+import pydot
+import yaml
+
 
 class cwl_writer():
     # output_string for each program to query the output names from the previous
@@ -97,6 +99,7 @@ class cwl_writer():
         self.cwl_input["threads"] = self.threads
 
         # setup attributes
+        self.reader = database_reader_object
         self.genome_index = database_reader_object.genome_index
         self.identifier = database_reader_object.identifier
         self.indexes = database_reader_object.indexes
@@ -812,6 +815,104 @@ class cwl_writer():
         self.add_metadata()
 
 
+    def misoindex(self):
+        # inputs
+        self.cwl_input["miso_index_script"] = {
+            "class": "File",
+            "path": f"{self.root}/RNASeq/scripts/gtf2gff3.pl"
+        }
+        self.cwl_workflow["inputs"]["miso_index_script"] = "File"
+        # outputs
+        self.cwl_workflow["outputs"]["misoindex_out"] = {
+            "type": "Directory",
+            "outputSource": "misoindex_folder/out"
+        }
+        # steps
+        self.cwl_workflow["steps"]["misoindex"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/docker/miso_index.cwl",
+            "in": {
+                "perl_input": "miso_index_script",
+                "gtf": "annotation",
+                "output": {"valueFrom": "miso_index"}
+            },
+            "out": ["miso_out"]
+        }
+        self.cwl_workflow["steps"]["misoindex_folder"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
+            "in": {
+                "item": "misoindex/miso_out",
+                "name": {"valueFrom": "misoindex"}
+            },
+            "out": ["out"]
+        }
+    
+
+
+    def misomerge(self):
+        samtools = "_".join(self.name_list[:self.name_list.index("samtools") + 1])
+        # outputs
+        self.cwl_workflow["outputs"][f"{self.name}_out"] = {
+            "type": "Directory",
+            "outputSource": f"{self.name}_folder/out"
+        }
+        # steps
+        for condition in self.conditions:
+            self.cwl_workflow["steps"][f"{self.name}_{condition}"] = {
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/miso_merge.cwl",
+                "in": {
+                    "bam": [f"{samtools}_{self.file_names.index(name) + 1}/samtools_out" 
+                                for name in self.conditions[condition]],
+                    "output": {"valueFrom": condition}
+                },
+                "out": ["miso_out"]
+            }
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
+            "in": {
+                "item": [f"{self.name}_{condition}/miso_out" 
+                            for condition in self.conditions],
+                "name": {"valueFrom": self.name}
+            },
+            "out": ["out"]
+        }
+
+
+    def misorun(self):
+        # inputs
+        self.cwl_input["miso_run_script"] = {
+            "class": "File",
+            "path": f"{self.root}/RNASeq/scripts/complete_run.sh"
+        }
+        self.cwl_workflow["inputs"]["miso_run_script"] = "File"
+        # outputs
+        self.cwl_workflow["outputs"][f"{self.name}_out"] = {
+            "type": "Directory",
+            "outputSource": f"{self.name}_folder/out"
+        }
+        # steps
+        print(self.reader.libtype)
+        for condition in self.conditions:
+            self.cwl_workflow["steps"][f"{self.name}_{condition}"] = {
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/miso_run.cwl",
+                "in": {
+                    "input_script": "miso_run_script",
+                    "gff": "misoindex/miso_out",
+                    "bam": f"{self.previous_name}_{condition}/miso_out",
+                    "lib_type": {"valueFrom": self.reader.libtype[0]},
+                    "output": {"valueFrom": condition}
+                },
+                "out": ["miso_out"]
+            }
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
+            "in": {
+                "item": [f"{self.name}_{condition}/miso_out" 
+                            for condition in self.conditions],
+                "name": {"valueFrom": self.name}
+            },
+            "out": ["out"]
+        }
+
     #----------analysis----------
     def deseq2(self):
         # inputs
@@ -932,12 +1033,6 @@ class cwl_writer():
 
 
     def cuffquant(self):
-        # inputs
-        # outputs
-        # self.name_list = self.name_list[:-1]
-        # self.name_list.append("cuffmerge")
-        # self.name_list.append("cuffquant")
-        # self.previous_name = "_".join(self.name_list[:-1])
         # self.name = "_".join(self.name_list)
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
@@ -1022,10 +1117,6 @@ class cwl_writer():
 
     def cuffdiff(self):
         cuffmerge = "_".join(self.name_list[:self.name_list.index("cuffmerge") + 1])
-        # inputs
-        # self.name_list[-1] = "cuffdiff"
-        # self.previous_name = "_".join(self.name_list[:-1])
-        # self.name = "_".join(self.name_list)
         self.cwl_workflow["inputs"]["conditions"] = "string[]"
         self.cwl_workflow["inputs"]["cuffdiff_file_sort"] = "File"
         self.cwl_input["conditions"] = list(self.conditions)
@@ -1108,17 +1199,6 @@ class cwl_writer():
 
 
     def ballgown(self):
-        # self.name_list = self.name_list[:-1]
-        # self.name_list.append("cuffmerge")
-        # self.name_list.append("tablemaker")
-        # self.previous_name = "_".join(self.name_list[:-1])
-        # self.name = "_".join(self.name_list)
-
-
-        # ballgown
-        # self.name_list.append("ballgown")
-        # self.previous_name = "_".join(self.name_list[:-1])
-        # self.name = "_".join(self.name_list)
         # inputs
         self.cwl_workflow["inputs"]["ballgown_script"] = "File"
         self.cwl_input["ballgown_script"] = {
@@ -1231,6 +1311,37 @@ class cwl_writer():
         self.sql_session.query(self.Workflow)\
                         .filter(self.Workflow.id == self.analysis_id[self.name])\
                         .first().paths = json.dumps(files)
+
+
+    def misocompare(self):
+        names = []
+        # outputs
+        self.cwl_workflow["outputs"][f"{self.name}_out"] = {
+            "type": "Directory",
+            "outputSource": f"{self.name}_folder/out"
+        }
+        for condition_pair in combinations(self.conditions, 2):
+            condition_str = "-".join(condition_pair)
+            name = self.name + "_" + condition_str
+            names.append(name)
+            # steps
+            self.cwl_workflow["steps"][name] = {
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/miso_compare.cwl",
+                "in": {
+                    "group1": f"{self.previous_name}_{condition_pair[0]}/miso_out",
+                    "group2": f"{self.previous_name}_{condition_pair[1]}/miso_out",
+                    "output": {"valueFrom": name}
+                },
+                "out": ["miso_out"]
+            }
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
+            "in": {
+                "item": [name + "/miso_out" for name in names],
+                "name": {"valueFrom": self.name}
+            },
+            "out": ["out"]
+        }
 
     #----------utility-----------
     def samtools(self):
@@ -1540,4 +1651,3 @@ class cwl_writer():
         q.result = "empty"
         self.sql_session.add(q)
         self.sql_session.commit()
-

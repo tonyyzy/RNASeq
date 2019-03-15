@@ -1,13 +1,16 @@
-import pandas as pd
-import programs
 import copy
+import csv
 import logging
+import os
+import uuid
+
+import pandas as pd
 from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
-import os
-import csv
-import uuid
+
+import programs
+
 
 class database_checker():
     def __init__(self, database_link):
@@ -60,13 +63,34 @@ class database_reader():
         Genome = Base.classes.analysis_genome
         session = Session(engine)
         self.Queue = Base.classes.analysis_queue
+        # extract fastq file path and coditions
+        self.libtype = []
+        for sample, condition in session\
+                .query(Samples, Condition)\
+                .filter(Samples.condition_id == Condition.id)\
+                .filter(Samples.session_id == self.Session_ID):
+            self.Reads_files[sample.accession] = {
+                "type": sample.libtype,
+                "condition": condition.condition,
+                "path": {
+                    1: root + "/Data/" + sample.read_1,
+                    2: root + "/Data/" + sample.read_2
+                }
+            }
+            self.libtype.append(sample.libtype)
+        
+        self.libtype = list(set(self.libtype))
 
         # extract steps in workflows of session
         for entry in session.query(Workflow)\
                 .filter(Workflow.session_id == self.Session_ID):
-            self.workflows[entry.id] = [entry.mapper.lower(),
-                                        entry.assembler.lower(),
-                                        entry.analysis.lower()]
+            print(self.libtype)
+            if entry.assembler.lower() == "misorun" and len(self.libtype) == 2:
+                print("Can't run MISO for mixed library type")
+            else:
+                self.workflows[entry.id] = [entry.mapper.lower(),
+                                            entry.assembler.lower(),
+                                            entry.analysis.lower()]
         print(self.workflows)
         
         # extract file path from Genome table
@@ -100,19 +124,6 @@ class database_reader():
                 self.indexes["salmon_index"] = data_path + "Salmonindex"
                 self.id = s.id
 
-        # extract fastq file path and coditions
-        for sample, condition in session\
-                .query(Samples, Condition)\
-                .filter(Samples.condition_id == Condition.id)\
-                .filter(Samples.session_id == self.Session_ID):
-            self.Reads_files[sample.accession] = {
-                "type": sample.libtype,
-                "condition": condition.condition,
-                "path": {
-                    1: root + "/Data/" + sample.read_1,
-                    2: root + "/Data/" + sample.read_2
-                }
-            }
         
         # create metadata.csv of samples and conditions
         ## check if session directory exist
