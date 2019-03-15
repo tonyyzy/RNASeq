@@ -5,7 +5,7 @@ class: CommandLineTool
 baseCommand: Rscript
 hints:
    DockerRequirement:
-      dockerPull: machalen/dexseq
+      dockerPull: filipejesus/dexseq
 
 inputs:
    input_script:
