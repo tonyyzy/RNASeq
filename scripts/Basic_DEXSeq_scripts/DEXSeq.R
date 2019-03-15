@@ -6,7 +6,6 @@ args <- commandArgs( trailingOnly=TRUE )
 
 suppressPackageStartupMessages(library("DEXSeq"))
 suppressPackageStartupMessages(library("BiocParallel"))
-suppressPackageStartupMessages(install.packages("dplyr"))
 suppressPackageStartupMessages(library("dplyr"))
 
 #load files
