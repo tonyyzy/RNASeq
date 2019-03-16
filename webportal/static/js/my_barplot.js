@@ -15,6 +15,24 @@ colours = [
   "#074751",
   "#FFFF6D"];
 
+  var dataFilter = function(dataset){
+    dataset = dataset[0];
+    dataset = dataset.filter(function(d){return ! isNaN(d.padj);});
+    dataset = dataset.filter(function(d){return - Math.log10(d.padj) > p_threshold && (d.log2FoldChange > log2_threshold || d.log2FoldChange <  - log2_threshold);});
+    var all_values  = [];
+    for(var e = 0; e < dataset.length; e++){
+      all_values.push(dataset[e].dataset_index)
+    }
+    var unique = d3.set(all_values).values();
+    var values = [];
+    for(var e in unique){
+      temp_value = dataset.filter(function(d){return d.dataset_index == unique[e];});
+      temp_value = temp_value.length
+      values.push(temp_value);
+    };
+    return values
+  };
+
   function wf_select_barplot(param){
     dataset = []
     result = []
@@ -31,13 +49,19 @@ colours = [
       endpoint += '_'
     }
     console.log(endpoint)
-    run(endpoint)
+    d3_run_barplot(endpoint)
   }
 
-var run = function(endpoint){
-  d3.json(endpoint).then(function(data){
-    console.log('d3_run called');
-    dataset.push(data);
+function d3_run_barplot(endpoint){
+  console.log(endpoint)
+  d3.json(endpoint).then(function(data) {
+    console.log('d3_run called')
+    dataset.push(data)
+    newPlot_Barplot(dataset)
+  });
+}
+
+var newPlot_Barplot = function(){
 
     dataset = dataFilter(dataset)
 
@@ -100,21 +124,3 @@ var run = function(endpoint){
     });
   });
 }
-
-var dataFilter = function(dataset){
-  dataset = dataset[0];
-  dataset = dataset.filter(function(d){return ! isNaN(d.padj);});
-  dataset = dataset.filter(function(d){return - Math.log10(d.padj) > p_threshold && (d.log2FoldChange > log2_threshold || d.log2FoldChange <  - log2_threshold);});
-  var all_values  = [];
-  for(var e = 0; e < dataset.length; e++){
-    all_values.push(dataset[e].dataset_index)
-  }
-  var unique = d3.set(all_values).values();
-  var values = [];
-  for(var e in unique){
-    temp_value = dataset.filter(function(d){return d.dataset_index == unique[e];});
-    temp_value = temp_value.length
-    values.push(temp_value);
-  };
-  return values
-};
