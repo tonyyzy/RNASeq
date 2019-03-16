@@ -15,7 +15,7 @@ colours = [
   "#074751",
   "#FFFF6D"];
 
-  var dataFilter = function(dataset){
+  var dataFilter_barplot = function(dataset){
     dataset = dataset[0];
     dataset = dataset.filter(function(d){return ! isNaN(d.padj);});
     dataset = dataset.filter(function(d){return - Math.log10(d.padj) > p_threshold && (d.log2FoldChange > log2_threshold || d.log2FoldChange <  - log2_threshold);});
@@ -63,7 +63,7 @@ function d3_run_barplot(endpoint){
 
 var newPlot_Barplot = function(){
 
-    dataset = dataFilter(dataset)
+    dataset = dataFilter_barplot(dataset)
 
     d3.select("#painting").selectAll("*").remove();
 
