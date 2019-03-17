@@ -1,5 +1,3 @@
 cwlref-runner
 pytest-xdist
 pytest-sugar
-misopy==0.5.4
-bsddb3
