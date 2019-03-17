@@ -72,21 +72,19 @@ var newPlot_Barplot = function(){
     var w = 800 - margin.right - margin.left;
     var h = 800 - margin.top - margin.bottom;
 
-    var xScale = d3.scaleBand().domain(d3.range(dataset.length))
+    var xScale = d3.scaleBand()
+    .domain(d3.range(dataset.length))
     .rangeRound([0, w]) // <-- Also enables rounding
     .paddingInner(0.05);
 
     var yScale = d3.scaleLinear()
-    .domain([0, d3.max(dataset, function(d) { return d;}) + 100])
+    .domain([0, d3.max(dataset, function(d) { return d;}) + 10])
     .range([h, 0]);
 
     var yAxis = d3.axisLeft()
     .scale(yScale);
 
     // d3.select("#painting_barplot").selectAll("*").remove();
-
-    var yAxis = d3.axisLeft()
-    .scale(yScale);
 
     var svg = d3.select("#id_painting_barplot")
     //.attr("width", w + margin.right + margin.left) // <-- Here
