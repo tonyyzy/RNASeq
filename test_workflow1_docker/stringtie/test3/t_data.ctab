@@ -1,0 +1,4 @@
+t_id	chr	strand	start	end	t_name	num_exons	length	gene_id	gene_name	cov	FPKM
+1	test1	+	500	999	trans1	1	500	gene1	.	10.100000	38024.820312
+2	test1	-	3000	5299	trans2	3	1150	gene2	.	223.595154	841798.500000
+3	test1	-	3000	5299	trans3	3	1050	gene2	.	3.264363	12289.783203

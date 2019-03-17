@@ -1,0 +1,7 @@
+test1	dexseq_prepare.py	aggregate_gene	500	999	.	+	.	gene_id "gene1"
+test1	dexseq_prepare.py	exonic_part	500	999	.	+	.	transcripts "trans1"; exonic_part_number "001"; gene_id "gene1"
+test1	dexseq_prepare.py	aggregate_gene	3000	5299	.	-	.	gene_id "gene2"
+test1	dexseq_prepare.py	exonic_part	3000	3299	.	-	.	transcripts "trans2+trans3"; exonic_part_number "001"; gene_id "gene2"
+test1	dexseq_prepare.py	exonic_part	3500	3999	.	-	.	transcripts "trans3"; exonic_part_number "002"; gene_id "gene2"
+test1	dexseq_prepare.py	exonic_part	4400	4999	.	-	.	transcripts "trans2"; exonic_part_number "003"; gene_id "gene2"
+test1	dexseq_prepare.py	exonic_part	5050	5299	.	-	.	transcripts "trans2+trans3"; exonic_part_number "004"; gene_id "gene2"

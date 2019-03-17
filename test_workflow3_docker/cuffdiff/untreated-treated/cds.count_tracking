@@ -1,0 +1,4 @@
+tracking_id	untreated_count	untreated_count_variance	untreated_count_uncertainty_var	untreated_count_dispersion_var	untreated_status	treated_count	treated_count_variance	treated_count_uncertainty_var	treated_count_dispersion_var	treated_status
+P1	83.6024	84.4936	0	83.6024	OK	76.8631	77	0	76.8631	OK
+P2	14.4283	7268.1	0	14.4283	OK	58.0318	19332	0	58.0318	OK
+P3	223.397	7330.72	0	223.397	OK	229.277	19327.1	0	229.277	OK

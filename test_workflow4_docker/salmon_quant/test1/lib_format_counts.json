@@ -1,0 +1,25 @@
+{
+    "read_files": [
+        "/var/lib/cwl/stg6fafcb2a-cf7e-45ac-a941-4c860a33dad5/test1.1.fastq",
+        "/var/lib/cwl/stg2396e688-e823-4d1f-9bf8-58238e5a51ee/test1.2.fastq"
+    ],
+    "expected_format": "IU",
+    "compatible_fragment_ratio": 1.0,
+    "num_compatible_fragments": 2120,
+    "num_assigned_fragments": 2120,
+    "num_frags_with_concordant_consistent_mappings": 2120,
+    "num_frags_with_inconsistent_or_orphan_mappings": 0,
+    "strand_mapping_bias": 0.0,
+    "MSF": 0,
+    "OSF": 0,
+    "ISF": 2120,
+    "MSR": 0,
+    "OSR": 0,
+    "ISR": 0,
+    "SF": 0,
+    "SR": 0,
+    "MU": 0,
+    "OU": 0,
+    "IU": 0,
+    "U": 0
+}

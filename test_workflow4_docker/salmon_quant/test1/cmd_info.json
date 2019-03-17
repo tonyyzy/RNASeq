@@ -1,0 +1,11 @@
+{
+    "salmon_version": "0.12.0",
+    "validateMappings": [],
+    "index": "/var/lib/cwl/stgcdd6ce3c-a69a-4f1c-a8c1-1a25d713d23b/SALMONIndex",
+    "output": "test1",
+    "threads": "2",
+    "libType": "A",
+    "mates1": "/var/lib/cwl/stg6fafcb2a-cf7e-45ac-a941-4c860a33dad5/test1.1.fastq",
+    "mates2": "/var/lib/cwl/stg2396e688-e823-4d1f-9bf8-58238e5a51ee/test1.2.fastq",
+    "auxDir": "aux_info"
+}

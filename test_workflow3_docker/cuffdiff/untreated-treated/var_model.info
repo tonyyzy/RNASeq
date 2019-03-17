@@ -1,0 +1,5 @@
+condition	locus	compatible_count_mean	compatible_count_var	total_count_mean	total_count_var	fitted_var
+untreated	test1:499-999	80.2328	7941.61	80.2328	7941.61	80.2328
+untreated	test1:2999-5299	264.037	76597.4	322.477	128056	264.037
+treated	test1:499-999	80.2328	7941.61	80.2328	7941.61	80.2328
+treated	test1:2999-5299	264.037	76597.4	322.477	128056	264.037

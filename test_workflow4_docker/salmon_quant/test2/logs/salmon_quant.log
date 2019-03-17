@@ -1,0 +1,34 @@
+[2019-03-17 18:33:02.242] [jointLog] [info] Fragment incompatibility prior below threshold.  Incompatible fragments will be ignored.
+[2019-03-17 18:33:02.242] [jointLog] [info] Usage of --validateMappings implies use of minScoreFraction. Since not explicitly specified, it is being set to 0.65
+[2019-03-17 18:33:02.242] [jointLog] [info] Usage of --validateMappings implies use of range factorization. rangeFactorizationBins is being set to 4
+[2019-03-17 18:33:02.242] [jointLog] [info] Usage of --validateMappings implies a default consensus slack of 1. Setting consensusSlack to 1.
+[2019-03-17 18:33:02.242] [jointLog] [info] parsing read library format
+[2019-03-17 18:33:02.242] [jointLog] [info] There is 1 library.
+[2019-03-17 18:33:02.286] [jointLog] [info] Loading Quasi index
+[2019-03-17 18:33:02.286] [jointLog] [info] Loading 32-bit quasi index
+[2019-03-17 18:33:02.287] [jointLog] [info] done
+[2019-03-17 18:33:02.287] [jointLog] [info] Index contained 3 targets
+[2019-03-17 18:33:02.325] [fileLog] [info] 
+At end of round 0
+==================
+Observed 520 total fragments (520 in most recent round)
+
+[2019-03-17 18:33:02.324] [jointLog] [info] Computed 4 rich equivalence classes for further processing
+[2019-03-17 18:33:02.324] [jointLog] [info] Counted 520 total reads in the equivalence classes 
+[2019-03-17 18:33:02.325] [jointLog] [warning] Only 520 fragments were mapped, but the number of burn-in fragments was set to 5000000.
+The effective lengths have been computed using the observed mappings.
+
+[2019-03-17 18:33:02.325] [jointLog] [info] Mapping rate = 100%
+
+[2019-03-17 18:33:02.325] [jointLog] [info] finished quantifyLibrary()
+[2019-03-17 18:33:02.326] [jointLog] [info] Starting optimizer
+[2019-03-17 18:33:02.327] [jointLog] [info] Marked 0 weighted equivalence classes as degenerate
+[2019-03-17 18:33:02.327] [jointLog] [info] iteration = 0 | max rel diff. = 1.97519
+[2019-03-17 18:33:02.328] [jointLog] [info] iteration = 100 | max rel diff. = 0
+[2019-03-17 18:33:02.328] [jointLog] [info] Finished optimizer
+[2019-03-17 18:33:02.328] [jointLog] [info] writing output 
+
+[2019-03-17 18:33:02.328] [jointLog] [warning] NOTE: Read Lib [[ /var/lib/cwl/stg0472ec84-14fa-4caa-a06c-1ce0c46b414f/test2.1.fastq, /var/lib/cwl/stgd5f41cab-82d2-4ae8-80f7-4c70aefa8f21/test2.2.fastq]] :
+
+Detected a *potential* strand bias > 1% in an unstranded protocol check the file: test2/lib_format_counts.json for details
+

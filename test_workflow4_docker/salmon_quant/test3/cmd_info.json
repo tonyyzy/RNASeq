@@ -1,0 +1,10 @@
+{
+    "salmon_version": "0.12.0",
+    "validateMappings": [],
+    "index": "/var/lib/cwl/stg730a37a1-bb48-48fa-a73f-0de755bc8485/SALMONIndex",
+    "output": "test3",
+    "threads": "2",
+    "libType": "A",
+    "unmatedReads": "/var/lib/cwl/stga17893bb-3a2a-4da2-bacc-10989f621f39/test3.fastq",
+    "auxDir": "aux_info"
+}
