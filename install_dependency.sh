@@ -35,3 +35,16 @@ if [ ! -f "./software/stringtie" ]; then
     cd ..
     rm -rf ./stringtie
 fi
+
+# install samtools
+if [ ! -f "./software/bedtools2" ]; then
+    wget wget https://github.com/arq5x/bedtools2/releases/download/v2.27.1/bedtools-2.27.1.tar.gz
+    tar bedtools-2.27.1.tar.gz
+    cd bedtools2
+    make
+    make prefix="$PWD" install
+    cp ./bin/bedtools2 ../software/
+    cd ..
+    rm ./bedtools-2.27.1.tar.gz
+    rm -r ./bedtools2
+fi
