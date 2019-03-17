@@ -1,8 +1,6 @@
-# Rscript ./GSEA_Script.R --de_res PATH --gene_set PATH --doc_name STRING
+# Rscript ./GSEA_Script.R --de_res PATH --gene_set PATH
 
 args <- commandArgs( trailingOnly=TRUE )
-
-set.seed(1)
 
 if ("--gene_set" %in% args) {
   gene_set.file.idx  <- grep("--gene_set", args)
@@ -18,26 +16,21 @@ if ("--gene_set" %in% args) {
   }
 }
 
-if ("--doc_name" %in% args) {
-  doc_name.file.idx  <- grep("--doc_name", args)
-  res_name <- args[ doc_name.file.idx+1 ]
-}
-
 ## Read file containing the **serialised** 'SummarizedExperiment' object & check its class is correct ##
 if (! "--de_res" %in% args) {
   cat("\n")
   stop("'Differential Expression' flag [--de_res] absent")
 } else {
   de.file.path <- args[ grep("--de_res", args)+1 ]
-  
+
   if (file.exists(de.file.path)) {
     cat("\nLoading _serialised_ 'differential expression' results from \"", de.file.path ,"\" ... ", sep="")
     Deseq.results <- read.csv(de.file.path, row.names = 1, header = TRUE)
-    if(!"padj" %in% colnames(Deseq.results)){
-      stop("padj must be a column in de results file")
+    if(!"p_adj" %in% colnames(Deseq.results)){
+      stop("p_adj must be a column in de results file")
     }
-    if(!"log2FoldChange" %in% colnames(Deseq.results)){
-      stop("log2FoldChange must be a column in de results file")
+    if(!"log2foldchange" %in% colnames(Deseq.results)){
+      stop("log2foldchange must be a column in de results file")
     }
     cat("done\n")
   }
@@ -55,17 +48,15 @@ names(Gene_Sets) <- unique(gs[,2])
 
 print("step 2")
 
-stats <- Deseq.results[!is.na(Deseq.results$padj),]
-tmp <- stats[,"log2FoldChange"]
+stats <- Deseq.results[!is.na(Deseq.results$p_adj),]
+tmp <- stats[,"log2foldchange"]
 names(tmp) <- rownames(stats)
 print(head(tmp))
 
 print("step 3")
-set.seed(1)
-gsea.Results <- fgsea::fgsea(Gene_Sets,tmp, 500, minSize = 10)
+gsea.Results <- fgsea::fgsea(Gene_Sets,tmp, 5000, minSize = 10)
 
 print("step 4")
 
 Results <- data.frame(gsea.Results[,2:7], row.names = gsea.Results$pathway)
-Results <- round(Results, 2)
 write.csv(Results, "gsea_res.csv")

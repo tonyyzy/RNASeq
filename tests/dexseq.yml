@@ -3,10 +3,7 @@ input_script:
    path: ./DEXSeq.R
 counts_matrix:
    class: Directory
-   path: ./
-gff:
-   class: Directory
-   path: ./
+   path: ./hisat2_dexseq
 metadata:
    class: File
    path: ./metadata.csv

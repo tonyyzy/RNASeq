@@ -1,0 +1,4 @@
+/tests/hisat2_cufflinks/test1_cufflinks/transcripts.gtf
+/tests/hisat2_cufflinks/test2_cufflinks/transcripts.gtf
+/tests/hisat2_cufflinks/test3_cufflinks/transcripts.gtf
+/tests/hisat2_cufflinks/test4_cufflinks/transcripts.gtf

@@ -1,0 +1,29 @@
+MISO (Mixture of Isoforms model)
+Probabilistic analysis of RNA-Seq data to detect differential isoforms
+Use --help argument to view options.
+
+Using MISO settings file: /project/home18/fmj18/Documents/RNASeq/tests/miso_settings.txt
+Computing Psi for genes from file...
+  - Input file: /project/home18/fmj18/Documents/RNASeq/tests/treated_miso/batch-genes/batch-0_genes.txt
+Computing Psi for 1 genes...
+  - gene1
+  - GFF filename: /project/home18/fmj18/Documents/RNASeq/tests/MISOindex/chrtest1/gene1.pickle
+  - BAM: /project/home18/fmj18/Documents/RNASeq/tests/test_treated.star_miso.sorted.bam
+  - Outputting to: /project/home18/fmj18/Documents/RNASeq/tests/treated_miso
+Loading BAM filename from: /project/home18/fmj18/Documents/RNASeq/tests/test_treated.star_miso.sorted.bam
+No. reads discarded due to strand violation: 0
+350 raw reads in event
+03/17/2019 04:58:23 PM - miso_logger - WARNING - Gene gene1 has only one isoform; skipping...
+Computing Psi for 1 genes...
+  - gene2
+  - GFF filename: /project/home18/fmj18/Documents/RNASeq/tests/MISOindex/chrtest1/gene2.pickle
+  - BAM: /project/home18/fmj18/Documents/RNASeq/tests/test_treated.star_miso.sorted.bam
+  - Outputting to: /project/home18/fmj18/Documents/RNASeq/tests/treated_miso
+Loading BAM filename from: /project/home18/fmj18/Documents/RNASeq/tests/test_treated.star_miso.sorted.bam
+No. reads discarded due to strand violation: 0
+2870 raw reads in event
+no chains: 6
+Outputting samples to: /project/home18/fmj18/Documents/RNASeq/tests/treated_miso/test1/gene2.miso...
+Completed outputting.
+Event took 1.58 seconds
+Processed 2 genes

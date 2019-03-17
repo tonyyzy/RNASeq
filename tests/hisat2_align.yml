@@ -1,4 +1,4 @@
-threads: 1
+threads: 1 
 index_directory: 
    class: Directory
    path: ./ht2_index

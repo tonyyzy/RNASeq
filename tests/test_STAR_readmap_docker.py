@@ -10,7 +10,7 @@ def test_STAR_readmap_docker():
     subprocess.run(["tail -n +5 ./test_star_readmap_docker/test3/test3Aligned.out.sam "
                     "> ./test_star_readmap_docker/test3/test3.tail.sam"], shell=True)
     assert filecmp.cmp("./test_star_readmap_docker/test3/test3.tail.sam",
-                        "./tests/test3.tail.sam")
+                        "./tests/test3.star.tail.sam")
 
 
 if __name__ == "__main__":

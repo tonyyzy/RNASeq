@@ -1,0 +1,2 @@
+test1	FakeGenome	gene	500	999	.	+	.	ID=gene1;Name=gene1
+test1	FakeGenome	gene	3000	5299	.	-	.	ID=gene2;Name=gene2

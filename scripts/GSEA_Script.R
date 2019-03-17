@@ -29,8 +29,8 @@ if (! "--de_res" %in% args) {
     if(!"p_adj" %in% colnames(Deseq.results)){
       stop("p_adj must be a column in de results file")
     }
-    if(!"log2FoldChange" %in% colnames(Deseq.results)){
-      stop("log2FoldChange must be a column in de results file")
+    if(!"log2foldchange" %in% colnames(Deseq.results)){
+      stop("log2foldchange must be a column in de results file")
     }
     cat("done\n")
   }
@@ -49,7 +49,7 @@ names(Gene_Sets) <- unique(gs[,2])
 print("step 2")
 
 stats <- Deseq.results[!is.na(Deseq.results$p_adj),]
-tmp <- stats[,"log2FoldChange"]
+tmp <- stats[,"log2foldchange"]
 names(tmp) <- rownames(stats)
 print(head(tmp))
 
@@ -59,4 +59,5 @@ gsea.Results <- fgsea::fgsea(Gene_Sets,tmp, 5000, minSize = 10)
 print("step 4")
 
 Results <- data.frame(gsea.Results[,2:7], row.names = gsea.Results$pathway)
+Results <- round(Results, 2)
 write.csv(Results, "gsea_res.csv")

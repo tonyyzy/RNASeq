@@ -1,0 +1,10 @@
+{
+    "salmon_version": "0.12.0",
+    "validateMappings": [],
+    "index": "/tests/SALMONIndex",
+    "output": "/test4",
+    "threads": "4",
+    "libType": "A",
+    "unmatedReads": "/tests/test4.fastq",
+    "auxDir": "aux_info"
+}

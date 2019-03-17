@@ -7,8 +7,8 @@ input_format: "bam"
 sorted_by: "pos"
 gff:
    class: File
-   path: ./test.gff
+   path: ./test.htseq.gff
 bam: 
    class: File
-   path: ./test1.bam
+   path: ./test1.hisat2.bam
 outname: "test1_htseq_count.csv"

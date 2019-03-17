@@ -1,5 +1,4 @@
 threads: 2
 fasta:
-   class: File
-   path: test.fa
+   - {class: File, path: test.fa}
 output: "test_index"

@@ -6,7 +6,7 @@ def test_fgsea_docker():
 			"--outdir=./test_fgsea_out",
 			"./cwl-tools/docker/fgsea.cwl",
 			"./tests/fgsea.yml"])
-	assert filecmp.cmp("./tests/test_gsea_res.csv", "./test_fgsea_out/gsea_res.csv")
+	assert filecmp.cmp("./tests/gsea_res.star_prepde_deseq2.csv", "./test_fgsea_out/gsea_res.csv")
 
 if __name__ == "__main__":
 	test_fgsea_docker()

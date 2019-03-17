@@ -2,4 +2,4 @@ threads: 2
 outfilename: test1.bam
 samfile:
  class: File
- path: ./test1.sam
+ path: ./test1.hisat2.sam

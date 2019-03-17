@@ -1,8 +1,0 @@
-threads: 2
-genomeDir:
-  class: Directory
-  path: ./GenomeIndex
-readFilesIn:
-  - {class: File, path: ./test1.1.fastq}
-  - {class: File, path: ./test1.2.fastq}
-outFileNamePrefix: "test1"

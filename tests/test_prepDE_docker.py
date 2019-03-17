@@ -11,9 +11,7 @@ def test_prepDE_docker():
                     "./tests/prepDE.yml"])
 
     assert filecmp.cmp("./test_prepDE_docker/gene_count_matrix.csv",
-                        "./tests/gene_count_matrix.csv")
-    assert filecmp.cmp("./test_prepDE_docker/transcript_count_matrix.csv",
-                        "./tests/transcript_count_matrix.csv")
+                        "./tests/gene_count_matrix.star_prepde.csv")
 
 if __name__ == "__main__":
     test_prepDE_docker()
