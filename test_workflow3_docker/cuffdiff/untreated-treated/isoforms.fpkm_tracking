@@ -1,4 +1,0 @@
-tracking_id	class_code	nearest_ref_id	gene_id	gene_short_name	tss_id	locus	length	coverage	untreated_FPKM	untreated_conf_lo	untreated_conf_hi	untreated_status	treated_FPKM	treated_conf_lo	treated_conf_hi	treated_status
-TCONS_00000001	=	trans1	XLOC_000001	gene1	TSS1	test1:499-999	500	-	852433	664984	1.03988e+06	OK	783717	604773	962661	OK
-TCONS_00000002	=	trans2	XLOC_000002	gene2	TSS2	test1:2999-5299	1150	-	694102	162055	1.22615e+06	OK	712370	0	1.57626e+06	OK
-TCONS_00000003	=	trans3	XLOC_000002	gene2	TSS2	test1:2999-5299	1050	-	50198.7	0	643422	OK	201903	0	1.16939e+06	OK

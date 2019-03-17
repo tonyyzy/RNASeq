@@ -1,9 +1,0 @@
-tracking_id	condition	replicate	raw_frags	internal_scaled_frags	external_scaled_frags	FPKM	effective_length	status
-XLOC_000001	untreated	0	70	24.0479	24.0479	245199	-	OK
-XLOC_000001	untreated	1	400	143.157	143.157	1.45967e+06	-	OK
-XLOC_000001	treated	1	300	143.157	143.157	1.45967e+06	-	OK
-XLOC_000001	treated	0	50	10.5693	10.5693	107767	-	OK
-XLOC_000002	untreated	0	1321	453.819	453.819	1.41484e+06	-	OK
-XLOC_000002	untreated	1	61	21.8314	21.8314	73760	-	OK
-XLOC_000002	treated	1	246	117.389	117.389	406734	-	OK
-XLOC_000002	treated	0	2163	457.228	457.228	1.42181e+06	-	OK

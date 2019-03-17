@@ -1,5 +1,0 @@
-i_id	chr	strand	start	end	rcount	ucount	mrcount
-1	test1	-	3300	4399	240	240	240.00
-2	test1	-	5000	5049	233	233	233.00
-3	test1	-	3300	3499	2	2	2.00
-4	test1	-	4000	5049	6	6	6.00

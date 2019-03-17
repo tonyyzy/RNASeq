@@ -1,3 +1,0 @@
-tracking_id	class_code	nearest_ref_id	gene_id	gene_short_name	tss_id	locus	length
-TSS1	-	-	XLOC_000001	gene1	TSS1	test1:499-999	-
-TSS2	-	-	XLOC_000002	gene2	TSS2	test1:2999-5299	-

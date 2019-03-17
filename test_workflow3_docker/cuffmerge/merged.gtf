@@ -1,7 +1,0 @@
-test1	Cufflinks	exon	500	999	.	+	.	gene_id "XLOC_000001"; transcript_id "TCONS_00000001"; exon_number "1"; gene_name "gene1"; oId "trans1"; nearest_ref "trans1"; class_code "="; tss_id "TSS1"; p_id "P1";
-test1	Cufflinks	exon	3000	3299	.	-	.	gene_id "XLOC_000002"; transcript_id "TCONS_00000003"; exon_number "1"; gene_name "gene2"; oId "trans3"; nearest_ref "trans3"; class_code "="; tss_id "TSS2"; p_id "P2";
-test1	Cufflinks	exon	3500	3999	.	-	.	gene_id "XLOC_000002"; transcript_id "TCONS_00000003"; exon_number "2"; gene_name "gene2"; oId "trans3"; nearest_ref "trans3"; class_code "="; tss_id "TSS2"; p_id "P2";
-test1	Cufflinks	exon	5050	5299	.	-	.	gene_id "XLOC_000002"; transcript_id "TCONS_00000003"; exon_number "3"; gene_name "gene2"; oId "trans3"; nearest_ref "trans3"; class_code "="; tss_id "TSS2"; p_id "P2";
-test1	Cufflinks	exon	3000	3299	.	-	.	gene_id "XLOC_000002"; transcript_id "TCONS_00000002"; exon_number "1"; gene_name "gene2"; oId "trans2"; nearest_ref "trans2"; class_code "="; tss_id "TSS2"; p_id "P3";
-test1	Cufflinks	exon	4400	4999	.	-	.	gene_id "XLOC_000002"; transcript_id "TCONS_00000002"; exon_number "2"; gene_name "gene2"; oId "trans2"; nearest_ref "trans2"; class_code "="; tss_id "TSS2"; p_id "P3";
-test1	Cufflinks	exon	5050	5299	.	-	.	gene_id "XLOC_000002"; transcript_id "TCONS_00000002"; exon_number "3"; gene_name "gene2"; oId "trans2"; nearest_ref "trans2"; class_code "="; tss_id "TSS2"; p_id "P3";

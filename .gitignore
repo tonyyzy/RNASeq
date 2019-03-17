@@ -22,7 +22,6 @@ test_fgsea_out
 test_dexseq_out
 test_DESeq2_out
 test1gz
-STARIndex
 STARIndexd
 hisat2_align
 hisat2_build
