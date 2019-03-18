@@ -33,7 +33,7 @@ outputs:
   DESeq2_out:
    type: File[]
    outputBinding:
-    glob: "*norm_count.csv"
+    glob: "*.csv"
   de_res:
     type: File[]
     outputBinding:
