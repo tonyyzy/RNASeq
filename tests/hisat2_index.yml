@@ -1,0 +1,6 @@
+threads: 1
+fasta:
+  - {class: File, path: ./test.fa}
+gtf:
+  - {class: File, path: ./test.gtf}
+ht2base: test

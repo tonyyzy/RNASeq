@@ -3,6 +3,9 @@
 cwlVersion: v1.0
 class: Workflow
 
+requirements:
+  StepInputExpressionRequirement: {}
+
 inputs:
    threads: int
    fasta: File[]
