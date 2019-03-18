@@ -79,33 +79,39 @@ class SamplesForm(forms.ModelForm):
 class WorkflowForm(forms.ModelForm):
     class Meta:
         model = Workflow
-        fields = ['label', 'mapper', 'assembler', 'analysis', 'status']
+        fields = ['label', 'mapper', 'assembler', 'analysis']
         # fields='__all__'
         widgets={
             'label': forms.TextInput(attrs={
                 'class':'form-control',
                 'placeholder': 'provide label for workflow here...'
                 }),
-            'salmon': forms.SelectMultiple(attrs={
+            'mapper': forms.Select(attrs={
+                'class':'form-control',
+                }),
+            'assembler': forms.Select(attrs={
+                'class':'form-control',
+                }),
+            'analysis': forms.Select(attrs={
                 'class':'form-control',
                 }),
 }
 
 
 class DebugForm(forms.ModelForm):
-    debug_title = forms.CharField(
-            max_length=100,
-            widget=forms.TextInput(
-                attrs={'class':'form-control', 'placeholder':'debug_title'}
-            )
-        )
-
-    debug_body = forms.CharField(
-            max_length=100,
-            widget=forms.Textarea(
-                attrs={'class':'form-control', 'placeholder':'debug_body'}
-            )
-        )
+    # debug_title = forms.CharField(
+    #         max_length=100,
+    #         widget=forms.TextInput(
+    #             attrs={'class':'form-control', 'placeholder':'debug_title'}
+    #         )
+    #     )
+    #
+    # debug_body = forms.CharField(
+    #         max_length=100,
+    #         widget=forms.Textarea(
+    #             attrs={'class':'form-control', 'placeholder':'debug_body'}
+    #         )
+    #     )
 
     class Meta:
         model = The_Debug

@@ -222,6 +222,7 @@ html,body{
   position: absolute;
   padding: 15px;
   /* border: 2px solid green; */
+  padding: 0px;
 }
 
 #wrapper.menuDisplayed #sidebar_wrapper{
@@ -233,7 +234,7 @@ html,body{
   /* margin-top: -300px; */
 }
 #sidebar_wrapper{
-  background-color: #b3b3b3;
+  background-color: #E9ECEF;
 
 }
 .sidebar-nav{
@@ -330,8 +331,16 @@ svg:hover path {
 
 /* SPINNER  */
 .spinner{
-
   margin-bottom: 230px;
   margin-top: 100px;
   margin-left: 48%;
+}
+
+.painting_style{
+  min-height: 600px;
+  /* height: 80%; */
+  min-width: 600px;
+  border: 2px yellow solid;
+  /* margin: 20px; */
+
 }

@@ -114,12 +114,17 @@ class Workflow(models.Model):
         ('edger', "EDGER"),
         ('ballgown', "BALLGOWN")
     )
+
+    def get_gene_set_path(self, filename):
+        return os.path.join(str(self.session.identifier), 'gene_set', filename) # version with dash
+
     session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='workflow_fk')
     # index = models.CharField(max_length=200, choices=INDEX_CHOICES)
     label = models.CharField(max_length=50, blank=False, null=False)
     mapper = models.CharField(max_length=200, choices=MAPPER_CHOICES)
     assembler = models.CharField(max_length=200, choices=ASSEMLBER_CHOICES, blank=True)
     analysis = models.CharField(max_length=200, choices=ANALYSIS_CHOICES)
+    # gene_set =  models.FileField(storage=data_root, upload_to=get_gene_set_path)
     status = models.BooleanField(default=False, null=False)
     paths = models.TextField(null=False)
 
@@ -130,9 +135,9 @@ class Workflow(models.Model):
 
 class The_Debug(models.Model):
 
-    def get_upload_path(self, filename):
-        return os.path.join(str(self.identifier), filename) # version with dash
-        # return os.path.join(self.identifier.hex, filename)
+    def get_debug_upload_path(self, filename):
+        print('\nDEBUG GET_DEBUG_UPLOAD_PATH CALLED ')
+        return os.path.join(str(self.identifier), 'debug', filename) # version with dash
 
     FIELD_THREE_CHOICES = (
         ("choice1", "choice1"),
@@ -142,4 +147,4 @@ class The_Debug(models.Model):
     identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     field_one = models.CharField(max_length=200)
     # field_two = models.CharField(max_length=200)
-    field_two = models.FileField(storage=data_root, upload_to=get_upload_path)
+    field_two = models.FileField(storage=data_root, upload_to=get_debug_upload_path)

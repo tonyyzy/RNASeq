@@ -32,6 +32,7 @@ def WorkFlowOneView(request, session_slug, workflow_slug):
         wf_csv = wf_path['DGE'][0] # pulling out first here. Would need to loop if more than two sample conditions are defined.
         selected_DGE.append(wf_csv)
 
+
     arr = []
     for index, DGE_csv in enumerate(selected_DGE):
         print(f'\n{DGE_csv}')
@@ -47,17 +48,16 @@ def WorkFlowOneView(request, session_slug, workflow_slug):
     # print(arr)
     return JsonResponse(arr, safe=False)
 
-# all_workflows = []
-# for i in workflows:
-#     if i.paths == '':
-#         all_workflows.append('')
-#     all_workflows.append(json.loads(i.paths))
-# all_workflows = [all_workflows[i] for i in range(length(all_workflows)) if i in selected_wf]
-# print(all_workflows)
 
 
 # 128bf2d4-a9d1-4cf4-91ed-c897099467f8
-# {"norm": "/project/home18/ph2417/gitWorkspace/Data/128bf2d4-a9d1-4cf4-91ed-c897099467f8/hisat_samtools_stringtie_prepde_deseq/norm_count.csv", "DGE": ["/project/home18/ph2417/gitWorkspace/Data/128bf2d4-a9d1-4cf4-91ed-c897099467f8/hisat_samtools_stringtie_prepde_deseq/DGE_results_1.csv"]}
+# {"norm": "/project/home18/ph2417/gitWorkspace/Data/128bf2d4-a9d1-4cf4-91ed-c897099467f8/hisat_samtools_cufflinks_prepde_deseq/DGE_results_1.csv", "DGE": ["/project/home18/ph2417/gitWorkspace/Data/128bf2d4-a9d1-4cf4-91ed-c897099467f8/hisat_samtools_cufflinks_prepde_deseq/DGE_results_1.csv"]}
+
+# {"norm": "/project/home18/ph2417/gitWorkspace/Data/128bf2d4-a9d1-4cf4-91ed-c897099467f8/star_samtools_stringtie_prepde_deseq/norm_count.csv", "DGE": ["/project/home18/ph2417/gitWorkspace/Data/128bf2d4-a9d1-4cf4-91ed-c897099467f8/star_samtools_stringtie_prepde_deseq/DGE_results_1.csv"]}
+
+
+
+
 
 
 class DebugView(View):

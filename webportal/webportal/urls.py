@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('chaining', include('smart_selects.urls')),
     path('', include('analysis.urls')),
     # path('', include('pages.urls')),
     path('users/', include('users.urls')),
@@ -30,3 +31,6 @@ urlpatterns = [
 
 # if settings.DEBUG:
 #     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# https://github.com/digi604/django-smart-selects
+# https://stackoverflow.com/questions/29460078/how-to-use-django-smart-select

@@ -52,6 +52,8 @@ colours = [
     d3_run_barplot(endpoint)
   }
 
+
+
 function d3_run_barplot(endpoint){
   console.log(endpoint)
   d3.json(endpoint).then(function(data) {
@@ -63,14 +65,22 @@ function d3_run_barplot(endpoint){
 
 var newPlot_Barplot = function(){
 
-    dataset = dataFilter_barplot(dataset)
+    d3.select("#id_painting_barplot").selectAll("*").remove();
+
+    dataset = dataFilter_barplot(dataset);
 
     d3.select("#painting").selectAll("*").remove();
 
+    var width = d3.select('#id_painting_style_barplot').node().getBoundingClientRect().width;
+    var height = d3.select('#id_painting_style_barplot').node().getBoundingClientRect().height;
+    console.log(width)
+    console.log(height)
+
     var margin = {top: 40, right: 20, bottom: 20, left: 40};
     //Width and height
-    var w = 800 - margin.right - margin.left;
-    var h = 800 - margin.top - margin.bottom;
+    w = width - margin.right - margin.left;
+    h = height - margin.top - margin.bottom;
+
 
     var xScale = d3.scaleBand()
     .domain(d3.range(dataset.length))
@@ -78,13 +88,12 @@ var newPlot_Barplot = function(){
     .paddingInner(0.05);
 
     var yScale = d3.scaleLinear()
-    .domain([0, d3.max(dataset, function(d) { return d;}) + 10])
+    .domain([0, d3.max(dataset, function(d) { return d;}) + 1])
     .range([h, 0]);
 
     var yAxis = d3.axisLeft()
     .scale(yScale);
 
-    // d3.select("#painting_barplot").selectAll("*").remove();
 
     var svg = d3.select("#id_painting_barplot")
     //.attr("width", w + margin.right + margin.left) // <-- Here
