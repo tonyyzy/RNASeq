@@ -1,3 +1,3 @@
-test_id,gene_id,name,locus,sample_1,sample_2,status,value_1,value_2,log2foldchange,test_stat,p_value,q_value,significant,p_adj
-XLOC_000001,XLOC_000001,gene1,test1:499-999,untreated,treated,NOTEST,,,inf,0,1,1,no,1.0
-XLOC_000002,XLOC_000002,gene2,test1:2999-5299,untreated,treated,NOTEST,,,inf,0,1,1,no,1.0
+name,test_id,gene_id,locus,sample_1,sample_2,status,value_1,value_2,log2foldchange,test_stat,p_value,q_value,significant,p_adj
+gene1,XLOC_000001,XLOC_000001,test1:499-999,untreated,treated,OK,641066,603606,-0.0868644,-0.379429,0.5952,0.5952,yes,0.5952
+gene2,XLOC_000002,XLOC_000002,test1:2999-5299,untreated,treated,OK,830935,954231,0.199603,1.30579,0.05055,0.1011,yes,0.1011

@@ -1,3 +1,3 @@
-"feature","name","log2foldchange","p_value","p_adj"
-"gene","XLOC_000001",-4.66,0.18,0.22
-"gene","XLOC_000002",2.5,0.22,0.22
+"name","feature","log2foldchange","p_value","p_adj"
+"XLOC_000001","gene",-4.66,0.18,0.22
+"XLOC_000002","gene",2.5,0.22,0.22

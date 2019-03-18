@@ -1,34 +1,34 @@
-[2019-03-18 04:38:02.365] [jointLog] [info] Fragment incompatibility prior below threshold.  Incompatible fragments will be ignored.
-[2019-03-18 04:38:02.365] [jointLog] [info] Usage of --validateMappings implies use of minScoreFraction. Since not explicitly specified, it is being set to 0.65
-[2019-03-18 04:38:02.365] [jointLog] [info] Usage of --validateMappings implies use of range factorization. rangeFactorizationBins is being set to 4
-[2019-03-18 04:38:02.365] [jointLog] [info] Usage of --validateMappings implies a default consensus slack of 1. Setting consensusSlack to 1.
-[2019-03-18 04:38:02.365] [jointLog] [info] parsing read library format
-[2019-03-18 04:38:02.365] [jointLog] [info] There is 1 library.
-[2019-03-18 04:38:02.467] [jointLog] [info] Loading Quasi index
-[2019-03-18 04:38:02.467] [jointLog] [info] Loading 32-bit quasi index
-[2019-03-18 04:38:02.468] [jointLog] [info] done
-[2019-03-18 04:38:02.468] [jointLog] [info] Index contained 3 targets
-[2019-03-18 04:38:02.549] [fileLog] [info] 
+[2019-03-18 16:30:31.326] [jointLog] [info] Fragment incompatibility prior below threshold.  Incompatible fragments will be ignored.
+[2019-03-18 16:30:31.326] [jointLog] [info] Usage of --validateMappings implies use of minScoreFraction. Since not explicitly specified, it is being set to 0.65
+[2019-03-18 16:30:31.326] [jointLog] [info] Usage of --validateMappings implies use of range factorization. rangeFactorizationBins is being set to 4
+[2019-03-18 16:30:31.326] [jointLog] [info] Usage of --validateMappings implies a default consensus slack of 1. Setting consensusSlack to 1.
+[2019-03-18 16:30:31.326] [jointLog] [info] parsing read library format
+[2019-03-18 16:30:31.326] [jointLog] [info] There is 1 library.
+[2019-03-18 16:30:31.420] [jointLog] [info] Loading Quasi index
+[2019-03-18 16:30:31.420] [jointLog] [info] Loading 32-bit quasi index
+[2019-03-18 16:30:31.420] [jointLog] [info] done
+[2019-03-18 16:30:31.420] [jointLog] [info] Index contained 3 targets
+[2019-03-18 16:30:31.501] [jointLog] [info] Computed 4 rich equivalence classes for further processing
+[2019-03-18 16:30:31.501] [jointLog] [info] Counted 2120 total reads in the equivalence classes 
+[2019-03-18 16:30:31.503] [jointLog] [warning] Only 2120 fragments were mapped, but the number of burn-in fragments was set to 5000000.
+The effective lengths have been computed using the observed mappings.
+
+[2019-03-18 16:30:31.503] [jointLog] [info] Mapping rate = 100%
+
+[2019-03-18 16:30:31.503] [jointLog] [info] finished quantifyLibrary()
+[2019-03-18 16:30:31.503] [jointLog] [info] Starting optimizer
+[2019-03-18 16:30:31.504] [jointLog] [info] Marked 0 weighted equivalence classes as degenerate
+[2019-03-18 16:30:31.504] [jointLog] [info] iteration = 0 | max rel diff. = 7.10127
+[2019-03-18 16:30:31.505] [jointLog] [info] iteration = 100 | max rel diff. = 0
+[2019-03-18 16:30:31.505] [jointLog] [info] Finished optimizer
+[2019-03-18 16:30:31.505] [jointLog] [info] writing output 
+
+[2019-03-18 16:30:31.505] [jointLog] [warning] NOTE: Read Lib [[ /tests/test1.1.fastq, /tests/test1.2.fastq]] :
+
+Detected a *potential* strand bias > 1% in an unstranded protocol check the file: /test1/lib_format_counts.json for details
+
+[2019-03-18 16:30:31.501] [fileLog] [info] 
 At end of round 0
 ==================
 Observed 2120 total fragments (2120 in most recent round)
-
-[2019-03-18 04:38:02.548] [jointLog] [info] Computed 4 rich equivalence classes for further processing
-[2019-03-18 04:38:02.548] [jointLog] [info] Counted 2120 total reads in the equivalence classes 
-[2019-03-18 04:38:02.551] [jointLog] [warning] Only 2120 fragments were mapped, but the number of burn-in fragments was set to 5000000.
-The effective lengths have been computed using the observed mappings.
-
-[2019-03-18 04:38:02.551] [jointLog] [info] Mapping rate = 100%
-
-[2019-03-18 04:38:02.551] [jointLog] [info] finished quantifyLibrary()
-[2019-03-18 04:38:02.551] [jointLog] [info] Starting optimizer
-[2019-03-18 04:38:02.552] [jointLog] [info] Marked 0 weighted equivalence classes as degenerate
-[2019-03-18 04:38:02.552] [jointLog] [info] iteration = 0 | max rel diff. = 7.10127
-[2019-03-18 04:38:02.553] [jointLog] [info] iteration = 100 | max rel diff. = 0
-[2019-03-18 04:38:02.553] [jointLog] [info] Finished optimizer
-[2019-03-18 04:38:02.553] [jointLog] [info] writing output 
-
-[2019-03-18 04:38:02.553] [jointLog] [warning] NOTE: Read Lib [[ /tests/test1.1.fastq, /tests/test1.2.fastq]] :
-
-Detected a *potential* strand bias > 1% in an unstranded protocol check the file: /test1/lib_format_counts.json for details
 
