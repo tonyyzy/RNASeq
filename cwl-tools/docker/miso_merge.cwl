@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: 
+baseCommand:
 hints:
    DockerRequirement:
       dockerPull: genomicpariscentre/miso
@@ -11,31 +11,19 @@ requirements:
 
 arguments:
    - position: 1
-     valueFrom: $("samtools merge " + inputs.output[0])
-     shellQuote: False
-   - prefix: "&&"
-     position: 3
-     valueFrom: $("samtools merge " + inputs.output[1])
+     valueFrom: $("samtools merge " + inputs.output)
      shellQuote: False
 
 inputs:
-   condition1bam:
+   bam:
       type: File[]
       inputBinding:
          position: 2
-   condition2bam:
-      type: File[]
-      inputBinding:
-         position: 4
    output:
-      type: string[]
+      type: string
 
 outputs:
-   condition1:
+   miso_out:
       type: File
       outputBinding:
-         glob: $(inputs.output[0])
-   condition2:
-      type: File
-      outputBinding:
-         glob: $(inputs.output[1])
+         glob: $(inputs.output)

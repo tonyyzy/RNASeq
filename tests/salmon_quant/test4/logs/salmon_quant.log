@@ -1,0 +1,34 @@
+[2019-03-18 16:30:37.605] [jointLog] [info] Fragment incompatibility prior below threshold.  Incompatible fragments will be ignored.
+[2019-03-18 16:30:37.605] [jointLog] [info] Usage of --validateMappings implies use of minScoreFraction. Since not explicitly specified, it is being set to 0.65
+[2019-03-18 16:30:37.605] [jointLog] [info] Usage of --validateMappings implies use of range factorization. rangeFactorizationBins is being set to 4
+[2019-03-18 16:30:37.605] [jointLog] [info] Usage of --validateMappings implies a default consensus slack of 1. Setting consensusSlack to 1.
+[2019-03-18 16:30:37.605] [jointLog] [info] parsing read library format
+[2019-03-18 16:30:37.605] [jointLog] [info] There is 1 library.
+[2019-03-18 16:30:37.701] [jointLog] [info] Loading Quasi index
+[2019-03-18 16:30:37.701] [jointLog] [info] Loading 32-bit quasi index
+[2019-03-18 16:30:37.702] [jointLog] [info] done
+[2019-03-18 16:30:37.702] [jointLog] [info] Index contained 3 targets
+[2019-03-18 16:30:37.757] [jointLog] [info] Computed 4 rich equivalence classes for further processing
+[2019-03-18 16:30:37.757] [jointLog] [info] Counted 590 total reads in the equivalence classes 
+[2019-03-18 16:30:37.758] [jointLog] [warning] Only 590 fragments were mapped, but the number of burn-in fragments was set to 5000000.
+The effective lengths have been computed using the observed mappings.
+
+[2019-03-18 16:30:37.758] [jointLog] [info] Mapping rate = 100%
+
+[2019-03-18 16:30:37.758] [jointLog] [info] finished quantifyLibrary()
+[2019-03-18 16:30:37.759] [jointLog] [info] Starting optimizer
+[2019-03-18 16:30:37.759] [jointLog] [info] Marked 0 weighted equivalence classes as degenerate
+[2019-03-18 16:30:37.759] [jointLog] [info] iteration = 0 | max rel diff. = 0.765504
+[2019-03-18 16:30:37.759] [jointLog] [info] iteration = 100 | max rel diff. = 0
+[2019-03-18 16:30:37.759] [jointLog] [info] Finished optimizer
+[2019-03-18 16:30:37.759] [jointLog] [info] writing output 
+
+[2019-03-18 16:30:37.760] [jointLog] [warning] NOTE: Read Lib [[ /tests/test4.fastq ]] :
+
+Detected a *potential* strand bias > 1% in an unstranded protocol check the file: /test4/lib_format_counts.json for details
+
+[2019-03-18 16:30:37.757] [fileLog] [info] 
+At end of round 0
+==================
+Observed 590 total fragments (590 in most recent round)
+

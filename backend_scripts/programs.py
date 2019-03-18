@@ -1,9 +1,11 @@
-import yaml
+import json
 import subprocess
 from configparser import ConfigParser
-import pydot
-import json
 from itertools import combinations
+
+import pydot
+import yaml
+
 
 class cwl_writer():
     # output_string for each program to query the output names from the previous
@@ -42,8 +44,6 @@ class cwl_writer():
         # dict for yml file
         self.cwl_input = {}
 
-
-
         # initialise graph
         self.nodes = {}
         self.graph = pydot.Dot(
@@ -79,7 +79,6 @@ class cwl_writer():
             ranksep = "0.5",
             nodesep = "0.5"
         )
-        # initialise 
         # initialise subgraph
         self.graph_inputs = pydot.Cluster(graph_name="inputs")
         self.graph_inputs.set_style("dashed")
@@ -92,12 +91,16 @@ class cwl_writer():
         self.name = ""
         self.previous_name = ""
         self.prev = ""
+
         # get number of treads from config.ini
         config = ConfigParser()
         config.read(f"{root}/config.ini")
-        self.cwl_input["threads"] = int(config.get("main", "threads"))
+        self.threads = int(config.get("main", "threads"))
+        self.cwl_input["threads"] = self.threads
 
         # setup attributes
+        self.reader = database_reader_object
+        self.genome_index = database_reader_object.genome_index
         self.identifier = database_reader_object.identifier
         self.indexes = database_reader_object.indexes
         self.input_files = database_reader_object.Reads_files
@@ -105,6 +108,12 @@ class cwl_writer():
         self.num = len(self.input_files) # total number of inputs
         self.root = root
         self.genome = database_reader_object.Genome_file
+        self.annotation = database_reader_object.Annotation_file
+        self.organism = database_reader_object.Organism_name
+        self.Queue = database_reader_object.Queue
+        self.id = database_reader_object.id
+        self.cdna = database_reader_object.cdna_file
+        self.reactome = database_reader_object.reactome
 
         # add metadata and annotation to cwl_input
         self.cwl_input["metadata"] = {
@@ -113,7 +122,7 @@ class cwl_writer():
         }
         self.cwl_input["annotation"] = {
             "class": "File",
-            "path": database_reader_object.Annotation_file
+            "path": self.annotation
         }
         self.graph_inputs.add_node(
             pydot.Node(
@@ -545,10 +554,7 @@ class cwl_writer():
                     "bam": f"{self.previous_name}_{i+1}/{self.output_string[self.prev]}",
                     "threads": "threads",
                     "gtf": "annotation",
-                    "output": {
-                        "source": [f"subject_name{i+1}"],
-                        "valueFrom": "$(self + \".gtf\")"
-                    }
+                    "output": f"subject_name{i+1}"
                 },
                 "out": ["stringtie_out"]
             }
@@ -572,10 +578,6 @@ class cwl_writer():
 
 
     def cufflinks(self):
-        # cufflinks 
-        # workflow section
-        # inputs
-
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
@@ -612,10 +614,8 @@ class cwl_writer():
         self.add_edge()
         self.add_annotation()
 
-        # cuffmerge
-        self.name_list.append("cuffmerge")
-        self.previous_name = "_".join(self.name_list[:-1])
-        self.name = "_".join(self.name_list)
+
+    def cuffmerge(self):
         # inputs
         self.cwl_workflow["inputs"]["fasta"] = "File"
         self.cwl_input["fasta"] = {
@@ -671,55 +671,9 @@ class cwl_writer():
             )
         )
 
-
     def htseq(self):
-        # htseq_prepare
-        # workflow section
-        # inputs
-        self.cwl_workflow["inputs"]["htseq_prepare_script"] = "File"
-        # yml section
-        self.cwl_input["htseq_prepare_script"] = {
-            "class": "File",
-            "path": f"{self.root}/RNASeq/scripts/Basic_DEXSeq_scripts/dexseq_prepare.py"
-        }
-        # outputs
-        self.cwl_workflow["outputs"]["htseq_prepare_out"] = {
-            "type": "Directory",
-            "outputSource": "htseq_prepare_folder/out"
-        }
-        # steps
-        self.cwl_workflow["steps"]["htseq_prepare"] = {
-            "run": f"{self.root}/RNASeq/cwl-tools/docker/htseq_prepare.cwl",
-            "in": {
-                "input_script": "htseq_prepare_script",
-                "gtf": "annotation",
-                "gff_name": {
-                    "source": ["annotation"],
-                    "valueFrom": "$(self.nameroot + '.gff')"
-                }
-            },
-            "out": ["ht_prep_out"]
-        }
-        # foldering
-        self.cwl_workflow["steps"]["htseq_prepare_folder"] = {
-            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
-            "in": {
-                "item": "htseq_prepare/ht_prep_out",
-                "name": {"valueFrom": "htseq_prepare"}
-            },
-            "out": ["out"]
-        }
-        if self.graph.get_node("htseq_prepare") == []:
-            self.graph.add_node(pydot.Node("htseq_prepare", label="HTSeq prepare"))
-            self.graph.add_edge(
-                pydot.Edge(
-                    *self.graph_inputs.get_node("annotation"),
-                    *self.graph.get_node("htseq_prepare")
-                )
-            )
+        self.htseq_prepare()
 
-        # htseq_count
-        # workflow section
         # inputs
         self.cwl_workflow["inputs"]["htseq_count_script"] = "File"
         self.cwl_input["htseq_count_script"] = {
@@ -775,6 +729,50 @@ class cwl_writer():
         )
 
 
+    def htseq_prepare(self):
+        # inputs
+        self.cwl_workflow["inputs"]["htseq_prepare_script"] = "File"
+        self.cwl_input["htseq_prepare_script"] = {
+            "class": "File",
+            "path": f"{self.root}/RNASeq/scripts/Basic_DEXSeq_scripts/dexseq_prepare.py"
+        }
+        # outputs
+        self.cwl_workflow["outputs"]["htseq_prepare_out"] = {
+            "type": "Directory",
+            "outputSource": "htseq_prepare_folder/out"
+        }
+        # steps
+        self.cwl_workflow["steps"]["htseq_prepare"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/docker/htseq_prepare.cwl",
+            "in": {
+                "input_script": "htseq_prepare_script",
+                "gtf": "annotation",
+                "gff_name": {
+                    "source": ["annotation"],
+                    "valueFrom": "$(self.nameroot + '.gff')"
+                }
+            },
+            "out": ["ht_prep_out"]
+        }
+        # foldering
+        self.cwl_workflow["steps"]["htseq_prepare_folder"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
+            "in": {
+                "item": "htseq_prepare/ht_prep_out",
+                "name": {"valueFrom": "htseq_prepare"}
+            },
+            "out": ["out"]
+        }
+        # graph
+        if self.graph.get_node("htseq_prepare") == []:
+            self.graph.add_node(pydot.Node("htseq_prepare", label="HTSeq prepare"))
+            self.graph.add_edge(
+                pydot.Edge(
+                    *self.graph_inputs.get_node("annotation"),
+                    *self.graph.get_node("htseq_prepare")
+                )
+            )
+
 
     def featurecounts(self):
         # inputs
@@ -818,12 +816,124 @@ class cwl_writer():
         self.add_metadata()
 
 
+    def misoindex(self):
+        # inputs
+        self.cwl_input["miso_index_script"] = {
+            "class": "File",
+            "path": f"{self.root}/RNASeq/scripts/gtf2gff3.pl"
+        }
+        self.cwl_workflow["inputs"]["miso_index_script"] = "File"
+        # outputs
+        self.cwl_workflow["outputs"]["misoindex_out"] = {
+            "type": "Directory",
+            "outputSource": "misoindex_folder/out"
+        }
+        # steps
+        self.cwl_workflow["steps"]["misoindex"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/docker/miso_index.cwl",
+            "in": {
+                "perl_input": "miso_index_script",
+                "gtf": "annotation",
+                "output": {"valueFrom": "miso_index"}
+            },
+            "out": ["miso_out"]
+        }
+        self.cwl_workflow["steps"]["misoindex_folder"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
+            "in": {
+                "item": "misoindex/miso_out",
+                "name": {"valueFrom": "misoindex"}
+            },
+            "out": ["out"]
+        }
+
+        # graph
+        if self.graph.get_node("miso_index") == []:
+            self.graph.add_node(pydot.Node("miso_index", label="MISO Index"))
+            self.graph.add_edge(
+                pydot.Edge(
+                    *self.graph_inputs.get_node("annotation"),
+                    *self.graph.get_node("miso_index")
+                )
+            )
+    
+
+
+    def misomerge(self):
+        samtools = "_".join(self.name_list[:self.name_list.index("samtools") + 1])
+        # outputs
+        self.cwl_workflow["outputs"][f"{self.name}_out"] = {
+            "type": "Directory",
+            "outputSource": f"{self.name}_folder/out"
+        }
+        # steps
+        for condition in self.conditions:
+            self.cwl_workflow["steps"][f"{self.name}_{condition}"] = {
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/miso_merge.cwl",
+                "in": {
+                    "bam": [f"{samtools}_{self.file_names.index(name) + 1}/samtools_out" 
+                                for name in self.conditions[condition]],
+                    "output": {"valueFrom": condition + ".bam"}
+                },
+                "out": ["miso_out"]
+            }
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
+            "in": {
+                "item": [f"{self.name}_{condition}/miso_out" 
+                            for condition in self.conditions],
+                "name": {"valueFrom": self.name}
+            },
+            "out": ["out"]
+        }
+
+        self.graph.add_node(pydot.Node(self.name, label="Merge BAM files"))
+        self.previous_name = "_".join(self.name_list[:2])
+        self.add_edge()
+
+
+    def misorun(self):
+        # inputs
+        self.cwl_input["miso_run_script"] = {
+            "class": "File",
+            "path": f"{self.root}/RNASeq/scripts/complete_run.sh"
+        }
+        self.cwl_workflow["inputs"]["miso_run_script"] = "File"
+        # outputs
+        self.cwl_workflow["outputs"][f"{self.name}_out"] = {
+            "type": "Directory",
+            "outputSource": f"{self.name}_folder/out"
+        }
+        # steps
+        for condition in self.conditions:
+            self.cwl_workflow["steps"][f"{self.name}_{condition}"] = {
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/miso_run.cwl",
+                "in": {
+                    "input_script": "miso_run_script",
+                    "gff": "misoindex/miso_out",
+                    "bam": f"{self.previous_name}_{condition}/miso_out",
+                    "lib_type": {"valueFrom": self.reader.libtype[0]},
+                    "output": {"valueFrom": condition}
+                },
+                "out": ["miso_out"]
+            }
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
+            "in": {
+                "item": [f"{self.name}_{condition}/miso_out" 
+                            for condition in self.conditions],
+                "name": {"valueFrom": self.name}
+            },
+            "out": ["out"]
+        }
+
+        self.graph.add_node(pydot.Node(self.name, label="MISO Run"))
+        self.add_edge()
+        self.previous_name = "miso_index"
+        self.add_edge()
+
     #----------analysis----------
     def deseq2(self):
-        """
-        func to add deseq2 step
-        """
-        # workflow section
         # inputs
         self.cwl_workflow["inputs"]["DESeq2_script"] = "File"
         self.cwl_input["DESeq2_script"] = {
@@ -845,7 +955,7 @@ class cwl_writer():
                 "count_matrix": f"{self.previous_name}/{self.output_string[self.prev]}",
                 "metadata": "metadata"
             },
-            "out": ["DESeq2_out"]
+            "out": ["DESeq2_out", "de_res"]
         }
 
         # foldering
@@ -860,12 +970,15 @@ class cwl_writer():
             "out": ["out"]
         }
 
+
+        # graph
         self.graph.add_node(pydot.Node(self.name, label="DESeq2"))
         self.add_edge()
         self.add_gene_count()
         self.add_norm()
         self.add_metadata()
 
+        # paths
         files = {}
         files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
                         f"/norm_count.csv"
@@ -881,11 +994,19 @@ class cwl_writer():
                         .filter(self.Workflow.id == self.analysis_id[self.name])\
                         .first().paths = json.dumps(files)
 
+        if self.reactome:
+            print("reactome exist, make fgsea")
+            self.previous_name = self.name
+            self.name += "_fgsea"
+            self.fgsea()
 
     def dexseq(self):
-        # workflow section
         # inputs
         self.cwl_workflow["inputs"]["dexseq_script"] = "File"
+        self.cwl_input["dexseq_script"] = {
+            "class": "File",
+            "path": f"{self.root}/RNASeq/scripts/Basic_DEXSeq_scripts/DEXSeq.R"
+        }
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
@@ -911,18 +1032,15 @@ class cwl_writer():
             },
             "out": ["out"]
         }
-        # yml section
-        self.cwl_input["dexseq_script"] = {
-            "class": "File",
-            "path": f"{self.root}/RNASeq/scripts/Basic_DEXSeq_scripts/DEXSeq.R"
-        }
 
+        # graph
         self.graph.add_node(pydot.Node(self.name, label="DEXSeq"))
         self.add_edge()
         self.add_metadata()
         self.add_exon_count()
         self.add_norm()
 
+        # paths
         files = {}
         files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
                         f"/norm_count.csv"
@@ -934,20 +1052,13 @@ class cwl_writer():
                         .filter(self.Workflow.id == self.analysis_id[self.name])\
                         .first().paths = json.dumps(files)
 
+
     def deseq(self):
         raise NotImplementedError
 
 
-    def cuffdiff(self):
-        # cuffquant
-        original_name = self.name
-        # inputs
-        # outputs
-        self.name_list = self.name_list[:-1]
-        self.name_list.append("cuffmerge")
-        self.name_list.append("cuffquant")
-        self.previous_name = "_".join(self.name_list[:-1])
-        self.name = "_".join(self.name_list)
+    def cuffquant(self):
+        # self.name = "_".join(self.name_list)
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
             "outputSource": f"{self.name}_folder/out"
@@ -983,11 +1094,20 @@ class cwl_writer():
         self.graph.add_node(pydot.Node(self.name, label="Cuffquant"))
         self.add_edge()
 
-        # cuffnorm
+        self.cuffnorm()
+
+
+    def cuffnorm(self):
+        cuffmerge = "_".join(self.name_list[:self.name_list.index("cuffmerge") + 1])
         self.name_list.append("cuffnorm")
         self.previous_name = "_".join(self.name_list[:-1])
         self.name = "_".join(self.name_list)
         # inputs
+        self.cwl_workflow["inputs"]["cuffnorm_table"] = "File"
+        self.cwl_input["cuffnorm_table"] = {
+            "class": "File",
+            "path": f"{self.root}/RNASeq/scripts/cuffnorm_table.py"
+        }
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
@@ -999,7 +1119,10 @@ class cwl_writer():
             "in": {
                 "threads": "threads",
                 "merged_gtf": f"{cuffmerge}/merged_gtf",
-                "output": {"valueFrom": f"{self.name}"}
+                "output": {"valueFrom": f"{self.name}"},
+                "input_script": "cuffnorm_table",
+                "label": "conditions",
+                "metadata": "metadata"
             },
             "out": ["cuffnorm_out"]
         }
@@ -1012,15 +1135,13 @@ class cwl_writer():
         self.graph.add_node(pydot.Node(self.name, label="Cuffnorm"))
         self.add_edge()
         self.add_norm()
-        files = {}
-        files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
+        self.files = {}
+        self.files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
                         f"/genes.fpkm_table"
 
-        # cuffdiff
-        # inputs
-        self.name_list[-1] = "cuffdiff"
-        self.previous_name = "_".join(self.name_list[:-1])
-        self.name = "_".join(self.name_list)
+
+    def cuffdiff(self):
+        cuffmerge = "_".join(self.name_list[:self.name_list.index("cuffmerge") + 1])
         self.cwl_workflow["inputs"]["conditions"] = "string[]"
         self.cwl_workflow["inputs"]["cuffdiff_file_sort"] = "File"
         self.cwl_input["conditions"] = list(self.conditions)
@@ -1044,7 +1165,7 @@ class cwl_writer():
                 "output": {"valueFrom": self.name},
                 "input_script": "cuffdiff_file_sort"
             },
-            "out": ["cuffdiff_out"]
+            "out": ["cuffdiff_out", "de_res"]
         }
         for index, condition in enumerate(self.conditions):
             self.cwl_workflow["steps"][self.name]["in"]\
@@ -1057,22 +1178,21 @@ class cwl_writer():
         self.add_gene_count()
 
 
-        files["DGE"] = [self.root + f"/Data/{self.identifier}/output/" + self.name + \
+        self.files["DGE"] = [self.root + f"/Data/{self.identifier}/output/" + self.name + \
                         f"/DGE_res.csv"]
 
         self.sql_session.query(self.Workflow)\
-                        .filter(self.Workflow.id == self.analysis_id[original_name])\
-                        .first().paths = json.dumps(files)
+                        .filter(self.Workflow.id == self.analysis_id[self.name])\
+                        .first().paths = json.dumps(self.files)
+
+        if self.reactome:
+            print("reactome exist, make fgsea")
+            self.previous_name = self.name
+            self.name += "_fgsea"
+            self.fgsea()
 
 
-    def ballgown(self):
-        original_name = self.name
-        self.name_list = self.name_list[:-1]
-        self.name_list.append("cuffmerge")
-        self.name_list.append("tablemaker")
-        self.previous_name = "_".join(self.name_list[:-1])
-        self.name = "_".join(self.name_list)
-        # tablemaker
+    def tablemaker(self):
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
@@ -1108,10 +1228,8 @@ class cwl_writer():
         self.graph.add_node(pydot.Node(self.name, label="Tablemaker"))
         self.add_edge()
 
-        # ballgown
-        self.name_list.append("ballgown")
-        self.previous_name = "_".join(self.name_list[:-1])
-        self.name = "_".join(self.name_list)
+
+    def ballgown(self):
         # inputs
         self.cwl_workflow["inputs"]["ballgown_script"] = "File"
         self.cwl_input["ballgown_script"] = {
@@ -1132,15 +1250,14 @@ class cwl_writer():
                 "condition": {"valueFrom": "condition"},
                 "tablemaker_output": [f"{self.previous_name}_folder/out"]
             },
-            "out": ["gene_matrix", "transcript_matrix"]
+            "out": ["de_res", "ballgown_out"]
         }
 
         # foldering
         self.cwl_workflow["steps"][f"{self.name}_folder"] = {
             "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
-                "item":[f"{self.name}/gene_matrix",
-                        f"{self.name}/transcript_matrix"],
+                "item":[f"{self.name}/ballgown_out"],
                 "name": {
                     "valueFrom": self.name
                     }
@@ -1163,8 +1280,14 @@ class cwl_writer():
                         f"/DTE_res.csv"]
 
         self.sql_session.query(self.Workflow)\
-                        .filter(self.Workflow.id == self.analysis_id[original_name])\
+                        .filter(self.Workflow.id == self.analysis_id[self.name])\
                         .first().paths = json.dumps(files)
+
+        if self.reactome:
+            print("reactome exist, make fgsea")
+            self.previous_name = self.name
+            self.name += "_fgsea"
+            self.fgsea()
     
 
     def edger(self):
@@ -1189,7 +1312,7 @@ class cwl_writer():
                 "metadata": "metadata",
                 "condition": {"valueFrom": "condition"}
             },
-            "out": ["edger_out"]
+            "out": ["edger_out", "de_res"]
         }
 
         # foldering
@@ -1203,6 +1326,7 @@ class cwl_writer():
                 },
             "out": ["out"]
         }
+
 
         self.graph.add_node(pydot.Node(self.name, label="EdgeR"))
         self.add_edge()
@@ -1224,6 +1348,61 @@ class cwl_writer():
         self.sql_session.query(self.Workflow)\
                         .filter(self.Workflow.id == self.analysis_id[self.name])\
                         .first().paths = json.dumps(files)
+
+        if self.reactome:
+            print("reactome exist, make fgsea")
+            self.previous_name = self.name
+            self.name += "_fgsea"
+            self.fgsea()
+
+    def misocompare(self):
+        names = []
+        # outputs
+        self.cwl_workflow["outputs"][f"{self.name}_out"] = {
+            "type": "Directory",
+            "outputSource": f"{self.name}_folder/out"
+        }
+        for condition_pair in combinations(self.conditions, 2):
+            condition_str = "-".join(condition_pair)
+            name = self.name + "_" + condition_str
+            names.append(name)
+            # steps
+            self.cwl_workflow["steps"][name] = {
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/miso_compare.cwl",
+                "in": {
+                    "group1": f"{self.previous_name}_{condition_pair[0]}/miso_out",
+                    "group2": f"{self.previous_name}_{condition_pair[1]}/miso_out",
+                    "output": {"valueFrom": name}
+                },
+                "out": ["miso_out"]
+            }
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
+            "in": {
+                "item": [name + "/miso_out" for name in names],
+                "name": {"valueFrom": self.name}
+            },
+            "out": ["out"]
+        }
+
+        self.graph.add_node(pydot.Node(self.name, label="MISO Compare"))
+        self.add_edge()
+        self.add_metadata()
+
+        if self.graph_outputs.get_node("isoform_count") == []:
+            self.graph_outputs.add_node(
+                pydot.Node(
+                    "isoform_count",
+                    label="Differential isoform expression result",
+                    fillcolor="#94DDF4"
+                )
+            )
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph.get_node(self.name),
+                *self.graph_outputs.get_node("isoform_count")
+            )
+        )
 
     #----------utility-----------
     def samtools(self):
@@ -1268,22 +1447,21 @@ class cwl_writer():
             "path": f"{self.root}/RNASeq/scripts/prepDE.py"
         }
         # outputs
-        self.cwl_workflow["outputs"]["prepde_out"] = {
+        self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
-            "outputSource": "prepde_folder/out"
+            "outputSource": f"{self.name}_folder/out"
         }
         # steps
         self.cwl_workflow["steps"][f"{self.name}"] = {
             "run": f"{self.root}/RNASeq/cwl-tools/docker/prepDE.cwl",
             "in": {
                 "input_script": "prepDE_script",
-                "stringtie_out": [f"{self.previous_name}_{i+1}/{self.output_string[self.prev]}"
-                            for i in range(self.num)]
+                "stringtie_out": f"{self.previous_name}_folder/out"
             },
             "out": ["gene_count_output", "transcript_count_output"]
         }
         # foldering
-        self.cwl_workflow["steps"]["prepde_folder"] = {
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
             "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
                 "item":[f"{self.name}/gene_count_output",
@@ -1297,6 +1475,73 @@ class cwl_writer():
 
         self.graph.add_node(pydot.Node(self.name, label="PrepDE"))
         self.add_edge()
+
+
+    def fgsea(self):
+        # inputs
+        self.cwl_input["fgsea_script"] = {
+            "class": "File",
+            "path": f"{self.root}/RNASeq/scripts/GSEA_Script.R"
+        }
+        self.cwl_workflow["inputs"]["fgsea_script"] = "File"
+        self.cwl_input["reactome"] = {
+            "class": "File",
+            "path": self.root + "/Data/" + self.reactome
+        }
+        self.cwl_workflow["inputs"]["reactome"] = "File"
+        # outputs
+        self.cwl_workflow["outputs"][f"{self.name}_out"] = {
+            "type": "Directory",
+            "outputSource": f"{self.name}_folder/out"
+        }
+        # steps
+        self.cwl_workflow["steps"][self.name] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/docker/fgsea.cwl",
+            "in": {
+                "input_script": "fgsea_script",
+                "de_res": f"{self.previous_name}/de_res",
+                "gene_set": "reactome"
+            },
+            "out": ["gsea_out"]
+        }
+
+        # foldering
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
+            "in":{
+                "item":[f"{self.name}/gsea_out"],
+                "name": {
+                    "valueFrom": self.name
+                    }
+            },
+            "out": ["out"]
+        }
+
+        if self.graph_inputs.get_node("reactome") == []:
+            self.graph_inputs.add_node(
+                pydot.Node(
+                    "reactome",
+                    label="Reactome",
+                    fillcolor="#94DDF4"
+                )
+            )
+        self.graph.add_node(pydot.Node(self.name, label="fgsea"))
+        self.add_edge()
+        if self.graph_outputs.get_node("fgsea_result") == []:
+            self.graph_outputs.add_node(
+                pydot.Node(
+                    "fgsea_result",
+                    label="Gene set analysis result",
+                    fillcolor="#94DDF4"
+                )
+            )
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph.get_node(self.name),
+                *self.graph_outputs.get_node("fgsea_result")
+            )
+        )
+
 
 
     def add_edge(self):
@@ -1374,40 +1619,132 @@ class cwl_writer():
             )
         )
 
+    def create_indexing(self, programs):
+        print("Generate indexing workflow")
+        indexing_input = {
+            "threads": self.threads,
+            "fasta": [{
+                "class": "File",
+                "path": self.genome
+            }],
+            "gtf": [{
+                "class": "File",
+                "path": self.annotation
+            }],
+            "ht2base": self.organism
+        }
+        indexing_workflow = {
+            "cwlVersion": "v1.0",
+            "class": "Workflow",
+            "requirements":{
+                "StepInputExpressionRequirement": {},
+                "InlineJavascriptRequirement": {},
+                "SubworkflowFeatureRequirement": {}
+            },
+            "inputs": {
+                "threads": "int",
+                "gtf": "File[]",
+                "fasta": "File[]",
+                "ht2base": "string"
+            },
+            "outputs": {},
+            "steps": {}
+        }
 
-    # TODO fix this!!!
-    def create_indexing(self, database_reader_object):
-        print("Reading program index")
+        if "star" in programs:
+            indexing_workflow["outputs"]["star_out"] = {
+                "type": "Directory",
+                "outputSource": "star/index_out"
+            }
 
-        if self.Workflow_index[0] == 8:
-            print("Creating STAR Index workflow")
-            yaml_file = open("./cwl-tools/docker/STAR_index.yml")
-            yaml_file = yaml.load(yaml_file)
+            indexing_workflow["steps"]["star"] = {
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/STAR_index.cwl",
+                "in": {
+                    "threads": "threads",
+                    "Mode": {"valueFrom": "genomeGenerate"},
+                    "fasta": "fasta",
+                    "gtf": "gtf"
+                },
+                "out": ["index_out"]
+            }
+        
+        if "hisat2" in programs or "hisat2xs" in programs:
+            indexing_workflow["outputs"]["hisat2_ht_out"] = {
+                "type": "Directory",
+                "outputSource": "hisat2/ht_out"
+            }
+            indexing_workflow["outputs"]["hisat2_log_out"] = {
+                "type": "File",
+                "outputSource": "hisat2/log_out"
+            }
+            indexing_workflow["outputs"]["hisat2_splice_sites_out"] = {
+                "type": "File",
+                "outputSource": "hisat2/splice_sites_out"
+            }
+            indexing_workflow["outputs"]["hisat2_exon_out"] = {
+                "type": "File",
+                "outputSource": "hisat2/exon_out"
+            }
+            indexing_workflow["steps"]["hisat2"] = {
+                "run": f"{self.root}/RNASeq/workflows/docker/hisat2_index.cwl",
+                "in": {
+                    "threads": "threads",
+                    "fasta": "fasta",
+                    "ht2base": "ht2base",
+                    "gtf": "gtf"
+                },
+                "out": ["ht_out", "log_out", "splice_sites_out", "exon_out"]
+            }
 
-            yaml_file["genomeFastaFiles"]["path"] = self.conf["genome"]
-            yaml_file["sjdbGTFfile"]["path"] = self.annotation
+        if "salmonquant" in programs:
+            indexing_input["cdna"] = [{
+                "class": "File",
+                "path": self.cdna
+            }]
+            indexing_workflow["inputs"]["cdna"] = "File[]"
+            indexing_workflow["outputs"]["salmon_out"] = {
+                "type": "Directory",
+                "outputSource": "salmon/salmon_out"
+            }
 
-            with open(f'STAR_index_{self.conf["session_ID"]}.yml', "w+") as outfile:
-                yaml.dump(yaml_file, outfile, default_flow_style=False)
+            indexing_workflow["steps"]["salmon"] = {
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/salmon_index.cwl",
+                "in": {
+                    "fasta": "cdna",
+                    "output": {"valueFrom": "Salmonindex"},
+                    "index_type": {"valueFrom": "quasi"},
+                    "threads": "threads"
+                },
+                "out": ["salmon_out"]
+            }
+        cwl = f"{self.root}/Data/{self.identifier}/indexing.cwl"
+        yml = f"{self.root}/Data/{self.identifier}/indexing.yml"
+        with open(cwl, "w+") as outfile:
+            outfile.write("#!/usr/bin/env cwl-runner\n\n")
+            yaml.dump(indexing_workflow, outfile, default_flow_style=False)
+        with open(yml, "w+") as outfile:
+            yaml.dump(indexing_input, outfile, default_flow_style=False)
+        
+        q = self.Queue()
+        q.session_id = self.id
+        q.cwl = cwl
+        q.yml = yml
+        q.status = 1
+        q.jobtype = "index"
+        q.result = "empty"
+        self.sql_session.add(q)
 
-        elif self.Workflow_index[0] == 4:
-            print("Creating HISAT 2 Index workflow")
-            yaml_file = open("./cwl-tools/docker/hisat2_build.yml")
-            yaml_file = yaml.load(yaml_file)
-
-            yaml_file["reference"]["path"] = self.conf["genome"]
-            yaml_file["basename"] = self.conf["organism_name"]
-
-            with open(f'HISAT2_index_{self.conf["session_ID"]}.yml', "w+") as outfile:
-                yaml.dump(yaml_file, outfile, default_flow_style=False)
-
+        
 
     def write_workflow(self, logic_object, session, Workflow):
         self.sql_session = session
         self.Workflow = Workflow
         self.analysis_id = logic_object.analysis_id
+        old_queues = self.sql_session.query(self.Queue).filter(self.Queue.session_id == self.id)
+        old_queues.delete()
+        if self.genome_index == "user_provided":
+            self.create_indexing(logic_object.workflow)
         print("writing cwl")
-        print(logic_object.analysis_id)
         for step in logic_object.workflow:
             self.name_list = step.split("_")
             self.previous_name = "_".join(self.name_list[:-1])
@@ -1425,23 +1762,20 @@ class cwl_writer():
                         f"{self.root}/Data/{self.identifier}/workflow.dot"],
                         stdout=svgfile)
         svgfile.close()
-        with open(f"{self.root}/Data/{self.identifier}/workflow.cwl", "w+") as outfile:
+        cwl = f"{self.root}/Data/{self.identifier}/workflow.cwl"
+        yml = f"{self.root}/Data/{self.identifier}/input.yml"
+        with open(cwl, "w+") as outfile:
             outfile.write("#!/usr/bin/env cwl-runner\n\n")
             yaml.dump(self.cwl_workflow, outfile, default_flow_style=False)
-        with open(f"{self.root}/Data/{self.identifier}/input.yml", "w+") as outfile:
+        with open(yml, "w+") as outfile:
             yaml.dump(self.cwl_input, outfile, default_flow_style=False)
-        workflow_log = open(f"{self.root}/Data/{self.identifier}/workflow.log", "w")
-        print("Submit workflow")
-        proc = subprocess.Popen(["cwl-runner",
-                    f"--outdir={self.root}/Data/{self.identifier}/output",
-                    "--timestamp",
-                    "--tmpdir-prefix=/tmp/",
-                    "--tmp-outdir-prefix=/tmp/",
-                    f"{self.root}/Data/{self.identifier}/workflow.cwl",
-                    f"{self.root}/Data/{self.identifier}/input.yml"],
-                    stdout=workflow_log, stderr=workflow_log)
-        print(proc.args)
-        print(proc.pid)
-        workflow_log.close()
+        print("Add workflow to jobs queue")
+        q = self.Queue()
+        q.session_id = self.id
+        q.cwl = cwl
+        q.yml = yml
+        q.status = 1
+        q.jobtype = "workflow"
+        q.result = "empty"
+        self.sql_session.add(q)
         self.sql_session.commit()
-

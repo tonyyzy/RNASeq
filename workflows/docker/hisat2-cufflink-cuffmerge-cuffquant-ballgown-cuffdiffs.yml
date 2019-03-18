@@ -28,8 +28,11 @@ ballgown_script:
 metadata:
   class: File
   path: ../../tests/metadata.csv
-conditions: ["Normal","Tumour"]
+conditions: ["untreated","treated"]
 Tag: --dta-cufflinks
-python_script: 
+python_script:
   class: File
   path: ../../scripts/cuffdiff_file_sort.py
+norm_python_script:
+  class: File
+  path: ../../scripts/cuffnorm_table.py

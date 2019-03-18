@@ -3,16 +3,25 @@
 cwlVersion: v1.0
 class: ExpressionTool
 requirements:
-  InlineJavascriptRequirement: {}
+    InlineJavascriptRequirement: {}
 
 inputs:
-  item: Any
-  name: string
+    item: Any
+    name: string
 
 outputs:
-  out: Directory
+    out: Directory
 
 expression: "${
+    if (inputs.item.class == 'Directory'){
+        return {
+            'out': {
+                'class': 'Directory',
+                'basename': inputs.name,
+                'listing': [inputs.item]
+            }
+        }
+    };
     if (inputs.item.class == 'File'){
         var arr = [inputs.item];
         }

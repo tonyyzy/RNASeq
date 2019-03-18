@@ -1,7 +1,7 @@
-threads: 2
+threads: 1
 genomeDir:
   class: Directory
-  path: ./ht2_index
+  path: ./HISAT2Index
 annotation:
   class: File
   path: ./test.gtf
@@ -28,8 +28,11 @@ ballgown_script:
 metadata:
   class: File
   path: ./metadata.csv
-conditions: ["Normal","Tumour"]
+conditions: ["untreated","treated"]
 Tag: --dta-cufflinks
 python_script:
   class: File
   path: ../scripts/cuffdiff_file_sort.py
+norm_python_script:
+  class: File
+  path: ../scripts/cuffnorm_table.py

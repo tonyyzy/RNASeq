@@ -1,0 +1,10 @@
+test1	Cufflinks	transcript	500	999	1000	+	.	gene_id "gene1"; transcript_id "trans1"; FPKM "1784882.2601053079"; frac "1.000000"; conf_lo "1576858.409008"; conf_hi "1992906.111203"; cov "106.361134";
+test1	Cufflinks	exon	500	999	1000	+	.	gene_id "gene1"; transcript_id "trans1"; exon_number "1"; FPKM "1784882.2601053079"; frac "1.000000"; conf_lo "1576858.409008"; conf_hi "1992906.111203"; cov "106.361134";
+test1	Cufflinks	transcript	3000	5299	1000	-	.	gene_id "gene2"; transcript_id "trans3"; FPKM "555858.5763334979"; frac "0.944151"; conf_lo "483453.624622"; conf_hi "628263.528045"; cov "33.123613";
+test1	Cufflinks	exon	3000	3299	1000	-	.	gene_id "gene2"; transcript_id "trans3"; exon_number "1"; FPKM "555858.5763334979"; frac "0.944151"; conf_lo "483453.624622"; conf_hi "628263.528045"; cov "33.123613";
+test1	Cufflinks	exon	3500	3999	1000	-	.	gene_id "gene2"; transcript_id "trans3"; exon_number "2"; FPKM "555858.5763334979"; frac "0.944151"; conf_lo "483453.624622"; conf_hi "628263.528045"; cov "33.123613";
+test1	Cufflinks	exon	5050	5299	1000	-	.	gene_id "gene2"; transcript_id "trans3"; exon_number "3"; FPKM "555858.5763334979"; frac "0.944151"; conf_lo "483453.624622"; conf_hi "628263.528045"; cov "33.123613";
+test1	Cufflinks	transcript	3000	5299	52	-	.	gene_id "gene2"; transcript_id "trans2"; FPKM "29363.2283089821"; frac "0.055849"; conf_lo "11599.732660"; conf_hi "47126.723958"; cov "1.749755";
+test1	Cufflinks	exon	3000	3299	52	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "1"; FPKM "29363.2283089821"; frac "0.055849"; conf_lo "11599.732660"; conf_hi "47126.723958"; cov "1.749755";
+test1	Cufflinks	exon	4400	4999	52	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "2"; FPKM "29363.2283089821"; frac "0.055849"; conf_lo "11599.732660"; conf_hi "47126.723958"; cov "1.749755";
+test1	Cufflinks	exon	5050	5299	52	-	.	gene_id "gene2"; transcript_id "trans2"; exon_number "3"; FPKM "29363.2283089821"; frac "0.055849"; conf_lo "11599.732660"; conf_hi "47126.723958"; cov "1.749755";

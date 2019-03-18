@@ -1,0 +1,2 @@
+event_name	miso_posterior_mean	ci_low	ci_high	isoforms	counts	assigned_counts	chrom	strand	mRNA_starts	mRNA_ends
+gene2	0.11	0.09	0.12	'exon:trans3:3_exon:trans3:2_exon:trans3:1','exon:trans2:3_exon:trans2:2_exon:trans2:1'	(0,0):11,(0,1):1683,(1,0):171,(1,1):1005	0:270,1:2589	test1	-	3000,3000	5299,5299

@@ -1,5 +1,10 @@
 threads: 2
 fasta:
-   class: File
-   path: test.fa
-output: "test_index"
+   - {class: File, path: test.fa}
+output: "test"
+splice_sites:
+  class: File
+  path: ./test.gtf.splice_sites
+exon:
+  class: File
+  path: ./test.gtf.exons

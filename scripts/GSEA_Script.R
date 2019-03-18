@@ -22,41 +22,44 @@ if (! "--de_res" %in% args) {
   stop("'Differential Expression' flag [--de_res] absent")
 } else {
   de.file.path <- args[ grep("--de_res", args)+1 ]
+  de.file.path <- strsplit(de.file.path, split = ",")
+}
 
-  if (file.exists(de.file.path)) {
-    cat("\nLoading _serialised_ 'differential expression' results from \"", de.file.path ,"\" ... ", sep="")
-    Deseq.results <- read.csv(de.file.path, row.names = 1, header = TRUE)
+for(x in de.file.path){
+  if (file.exists(x)) {
+    cat("\nLoading _serialised_ 'differential expression' results from \"", x ,"\" ... ", sep="")
+    Deseq.results <- read.csv(x, row.names = 1, header = TRUE)
     if(!"p_adj" %in% colnames(Deseq.results)){
       stop("p_adj must be a column in de results file")
     }
-    if(!"log2FoldChange" %in% colnames(Deseq.results)){
-      stop("log2FoldChange must be a column in de results file")
+    if(!"log2foldchange" %in% colnames(Deseq.results)){
+      stop("log2foldchange must be a column in de results file")
     }
     cat("done\n")
   }
   else {
-    cat("\nLocation of file containing 'differential expression' results : \"", de.file.path,"\"\n", sep="")
+    cat("\nLocation of file containing 'differential expression' results : \"", x,"\"\n", sep="")
     stop("File **DOES NOT EXIST**")
   }
+  print("step 1")
+  
+  gs <- gs[gs[,1] %in% rownames(Deseq.results),]
+  Gene_Sets <- lapply(unique(gs[,2]), function(x) gs[gs[,2] == x,1])
+  names(Gene_Sets) <- unique(gs[,2])
+  
+  print("step 2")
+  
+  stats <- Deseq.results[!is.na(Deseq.results$p_adj),]
+  tmp <- stats[,"log2foldchange"]
+  names(tmp) <- rownames(stats)
+  print(head(tmp))
+  
+  print("step 3")
+  gsea.Results <- fgsea::fgsea(Gene_Sets,tmp, 5000, minSize = 10)
+  
+  print("step 4")
+  colnames(gsea.Results) <- c("name","p_value","p_adj","ES","NES","nMoreExtreme","size","leadingEdge")
+  name <- sub("DGE_res.csv","", x)
+  name <- basename(name)
+  write.csv(gsea.Results, paste0(name,"gsea_res.csv"), row.names = FALSE)
 }
-
-print("step 1")
-
-gs <- gs[gs[,1] %in% rownames(Deseq.results),]
-Gene_Sets <- lapply(unique(gs[,2]), function(x) gs[gs[,2] == x,1])
-names(Gene_Sets) <- unique(gs[,2])
-
-print("step 2")
-
-stats <- Deseq.results[!is.na(Deseq.results$p_adj),]
-tmp <- stats[,"log2FoldChange"]
-names(tmp) <- rownames(stats)
-print(head(tmp))
-
-print("step 3")
-gsea.Results <- fgsea::fgsea(Gene_Sets,tmp, 5000, minSize = 10)
-
-print("step 4")
-
-Results <- data.frame(gsea.Results[,2:7], row.names = gsea.Results$pathway)
-write.csv(Results, "gsea_res.csv")

@@ -1,7 +1,7 @@
-threads: 2
+threads: 1
 genomeDir:
   class: Directory
-  path: ./ht2_index
+  path: ./HISAT2Index
 annotation:
   class: File
   path: ./test.gtf

@@ -26,6 +26,7 @@ inputs:
     conditions: string[]
     Tag: string
     python_script: File
+    norm_python_script: File
 
 outputs:
     hisat2_align_out:
@@ -45,7 +46,7 @@ outputs:
       outputSource: cuffmerge_folder/out
     cuffdiff_out:
       type: Directory
-      outputSource: cuffdiff/cuffdiff_out
+      outputSource: cuffdiff_folder/out
     tablemaker_out:
       type: Directory
       outputSource: tablemaker_folder/out
@@ -346,18 +347,37 @@ steps:
         - cuffquant_3/cxb
         - cuffquant_4/cxb
       output:
-        valueFrom: "cuffdiff"
+        valueFrom: "untreated-treated"
     out: [cuffdiff_out]
 
-#  cuffdiff_folder:
-#    run: ../../cwl-tools/folder.cwl
-#    in:
-#      item: 
-#        - cuffdiff/cuffdiff_out
-#        #- cuffdiff/cuffdiff_out
-#      name:
-#        valueFrom: "cuffdiff"
-#    out: [out]
+
+  cuffnorm:
+    run: ../../cwl-tools/docker/cuffnorm.cwl
+    in:
+      input_script: norm_python_script
+      threads: threads
+      merged_gtf: cuffmerge/merged_gtf
+      label: conditions
+      metadata: metadata
+      condition1_files:
+        - cuffquant_1/cxb
+        - cuffquant_2/cxb
+      condition2_files:
+        - cuffquant_3/cxb
+        - cuffquant_4/cxb
+      output:
+        valueFrom: "cuffnorm"
+    out: [cuffnorm_out]
+
+  cuffdiff_folder:
+    run: ../../cwl-tools/folder.cwl
+    in:
+      item:
+        - cuffdiff/cuffdiff_out
+        - cuffnorm/cuffnorm_out
+      name:
+        valueFrom: "cuffdiff"
+    out: [out]
 
   tablemaker_1:
     run: ../../cwl-tools/docker/tablemaker.cwl
@@ -423,14 +443,13 @@ steps:
         valueFrom: "condition"
       tablemaker_output:
         - tablemaker_folder/out
-    out: [gene_matrix, transcript_matrix]
+    out: [ballgown_out]
 
   ballgown_folder:
     run: ../../cwl-tools/folder.cwl
     in:
       item:
-        - ballgown/gene_matrix
-        - ballgown/transcript_matrix
+        - ballgown/ballgown_out
       name:
         valueFrom: "ballgown"
     out: [out]

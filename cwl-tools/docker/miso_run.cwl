@@ -26,6 +26,7 @@ inputs:
          position: 4
    min_exon_size:
       type: string
+      default: "50"
       inputBinding:
          position: 3
    output:

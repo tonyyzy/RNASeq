@@ -7,8 +7,8 @@ def test_workflow1_docker():
                     "--outdir=./test_workflow1_docker",
                     "./workflows/docker/star_samtools_stringtie_prepDE_DESeq2.cwl",
                     "./tests/star_samtools_stringtie_prepDE_DESeq2.yml"])
-        
-    assert filecmp.cmp("./test_workflow1_docker/DESeq2/untreated-treated_DGE_results.csv", "./tests/DGE_results.csv")
+
+    assert filecmp.cmp("./test_workflow1_docker/DESeq2/untreated-treated_DGE_res.csv", "./tests/DGE_res.star_prepde.csv")
 
 
 if __name__ == "__main__":

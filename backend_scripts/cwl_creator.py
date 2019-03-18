@@ -1,7 +1,7 @@
-from configparser import ConfigParser
-import os
-import sys
 import logging
+import os
+from configparser import ConfigParser
+
 import classes
 
 if __name__ == "__main__":

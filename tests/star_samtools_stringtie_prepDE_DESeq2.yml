@@ -1,7 +1,7 @@
 threads: 2
 genomeDir:
   class: Directory
-  path: ./GenomeIndex
+  path: ./STARIndex
 subject_name1: test1
 subject_name2: test2
 subject_name3: test3
@@ -24,7 +24,7 @@ prepDE_script:
   path: ../scripts/prepDE.py
 DESeq2_script:
   class: File
-  path: ../scripts/Basic_DESeq2.R
+  path: ./DESeq2.R
 metadata:
   class: File
   path: ./metadata.csv

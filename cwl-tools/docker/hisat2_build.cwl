@@ -6,7 +6,8 @@ baseCommand: hisat2-build
 hints:
    DockerRequirement:
       dockerPull: quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2 
-stdout: log.txt
+stdout: hisat2_build.log
+stderr: hisat2_build.log
 inputs:
    threads:
       type: int
@@ -24,10 +25,13 @@ inputs:
          position: 3
          prefix: --exon
    fasta:
-      type: File
+      type: File[]
       inputBinding:
+         itemSeparator: ","
+         separate: True
          position: 4
          prefix: -f
+         shellQuote: False
    output:
       type: string
       inputBinding:
@@ -37,6 +41,6 @@ outputs:
    ht:
       type: File[]
       outputBinding:
-         glob: "*"
+         glob: "*.ht2*"
    log:
       type: stdout

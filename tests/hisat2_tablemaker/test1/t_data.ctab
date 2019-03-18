@@ -1,0 +1,4 @@
+t_id	chr	strand	start	end	t_name	num_exons	length	gene_id	gene_name	cov	FPKM
+1	test1	+	500	999	TCONS_00000001	1	500	XLOC_000001	gene1	49.6352	115905
+2	test1	-	3000	5299	TCONS_00000002	3	1150	XLOC_000002	gene2	432.268	1.00941e+06
+3	test1	-	3000	5299	TCONS_00000003	3	1050	XLOC_000002	gene2	11.9558	27918.4

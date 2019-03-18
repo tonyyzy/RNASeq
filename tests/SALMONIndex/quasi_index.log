@@ -1,0 +1,12 @@
+[2019-03-18 16:30:29.646] [jointLog] [info] [Step 1 of 4] : counting k-mers
+[2019-03-18 16:30:29.647] [jointLog] [info] Replaced 0 non-ATCG nucleotides
+[2019-03-18 16:30:29.647] [jointLog] [info] Clipped poly-A tails from 0 transcripts
+[2019-03-18 16:30:29.647] [jointLog] [info] Building rank-select dictionary and saving to disk
+[2019-03-18 16:30:29.647] [jointLog] [info] done
+[2019-03-18 16:30:29.647] [jointLog] [info] Writing sequence data to file . . . 
+[2019-03-18 16:30:29.647] [jointLog] [info] done
+[2019-03-18 16:30:29.647] [jointLog] [info] Building 32-bit suffix array (length of generalized text is 2703)
+[2019-03-18 16:30:29.648] [jointLog] [info] Building suffix array . . . 
+[2019-03-18 16:30:29.663] [jointLog] [info] khash had 2120 keys
+[2019-03-18 16:30:29.664] [jointLog] [info] saving hash to disk . . . 
+[2019-03-18 16:30:29.664] [jointLog] [info] done

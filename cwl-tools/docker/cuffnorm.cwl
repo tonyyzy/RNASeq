@@ -6,6 +6,7 @@ baseCommand: mkdir
 
 requirements:
     ShellCommandRequirement: {}
+    InlineJavascriptRequirement: {}
 
 hints:
     DockerRequirement:
@@ -17,19 +18,41 @@ arguments:
   - position: -3
     prefix: "&&"
     valueFrom: "cuffnorm"
-    shellQuote: false
+    shellQuote: False
+  - position: 6
+    prefix: "&&"
+    valueFrom: $("python")
+    shellQuote: False
+  - position: 8
+    valueFrom: $(inputs.output + "/genes.count_table")
+  - position: 9
+    valueFrom: $(inputs.output + "/genes.attr_table")
+
 
 inputs:
+  input_script:
+     type: File
+     inputBinding:
+        position: 7
   output:
      type: string
      inputBinding:
         position: 1
         prefix: -o
+  metadata:
+     type: File
+     inputBinding:
+        position: 7
   threads:
      type: int
      inputBinding:
         position: 2
         prefix: -p
+  label:
+     type: string[]
+     inputBinding:
+        position: 10
+        itemSeparator: ","
   merged_gtf:
      type: File
      inputBinding:

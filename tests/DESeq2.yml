@@ -1,9 +1,9 @@
 input_script:
   class: File
-  path: ../scripts/Basic_DESeq2.R
+  path: ./DESeq2.R
 count_matrix:
   class: File
-  path: ./gene_count_matrix.csv
+  path: ./gene_count_matrix.star_prepde.csv
 metadata:
   class: File
   path: ./metadata.csv

@@ -12,7 +12,7 @@ arguments:
      valueFrom: "index"
 inputs:
    fasta:
-      type: File
+      type: File[]
       inputBinding:
          position: 1
          prefix: -t

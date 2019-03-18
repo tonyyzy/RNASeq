@@ -3,4 +3,4 @@ input_script:
   path: ../scripts/prepDE.py
 stringtie_out:
   class: Directory
-  path: ./stringtie
+  path: ./star_stringtie

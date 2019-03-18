@@ -1,7 +1,7 @@
 threads: 2
 genomeDir:
   class: Directory
-  path: ./GenomeIndex
+  path: ./STARIndex
 readFilesIn:
   - {class: File, path: ./test3.fastq}
 outFileNamePrefix: "test3"

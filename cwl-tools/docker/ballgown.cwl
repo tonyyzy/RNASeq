@@ -4,9 +4,18 @@ cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: Rscript
 
+requirements:
+  ShellCommandRequirement: {}
+
 hints:
   DockerRequirement:
     dockerPull: quay.io/biocontainers/bioconductor-ballgown:2.14.0--r351_0
+
+arguments:
+  - position: 4
+    prefix: "&&"
+    valueFrom: "ls"
+    shellQuote: False
 
 inputs:
   input_script:
@@ -30,11 +39,11 @@ inputs:
       prefix: --condition
 
 outputs:
-  gene_matrix:
-    type: File
+  de_res:
+    type: File[]
     outputBinding:
       glob: "*DGE_res.csv"
-  transcript_matrix:
-    type: File
+  ballgown_out:
+    type: File[]
     outputBinding:
-      glob: "*DTE_res.csv"
+      glob: "*.csv"

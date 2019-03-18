@@ -4,9 +4,6 @@ input_script:
 counts_matrix:
    class: Directory
    path: ./
-gff:
-   class: Directory
-   path: ./
 metadata:
    class: File
    path: ./metadata.csv

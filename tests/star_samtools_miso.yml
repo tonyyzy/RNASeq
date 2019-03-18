@@ -1,7 +1,7 @@
 threads: 2
 genomeDir:
   class: Directory
-  path: ./GenomeIndex
+  path: ./STARIndex
 subject_name1: test1
 subject_name2: test2
 subject_name3: test3

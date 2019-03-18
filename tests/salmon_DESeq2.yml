@@ -1,7 +1,7 @@
 threads: 2
 salmon_index:
   class: Directory
-  path: ./Salmonindex
+  path: ./SALMONIndex
 subject_name1: test1
 subject_name2: test2
 subject_name3: test3
@@ -24,7 +24,7 @@ salmon_count_script:
   path: ../scripts/salmon_R_script.R
 DESeq2_script:
   class: File
-  path: ../scripts/Basic_DESeq2.R
+  path: ./DESeq2.R
 metadata:
   class: File
   path: ./metadata.csv

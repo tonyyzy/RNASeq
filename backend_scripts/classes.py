@@ -1,13 +1,16 @@
-import pandas as pd
-import programs
 import copy
+import csv
 import logging
+import os
+import uuid
+
+import pandas as pd
 from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
-import os
-import csv
-import uuid
+
+import programs
+
 
 class database_checker():
     def __init__(self, database_link):
@@ -31,6 +34,7 @@ class database_checker():
         reader.extract_from_database(self.Database, root)
         logic = logic_builder(root)
         logic.create_workflow_logic(reader)
+        print(reader.genome_index)
         writer = programs.cwl_writer(reader, root)
         writer.write_workflow(logic, Session(self.engine), Workflow)
 
@@ -46,6 +50,7 @@ class database_reader():
         self.Annotation_file = ""
         self.identifier = ""
         self.indexes = {}
+        self.cdna_file = ""
 
     def extract_from_database(self, database, root):
         Base = automap_base()
@@ -57,28 +62,9 @@ class database_reader():
         Condition = Base.classes.analysis_condition
         Genome = Base.classes.analysis_genome
         session = Session(engine)
-
-        # extract steps in workflows of session
-        for entry in session.query(Workflow)\
-                .filter(Workflow.session_id == self.Session_ID):
-            self.workflows[entry.id] = [entry.mapper.lower(),
-                                        entry.assembler.lower(),
-                                        entry.analysis.lower()]
-        print(self.workflows)
-        
-        # extract file path from Genome table
-        for s,g in session.query(RSession, Genome)\
-                            .filter(RSession.genome_id == Genome.id)\
-                            .filter(RSession.id == self.Session_ID):
-            self.identifier = uuid.UUID(s.identifier)
-            self.Organism_name = g.organism
-            self.Genome_file = g.fasta_dna_file
-            self.Annotation_file = g.gtf_file
-            self.indexes["star_genomedir"] = g.star
-            self.indexes["HISAT2Index"] = g.hisat2
-            self.indexes["salmon_index"] = g.salmon
-        
+        self.Queue = Base.classes.analysis_queue
         # extract fastq file path and coditions
+        self.libtype = []
         for sample, condition in session\
                 .query(Samples, Condition)\
                 .filter(Samples.condition_id == Condition.id)\
@@ -91,6 +77,57 @@ class database_reader():
                     2: root + "/Data/" + sample.read_2
                 }
             }
+            self.libtype.append(sample.libtype)
+        
+        self.libtype = list(set(self.libtype))
+
+        # extract steps in workflows of session
+        for entry in session.query(Workflow)\
+                .filter(Workflow.session_id == self.Session_ID):
+            print(self.libtype)
+            if entry.assembler.lower() == "misorun" and len(self.libtype) == 2:
+                print("Can't run MISO for mixed library type")
+            else:
+                self.workflows[entry.id] = [entry.mapper.lower(),
+                                            entry.assembler.lower(),
+                                            entry.analysis.lower()]
+        print(self.workflows)
+        
+        # extract file path from Genome table
+        self.genome_index = session.query(RSession)\
+                                    .filter(RSession.id == self.Session_ID)\
+                                    .first()\
+                                    .genome_index
+        if self.genome_index == "pre_index":
+            for s,g in session.query(RSession, Genome)\
+                                .filter(RSession.genome_id == Genome.id)\
+                                .filter(RSession.id == self.Session_ID):
+                self.identifier = uuid.UUID(s.identifier)
+                self.Genome_file = g.fasta_dna_file
+                self.Annotation_file = g.gtf_file
+                self.indexes["star_genomedir"] = g.star
+                self.indexes["HISAT2Index"] = g.hisat2
+                self.indexes["salmon_index"] = g.salmon
+                self.Organism_name = g.organism
+                self.id = s.id
+                self.reactome = s.reactome
+                print(self.reactome)
+        elif self.genome_index == "user_provided":
+            for s in session.query(RSession)\
+                            .filter(RSession.id == self.Session_ID):
+                self.Organism_name = s.organism
+                self.identifier = uuid.UUID(s.identifier)
+                data_path = f"{root}/Data/{self.identifier}/genome/"
+                self.Genome_file = f"{root}/Data/" + s.fasta_dna_file
+                self.cdna_file = f"{root}/Data/" + s.fasta_cdna_file
+                self.Annotation_file = f"{root}/Data/" + s.gtf_file
+                self.indexes["star_genomedir"] = data_path + "STARIndex"
+                self.indexes["HISAT2Index"] = data_path + "HISAT2Index"
+                self.indexes["salmon_index"] = data_path + "Salmonindex"
+                self.id = s.id
+                self.reactome = s.reactome
+                print(self.reactome)
+
         
         # create metadata.csv of samples and conditions
         ## check if session directory exist
@@ -122,13 +159,16 @@ class logic_builder():
         for key, progs in database_reader_object.workflows.items():
             if progs[1] == "cufflinks" and progs[0] == "hisat2":
                 progs[0] = "hisat2xs"
+                result[key][0] = "hisat2xs"
             prev_prog = progs[0]
             for prog in progs[1:]:
                 value = self.programs_connections[prog][prev_prog]
                 if value == "-1":
                     raise ValueError("Invalid step connection")
                 elif value != "0":
-                    result[key].insert(result[key].index(prog), value)
+                    pos = prog
+                    for i in value.split("_"):
+                        result[key].insert(result[key].index(pos), i)
                 prev_prog = prog
             for j in range(1, len(result[key])):
                 result[key][j] = "_".join(result[key][j-1:j+1])

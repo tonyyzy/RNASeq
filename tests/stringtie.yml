@@ -1,6 +1,6 @@
 bam:
   class: File
-  path: ./test1.bam
+  path: ./test1.star.bam
 threads: 2
 gtf:
   class: File

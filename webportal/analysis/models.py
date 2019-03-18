@@ -46,6 +46,7 @@ class Session(models.Model):
     gtf_file = models.FileField(storage=data_root, upload_to=get_genome_path, blank=True, null=True)
     status = models.PositiveSmallIntegerField(default=False, blank=True, null=True)
     pid = models.IntegerField(blank=True, null=True)
+    reactome = models.FileField(storage=data_root, upload_to=get_genome_path, blank=True, null=True)
 
     def get_absolute_url(self): # provides a default if Session is called from views.py without a specified reverse or redirect
         return reverse('analysis:session_detail', kwargs={'session_slug':self.identifier})
@@ -101,7 +102,7 @@ class Workflow(models.Model):
     ASSEMLBER_CHOICES = (
         ("stringtie", "STRINGTIE"),
         ('cufflinks', 'CUFFLINKS'),
-        # ('miso', 'MISO'),
+        ('misorun', 'MISO'),
         ('htseq', 'HTSEQ'),
         ('featurecounts', 'FEATURECOUNTS'),
         ('salmoncount', 'SALMON')
@@ -109,7 +110,7 @@ class Workflow(models.Model):
     ANALYSIS_CHOICES = (
         ('deseq2', 'DESEQ2'),
         ('dexseq', 'DEXSEQ'),
-        # ('miso', 'MISO'),
+        ('misocompare', 'MISO'),
         ('cuffdiff', "CUFFDIFF"),
         ('edger', "EDGER"),
         ('ballgown', "BALLGOWN")
@@ -147,4 +148,14 @@ class The_Debug(models.Model):
     identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     field_one = models.CharField(max_length=200)
     # field_two = models.CharField(max_length=200)
-    field_two = models.FileField(storage=data_root, upload_to=get_debug_upload_path)
+    field_two = models.FileField(storage=data_root, upload_to=get_upload_path)
+
+
+class Queue(models.Model):
+    session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='queue_fk')
+    cwl = models.TextField(null=False)
+    yml = models.TextField(null=False)
+    status = models.BooleanField(default=False, null=False)
+    jobtype = models.CharField(max_length=200)
+    result = models.CharField(max_length=200)
+

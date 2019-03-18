@@ -2,8 +2,7 @@ input_script:
    class: File
    path: ./GSEA_Script.R
 de_res:
-   class: File
-   path: ./test_dge_results.csv
+   - {class: File, path: ./DGE_res.hisat2_prepde.csv}
 gene_set:
    class: File
    path: ./reactome.tsv

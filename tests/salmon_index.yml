@@ -1,6 +1,5 @@
 fasta:
-   class: File
-   path: ./test.cdna.fa
+ - {class: File, path: ./test.cdna.fa}
 output: "Salmonindex"
 # options are "fmd" or "quasi"
 index_type: "quasi"

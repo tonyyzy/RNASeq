@@ -5,7 +5,7 @@ class: CommandLineTool
 baseCommand: Rscript
 hints:
    DockerRequirement:
-      dockerPull: machalen/dexseq
+      dockerPull: filipejesus/dexseq
 
 inputs:
    input_script:
@@ -17,11 +17,6 @@ inputs:
       inputBinding:
          position: 2
          prefix: --count_matrix_dir
-   gff:
-      type: Directory
-      inputBinding:
-         position: 3
-         prefix: --gff_file_dir
    metadata:
       type: File
       inputBinding:
