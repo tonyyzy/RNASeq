@@ -1,3 +1,3 @@
 "name","basemean","log2foldchange","lfcSE","test_stat","p_value","p_adj"
-"gene1",469,-3,1,-6,0,0
-"gene2",1692,3,0,6,0,0
+"gene1",462,-3,0,-7,0,0
+"gene2",2058,3,0,7,0,0

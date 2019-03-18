@@ -1,4 +1,4 @@
 tracking_id	class_code	nearest_ref_id	gene_id	gene_short_name	tss_id	locus	length	coverage	FPKM	FPKM_conf_lo	FPKM_conf_hi	FPKM_status
-trans1	-	-	gene1	-	-	test1:499-999	500	106.361	1.91818e+06	1.69462e+06	2.14174e+06	OK
-trans3	-	-	gene2	-	-	test1:2999-5299	1050	28.6137	516036	444336	587735	OK
-trans2	-	-	gene2	-	-	test1:2999-5299	1150	1.02374	18462.7	3370.63	33554.7	OK
+trans1	-	-	gene1	-	-	test1:499-999	500	106.361	1.78488e+06	1.57686e+06	1.99291e+06	OK
+trans3	-	-	gene2	-	-	test1:2999-5299	1050	33.1236	555859	483454	628264	OK
+trans2	-	-	gene2	-	-	test1:2999-5299	1150	1.74975	29363.2	11599.7	47126.7	OK

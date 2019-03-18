@@ -24,3 +24,55 @@ burn_in = 500
 lag = 10
 num_iters = 5000
 num_processors = 4
+[data]
+filter_results = False
+min_event_reads = 20
+strand = fr-unstranded
+
+[cluster]
+cluster_command = qsub
+
+[sampler]
+burn_in = 500
+lag = 10
+num_iters = 5000
+num_processors = 4
+[data]
+filter_results = False
+min_event_reads = 20
+strand = fr-unstranded
+
+[cluster]
+cluster_command = qsub
+
+[sampler]
+burn_in = 500
+lag = 10
+num_iters = 5000
+num_processors = 4
+[data]
+filter_results = False
+min_event_reads = 20
+strand = fr-unstranded
+
+[cluster]
+cluster_command = qsub
+
+[sampler]
+burn_in = 500
+lag = 10
+num_iters = 5000
+num_processors = 4
+[data]
+filter_results = False
+min_event_reads = 20
+strand = fr-unstranded
+
+[cluster]
+cluster_command = qsub
+
+[sampler]
+burn_in = 500
+lag = 10
+num_iters = 5000
+num_processors = 4

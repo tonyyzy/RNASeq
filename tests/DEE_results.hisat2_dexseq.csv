@@ -1,6 +1,6 @@
 "name","groupID","featureID","exonBaseMean","dispersion","test_stat","p_value","p_adj","Normal","Tumour","log2foldchange","genomicData"
-"gene1:001","gene1","001",938,NA,NA,NA,NA,NA,NA,NA,<S4 object of class "GRanges">
-"gene2:001","gene2","001",107,0,1,0,0,2,2,-1,<S4 object of class "GRanges">
-"gene2:002","gene2","002",118,0,44,0,0,2,1,-6,<S4 object of class "GRanges">
-"gene2:003","gene2","003",236,0,9,0,0,2,3,2,<S4 object of class "GRanges">
-"gene2:004","gene2","004",115,0,2,0,0,2,2,0,<S4 object of class "GRanges">
+"gene1:001","gene1","001",645,NA,NA,NA,NA,NA,NA,NA,<S4 object of class "GRanges">
+"gene2:001","gene2","001",215,0,2,0,0,2,2,0,<S4 object of class "GRanges">
+"gene2:002","gene2","002",200,0,84,0,0,3,1,-5,<S4 object of class "GRanges">
+"gene2:003","gene2","003",296,0,26,0,0,2,3,3,<S4 object of class "GRanges">
+"gene2:004","gene2","004",174,0,1,0,0,2,2,0,<S4 object of class "GRanges">

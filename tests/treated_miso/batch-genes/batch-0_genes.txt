@@ -1,2 +1,2 @@
-gene1	/project/home18/fmj18/Documents/RNASeq/tests/MISOindex/chrtest1/gene1.pickle
-gene2	/project/home18/fmj18/Documents/RNASeq/tests/MISOindex/chrtest1/gene2.pickle
+gene1	/data/rnaseq/RNASeq/tests/MISOindex/chrtest1/gene1.pickle
+gene2	/data/rnaseq/RNASeq/tests/MISOindex/chrtest1/gene2.pickle
