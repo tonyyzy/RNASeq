@@ -120,5 +120,4 @@ var newPlot_Barplot = function(){
     .on("mouseout", function(){
       d3.select("#label").remove();
     });
-  });
-}
+  };
