@@ -1165,7 +1165,7 @@ class cwl_writer():
                 "output": {"valueFrom": self.name},
                 "input_script": "cuffdiff_file_sort"
             },
-            "out": ["cuffdiff_out"]
+            "out": ["cuffdiff_out", "de_res"]
         }
         for index, condition in enumerate(self.conditions):
             self.cwl_workflow["steps"][self.name]["in"]\
@@ -1184,6 +1184,12 @@ class cwl_writer():
         self.sql_session.query(self.Workflow)\
                         .filter(self.Workflow.id == self.analysis_id[self.name])\
                         .first().paths = json.dumps(self.files)
+
+        if self.reactome:
+            print("reactome exist, make fgsea")
+            self.previous_name = self.name
+            self.name += "_fgsea"
+            self.fgsea()
 
 
     def tablemaker(self):
@@ -1276,6 +1282,12 @@ class cwl_writer():
         self.sql_session.query(self.Workflow)\
                         .filter(self.Workflow.id == self.analysis_id[self.name])\
                         .first().paths = json.dumps(files)
+
+        if self.reactome:
+            print("reactome exist, make fgsea")
+            self.previous_name = self.name
+            self.name += "_fgsea"
+            self.fgsea()
     
 
     def edger(self):
