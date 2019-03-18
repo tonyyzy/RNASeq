@@ -1,3 +1,5 @@
 cwlref-runner
 pytest-xdist
 pytest-sugar
+Django
+django-crispy-forms
