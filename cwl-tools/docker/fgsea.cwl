@@ -13,9 +13,10 @@ inputs:
       inputBinding:
          position: 1
    de_res:
-      type: File
+      type: File[]
       inputBinding:
          position: 2
+         itemSeparator: ","
          prefix: --de_res
    gene_set:
       type: File
@@ -25,6 +26,6 @@ inputs:
 
 outputs:
    gsea_out:
-      type: File
+      type: File[]
       outputBinding:
-         glob: "gsea_res.csv"
+         glob: "*gsea_res.csv"
