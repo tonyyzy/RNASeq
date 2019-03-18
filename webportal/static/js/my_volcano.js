@@ -84,7 +84,7 @@ function wf_select(param){
     endpoint += '_'
   }
   console.log(endpoint)
-  console.log('hi there old sport')
+  // console.log('hi there old sport')
   d3_run(endpoint)
 }
 
@@ -119,13 +119,24 @@ function dataFilter_volcano(){
   newPlot(dataset)
 }
 
-function newPlot(){
-  console.log(dataset);
 
-  var margin = {top: 40, right: 20, bottom: 20, left: 40};
+
+function newPlot(){
+
+      d3.select("#id_painting_volcano").selectAll("*").remove();
+
+      console.log(dataset);
+
+      var width = d3.select('#id_painting_style_volcano').node().getBoundingClientRect().width;
+      var height = d3.select('#id_painting_style_volcano').node().getBoundingClientRect().height;
+      console.log(width)
+      console.log(height)
+
+      var margin = {top: 100, right: 20, bottom: 20, left: 100};
       //Width and height
-      w = 800 - margin.right - margin.left;
-      h = 800 - margin.top - margin.bottom;
+
+      w = width - margin.right - margin.left;
+      h = height - margin.top - margin.bottom;
 
       xScale = d3.scaleLinear()
         .domain([d3.min(dataset, function(d) { return  d.log2FoldChange - 2;}),
@@ -140,6 +151,7 @@ function newPlot(){
       .domain([d3.min(dataset, function(d) { return - Math.log10(d.padj) - 0.5;}),
                d3.max(dataset, function(d) { return - Math.log10(d.padj) + 0.5;})])
       .range([h, 0]);
+      // .range([h, 0]);
 
       d3.select("id_p_threshold")
       .attr("min", "" + d3.min(dataset, function(d) { return - Math.log10(d.padj);}))
@@ -151,13 +163,10 @@ function newPlot(){
 
       yAxis = d3.axisLeft()
       .scale(yScale);
-      // d3.select("#id_painting_volcano").selectAll("*").remove();
+
       svg = d3.select("#id_painting_volcano")
-      .append("svg")
-      .attr("width", w + margin.right + margin.left) // <-- Here
-      .attr("height", h + margin.top + margin.bottom)
-      // .attr("width", "100%") // <-- Here
-      // .attr("height", "100%")
+      .attr("width", "100%") // <-- Here
+      .attr("height", "100%")
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.bottom + ")");// <-- and here!
       svg.append("g")
@@ -167,6 +176,11 @@ function newPlot(){
       svg.append("g")
       .attr("class", "axis") //Assign "axis" class
       .call(yAxis)
+      svg.append("text")
+      .attr("x", xScale(w/2))
+      .attr("y", yScale(h + margin.top))
+      .style("text-anchor", "middle")
+      .text("Date");
       circles()
       hLines()
       vLines()

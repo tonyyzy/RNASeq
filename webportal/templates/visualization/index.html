@@ -46,7 +46,7 @@
 
 <ul class="nav nav-tabs nav-justified" role="tablist">
   <li class="nav-item">
-    <a id='id_volcano_tab' class="nav-link active" data-toggle="tab" href="#id_href_volcano">Volcano Plot</a>
+    <a id='id_volcano_tab' class="nav-link active" data-toggle="tab" href="#id_volcano">Volcano Plot</a>
   </li>
   <li class="nav-item">
     <a  id='id_barplot_tab' class="nav-link" data-toggle="tab" href="#id_barplot">Bar Plot</a>
@@ -55,27 +55,29 @@
 
 
   <div class="tab-content">
-    <div id="id_href_volcano" class="container tab-pane active"><br>
+    <div id="id_volcano" class="container tab-pane active">
       volc test
-      <div style="height: 1000px;width:1000px;">
-        <svg id='id_painting_volcano' style="height: 100%;width: 100%">
+      <div id='id_painting_style_volcano' style="height:100%">
+        <svg id='id_painting_volcano' class='painting_style'>
         </svg>
       </div>
     </div>
-    <div id="id_barplot" class="container tab-pane fade"><br>
-      bar test
-      <div style="height: 1000px;width:1000px;">
-        <svg id='id_painting_barplot' style="height: 100%;width: 100%">
+
+    <div id="id_barplot" class="container tab-pane fade">
+      barplot test
+      <div id='id_painting_style_barplot' style="height:100%">
+        <svg id='id_painting_barplot' class='painting_style'>
         </svg>
       </div>
     </div>
+
   </div>
+
 
 <!-- <input type="submit" class='btn btn-success' onclick='wf_select_barplot()' value="Bar Plot" /> -->
 
 <div class="dataFilterControls">
   <div class="slidecontainer jumbotron">
-    <!-- <input type="text" name="" value=""> -->
     <label for="">P Value</label>
     <input type="range" min="1" max="50" class="slider" id="id_p_threshold">
     <p>Value: <span id="id_p_threshold_out"></span></p>
@@ -112,6 +114,9 @@
   // })
 
   {% endblock %}
+  $( document ).ready(function() {
+    $('#wrapper').toggleClass('menuDisplayed')
+});
 
   $('#sidebar_toggle').click(function(e){
     // e.preventDefault();
@@ -125,11 +130,8 @@
     console.log('loading volcano')
   });
   $( "#id_barplot_tab" ).click(function() {
-    // wf_select()
-    // alert( "Handler for barplot called." );
     wf_select_barplot()
     console.log('loading barplot')
-    wf_select()
   });
   </script>
 
@@ -137,4 +139,3 @@
   {% endblock %}
   </body>
 </html>
-<input type="submit" class='btn btn-success' onclick='wf_select()' value="Bar Plot" />

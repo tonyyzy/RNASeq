@@ -303,7 +303,7 @@ class WorkflowCreateView(CreateView):
         return render(request, self.template_name, context)
 
     def post(self, request, session_slug):
-        form = WorkflowForm(request.POST)
+        form = WorkflowForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.session = Session.objects.get(identifier=session_slug)

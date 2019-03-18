@@ -15,6 +15,24 @@ colours = [
   "#074751",
   "#FFFF6D"];
 
+  var dataFilter_barplot = function(dataset){
+    dataset = dataset[0];
+    dataset = dataset.filter(function(d){return ! isNaN(d.padj);});
+    dataset = dataset.filter(function(d){return - Math.log10(d.padj) > p_threshold && (d.log2FoldChange > log2_threshold || d.log2FoldChange <  - log2_threshold);});
+    var all_values  = [];
+    for(var e = 0; e < dataset.length; e++){
+      all_values.push(dataset[e].dataset_index)
+    }
+    var unique = d3.set(all_values).values();
+    var values = [];
+    for(var e in unique){
+      temp_value = dataset.filter(function(d){return d.dataset_index == unique[e];});
+      temp_value = temp_value.length
+      values.push(temp_value);
+    };
+    return values
+  };
+
   function wf_select_barplot(param){
     dataset = []
     result = []
@@ -31,38 +49,51 @@ colours = [
       endpoint += '_'
     }
     console.log(endpoint)
-    run(endpoint)
+    d3_run_barplot(endpoint)
   }
 
-var run = function(endpoint){
-  d3.json(endpoint).then(function(data){
-    console.log('d3_run called');
-    dataset.push(data);
 
-    dataset = dataFilter(dataset)
+
+function d3_run_barplot(endpoint){
+  console.log(endpoint)
+  d3.json(endpoint).then(function(data) {
+    console.log('d3_run called')
+    dataset.push(data)
+    newPlot_Barplot(dataset)
+  });
+}
+
+var newPlot_Barplot = function(){
+
+    d3.select("#id_painting_barplot").selectAll("*").remove();
+
+    dataset = dataFilter_barplot(dataset);
 
     d3.select("#painting").selectAll("*").remove();
 
+    var width = d3.select('#id_painting_style_barplot').node().getBoundingClientRect().width;
+    var height = d3.select('#id_painting_style_barplot').node().getBoundingClientRect().height;
+    console.log(width)
+    console.log(height)
+
     var margin = {top: 40, right: 20, bottom: 20, left: 40};
     //Width and height
-    var w = 800 - margin.right - margin.left;
-    var h = 800 - margin.top - margin.bottom;
+    w = width - margin.right - margin.left;
+    h = height - margin.top - margin.bottom;
 
-    var xScale = d3.scaleBand().domain(d3.range(dataset.length))
+
+    var xScale = d3.scaleBand()
+    .domain(d3.range(dataset.length))
     .rangeRound([0, w]) // <-- Also enables rounding
     .paddingInner(0.05);
 
     var yScale = d3.scaleLinear()
-    .domain([0, d3.max(dataset, function(d) { return d;}) + 100])
+    .domain([0, d3.max(dataset, function(d) { return d;}) + 1])
     .range([h, 0]);
 
     var yAxis = d3.axisLeft()
     .scale(yScale);
 
-    // d3.select("#painting_barplot").selectAll("*").remove();
-
-    var yAxis = d3.axisLeft()
-    .scale(yScale);
 
     var svg = d3.select("#id_painting_barplot")
     //.attr("width", w + margin.right + margin.left) // <-- Here
@@ -98,23 +129,4 @@ var run = function(endpoint){
     .on("mouseout", function(){
       d3.select("#label").remove();
     });
-  });
-}
-
-var dataFilter = function(dataset){
-  dataset = dataset[0];
-  dataset = dataset.filter(function(d){return ! isNaN(d.padj);});
-  dataset = dataset.filter(function(d){return - Math.log10(d.padj) > p_threshold && (d.log2FoldChange > log2_threshold || d.log2FoldChange <  - log2_threshold);});
-  var all_values  = [];
-  for(var e = 0; e < dataset.length; e++){
-    all_values.push(dataset[e].dataset_index)
-  }
-  var unique = d3.set(all_values).values();
-  var values = [];
-  for(var e in unique){
-    temp_value = dataset.filter(function(d){return d.dataset_index == unique[e];});
-    temp_value = temp_value.length
-    values.push(temp_value);
   };
-  return values
-};

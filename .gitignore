@@ -33,4 +33,5 @@ test.cwl
 test.dot
 .vscode/.ropeproject/config.py
 settings.py
+venv
 .vscode/cwl.code-snippets

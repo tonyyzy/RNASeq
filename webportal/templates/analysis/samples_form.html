@@ -11,7 +11,7 @@
   <body>
     {% block body %}
 
-    <div id='validate_library'>
+    <div id='id_validate_library' class='hidden'>
       <p style='margin:30px;padding-top:14px;padding-bottom:22px;padding-left:14px;border-radius:2%;background:#fceeb3;color:#856404;'>Paired End Read Selected. Please Upload Second File.</p>
     </div>
       <div class="offset-3 col-md-6">
@@ -24,31 +24,64 @@
                 <h4>NEW SAMPLE</h4>
               </div>
               <hr class="my-4">
+              <!-- {{form|crispy}} -->
 
-              {{form|crispy}}
+              <div id='id_libtype' class='create_form_element'>
+              <label for="">{{form.libtype.label_tag}}</label>
+                {{form.libtype}}
+              </div>
+              <div id='id_read_1' class='hidden'>
+              <label for="">{{form.read_1.label_tag}}</label>
+                <div class="create_form_element ">
+                  {{form.read_1}}
+                </div>
+              </div>
+              <div id='id_read_2' class='hidden'>
+                <label for="">{{form.read_2.label_tag}}</label>
+                <div class="create_form_element">
+                  {{form.read_2}}
+                </div>
+                </div>
+              <div id='id_accession' class='create_form_element hidden'>
+              <label for="">{{form.accession.label_tag}}</label>
+                {{form.accession}}
+              </div>
               <br>
               <input type="submit" class='create_btn' value="Submit">
             </form>
           </div>
         </div>
       </div>
-
       <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- jQuery cdn is required prior to using bootstrap -->
       <script type="text/javascript">
         $( document ).ready(function() {
           console.log('samples_form javascript loaded')
         });
-
-
         $( "#id_samples_form" ).submit(function() {
-          // alert( "Handler for .submit() called." );
-          if ($('#div_id_libtype option:selected').val() == 'PE'){ // executes if PE selected from dropdown
-            if ($('#id_read_2').val() == ''){ // checks if read_2 file upload is empty
-              $('#validate_library').show()
-              return false;
+          if ($('#id_libtype option:selected').val() == 'PE'){ // executes if PE selected from dropdown
+            read_2 = $('input[type="file"]')[1]
+            read_2_file = read_2.files[0]
+            if(typeof read_2_file == "undefined"){
+               console.log('fail')
+               unhide(['id_validate_library'])
+               return false;
             }
+
           }
         });
+        $('#id_libtype').on('click', function(){
+          if ($('#id_libtype option:selected').val() == 'PE'){
+            console.log('pe selected')
+            unhide(['id_read_1', 'id_read_2', 'id_accession'])
+          }
+          if ($('#id_libtype option:selected').val() == 'SG'){
+            hide(['id_read_2']) & unhide(['id_read_1', 'id_accession'])
+          }
+      });
+      $('input[type="file"]').change(function(e){
+          var fileName = e.target.files[0].name;
+          console.log(fileName)
+        })
 
       </script>
     {% endblock %}
