@@ -31,10 +31,14 @@ inputs:
 
 outputs:
   gene_matrix:
-    type: File
+    type: File[]
     outputBinding:
       glob: "*DGE_res.csv"
   transcript_matrix:
-    type: File
+    type: File[]
     outputBinding:
       glob: "*DTE_res.csv"
+  norm_count:
+    type: File[]
+    outputBinding:
+      glob: "*norm_count.csv"

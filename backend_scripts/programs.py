@@ -1244,7 +1244,7 @@ class cwl_writer():
                 "condition": {"valueFrom": "condition"},
                 "tablemaker_output": [f"{self.previous_name}_folder/out"]
             },
-            "out": ["gene_matrix", "transcript_matrix"]
+            "out": ["gene_matrix", "transcript_matrix", "norm_count"]
         }
 
         # foldering
@@ -1252,7 +1252,8 @@ class cwl_writer():
             "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in":{
                 "item":[f"{self.name}/gene_matrix",
-                        f"{self.name}/transcript_matrix"],
+                        f"{self.name}/transcript_matrix",
+                        f"{self.name}/norm_count"],
                 "name": {
                     "valueFrom": self.name
                     }

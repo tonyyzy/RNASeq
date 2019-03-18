@@ -55,4 +55,8 @@ for(i in 1:ncol(comb)){
   contrast <- gsub(".$","",paste0(paste0(unique(metadata.f$condition)),sep="-", collapse = ""))
   write.csv(results_transcripts,paste0(contrast,"_","DTE_res.csv"), row.names = FALSE)
   write.csv(results_genes,paste0(contrast,"_","DGE_res.csv"), row.names = FALSE)
+  
+  norm_count <- gexpr(bg)
+  norm_count <- data.frame("name"=rownames(norm_count), norm_count)
+  write.csv(norm_count,paste0(contrast,"_norm_count.csv"), row.names = FALSE)
 }
