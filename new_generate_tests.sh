@@ -34,7 +34,7 @@ gzip -c ./tests/test1.2.fastq > ./tests/test1.2.fastq.gz
 ############################# TEST 1 ###################################
 
 # Delete existing readmap files
-if [ -d "./test1"]; then
+if [ -d "./test1" ]; then
     rm -rf ./test1
 fi
 
@@ -53,7 +53,7 @@ tail -n +5 ./tests/test1.star.sam > ./tests/test1.star.tail.sam
 ############################# TEST 2 ###################################
 
 # Delete existing readmap files
-if [ -d "./test2"]; then
+if [ -d "./test2" ]; then
     rm -rf ./test2
 fi 
 
@@ -71,7 +71,7 @@ tail -n +5 ./tests/test2.star.sam > ./tests/test2.star.tail.sam
 ############################# TEST 3 ###################################
 
 # Delete existing readmap files
-if [ -d "./test3"]; then
+if [ -d "./test3" ]; then
     rm -rf ./test3
 fi 
 
@@ -89,7 +89,7 @@ tail -n +5 ./tests/test3.star.sam > ./tests/test3.star.tail.sam
 ############################# TEST 4 ###################################
 
 # Delete existing readmap files
-if [ -d "./test4"]; then
+if [ -d "./test4" ]; then
     rm ./test4
 fi 
 
@@ -410,7 +410,7 @@ rm untreated-treated_norm_count.csv
 if [ -d "./tests/HISAT2Index" ]; then
     rm -r ./tests/HISAT2Index
 fi
-docker run -v /data/tony/RNASeq/tests:/tests -t quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2 bash -c "mkdir HISAT2Index ; cd HISAT2Index ; hisat2-build -p 1 --ss /tests/test.gtf.splice_sites --exon /tests/test.gtf.exons -f /tests/test.fa test"
+docker run -v $PWD/tests:/tests -t quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2 bash -c "mkdir HISAT2Index ; cd HISAT2Index ; hisat2-build -p 1 --ss /tests/test.gtf.splice_sites --exon /tests/test.gtf.exons -f /tests/test.fa test"
 CONTAINER_ID=$(docker ps -alq)
 docker cp $CONTAINER_ID:/HISAT2Index ./tests
 docker stop $CONTAINER_ID
@@ -419,7 +419,7 @@ docker stop $CONTAINER_ID
 ########################################################################
 
 ################################ TEST 1 ################################
-docker run -v $PWD/tests:/tests -t quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2 hisat2 -q -x /tests/ht2_index/test_index -1 /tests/test1.1.fastq -2 /tests/test1.2.fastq --dta-cufflinks -p 1 -S /test1.hisat2.sam
+docker run -v $PWD/tests:/tests -t quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2 hisat2 -q -x /tests/HISAT2Index/test -1 /tests/test1.1.fastq -2 /tests/test1.2.fastq --dta-cufflinks -p 1 -S /test1.hisat2.sam
 CONTAINER_ID=$(docker ps -alq)
 docker cp $CONTAINER_ID:/test1.hisat2.sam ./tests
 docker stop $CONTAINER_ID
@@ -427,19 +427,19 @@ docker stop $CONTAINER_ID
 tail -n +5 ./tests/test1.hisat2.sam > ./tests/test1.hisat2.tail.sam
 
 ################################ TEST 2 ################################
-docker run -v $PWD/tests:/tests -t quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2 hisat2 -q -x /tests/ht2_index/test_index -1 /tests/test2.1.fastq -2 /tests/test2.2.fastq --dta-cufflinks -p 1 -S /test2.hisat2.sam
+docker run -v $PWD/tests:/tests -t quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2 hisat2 -q -x /tests/HISAT2Index/test -1 /tests/test2.1.fastq -2 /tests/test2.2.fastq --dta-cufflinks -p 1 -S /test2.hisat2.sam
 CONTAINER_ID=$(docker ps -alq)
 docker cp $CONTAINER_ID:/test2.hisat2.sam ./tests
 docker stop $CONTAINER_ID
 
 ################################ TEST 3 ################################
-docker run -v $PWD/tests:/tests -t quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2 hisat2 -q -x /tests/ht2_index/test_index -U /tests/test3.fastq --dta-cufflinks -p 1 -S /test3.hisat2.sam
+docker run -v $PWD/tests:/tests -t quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2 hisat2 -q -x /tests/HISAT2Index/test -U /tests/test3.fastq --dta-cufflinks -p 1 -S /test3.hisat2.sam
 CONTAINER_ID=$(docker ps -alq)
 docker cp $CONTAINER_ID:/test3.hisat2.sam ./tests
 docker stop $CONTAINER_ID
 
 ################################ TEST 4 ################################
-docker run -v $PWD/tests:/tests -t quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2 hisat2 -q -x /tests/ht2_index/test_index -U /tests/test4.fastq --dta-cufflinks -p 1 -S /test4.hisat2.sam
+docker run -v $PWD/tests:/tests -t quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2 hisat2 -q -x /tests/HISAT2Index/test -U /tests/test4.fastq --dta-cufflinks -p 1 -S /test4.hisat2.sam
 CONTAINER_ID=$(docker ps -alq)
 docker cp $CONTAINER_ID:/test4.hisat2.sam ./tests
 docker stop $CONTAINER_ID
