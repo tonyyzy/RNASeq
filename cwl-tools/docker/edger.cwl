@@ -33,3 +33,7 @@ outputs:
       type: File[]
       outputBinding:
         glob: "*.csv"
+    de_res:
+      type: File
+      outputBinding:
+        glob: "*DGE_res.csv"

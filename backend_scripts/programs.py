@@ -113,6 +113,7 @@ class cwl_writer():
         self.Queue = database_reader_object.Queue
         self.id = database_reader_object.id
         self.cdna = database_reader_object.cdna_file
+        self.reactome = database_reader_object.reactome
 
         # add metadata and annotation to cwl_input
         self.cwl_input["metadata"] = {
@@ -954,7 +955,7 @@ class cwl_writer():
                 "count_matrix": f"{self.previous_name}/{self.output_string[self.prev]}",
                 "metadata": "metadata"
             },
-            "out": ["DESeq2_out"]
+            "out": ["DESeq2_out", "de_res"]
         }
 
         # foldering
@@ -968,6 +969,7 @@ class cwl_writer():
             },
             "out": ["out"]
         }
+
 
         # graph
         self.graph.add_node(pydot.Node(self.name, label="DESeq2"))
@@ -992,6 +994,11 @@ class cwl_writer():
                         .filter(self.Workflow.id == self.analysis_id[self.name])\
                         .first().paths = json.dumps(files)
 
+        if self.reactome:
+            print("reactome exist, make fgsea")
+            self.previous_name = self.name
+            self.name += "_fgsea"
+            self.fgsea()
 
     def dexseq(self):
         # inputs
@@ -1294,7 +1301,7 @@ class cwl_writer():
                 "metadata": "metadata",
                 "condition": {"valueFrom": "condition"}
             },
-            "out": ["edger_out"]
+            "out": ["edger_out", "de_res"]
         }
 
         # foldering
@@ -1308,6 +1315,7 @@ class cwl_writer():
                 },
             "out": ["out"]
         }
+
 
         self.graph.add_node(pydot.Node(self.name, label="EdgeR"))
         self.add_edge()
@@ -1330,6 +1338,11 @@ class cwl_writer():
                         .filter(self.Workflow.id == self.analysis_id[self.name])\
                         .first().paths = json.dumps(files)
 
+        if self.reactome:
+            print("reactome exist, make fgsea")
+            self.previous_name = self.name
+            self.name += "_fgsea"
+            self.fgsea()
 
     def misocompare(self):
         names = []
@@ -1451,6 +1464,73 @@ class cwl_writer():
 
         self.graph.add_node(pydot.Node(self.name, label="PrepDE"))
         self.add_edge()
+
+
+    def fgsea(self):
+        # inputs
+        self.cwl_input["fgsea_script"] = {
+            "class": "File",
+            "path": f"{self.root}/RNASeq/scripts/GSEA_Script.R"
+        }
+        self.cwl_workflow["inputs"]["fgsea_script"] = "File"
+        self.cwl_input["reactome"] = {
+            "class": "File",
+            "path": self.root + "/Data/" + self.reactome
+        }
+        self.cwl_workflow["inputs"]["reactome"] = "File"
+        # outputs
+        self.cwl_workflow["outputs"][f"{self.name}_out"] = {
+            "type": "Directory",
+            "outputSource": f"{self.name}_folder/out"
+        }
+        # steps
+        self.cwl_workflow["steps"][self.name] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/docker/fgsea.cwl",
+            "in": {
+                "input_script": "fgsea_script",
+                "de_res": f"{self.previous_name}/de_res",
+                "gene_set": "reactome"
+            },
+            "out": ["gsea_out"]
+        }
+
+        # foldering
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
+            "in":{
+                "item":[f"{self.name}/gsea_out"],
+                "name": {
+                    "valueFrom": self.name
+                    }
+            },
+            "out": ["out"]
+        }
+
+        if self.graph_inputs.get_node("reactome") == []:
+            self.graph_inputs.add_node(
+                pydot.Node(
+                    "reactome",
+                    label="Reactome",
+                    fillcolor="#94DDF4"
+                )
+            )
+        self.graph.add_node(pydot.Node(self.name, label="fgsea"))
+        self.add_edge()
+        if self.graph_outputs.get_node("fgsea_result") == []:
+            self.graph_outputs.add_node(
+                pydot.Node(
+                    "fgsea_result",
+                    label="Gene set analysis result",
+                    fillcolor="#94DDF4"
+                )
+            )
+        self.graph.add_edge(
+            pydot.Edge(
+                *self.graph.get_node(self.name),
+                *self.graph_outputs.get_node("fgsea_result")
+            )
+        )
+
 
 
     def add_edge(self):
@@ -1666,11 +1746,11 @@ class cwl_writer():
         self.graph.add_subgraph(self.graph_inputs)
         self.graph.add_subgraph(self.graph_outputs)
         self.graph.write(f"{self.root}/Data/{self.identifier}/workflow.dot")
-        svgfile = open(f"{self.root}/Data/{self.identifier}/workflow.svg", "w")
-        subprocess.run(["dot", "-Tsvg",
-                        f"{self.root}/Data/{self.identifier}/workflow.dot"],
-                        stdout=svgfile)
-        svgfile.close()
+        # svgfile = open(f"{self.root}/Data/{self.identifier}/workflow.svg", "w")
+        # subprocess.run(["dot", "-Tsvg",
+        #                 f"{self.root}/Data/{self.identifier}/workflow.dot"],
+        #                 stdout=svgfile)
+        # svgfile.close()
         cwl = f"{self.root}/Data/{self.identifier}/workflow.cwl"
         yml = f"{self.root}/Data/{self.identifier}/input.yml"
         with open(cwl, "w+") as outfile:

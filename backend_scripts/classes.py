@@ -25,8 +25,8 @@ class database_checker():
         for entry in session.query(RSession).filter(RSession.status == 1):
             print(entry.id)
             self.create_workflow(entry.id, root)
-            entry.status = 2
-        session.commit()
+        #     entry.status = 2
+        # session.commit()
 
     def create_workflow(self, Session_ID, root):
         Workflow = self.Base.classes.analysis_workflow
@@ -110,6 +110,8 @@ class database_reader():
                 self.indexes["salmon_index"] = g.salmon
                 self.Organism_name = g.organism
                 self.id = s.id
+                self.reactome = s.reactome
+                print(self.reactome)
         elif self.genome_index == "user_provided":
             for s in session.query(RSession)\
                             .filter(RSession.id == self.Session_ID):
@@ -123,6 +125,8 @@ class database_reader():
                 self.indexes["HISAT2Index"] = data_path + "HISAT2Index"
                 self.indexes["salmon_index"] = data_path + "Salmonindex"
                 self.id = s.id
+                self.reactome = s.reactome
+                print(self.reactome)
 
         
         # create metadata.csv of samples and conditions

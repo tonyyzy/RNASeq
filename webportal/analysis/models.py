@@ -46,6 +46,7 @@ class Session(models.Model):
     gtf_file = models.FileField(storage=data_root, upload_to=get_genome_path, blank=True, null=True)
     status = models.PositiveSmallIntegerField(default=False, blank=True, null=True)
     pid = models.IntegerField(blank=True, null=True)
+    reactome = models.FileField(storage=data_root, upload_to=get_genome_path, blank=True, null=True)
 
     def get_absolute_url(self): # provides a default if Session is called from views.py without a specified reverse or redirect
         return reverse('analysis:session_detail', kwargs={'session_slug':self.identifier})
