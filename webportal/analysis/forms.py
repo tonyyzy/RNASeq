@@ -17,7 +17,7 @@ class SessionForm(forms.ModelForm):
 
     class Meta:
         model = Session
-        fields = ['genome_index','genome','organism', 'salmon', 'fasta_dna_file', 'fasta_cdna_file', 'gtf_file', 'status']
+        fields = ['genome_index','genome','organism', 'salmon', 'fasta_dna_file', 'fasta_cdna_file', 'gtf_file', 'status', 'reactome']
         # fields='__all__'
         widgets={
             'genome_index': forms.Select(attrs={
