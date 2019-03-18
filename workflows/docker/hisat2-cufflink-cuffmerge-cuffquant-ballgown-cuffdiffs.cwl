@@ -443,15 +443,13 @@ steps:
         valueFrom: "condition"
       tablemaker_output:
         - tablemaker_folder/out
-    out: [gene_matrix, transcript_matrix, norm_count]
+    out: [ballgown_out]
 
   ballgown_folder:
     run: ../../cwl-tools/folder.cwl
     in:
       item:
-        - ballgown/gene_matrix
-        - ballgown/transcript_matrix
-        - ballgown/norm_count
+        - ballgown/ballgown_out
       name:
         valueFrom: "ballgown"
     out: [out]
