@@ -407,15 +407,13 @@ rm untreated-treated_norm_count.csv
 ########################################################################
 ############################## HISAT2 INDEX  ###########################
 ########################################################################
-
-# Delete existing STARIndex directory
-#if [ -d "./tests/HISAT2Index" ]; then
-#    rm -r ./HISAT2Index
-#fi
-#if [ -d "./HISAT2Index" ]; then
-#    rm -r ./STARIndex
-#fi
-
+if [ -d "./tests/HISAT2Index" ]; then
+    rm -r ./tests/HISAT2Index
+fi
+docker run -v /data/tony/RNASeq/tests:/tests -t quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2 bash -c "mkdir HISAT2Index ; cd HISAT2Index ; hisat2-build -p 1 --ss /tests/test.gtf.splice_sites --exon /tests/test.gtf.exons -f /tests/test.fa test"
+CONTAINER_ID=$(docker ps -alq)
+docker cp $CONTAINER_ID:/HISAT2Index ./tests
+docker stop $CONTAINER_ID
 ########################################################################
 ############################## HISAT2 ALIGN  ###########################
 ########################################################################
