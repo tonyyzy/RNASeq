@@ -107,3 +107,7 @@ outputs:
       type: Directory
       outputBinding:
          glob: $(inputs.output)
+   de_res:
+      type: File
+      outputBinding:
+         glob: "*/*_DGE_res.csv"
