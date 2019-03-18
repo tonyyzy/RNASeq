@@ -148,7 +148,7 @@ class The_Debug(models.Model):
     identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     field_one = models.CharField(max_length=200)
     # field_two = models.CharField(max_length=200)
-    field_two = models.FileField(storage=data_root, upload_to=get_upload_path)
+    field_two = models.FileField(storage=data_root, upload_to=get_debug_upload_path)
 
 
 class Queue(models.Model):
@@ -158,4 +158,3 @@ class Queue(models.Model):
     status = models.BooleanField(default=False, null=False)
     jobtype = models.CharField(max_length=200)
     result = models.CharField(max_length=200)
-
