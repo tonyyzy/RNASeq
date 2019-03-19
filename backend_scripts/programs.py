@@ -1018,7 +1018,6 @@ class cwl_writer():
             "in": {
                 "input_script": "dexseq_script",
                 "counts_matrix": f"{self.previous_name}_folder/out",
-                "gff": "htseq_prepare_folder/out",
                 "metadata": "metadata"
             },
             "out": ["dexseq_out"]
