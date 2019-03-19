@@ -2,11 +2,12 @@
 
 cwlVersion: v1.0
 class: CommandLineTool
-hints:
-  DockerRequirement:
-    dockerPull: genomicpariscentre/samtools
 baseCommand: samtools
 
+requirements:
+  DockerRequirement:
+    dockerPull: genomicpariscentre/samtools
+    
 inputs:
   action:
     type: string

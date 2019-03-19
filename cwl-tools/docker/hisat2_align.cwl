@@ -2,13 +2,14 @@
 
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: 
-hints:
+baseCommand:
+
+requirements:
   ShellCommandRequirement: {}
   DockerRequirement:
     dockerPull: quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2
-requirements:
   InlineJavascriptRequirement: {}
+
 arguments:
   - position: 1
     valueFrom: "mkdir"
@@ -34,7 +35,7 @@ inputs:
     inputBinding:
       position: 7
       prefix: "-x"
-      valueFrom: "${return inputs.index_directory.path + '/' 
+      valueFrom: "${return inputs.index_directory.path + '/'
                   + inputs.index_directory.listing[0].nameroot.split('.').slice(0,-1).join('.')}"
   first_pair:
     type: File?
@@ -83,9 +84,8 @@ outputs:
     type: Directory
     outputBinding:
       glob: $(inputs.output.split('.')[0])
-  
+
   sam_output:
     type: File
     outputBinding:
       glob: $(inputs.output.split('.')[0] + '/' + inputs.output)
-

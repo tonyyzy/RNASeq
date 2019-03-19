@@ -6,8 +6,6 @@ baseCommand: cufflinks
 
 requirements:
    InlineJavascriptRequirement: {}
-
-hints:
    DockerRequirement:
       dockerPull: filipejesus/cufflinks:latest
 

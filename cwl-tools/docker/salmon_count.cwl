@@ -3,7 +3,8 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: Rscript
-hints:
+
+requirements:
    DockerRequirement:
       dockerPull: filipejesus/tximport
 

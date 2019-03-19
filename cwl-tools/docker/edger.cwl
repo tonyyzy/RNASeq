@@ -3,7 +3,8 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: Rscript
-hints:
+
+requirements:
     DockerRequirement:
         dockerPull: quay.io/biocontainers/bioconductor-edger:3.24.1--r351hf484d3e_0
 

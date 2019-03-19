@@ -3,7 +3,8 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: compare_miso
-hints:
+
+requirements:
    DockerRequirement:
       dockerPull: genomicpariscentre/miso
 

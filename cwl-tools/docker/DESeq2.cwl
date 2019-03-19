@@ -2,10 +2,9 @@
 
 cwlVersion: v1.0
 class: CommandLineTool
-hints:
+requirements:
  DockerRequirement:
   dockerPull: biowardrobe2/scidap-deseq:v0.0.5
-requirements:
  InlineJavascriptRequirement: {}
 
 baseCommand: Rscript

@@ -3,7 +3,8 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: python
-hints:
+
+requirements:
    DockerRequirement:
       dockerPull: genomicpariscentre/htseq:0.11.0
 

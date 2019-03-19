@@ -6,8 +6,6 @@ baseCommand: Rscript
 
 requirements:
   ShellCommandRequirement: {}
-
-hints:
   DockerRequirement:
     dockerPull: quay.io/biocontainers/bioconductor-ballgown:2.14.0--r351_0
 

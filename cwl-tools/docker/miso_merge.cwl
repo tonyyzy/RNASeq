@@ -1,13 +1,12 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand:
-hints:
-   DockerRequirement:
-      dockerPull: genomicpariscentre/miso
 
 requirements:
   InlineJavascriptRequirement: {}
   ShellCommandRequirement: {}
+  DockerRequirement:
+     dockerPull: genomicpariscentre/miso
 
 arguments:
    - position: 1

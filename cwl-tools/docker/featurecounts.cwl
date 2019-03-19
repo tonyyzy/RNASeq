@@ -4,14 +4,12 @@ cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: Rscript
 
-hints:
-  DockerRequirement:
-    dockerPull: filipejesus/featurecounts:latest
-
 requirements:
   InlineJavascriptRequirement: {}
   InitialWorkDirRequirement:
     listing: $(inputs.bam_files)
+  DockerRequirement:
+    dockerPull: filipejesus/featurecounts:latest
 
 arguments:
   - prefix: --d

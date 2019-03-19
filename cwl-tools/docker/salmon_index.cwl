@@ -1,10 +1,10 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: salmon
-hints:
+
+requirements:
    DockerRequirement:
       dockerPull: combinelab/salmon:0.12.0
-requirements:
    InlineJavascriptRequirement: {}
 
 arguments:

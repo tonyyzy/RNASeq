@@ -3,13 +3,12 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand:
-hints:
-  DockerRequirement:
-    dockerPull: quay.io/biocontainers/stringtie:1.3.0--hd28b015_2
 
 requirements:
- ShellCommandRequirement: {}
- InlineJavascriptRequirement: {}
+  DockerRequirement:
+    dockerPull: quay.io/biocontainers/stringtie:1.3.0--hd28b015_2
+  ShellCommandRequirement: {}
+  InlineJavascriptRequirement: {}
 
 arguments:
  - position: -4

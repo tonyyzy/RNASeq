@@ -4,13 +4,11 @@ cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: tablemaker
 
-hints:
+requirements:
   DockerRequirement:
     dockerPull: filipejesus/cufflinks:latest
-
-requirements:
-   InlineJavascriptRequirement: {}
-   ShellCommandRequirement: {}
+  InlineJavascriptRequirement: {}
+  ShellCommandRequirement: {}
 
 arguments:
   - position: 2

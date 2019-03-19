@@ -2,10 +2,12 @@
 
 cwlVersion: v1.0
 class: CommandLineTool
-hints:
+baseCommand: Rscript
+
+requirements:
  DockerRequirement:
   dockerPull: biowardrobe2/scidap-deseq:v0.0.5
-baseCommand: Rscript
+  
 inputs:
  input_script:
   type: File

@@ -5,8 +5,6 @@ baseCommand: python2
 hints:
     DockerRequirement:
         dockerPull: filipejesus/cufflinks:latest
-
-requirements:
     ShellCommandRequirement: {}
     InlineJavascriptRequirement: {}
     InitialWorkDirRequirement:

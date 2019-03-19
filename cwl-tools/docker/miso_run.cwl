@@ -3,6 +3,7 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: sh
+
 hints:
    DockerRequirement:
       dockerPull: genomicpariscentre/miso

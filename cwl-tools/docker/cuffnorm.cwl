@@ -7,8 +7,6 @@ baseCommand: mkdir
 requirements:
     ShellCommandRequirement: {}
     InlineJavascriptRequirement: {}
-
-hints:
     DockerRequirement:
         dockerPull: filipejesus/cufflinks:latest
 

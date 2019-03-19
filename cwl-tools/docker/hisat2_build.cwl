@@ -3,9 +3,11 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: hisat2-build
-hints:
+
+requirements:
    DockerRequirement:
-      dockerPull: quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2 
+      dockerPull: quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2
+
 stdout: hisat2_build.log
 stderr: hisat2_build.log
 inputs:

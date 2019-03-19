@@ -3,13 +3,13 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand:
-requirements:
-  - class: ShellCommandRequirement
-  - class: InlineJavascriptRequirement
 
-hints:
+requirements:
+  ShellCommandRequirement: {}
+  InlineJavascriptRequirement: {}
   DockerRequirement:
     dockerPull: quay.io/biocontainers/star:2.6.0c--0
+
 arguments:
   - position: 1
     valueFrom: "mkdir"

@@ -5,10 +5,8 @@ class: CommandLineTool
 baseCommand: mkdir
 
 requirements:
-    - class: ShellCommandRequirement
-    - class: InlineJavascriptRequirement
-
-hints:
+    ShellCommandRequirement: {}
+    InlineJavascriptRequirement: {}
     DockerRequirement:
         dockerPull: filipejesus/cufflinks:latest
 

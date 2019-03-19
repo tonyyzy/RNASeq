@@ -3,13 +3,12 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: perl
-hints:
-   DockerRequirement:
-      dockerPull: genomicpariscentre/miso
 
 requirements:
   InlineJavascriptRequirement: {}
   ShellCommandRequirement: {}
+  DockerRequirement:
+     dockerPull: genomicpariscentre/miso
 
 arguments:
    - position: 3
