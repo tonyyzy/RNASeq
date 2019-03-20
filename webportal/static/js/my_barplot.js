@@ -17,8 +17,8 @@ colours = [
 
   var dataFilter_barplot = function(dataset){
     dataset = dataset[0];
-    dataset = dataset.filter(function(d){return ! isNaN(d.padj);});
-    dataset = dataset.filter(function(d){return - Math.log10(d.padj) > p_threshold && (d.log2FoldChange > log2_threshold || d.log2FoldChange <  - log2_threshold);});
+    dataset = dataset.filter(function(d){return d.p_adj != null; });
+    dataset = dataset.filter(function(d){return - Math.log10(parseFloat(d.p_adj)) > p_threshold && (parseFloat(d.log2foldchange) > log2_threshold || parseFloat(d.log2foldchange) <  - log2_threshold);});
     var all_values  = [];
     for(var e = 0; e < dataset.length; e++){
       all_values.push(dataset[e].dataset_index)
@@ -43,7 +43,7 @@ colours = [
        }
     }
     // console.log(result)
-    var endpoint = 'wf_one/';
+    var endpoint = 'wf_data/';
     for(var i = 0; i < result.length; i++){
       endpoint += result[i]
       endpoint += '_'
@@ -69,10 +69,10 @@ var newPlot_Barplot = function(){
 
     dataset = dataFilter_barplot(dataset);
 
-    d3.select("#painting").selectAll("*").remove();
+    // d3.select("#painting").selectAll("*").remove();
 
-    var width = d3.select('#id_painting_style_barplot').node().getBoundingClientRect().width;
-    var height = d3.select('#id_painting_style_barplot').node().getBoundingClientRect().height;
+    var width = d3.select('#id_tab').node().getBoundingClientRect().width;
+    var height = d3.select('#id_tab').node().getBoundingClientRect().height;
     console.log(width)
     console.log(height)
 
@@ -123,7 +123,7 @@ var newPlot_Barplot = function(){
     svg.append("text")
         .attr("id", "label")
         .attr("x", 400)
-        .attr("y", h + 35)
+        .attr("y", h + 25)
         .text("Significant genes: " + d);
     })
     .on("mouseout", function(){

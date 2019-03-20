@@ -10,32 +10,24 @@
     {% endblock %}
   </head>
   <body>
-    {% block body %}
-    <div id='wrapper'>
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-{{message.tags}}">
-            <p>{{message}}</p>
-          </div>
+{%block body%}
+
+<input type="submit" class='btn btn-success' onclick='wf_select()' value="run" />
+
+
+<div id='wrapper'>
+<div id='sidebar_wrapper'>
+  <ul class='sidebar-nav'>
+    <fieldset>
+      <li>
+        {% for workflow in workflows %}
+          <input  type="checkbox"  name="" class='checkbox_wf' value="{{forloop.counter}}" checked>
+          <label  for="">{{workflow.label}}</label><br>
         {% endfor %}
-      {% endif %}
-
-      <div id='sidebar_wrapper'>
-
-        <ul class='sidebar-nav'>
-        <!-- <li><a onclick="wf_select(1)">star workflow</a></li> -->
-        <!-- <li><a onclick="wf_select(2)">hisat workflow</a></li> -->
-        <!-- <li><a href="#">further wofkflows</a></li> -->
-        <fieldset>
-        <li>
-          {% for workflow in workflows %}
-            <input  type="checkbox"  name="" class='checkbox_wf' value="{{forloop.counter}}" checked>
-            <label  for="">{{workflow.label}}</label><br>
-          {% endfor %}
-        </li>
-      </fieldset>
-        </ul>
-      </div>
+      </li>
+    </fieldset>
+  </ul>
+</div>
 
 <div id='page_content_wrapper'>
   <div id='sidebar_toggle' class="toggle_btn">
@@ -44,7 +36,9 @@
     <span></span>
   </div>
 
+
 <ul class="nav nav-tabs nav-justified" role="tablist">
+
   <li class="nav-item">
     <a id='id_volcano_tab' class="nav-link active" data-toggle="tab" href="#id_volcano">Volcano Plot</a>
   </li>
@@ -53,30 +47,28 @@
   </li>
 </ul>
 
-
-  <div class="tab-content">
-    <div id="id_volcano" class="container tab-pane active">
-      volc test
-      <div id='id_painting_style_volcano' style="height:100%">
-        <svg id='id_painting_volcano' class='painting_style'>
-        </svg>
+<div id="id_tab" class="tab-content">
+  <div id="id_volcano" class="container tab-pane active">
+    <div class="row">
+      <div class="col-2">
+        <label for="">P Value</label>
+        <input type="range" min="1" max="50" class="slider" id="id_p_threshold">
+        <p>Value: <span id="id_p_threshold_out"></span></p>
+        <br>
+        <label for="">Logfold change</label>
+        <input type="range" min="1" max="9" class="slider" id="id_log2_threshold">
+        <p>Value: <span id="id_log2_threshold_out"></span></p>
       </div>
+      <div class="col-10">col<svg id='id_painting_volcano'></svg></div>
     </div>
-
-    <div id="id_barplot" class="container tab-pane fade">
-      barplot test
-      <div id='id_painting_style_barplot' style="height:100%">
-        <svg id='id_painting_barplot' class='painting_style'>
-        </svg>
-      </div>
-    </div>
-
   </div>
+  <div id="id_barplot" class="container tab-pane fade">
+    bar
+      <svg id='id_painting_barplot'></svg>
+  </div>
+</div>
 
-
-<!-- <input type="submit" class='btn btn-success' onclick='wf_select_barplot()' value="Bar Plot" /> -->
-
-<div class="dataFilterControls">
+<!-- <div class="dataFilterControls">
   <div class="slidecontainer jumbotron">
     <label for="">P Value</label>
     <input type="range" min="1" max="50" class="slider" id="id_p_threshold">
@@ -86,11 +78,11 @@
     <input type="range" min="1" max="9" class="slider" id="id_log2_threshold">
     <p>Value: <span id="id_log2_threshold_out"></span></p>
   </div>
+</div> -->
+
 </div>
+</div> <!-- END WRAPPER -->
 
-
-      </div><!-- PAGE CONTENT WRAPPER -->
-</div> <!-- WRAPPER -->
 
 
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -120,11 +112,11 @@
 
   $('#sidebar_toggle').click(function(e){
     // e.preventDefault();
+    console.log('hi')
     $('#wrapper').toggleClass('menuDisplayed')
-    // console.log('hi')
   });
   $( "#id_volcano_tab" ).click(function() {
-    wf_select()
+
     console.log('called wf_select')
     // alert( "Handler for .click() called." );
     console.log('loading volcano')
@@ -133,6 +125,8 @@
     wf_select_barplot()
     console.log('loading barplot')
   });
+
+
   </script>
 
 
