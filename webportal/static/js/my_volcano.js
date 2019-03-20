@@ -19,7 +19,7 @@ $("#id_p_threshold").change(function() {
   output.innerHTML = p_val;
   // console.log(p_threshold)
   all_circles.attr("fill", function(d){
-          if(- Math.log10(d.padj) > p_threshold && (d.log2FoldChange > log2_threshold || d.log2FoldChange <  - log2_threshold)){
+          if(- Math.log10(d.p_adj) > p_threshold && (d.log2foldchange > log2_threshold || d.log2foldchange <  - log2_threshold)){
             return colours[d.dataset_index];
           } else {
             return "grey";
@@ -38,7 +38,7 @@ $("#id_log2_threshold").change(function() {
   var output = document.getElementById("id_log2_threshold_out");
   output.innerHTML = log2_threshold;
   all_circles.attr("fill", function(d){
-          if(- Math.log10(d.padj) > p_threshold && (d.log2FoldChange > log2_threshold || d.log2FoldChange <  - log2_threshold)){
+          if(- Math.log10(d.p_adj) > p_threshold && (d.log2foldchange > log2_threshold || d.log2foldchange <  - log2_threshold)){
             return colours[d.dataset_index];
           } else {
             return "grey";
@@ -114,7 +114,7 @@ function d3_run(endpoint){
 
 function dataFilter_volcano(){
   dataset = dataset[0]
-  dataset = dataset.filter(function(d){return ! isNaN(d.padj)});
+  dataset = dataset.filter(function(d){return ! isNaN(d.p_adj)});
   // myPlot()
   newPlot(dataset)
 }
@@ -132,34 +132,34 @@ function newPlot(){
       console.log(width)
       console.log(height)
 
-      var margin = {top: 100, right: 20, bottom: 20, left: 100};
+      var margin = {top: 20, right: 20, bottom: 20, left: 20};
       //Width and height
 
       w = width - margin.right - margin.left;
       h = height - margin.top - margin.bottom;
 
       xScale = d3.scaleLinear()
-        .domain([d3.min(dataset, function(d) { return  d.log2FoldChange - 2;}),
-                 d3.max(dataset, function(d) { return  d.log2FoldChange + 2;})])
+        .domain([d3.min(dataset, function(d) { return  d.log2foldchange - 2;}),
+                 d3.max(dataset, function(d) { return  d.log2foldchange + 2;})])
       .range([0, w]);
 
       d3.select("id_p_threshold")
-        .attr("min", "" + d3.min(dataset, function(d) { return d.log2FoldChange;}))
-        .attr("max", "" + d3.max(dataset, function(d) { return d.log2FoldChange;}));
+        .attr("min", "" + d3.min(dataset, function(d) { return d.log2foldchange;}))
+        .attr("max", "" + d3.max(dataset, function(d) { return d.log2foldchange;}));
 
       yScale = d3.scaleLinear()
-      .domain([d3.min(dataset, function(d) { return - Math.log10(d.padj) - 0.5;}),
-               d3.max(dataset, function(d) { return - Math.log10(d.padj) + 0.5;})])
+      .domain([d3.min(dataset, function(d) { return - Math.log10(d.p_adj) - 0.5;}),
+               d3.max(dataset, function(d) { return - Math.log10(d.p_adj) + 0.5;})])
       .range([h, 0]);
       // .range([h, 0]);
 
       d3.select("id_p_threshold")
-      .attr("min", "" + d3.min(dataset, function(d) { return - Math.log10(d.padj);}))
-      .attr("max", "" + d3.max(dataset, function(d) { return - Math.log10(d.padj);}));
+      .attr("min", "" + d3.min(dataset, function(d) { return - Math.log10(d.p_adj);}))
+      .attr("max", "" + d3.max(dataset, function(d) { return - Math.log10(d.p_adj);}));
 
       xAxis = d3.axisBottom()
       .scale(xScale);
-      // .ticks(5)
+      
 
       yAxis = d3.axisLeft()
       .scale(yScale);
@@ -194,14 +194,14 @@ function circles(){
         .enter()
         .append("circle")
         .attr("cx", function(d) {
-          return xScale(d.log2FoldChange);
+          return xScale(d.log2foldchange);
         })
         .attr("cy",function(d){
-          return yScale(- Math.log10(d.padj));
+          return yScale(- Math.log10(d.p_adj));
         })
         .attr("r", 5)
         .attr("fill", function(d){
-          if(- Math.log10(d.padj) > p_threshold && (d.log2FoldChange > log2_threshold || d.log2FoldChange <  - log2_threshold)){
+          if(- Math.log10(d.p_adj) > p_threshold && (d.log2foldchange > log2_threshold || d.log2foldchange <  - log2_threshold)){
             return colours[d.dataset_index];
           } else {
             return "grey";
@@ -218,11 +218,11 @@ function circles(){
           svg.append("text")
             .attr("id", "label")
             .attr("y", h + 35 )
-            .text("Gene: " + d[""] + " L2fc: " + d.log2FoldChange + " p adj: " + d.padj);
+            .text("Gene: " + d.genename + " L2fc: " + d.log2foldchange + " p adj: " + d.p_adj);
         })
         .on("mouseout", function(d){
           d3.select(this).attr("fill", function(d){
-            if(- Math.log10(d.padj) > p_threshold && (d.log2FoldChange > log2_threshold || d.log2FoldChange <  - log2_threshold)){
+            if(- Math.log10(d.p_adj) > p_threshold && (d.log2foldchange > log2_threshold || d.log2foldchange <  - log2_threshold)){
               return colours[d.dataset_index];
             } else {
               return "grey";
@@ -257,12 +257,12 @@ function hLines(){
   var h_lines_g = svg.append("g")
   .attr("class", "lines");
 
+console.log(w)
   h_line = [p_threshold]
   var h_lines = h_lines_g.selectAll("line")
   .data(h_line)
   .enter()
   .append("line")
-
   .attr("x1", "0")
   .attr("y1", function(d){
     return yScale(d);})
