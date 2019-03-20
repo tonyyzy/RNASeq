@@ -37,7 +37,7 @@ for(i in 1:ncol(comb)){
   count.f <- df[,rownames(metadata.f)]
   #construct an DEXSeqDataSet object
   ids <- t(as.data.frame(strsplit(rownames(count.f),":")))
-  dxd <- DEXSeqDataSet(count.f, metadata, design= ~ sample + exon + condition:exon, featureID = ids[,2], groupID = ids[,1])
+  dxd <- DEXSeqDataSet(count.f, metadata.f, design= ~ sample + exon + condition:exon, featureID = ids[,2], groupID = ids[,1])
 
   if("--threads" %in% args){
     threads.idx <- grep("--threads", args)
