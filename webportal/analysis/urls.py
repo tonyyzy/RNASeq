@@ -9,7 +9,7 @@ urlpatterns = [
     path('', views.SessionIndexView.as_view(), name='session_index'),
     path('debug/', views.DebugView.as_view(), name='debug_view'),
     path('genome_create/', views.GenomeCreateView.as_view(), name='genome_view'),
-    path('session_detail/<slug:session_slug>/workflow_create/axaj_test/', views.AjaxTest, name='axaj_test'),
+    path('session_detail/<slug:session_slug>/workflow_create/axaj_test/<slug:mapper_slug>', views.AjaxTest, name='axaj_test'),
 
     # path('session_detail/<slug:session_slug>/submit/', views.SessionSubmitView.as_view(), name='session_submit'),
 

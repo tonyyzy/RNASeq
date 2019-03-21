@@ -324,12 +324,13 @@ class WorkflowCreateView(CreateView):
     def get(self, request, session_slug):
         form = WorkflowForm
         mapper = {'STARAligner', 'HISAT2', 'SALMON'}
-        assembler = {
-                        'STARAligner':{'STRINGTIE', 'CUFFLINKS', 'MISO', 'HTSEQ', 'FEATURECOUNTS'},
-                        'HISAT2':{'STRINGTIE', 'CUFFLINKS', 'MISO', 'HTSEQ', 'FEATURECOUNTS'},
-                        'SALMON':{'SALMON'}
-                    }
-        context = {'form':form, 'mapper': mapper, 'assembler':assembler}
+        assembler = {'STRINGTIE', 'CUFFLINKS', 'MISO', 'HTSEQ', 'FEATURECOUNTS', 'SALMON'}
+        # assembler = {
+        #                 'STARAligner':{'STRINGTIE', 'CUFFLINKS', 'MISO', 'HTSEQ', 'FEATURECOUNTS'},
+        #                 'HISAT2':{'STRINGTIE', 'CUFFLINKS', 'MISO', 'HTSEQ', 'FEATURECOUNTS'},
+        #                 'SALMON':{'SALMON'}
+        #             }
+        context = {'form':form, 'mapper': mapper}
         return render(request, self.template_name, context)
 
     def post(self, request, session_slug):
@@ -342,12 +343,22 @@ class WorkflowCreateView(CreateView):
         return render(request, self.template_name, {'form':form})
 
 from django.http import JsonResponse
-def AjaxTest(request, session_slug):
-    data = {'STARAligner':['STRINGTIE', 'CUFFLINKS', 'MISO', 'HTSEQ', 'FEATURECOUNTS'],
+def AjaxTest(request, session_slug, mapper_slug):
+    template_name = 'analysis/workflow_form_assembler.html'
+    assembler = {'STARAligner':['STRINGTIE', 'CUFFLINKS', 'MISO', 'HTSEQ', 'FEATURECOUNTS'],
                   'HISAT2':['STRINGTIE', 'CUFFLINKS', 'MISO', 'HTSEQ', 'FEATURECOUNTS'],
                   'SALMON':['SALMON']}
-    return JsonResponse(data)
-    return HttpResponse(data)
+
+    filtered_assembler = assembler[mapper_slug]
+    print(f'\n{filtered_assembler}')
+    return JsonResponse(filtered_assembler, safe=False)
+    context = {'filtered_assembler': filtered_assembler}
+    # filtered_assembler = list(assembler[mapper_slug])
+    # return (filtered_assembler)
+    return render(request, template_name, context)
+    return render(request, self.template_name, context)
+    # return HttpResponse('success')
+    # return HttpResponse(data)
 
 class WorkflowUpdateView(UpdateView):
     template_name = 'analysis/workflow_form.html'
