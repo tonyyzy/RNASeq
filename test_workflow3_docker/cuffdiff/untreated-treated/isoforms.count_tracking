@@ -1,0 +1,4 @@
+tracking_id	untreated_count	untreated_count_variance	untreated_count_uncertainty_var	untreated_count_dispersion_var	untreated_status	treated_count	treated_count_variance	treated_count_uncertainty_var	treated_count_dispersion_var	treated_status
+TCONS_00000001	82.7613	84.3858	0	82.7613	OK	77.9253	78.0963	0	77.9253	OK
+TCONS_00000002	323.383	19909.6	0	323.383	OK	327.457	35135	0	327.457	OK
+TCONS_00000003	25.5881	20025.9	0	25.5881	OK	68.5983	34856.5	0	68.5983	OK

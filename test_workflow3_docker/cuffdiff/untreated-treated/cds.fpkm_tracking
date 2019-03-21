@@ -1,0 +1,4 @@
+tracking_id	class_code	nearest_ref_id	gene_id	gene_short_name	tss_id	locus	length	coverage	untreated_FPKM	untreated_conf_lo	untreated_conf_hi	untreated_status	treated_FPKM	treated_conf_lo	treated_conf_hi	treated_status
+P1	-	-	XLOC_000001	gene1	TSS1	test1:499-999	-	-	641066	498754	783377	OK	603606	466701	740512	OK
+P2	-	-	XLOC_000002	gene2	TSS2	test1:2999-5299	-	-	67631.7	0	815694	OK	181311	0	1.16824e+06	OK
+P3	-	-	XLOC_000002	gene2	TSS2	test1:2999-5299	-	-	763303	97201.5	1.42941e+06	OK	772920	0	1.65779e+06	OK

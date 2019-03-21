@@ -1,0 +1,4 @@
+test_id	gene_id	gene	locus	sample_1	sample_2	status	value_1	value_2	log2(fold_change)	test_stat	p_value	q_value	significant
+TCONS_00000001	XLOC_000001	gene1	test1:499-999	untreated	treated	OK	641066	603606	-0.0868644	-0.379429	0.5952	0.8928	yes
+TCONS_00000002	XLOC_000002	gene2	test1:2999-5299	untreated	treated	OK	763303	772920	0.0180624	0.0173946	0.9477	0.9477	yes
+TCONS_00000003	XLOC_000002	gene2	test1:2999-5299	untreated	treated	OK	67631.7	181311	1.4227	0.159988	0.37135	0.8928	yes

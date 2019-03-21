@@ -1,0 +1,5 @@
+file	condition	replicate_num	total_mass	norm_mass	internal_scale	external_scale
+/var/lib/cwl/stg991cff06-15d0-4d0e-81f7-341de322db25/abundances.cxb	untreated	0	2120	453.174	3.12979	1
+/var/lib/cwl/stg0e227eff-a40e-4bb2-89d0-14fdd1fd7e2a/abundances.cxb	untreated	1	520	453.174	2.79414	1
+/var/lib/cwl/stg0c201aed-f5d3-4042-80b0-6bde8309e49d/abundances.cxb	treated	0	2630	453.174	3.93896	1
+/var/lib/cwl/stg8f699aa5-3e0b-452c-a9ce-6573fb3ac609/abundances.cxb	treated	1	590	453.174	2.0956	1

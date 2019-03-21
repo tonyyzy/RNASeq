@@ -1,0 +1,3 @@
+test_id	gene_id	gene	locus	sample_1	sample_2	status	value_1	value_2	sqrt(JS)	test_stat	p_value	q_value	significant
+XLOC_000001	XLOC_000001	gene1	test1:499-999	untreated	treated	NOTEST	0	0	0	0	1	1	no
+XLOC_000002	XLOC_000002	gene2	test1:2999-5299	untreated	treated	NOTEST	0	0	0	0	1	1	no

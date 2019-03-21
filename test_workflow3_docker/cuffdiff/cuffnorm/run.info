@@ -1,0 +1,5 @@
+param	value
+cmd_line	cuffnorm -o cuffnorm -p 1 /var/lib/cwl/stg68555fe4-48f1-49a0-8375-7ae598ca7457/merged.gtf /var/lib/cwl/stg89dbc8e1-81c6-44f5-86d6-788b97d84cac/abundances.cxb,/var/lib/cwl/stgbc7584a0-4874-44d0-8b5e-989a1a07ef31/abundances.cxb /var/lib/cwl/stge9eacc01-288d-407a-a551-dedc9dcab900/abundances.cxb,/var/lib/cwl/stgfb263adc-4ff4-4598-ba44-267a98c5d875/abundances.cxb 
+version	2.2.1
+SVN_revision	4237
+boost_version	104700

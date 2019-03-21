@@ -1,0 +1,5 @@
+param	value
+cmd_line	cuffdiff -o untreated-treated -p 1 -L untreated,treated --FDR 1 /var/lib/cwl/stg36df3348-de0b-4d2c-9279-21dcc45bc3d0/merged.gtf /var/lib/cwl/stg991cff06-15d0-4d0e-81f7-341de322db25/abundances.cxb,/var/lib/cwl/stg0e227eff-a40e-4bb2-89d0-14fdd1fd7e2a/abundances.cxb /var/lib/cwl/stg0c201aed-f5d3-4042-80b0-6bde8309e49d/abundances.cxb,/var/lib/cwl/stg8f699aa5-3e0b-452c-a9ce-6573fb3ac609/abundances.cxb 
+version	2.2.1
+SVN_revision	4237
+boost_version	104700

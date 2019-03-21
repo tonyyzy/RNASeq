@@ -1,0 +1,4 @@
+"name","feature","log2foldchange","p_value","p_adj"
+"1","transcript",-3.88,0.2,0.31
+"2","transcript",4.53,0.11,0.31
+"3","transcript",-2.08,0.34,0.34

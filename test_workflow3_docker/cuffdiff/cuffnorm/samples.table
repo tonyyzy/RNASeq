@@ -1,0 +1,5 @@
+sample_id	file	total_mass	internal_scale	external_scale
+q1_0	/var/lib/cwl/stg89dbc8e1-81c6-44f5-86d6-788b97d84cac/abundances.cxb	2120	3.12979	1
+q1_1	/var/lib/cwl/stgbc7584a0-4874-44d0-8b5e-989a1a07ef31/abundances.cxb	520	2.79414	1
+q2_0	/var/lib/cwl/stge9eacc01-288d-407a-a551-dedc9dcab900/abundances.cxb	2630	3.93896	1
+q2_1	/var/lib/cwl/stgfb263adc-4ff4-4598-ba44-267a98c5d875/abundances.cxb	590	2.0956	1
