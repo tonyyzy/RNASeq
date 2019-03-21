@@ -90,7 +90,6 @@ class cwl_writer():
 
         self.name = ""
         self.previous_name = ""
-        self.prev = ""
 
         # get number of treads from config.ini
         config = ConfigParser()
@@ -1779,11 +1778,7 @@ class cwl_writer():
             self.name_list = step.split("_")
             self.previous_name = "_".join(self.name_list[:-1])
             self.name = step
-            if len(self.name_list) > 1:
-                self.prev = self.name_list[-2]
-            else:
-                self.prev = ""
-            getattr(cwl_writer, step.split("_")[-1])(self)
+            getattr(cwl_writer, self.name_list[-1])(self)
         self.graph.add_subgraph(self.graph_inputs)
         self.graph.add_subgraph(self.graph_outputs)
         self.graph.write(f"{self.root}/Data/{self.identifier}/workflow.dot")
