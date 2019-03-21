@@ -34,7 +34,7 @@ if __name__ == "__main__":
         elif q.jobtype == "workflow":
             logpath = f"{root}/Data/{identifier}/workflow.log"
             outdir = f"{root}/Data/{identifier}/output"
-        logfile = open(logpath, "w")
+        logfile = open(logpath, "a+")
         proc = subprocess.run(["cwl-runner",
                                 f"--outdir={outdir}",
                                 "--timestamp",

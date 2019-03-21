@@ -1097,6 +1097,7 @@ class cwl_writer():
 
 
     def cuffnorm(self):
+        names = []
         cuffmerge = "_".join(self.name_list[:self.name_list.index("cuffmerge") + 1])
         self.name_list.append("cuffnorm")
         self.previous_name = "_".join(self.name_list[:-1])
@@ -1110,27 +1111,39 @@ class cwl_writer():
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
-            "outputSource": f"{self.name}/cuffnorm_out"
+            "outputSource": f"{self.name}_folder/out"
         }
         # steps
-        self.cwl_workflow["steps"][f"{self.name}"] = {
-            "run": f"{self.root}/RNASeq/cwl-tools/docker/cuffnorm.cwl",
-            "in": {
-                "threads": "threads",
-                "merged_gtf": f"{cuffmerge}/merged_gtf",
-                "output": {"valueFrom": f"{self.name}"},
-                "input_script": "cuffnorm_table",
-                "label": "conditions",
-                "metadata": "metadata"
-            },
-            "out": ["cuffnorm_out"]
-        }
-        for index, condition in enumerate(self.conditions):
-            self.cwl_workflow["steps"][f"{self.name}"]\
-                ["in"][f"condition{index+1}_files"] = \
-                [f"{self.previous_name}_{self.file_names.index(name)+1}/cxb" \
-                    for name in self.conditions[condition]]
+        for condition_pair in combinations(self.conditions, 2):
+            condition_str = "-".join(condition_pair)
+            name = self.name + "_" + condition_str
+            names.append(name)
+            self.cwl_workflow["steps"][name] = {
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/cuffnorm.cwl",
+                "in": {
+                    "threads": "threads",
+                    "merged_gtf": f"{cuffmerge}/merged_gtf",
+                    "output": {"valueFrom": condition_str},
+                    "input_script": "cuffnorm_table",
+                    "label": {"default": list(condition_pair)},
+                    "metadata": "metadata"
+                },
+                "out": ["cuffnorm_out"]
+            }
+            for index, condition in enumerate(self.conditions):
+                self.cwl_workflow["steps"][name]\
+                    ["in"][f"condition{index+1}_files"] = \
+                    [f"{self.previous_name}_{self.file_names.index(fname)+1}/cxb" \
+                        for fname in self.conditions[condition]]
         
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
+            "in": {
+                "item": [name + "/cuffnorm_out" for name in names],
+                "name": {"valueFrom": self.name}
+            },
+            "out": ["out"]
+        }
         self.graph.add_node(pydot.Node(self.name, label="Cuffnorm"))
         self.add_edge()
         self.add_norm()
@@ -1140,10 +1153,11 @@ class cwl_writer():
 
 
     def cuffdiff(self):
+        names = []
         cuffmerge = "_".join(self.name_list[:self.name_list.index("cuffmerge") + 1])
-        self.cwl_workflow["inputs"]["conditions"] = "string[]"
+        # self.cwl_workflow["inputs"]["conditions"] = "string[]"
         self.cwl_workflow["inputs"]["cuffdiff_file_sort"] = "File"
-        self.cwl_input["conditions"] = list(self.conditions)
+        # self.cwl_input["conditions"] = list(self.conditions)
         self.cwl_input["cuffdiff_file_sort"] = {
             "class": "File",
             "path": f"{self.root}/RNASeq/scripts/cuffdiff_file_sort.py"
@@ -1151,26 +1165,40 @@ class cwl_writer():
         # outputs
         self.cwl_workflow["outputs"][f"{self.name}_out"] = {
             "type": "Directory",
-            "outputSource": f"{self.name}/cuffdiff_out"
+            "outputSource": f"{self.name}_folder/out"
         }
         # steps
-        self.cwl_workflow["steps"][self.name] = {
-            "run": f"{self.root}/RNASeq/cwl-tools/docker/cuffdiff.cwl",
+        for condition_pair in combinations(self.conditions, 2):
+            condition_str = "-".join(condition_pair)
+            name = self.name + "_" + condition_str
+            names.append(name)
+            self.cwl_workflow["steps"][name] = {
+                "run": f"{self.root}/RNASeq/cwl-tools/docker/cuffdiff.cwl",
+                "in": {
+                    "threads": "threads",
+                    "merged_gtf": f"{cuffmerge}/merged_gtf",
+                    "FDR": {"valueFrom": "1"},
+                    "label": {"default": list(condition_pair)},
+                    "output": {"valueFrom": condition_str},
+                    "input_script": "cuffdiff_file_sort"
+                },
+                "out": ["cuffdiff_out", "de_res"]
+            }
+            for index, condition in enumerate(condition_pair):
+                self.cwl_workflow["steps"][name]["in"]\
+                    [f"condition{index+1}_files"] = \
+                    [f"{self.previous_name}_{self.file_names.index(fname)+1}/cxb" \
+                        for fname in self.conditions[condition]]
+
+
+        self.cwl_workflow["steps"][f"{self.name}_folder"] = {
+            "run": f"{self.root}/RNASeq/cwl-tools/folder.cwl",
             "in": {
-                "threads": "threads",
-                "merged_gtf": f"{cuffmerge}/merged_gtf",
-                "FDR": {"valueFrom": "1"},
-                "label": "conditions",
-                "output": {"valueFrom": self.name},
-                "input_script": "cuffdiff_file_sort"
+                "item": [name + "/cuffdiff_out" for name in names],
+                "name": {"valueFrom": self.name}
             },
-            "out": ["cuffdiff_out", "de_res"]
+            "out": ["out"]
         }
-        for index, condition in enumerate(self.conditions):
-            self.cwl_workflow["steps"][self.name]["in"]\
-                [f"condition{index+1}_files"] = \
-                [f"{self.previous_name}_{self.file_names.index(name)+1}/cxb" \
-                    for name in self.conditions[condition]]
 
         self.graph.add_node(pydot.Node(self.name, label="Cuffdiff"))
         self.add_edge()
@@ -1189,6 +1217,9 @@ class cwl_writer():
             self.previous_name = self.name
             self.name += "_fgsea"
             self.fgsea()
+            self.cwl_workflow["steps"][self.name]["in"]["de_res"] = [
+                f"{name}/de_res" for name in names
+            ]
 
 
     def tablemaker(self):

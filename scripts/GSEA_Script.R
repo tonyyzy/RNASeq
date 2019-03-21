@@ -8,7 +8,6 @@ if ("--gene_set" %in% args) {
   if (file.exists(gene_set.file.path)) {
     cat("\nLoading _serialised_ 'Gene Set' from \"",gene_set.file.path,"\" ... ", sep="")
     gs <- read.table(gene_set.file.path)
-    gs <- gs[grep("HSA", gs$V2),]
     cat("done\n")
   } else {
     cat("\nLocation of file containing 'Gene Set': \"",gene_set.file.path,"\"\n", sep="")
