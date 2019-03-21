@@ -15,7 +15,6 @@ if( "--condition" %in% args ){
   colnames(metadata) <- sub(condition, "condition",colnames(metadata))
 }
 print(metadata)
-print(data)
 comb <- combn(unique(as.character(metadata[,"condition"])), 2)
 for(i in 1:ncol(comb)){
   metadata.f <- metadata[metadata$condition %in% comb[,i],]

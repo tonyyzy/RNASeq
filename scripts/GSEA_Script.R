@@ -21,13 +21,14 @@ if (! "--de_res" %in% args) {
   stop("'Differential Expression' flag [--de_res] absent")
 } else {
   de.file.path <- args[ grep("--de_res", args)+1 ]
-  de.file.path <- strsplit(de.file.path, split = ",")
+  de.file.sep <- unlist(strsplit(de.file.path, split = ","))
 }
 
-for(x in de.file.path){
+for(x in de.file.sep){
   if (file.exists(x)) {
     cat("\nLoading _serialised_ 'differential expression' results from \"", x ,"\" ... ", sep="")
-    Deseq.results <- read.csv(x, row.names = 1, header = TRUE)
+    print(x)
+    Deseq.results <- read.csv(as.character(x), row.names = 1, header = TRUE)
     if(!"p_adj" %in% colnames(Deseq.results)){
       stop("p_adj must be a column in de results file")
     }
