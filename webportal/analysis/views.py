@@ -334,7 +334,14 @@ class WorkflowCreateView(CreateView):
         return render(request, self.template_name, context)
 
     def post(self, request, session_slug):
-        form = WorkflowForm(request.POST, request.FILES)
+        form = WorkflowForm(request.POST)
+        valid_check = form.is_valid()
+        print(f'\n{valid_check}')
+        print(request.POST.get('label'))
+        print(request.POST.get('mapper'))
+        print(request.POST.get('assembler'))
+        print(request.POST.get('analysis'))
+        print(f'\n{valid_check}')
         if form.is_valid():
             post = form.save(commit=False)
             post.session = Session.objects.get(identifier=session_slug)
