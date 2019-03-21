@@ -6,7 +6,7 @@ baseCommand: compare_miso
 
 requirements:
    DockerRequirement:
-      dockerPull: genomicpariscentre/miso
+      dockerPull: genomicpariscentre/miso:0.5.3
 
 inputs:
    group1:

@@ -4,7 +4,7 @@ baseCommand: python2
 
 hints:
     DockerRequirement:
-        dockerPull: filipejesus/cufflinks:latest
+        dockerPull: filipejesus/cufflinks:2.2.1
     ShellCommandRequirement: {}
     InlineJavascriptRequirement: {}
     InitialWorkDirRequirement:

@@ -7,9 +7,7 @@ baseCommand: tablemaker
 
 requirements:
   DockerRequirement:
-    dockerPull: filipejesus/cufflinks:latest
-  InlineJavascriptRequirement: {}
-  ShellCommandRequirement: {}
+    dockerPull: filipejesus/cufflinks:2.2.1
 
 arguments:
   - position: 2

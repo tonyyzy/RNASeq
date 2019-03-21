@@ -6,7 +6,7 @@ baseCommand: Rscript
 
 requirements:
    DockerRequirement:
-      dockerPull: filipejesus/dexseq
+      dockerPull: filipejesus/dexseq:3.8
 
 inputs:
    input_script:

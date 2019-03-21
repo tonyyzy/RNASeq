@@ -7,7 +7,7 @@ baseCommand: cufflinks
 requirements:
    InlineJavascriptRequirement: {}
    DockerRequirement:
-      dockerPull: filipejesus/cufflinks:latest
+      dockerPull: filipejesus/cufflinks:2.2.1
 
 inputs:
    gtf:

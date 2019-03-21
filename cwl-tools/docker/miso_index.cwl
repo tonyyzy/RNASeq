@@ -8,7 +8,7 @@ requirements:
   InlineJavascriptRequirement: {}
   ShellCommandRequirement: {}
   DockerRequirement:
-     dockerPull: genomicpariscentre/miso
+     dockerPull: genomicpariscentre/miso:0.5.3
 
 arguments:
    - position: 3

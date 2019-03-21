@@ -6,7 +6,7 @@ baseCommand: Rscript
 
 requirements:
    DockerRequirement:
-      dockerPull: filipejesus/fgsea
+      dockerPull: filipejesus/fgsea:3.8
 
 inputs:
    input_script:

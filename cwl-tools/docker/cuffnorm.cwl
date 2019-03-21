@@ -8,7 +8,7 @@ requirements:
     ShellCommandRequirement: {}
     InlineJavascriptRequirement: {}
     DockerRequirement:
-        dockerPull: filipejesus/cufflinks:latest
+        dockerPull: filipejesus/cufflinks:2.2.1
 
 arguments:
   - position: -4

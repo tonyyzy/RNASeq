@@ -6,7 +6,7 @@ baseCommand: Rscript
 
 requirements:
    DockerRequirement:
-      dockerPull: filipejesus/tximport
+      dockerPull: filipejesus/tximport:3.8
 
 inputs:
    input_script:

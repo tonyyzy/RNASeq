@@ -9,7 +9,7 @@ requirements:
   InitialWorkDirRequirement:
     listing: $(inputs.bam_files)
   DockerRequirement:
-    dockerPull: filipejesus/featurecounts:latest
+    dockerPull: filipejesus/featurecounts:3.8
 
 arguments:
   - prefix: --d

@@ -6,7 +6,7 @@ baseCommand: sh
 
 hints:
    DockerRequirement:
-      dockerPull: genomicpariscentre/miso
+      dockerPull: genomicpariscentre/miso:0.5.3
 
 inputs:
    input_script:
