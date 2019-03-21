@@ -90,7 +90,6 @@ class cwl_writer():
 
         self.name = ""
         self.previous_name = ""
-        self.prev = ""
 
         # get number of treads from config.ini
         config = ConfigParser()
@@ -551,7 +550,7 @@ class cwl_writer():
             self.cwl_workflow["steps"][f"{self.name}_{i + 1}"] = {
                 "run": f"{self.root}/RNASeq/cwl-tools/docker/stringtie.cwl",
                 "in": {
-                    "bam": f"{self.previous_name}_{i+1}/{self.output_string[self.prev]}",
+                    "bam": f"{self.previous_name}_{i+1}/{self.output_string[self.name_list[-2]]}",
                     "threads": "threads",
                     "gtf": "annotation",
                     "output": f"subject_name{i+1}"
@@ -591,7 +590,7 @@ class cwl_writer():
                 "in": {
                     "gtf": "annotation",
                     "threads": "threads",
-                    "bam": f"{self.previous_name}_{index+1}/{self.output_string[self.prev]}",
+                    "bam": f"{self.previous_name}_{index+1}/{self.output_string[self.name_list[-2]]}",
                     "output": f"subject_name{index+1}"
                 },
                 "out": ["cufflink_out", "gtf_out"]
@@ -952,7 +951,7 @@ class cwl_writer():
             "run": f"{self.root}/RNASeq/cwl-tools/docker/DESeq2.cwl",
             "in": {
                 "input_script": "DESeq2_script",
-                "count_matrix": f"{self.previous_name}/{self.output_string[self.prev]}",
+                "count_matrix": f"{self.previous_name}/{self.output_string[self.name_list[-2]]}",
                 "metadata": "metadata"
             },
             "out": ["DESeq2_out", "de_res"]
@@ -1338,7 +1337,7 @@ class cwl_writer():
             "run": f"{self.root}/RNASeq/cwl-tools/docker/edger.cwl",
             "in": {
                 "input_script": "EdgeR_script",
-                "count_matrix": f"{self.previous_name}/{self.output_string[self.prev]}",
+                "count_matrix": f"{self.previous_name}/{self.output_string[self.name_list[-2]]}",
                 "metadata": "metadata",
                 "condition": {"valueFrom": "condition"}
             },
@@ -1445,7 +1444,7 @@ class cwl_writer():
             self.cwl_workflow["steps"][f"{self.name}_{i + 1}"] = {
                 "run": f"{self.root}/RNASeq/cwl-tools/docker/samtools.cwl",
                 "in": {
-                    "samfile": f"{self.previous_name}_{i+1}/{self.output_string[self.prev]}",
+                    "samfile": f"{self.previous_name}_{i+1}/{self.output_string[self.name_list[-2]]}",
                     "threads": "threads",
                     "outfilename": {
                         "source": [f"subject_name{i + 1}"],
@@ -1779,11 +1778,7 @@ class cwl_writer():
             self.name_list = step.split("_")
             self.previous_name = "_".join(self.name_list[:-1])
             self.name = step
-            if len(self.name_list) > 1:
-                self.prev = self.name_list[-2]
-            else:
-                self.prev = ""
-            getattr(cwl_writer, step.split("_")[-1])(self)
+            getattr(cwl_writer, self.name_list[-1])(self)
         self.graph.add_subgraph(self.graph_inputs)
         self.graph.add_subgraph(self.graph_outputs)
         self.graph.write(f"{self.root}/Data/{self.identifier}/workflow.dot")

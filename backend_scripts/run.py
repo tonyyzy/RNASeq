@@ -27,6 +27,7 @@ if __name__ == "__main__":
                     .filter(RSession.id == Queue.session_id).all()
     if len(query) > 0:
         s, q = query[0]
+        queue_id = q.id
         identifier = UUID(s.identifier)
         if q.jobtype == "index":
             logpath = f"{root}/Data/{identifier}/indexing.log"
@@ -35,6 +36,7 @@ if __name__ == "__main__":
             logpath = f"{root}/Data/{identifier}/workflow.log"
             outdir = f"{root}/Data/{identifier}/output"
         logfile = open(logpath, "a+")
+        session.close()
         proc = subprocess.run(["cwl-runner",
                                 f"--outdir={outdir}",
                                 "--timestamp",
@@ -44,6 +46,8 @@ if __name__ == "__main__":
                                 q.yml],
                                 stdout=logfile, stderr=logfile)
         
+        session = Session(engine)
+        q = session.query(Queue).filter(Queue.id == queue_id).first()
         if proc.returncode == 0:
             q.status = 0
             q.result = "success"
@@ -52,4 +56,5 @@ if __name__ == "__main__":
             q.result = "failed"
         
         session.commit()
+        session.close()
         logfile.close()
