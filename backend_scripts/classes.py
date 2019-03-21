@@ -3,6 +3,7 @@ import csv
 import logging
 import os
 import uuid
+import datetime
 
 import pandas as pd
 from sqlalchemy import create_engine
@@ -23,6 +24,7 @@ class database_checker():
         RSession = self.Base.classes.analysis_session
         session = Session(self.engine)
         for entry in session.query(RSession).filter(RSession.status == 1):
+            print(datetime.datetime.now())
             print(entry.id)
             self.create_workflow(entry.id, root)
             entry.status = 2
