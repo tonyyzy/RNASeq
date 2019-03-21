@@ -11,14 +11,6 @@
   <body>
     {% block body %}
       <div class="offset-3 col-md-6">
-        <input id='id_ajax_test' onclick="fireAjax()" type="submit" name="" class='btn btn-success' value="submit">
-        <div id="output_box"></div>
-        {{data}}
-
-<h1>Currently</h1>
-{% for assembler in assembler %}
-  {{assembler}}
-{% endfor %}
 
           <div class="form-group">
             <form method="POST"  enctype="multipart/form-data" class="create_form">
@@ -39,60 +31,66 @@
               <div id='id_mapper' class='create_form_element'>
                 <label for="">{{form.mapper.label_tag}}</label>
                 <!-- {{form.mapper}} -->
-                <select onchange='filterAssembler()'class="form-control" name="">
+                <select onchange='fireAjax()'class="form-control" name="">
                   <option value="">---------</option>
                   {% for mapper in mapper %}
                     <option value="{{mapper}}">{{mapper}}</option>
                   {% endfor %}
                 </select>
               </div>
-              <div id='id_assembler' class='create_form_element'>
-                <label for="">{{form.assembler.label_tag}}</label>
-                <!-- {{form.assembler}} -->
-                <select onchange="" class="form-control" name="">
-                  <option value="">---------</option>
-                  {% for assembler in assembler %}
-                    <option value="{{assembler}}">{{assembler}}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <div id='id_analysis' class='create_form_element'>
-                <label for="">{{form.analysis.label_tag}}</label>
-                {{form.analysis}}
-              </div>
-              <div id='id_status' class='create_form_element'>
-                <label for="">{{form.status.label_tag}}</label>
-                {{form.status}}
-              </div>
-              <div id='id_status' class='create_form_element'>
-                <label for="">{{form.status.label_tag}}</label>
-                {{form.status}}
-              </div>
-              <input type="submit" class='create_btn' value="Submit">
+                <div id='id_assembler' class='create_form_element'>
+                  <label for="">{{form.assembler.label_tag}}</label>
+                  <!-- {{form.assembler}} -->
+                  <select id='id_assembler_select' onchange="" class="form-control" name="">
+                    <option value="">---------</option>
+                    <!-- {% for assembler in ajax_assembler %}
+                      <option value="{{assembler}}">{{assembler}}</option>
+                    {% endfor %} -->
+                  </select>
+                </div>
+                <div id='id_analysis' class='create_form_element'>
+                  <label for="">{{form.analysis.label_tag}}</label>
+                  {{form.analysis}}
+                </div>
+                <div id='id_status' class='create_form_element'>
+                  <label for="">{{form.status.label_tag}}</label>
+                  {{form.status}}
+                </div>
+                <div id='id_status' class='create_form_element'>
+                  <label for="">{{form.status.label_tag}}</label>
+                  {{form.status}}
+                </div>
+                <input type="submit" class='create_btn' value="Submit">
+
             </form>
-            <h2>experiments</h2>
-            mapper: {{mapper}}<br>
-            assembler: {{assembler}}<br>
-            filtered_assembler: {{filtered_assembler}}
-            {% if filtered_assembler %}
-              hi there
-            {% endif %}
+          </div>
           </div>
       </div>
       <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
       <script type="text/javascript">
 // $('#id_mapper option:selected').val()
 
+
+
   function fireAjax(){
-    var endpoint = 'axaj_test'
+    var mapper = $('#id_mapper option:selected').val()
+    var endpoint = 'axaj_test/'+mapper
+    console.log(endpoint)
+
     $.ajax({
       method: 'GET',
       url: endpoint,
       success: function(data){
         console.log(data)
-        console.log(data['key1'])
-        // $('#output_box').html = 'fe fi fo fum'
-        $('#output_box').html(data['HISAT2'])
+        options = ''
+        blank_option = '<option value="">---------</option>'
+        $('#id_assembler_select option:not(:first)').remove()
+        $.each(data, function () {
+            console.log(this)
+            options += "<option value='" + this + "'>" + this + "</option>";
+        });
+        $('#id_assembler_select').append(options)
+        // data = "{{ajax_assembler}}"
       },
       error: function(error_data){
         console.log('error')
@@ -100,20 +98,6 @@
       }
     })
   }
-
-
-      function filterAssembler(){
-        // console.log('select changed!')
-        var mapper = $('#id_mapper option:selected').val()
-        console.log(mapper)
-        assembler = {'STARAligner':['STRINGTIE', 'CUFFLINKS', 'MISO', 'HTSEQ', 'FEATURECOUNTS'],
-                      'HISAT2':['STRINGTIE', 'CUFFLINKS', 'MISO', 'HTSEQ', 'FEATURECOUNTS'],
-                      'SALMON':['SALMON']}
-        $('#output_box').html(assembler[mapper])
-        return filtered_assembler = assembler[mapper]
-        // console.log(filtered_assembler)
-      }
-
 
       </script>
     {% endblock %}
