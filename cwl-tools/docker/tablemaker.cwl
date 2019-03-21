@@ -8,8 +8,6 @@ baseCommand: tablemaker
 requirements:
   DockerRequirement:
     dockerPull: filipejesus/cufflinks:latest
-  InlineJavascriptRequirement: {}
-  ShellCommandRequirement: {}
 
 arguments:
   - position: 2
