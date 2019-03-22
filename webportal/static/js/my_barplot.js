@@ -76,7 +76,7 @@ var newPlot_Barplot = function(){
     console.log(width)
     console.log(height)
 
-    var margin = {top: 40, right: 20, bottom: 20, left: 40};
+    var margin = {top: 40, right: 20, bottom: 20, left: 60};
     //Width and height
     w = width - margin.right - margin.left;
     h = height - margin.top - margin.bottom;
@@ -106,6 +106,16 @@ var newPlot_Barplot = function(){
     .attr("class", "axis") //Assign "axis" class
     .call(yAxis);
 
+    // text label for the y axis
+    svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.right - 40)
+      .attr("x", 0 - (height / 2))
+      .attr("dy", "1em")
+      .attr("font-size", "1.5rem")
+      .style("text-anchor", "middle")
+      .text("Number of significant genes");
+
     var barPadding = 10;
 
     svg.selectAll("rect")
@@ -116,13 +126,14 @@ var newPlot_Barplot = function(){
       return xScale(i); // <-- Set x values
     })
     .attr("y", function(d){return yScale(d);})
-    .attr("width", xScale.bandwidth())
+    .attr("width", xScale.bandwidth()/2)
     .attr("height", function(d){return h - yScale(d);})
     .attr("fill", function(d, i){return colours[i];})
     .on("mouseover", function(d){
-    svg.append("text")
+      d3.select("#label").remove();
+      svg.append("text")
         .attr("id", "label")
-        .attr("x", 400)
+        .attr("x", width/2)
         .attr("y", h + 25)
         .text("Significant genes: " + d);
     })
