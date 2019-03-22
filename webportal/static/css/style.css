@@ -319,7 +319,11 @@ html,body{
 }
 
 
-
+.svg{
+  /* background: yellow; */
+  width:100%;
+  height: 100%;
+}
 
 
 /* MODAL STYLE */
@@ -342,11 +346,6 @@ html,body{
 } */
 
 #id_volcano{
-  width: 100%;
-  height: 100%;
-}
-
-#id_barplot{
   width: 100%;
   height: 100%;
 }
