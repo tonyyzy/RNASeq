@@ -72,6 +72,7 @@ class SessionDetailView(View):
         instance = get_object_or_404(Session, identifier=session_slug)
         form = SessionSubmitForm(request.POST or None, instance = instance)
         session_data_dir = os.path.join(settings.DATA_DIR, session_slug)
+        print('lookout below')
         print(f'\n{session_data_dir}')
         try:
             session = Session.objects.get(identifier=session_slug)
