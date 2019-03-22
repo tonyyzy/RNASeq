@@ -11,6 +11,7 @@
   <body>
     {% block body %}
       <div class="offset-3 col-md-6">
+
           <div class="form-group">
             <form method="POST"  enctype="multipart/form-data" class="create_form">
               {% csrf_token %}
@@ -20,39 +21,102 @@
               </div>
               <hr class="my-4">
 
-              {{form|crispy}}
+              <!-- {{form|crispy}} -->
 
-              <!--
+
               <div id='id_label' class='create_form_element'>
                 <label for="">{{form.label.label_tag}}</label>
                 {{form.label}}
               </div>
-              <div id='id_mapper' class='create_form_element'>
+              <div id='id_mapper' onchange='filterAssembler()' class='create_form_element'>
                 <label for="">{{form.mapper.label_tag}}</label>
                 {{form.mapper}}
+                <!-- <select onchange='fireAjax()' class="form-control" name="">
+                  <option value="">- empty -</option>
+                  {% for mapper in mapper %}
+                    <option value='{{mapper}}' name="{{mapper}}">{{mapper}}</option>
+                  {% endfor %}
+                </select> -->
               </div>
-              <div id='id_assembler' class='create_form_element'>
-                <label for="">{{form.assembler.label_tag}}</label>
-                {{form.assembler}}
-              </div>
-              <div id='id_analysis' class='create_form_element'>
-                <label for="">{{form.analysis.label_tag}}</label>
-                {{form.analysis}}
-              </div>
-              <div id='id_status' class='create_form_element'>
-                <label for="">{{form.status.label_tag}}</label>
-                {{form.status}}
-              </div>
-              <div id='id_status' class='create_form_element'>
-                <label for="">{{form.status.label_tag}}</label>
-                {{form.status}}
-              </div> -->
-              <input type="submit" class='create_btn' value="Submit">
+                <div id='id_assembler' onchange="filterAnalysis()" class='create_form_element'>
+                  <label for="">{{form.assembler.label_tag}}</label>
+                  {{form.assembler}}
+                  <!-- <select id='id_assembler_select' onchange="" class="form-control" name="">
+                    <option value="">-</option>
+                    {% for assembler in ajax_assembler %}
+                      <option value="{{assembler}}">{{assembler}}</option>
+                    {% endfor %}
+                  </select> -->
+                </div>
+                <div id='id_analysis' class='create_form_element'>
+                  <label for="">{{form.analysis.label_tag}}</label>
+                  {{form.analysis}}
+                </div>
+                <!-- <div id='id_status' class='create_form_element'>
+                  <label for="">{{form.status.label_tag}}</label>
+                  {{form.status}}
+                </div> -->
+                <input type="submit" class='create_btn' value="Submit">
             </form>
-
           </div>
-
+          </div>
       </div>
+      <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+      <script type="text/javascript">
+// $('#id_mapper option:selected').val()
+
+
+
+  function filterAssembler(){
+    var mapper = $('#id_mapper option:selected').val()
+    var endpoint = 'filtered_assembler/'+mapper
+    console.log(endpoint)
+
+    $.ajax({
+      method: 'GET',
+      url: endpoint,
+      success: function(data){
+        console.log('ajax fired')
+        console.log(data)
+        $('#id_assembler option:not(:first)').remove()
+        $.each(data, function (i,item) {
+            console.log(item[0])
+            option = "<option value=" + item[0] +">" + item[1] + "</option>";
+            $('#id_assembler select').append(option)
+        });
+      },
+      error: function(error_data){
+        console.log('error')
+        console.log(error_data)
+      }
+    })
+  }
+
+  function filterAnalysis(){
+    console.log('filterAnalysis executed')
+    var assembler = $('#id_assembler option:selected').val()
+    var endpoint = 'filtered_analysis/'+assembler
+
+    $.ajax({
+      method: 'GET',
+      url: endpoint,
+      success: function(data){
+        console.log(data)
+        $('#id_analysis option:not(:first)').remove()
+        $.each(data, function (i,item) {
+            console.log(item[0])
+            option = "<option value=" + item[0] +">" + item[1] + "</option>";
+            $('#id_analysis select').append(option)
+        });
+      },
+      error: function(error_data){
+        console.log('error')
+        console.log(error_data)
+      }
+    })
+  }
+
+      </script>
     {% endblock %}
   </body>
 </html>

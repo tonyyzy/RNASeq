@@ -6,11 +6,13 @@ app_name = 'analysis'
 
 urlpatterns = [
 
+
+
     path('', views.SessionIndexView.as_view(), name='session_index'),
     path('debug/', views.DebugView.as_view(), name='debug_view'),
     path('genome_create/', views.GenomeCreateView.as_view(), name='genome_view'),
 
-    # path('session_detail/<slug:session_slug>/submit/', views.SessionSubmitView.as_view(), name='session_submit'),
+    # path('session_detail/<slug:session_slug>/workflow_update/<int:workflow_pk>/filtered_analysis/<slug:assembler_slug>/', views.filterAnalysis, name='filtered_analysis'),
 
     path('session_list', views.SessionListView.as_view(), name='session_list'),
     path('session_detail/<slug:session_slug>/', views.SessionDetailView.as_view(), name='session_detail'),
@@ -34,7 +36,13 @@ urlpatterns = [
     path('workflow_list', views.WorkflowListView.as_view(), name='workflow_list'),
     path('workflow_detail/<int:pk>/', views.WorkflowDetailView.as_view(), name='workflow_detail'),
     path('session_detail/<slug:session_slug>/workflow_create/', views.WorkflowCreateView.as_view(), name='workflow_create'),
+    path('session_detail/<slug:session_slug>/workflow_create/filtered_assembler/<slug:mapper_slug>', views.filterAssembler, name='filtered_assembler'),
+    path('session_detail/<slug:session_slug>/workflow_create/filtered_analysis/<slug:assembler_slug>', views.filterAnalysis, name='filtered_analysis'),
+
     path('session_detail/<slug:session_slug>/workflow_update/<int:workflow_pk>/', views.WorkflowUpdateView.as_view(), name='workflow_update'),
+    path('session_detail/<slug:session_slug>/workflow_update/<int:workflow_pk>/filtered_assembler/<slug:mapper_slug>', views.filterAssemblerUpdate, name='filtered_assembler'),
+    path('session_detail/<slug:session_slug>/workflow_update/<int:workflow_pk>/filtered_analysis/<slug:assembler_slug>', views.filterAnalysisUpdate, name='filtered_analysis'),
+
     path('session_detail/<slug:session_slug>/workflow_delete/<int:workflow_pk>/', views.WorkflowDeleteView.as_view(), name='workflow_delete'),
 
 ]

@@ -78,32 +78,18 @@ function wf_select(param){
      }
   }
   // console.log(result)
-  var endpoint = 'wf_one/';
+  var endpoint = 'wf_data/';
   for(var i = 0; i < result.length; i++){
     endpoint += result[i]
     endpoint += '_'
   }
-  console.log(endpoint)
+  // console.log(endpoint)
   // console.log('hi there old sport')
   d3_run(endpoint)
 }
 
-// var volcanoplot = function() {
-//   var dataset = [];
-//     for (var i = 0; i < all_data.length; i++) {
-//       dataset.push(d3.csv("DGE_results_" + all_data[i] + ".csv", function(dataset){
-//         dataset.gene_name = dataset[""];
-//         dataset.Base_Mean = parseFloat(dataset.baseMean);
-//         dataset.log2FoldChange = parseFloat(dataset.log2FoldChange);
-//         dataset.pvalue = parseFloat(dataset.pvalue);
-//         dataset.padj = parseFloat(dataset.padj);
-//         return dataset;
-//       }));
-// };
-
-
 function d3_run(endpoint){
-  console.log(endpoint)
+  console.log('the endpoint selected: ' + endpoint)
   d3.json(endpoint).then(function(data) {
     console.log('d3_run called')
     dataset.push(data)
@@ -113,8 +99,10 @@ function d3_run(endpoint){
 
 
 function dataFilter_volcano(){
+  console.log(dataset)
   dataset = dataset[0]
-  dataset = dataset.filter(function(d){return ! isNaN(d.p_adj)});
+  dataset = dataset.filter(function(d){return d.p_adj != null});
+  dataset = dataset.filter(function(d){return d.p_adj != 0});
   // myPlot()
   newPlot(dataset)
 }
@@ -122,44 +110,50 @@ function dataFilter_volcano(){
 
 
 function newPlot(){
-
+      console.log('newPlot called')
       d3.select("#id_painting_volcano").selectAll("*").remove();
-
       console.log(dataset);
 
-      var width = d3.select('#id_painting_style_volcano').node().getBoundingClientRect().width;
-      var height = d3.select('#id_painting_style_volcano').node().getBoundingClientRect().height;
-      console.log(width)
-      console.log(height)
+      // console.log(dataset);
 
-      var margin = {top: 20, right: 20, bottom: 20, left: 20};
+      var width = d3.select('#id_tab').node().getBoundingClientRect().width;
+      var height = d3.select('#id_tab').node().getBoundingClientRect().height;
+
+      // console.log(width)
+      // console.log(height)
+
+      var margin = {top: 40, right: 20, bottom: 50, left: 60};
+
       //Width and height
 
       w = width - margin.right - margin.left;
       h = height - margin.top - margin.bottom;
 
+      // xMax = d3.max(dataset, function(d) { return  parseFloat(d.log2foldchange) + 1;})
+      // xMin =
       xScale = d3.scaleLinear()
-        .domain([d3.min(dataset, function(d) { return  d.log2foldchange - 2;}),
-                 d3.max(dataset, function(d) { return  d.log2foldchange + 2;})])
-      .range([0, w]);
+        .domain([d3.min(dataset, function(d) { return  d.log2foldchange - 1;}),
+                 d3.max(dataset, function(d) { return  d.log2foldchange + 1;})])
+        .range([0, w]);
 
-      d3.select("id_p_threshold")
-        .attr("min", "" + d3.min(dataset, function(d) { return d.log2foldchange;}))
-        .attr("max", "" + d3.max(dataset, function(d) { return d.log2foldchange;}));
+      // var slider = document.getElementById("id_p_threshold");
+      // slider.min = "" + d3.min(dataset, function(d) { return parseInt(d.log2foldchange);});
+      // slider.max = "" + d3.max(dataset, function(d) { return parseInt(d.log2foldchange);});
+      // console.log(slider.max)
 
       yScale = d3.scaleLinear()
-      .domain([d3.min(dataset, function(d) { return - Math.log10(d.p_adj) - 0.5;}),
-               d3.max(dataset, function(d) { return - Math.log10(d.p_adj) + 0.5;})])
-      .range([h, 0]);
+        .domain([d3.min(dataset, function(d) { return - Math.log10(d.p_adj) - 0.5;}),
+                d3.max(dataset, function(d) { return - Math.log10(d.p_adj) + 0.5;})])
+        .range([h, 0]);
       // .range([h, 0]);
 
-      d3.select("id_p_threshold")
-      .attr("min", "" + d3.min(dataset, function(d) { return - Math.log10(d.p_adj);}))
-      .attr("max", "" + d3.max(dataset, function(d) { return - Math.log10(d.p_adj);}));
+      // d3.select("id_p_threshold")
+      // .attr("min", "" + d3.min(dataset, function(d) { return - Math.log10(d.p_adj);}))
+      // .attr("max", "" + d3.max(dataset, function(d) { return - Math.log10(d.p_adj);}));
 
       xAxis = d3.axisBottom()
       .scale(xScale);
-      
+
 
       yAxis = d3.axisLeft()
       .scale(yScale);
@@ -177,10 +171,19 @@ function newPlot(){
       .attr("class", "axis") //Assign "axis" class
       .call(yAxis)
       svg.append("text")
-      .attr("x", xScale(w/2))
-      .attr("y", yScale(h + margin.top))
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.right - 40)
+      .attr("x", 0 - (height / 2))
+      .attr("dy", "1em")
+      .attr("font-size", "1.5rem")
       .style("text-anchor", "middle")
-      .text("Date");
+      .text("- Log 10 of P adjusted");
+      svg.append("text")
+      .attr("x", w/2 )
+      .attr("y", h + margin.top)
+      .style("text-anchor", "middle")
+      .attr("font-size", "1.5rem")
+      .text("Log 2 Fold Change");
       circles()
       hLines()
       vLines()
@@ -218,7 +221,7 @@ function circles(){
           svg.append("text")
             .attr("id", "label")
             .attr("y", h + 35 )
-            .text("Gene: " + d.genename + " L2fc: " + d.log2foldchange + " p adj: " + d.p_adj);
+            .text("Gene: " + d.name + " L2fc: " + d.log2foldchange + " p adj: " + d.p_adj);
         })
         .on("mouseout", function(d){
           d3.select(this).attr("fill", function(d){
@@ -257,7 +260,6 @@ function hLines(){
   var h_lines_g = svg.append("g")
   .attr("class", "lines");
 
-console.log(w)
   h_line = [p_threshold]
   var h_lines = h_lines_g.selectAll("line")
   .data(h_line)

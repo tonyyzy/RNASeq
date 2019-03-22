@@ -29,7 +29,7 @@ var get_data = function(){
       dataset[i][e].dataset_index = i;
     };
   };
-  dataset = dataset.flat();
+  dataset = [].concat.apply([], dataset);
   console.log(dataset);
 
   var value_selected = document.getElementById('selector').value;

@@ -10,6 +10,8 @@ import csv , json
 from django.conf import settings
 import os
 from analysis.models import Session
+import pandas
+from collections import OrderedDict, defaultdict
 
 class VisualizationIndexView(View):
     def get(self, request, session_slug):
@@ -20,7 +22,7 @@ class VisualizationIndexView(View):
         context = {'session': session, 'workflows': workflows}
         return render(request, 'visualization/index.html', context)
 
-def WorkFlowOneView(request, session_slug, workflow_slug):
+def WorkflowData(request, session_slug, workflow_slug):
     session = Session.objects.get(identifier = session_slug)
     workflows = session.workflow_fk.all()
     selected_wf_list = workflow_slug[:-1].split("_")
@@ -37,16 +39,25 @@ def WorkFlowOneView(request, session_slug, workflow_slug):
     for index, DGE_csv in enumerate(selected_DGE):
         print(f'\n{DGE_csv}')
         with open (DGE_csv) as in_file:
-            csvReader = csv.DictReader(in_file)
+            csvReader = pandas.read_csv(in_file)
+            csvReader['dataset_index'] = index
+            arr.append(csvReader)
+            # print(arr)
+            # csvReader = csv.DictReader(in_file)
             # print(csvReader)
-            for csvRow in csvReader:
-                csvRow['dataset_index'] = index
-                print(csvRow)
-                # print(csvRow)
-                arr.append(csvRow)
-
+            # for csvRow in csvReader:
+            #     csvRow['dataset_index'] = index
+            #     print(csvRow)
+            #     arr.append(csvRow)
     # print(arr)
-    return JsonResponse(arr, safe=False)
+    final = pandas.concat(arr, keys=range(len(arr)))
+    # print(final)
+    # final = final.round(8)
+    final = final.to_json(orient='records')
+    return HttpResponse(final)
+    # return render(final, safe=False)
+    # print(arr)
+    # return JsonResponse(final, safe=False)
 
 
 
@@ -61,8 +72,36 @@ def WorkFlowOneView(request, session_slug, workflow_slug):
 
 
 class DebugView(View):
-    def get(self, request, session_slug, workflow_slug):
-        return HttpResponse(workflow_slug)
+    # def get(self, request, session_slug, workflow_slug):
+    #     return HttpResponse(workflow_slug)
+
+    def get(request, session_slug, workflow_slug):
+        session = Session.objects.get(identifier = session_slug)
+        workflows = session.workflow_fk.all()
+        selected_wf_list = workflow_slug[:-1].split("_")
+        selected_wf = {workflows[int(i)-1] for i in selected_wf_list} # adds user selected workflow OBJECTS(s) to list
+        selected_DGE = []
+        for wf in selected_wf:
+            wf_path = wf.paths
+            wf_path = eval(wf_path) # only required if workflow path has been manually added to database in which case it is stored as a string
+            wf_csv = wf_path['DGE'][0] # pulling out first here. Would need to loop if more than two sample conditions are defined.
+            selected_DGE.append(wf_csv)
+
+
+        arr = []
+        for index, DGE_csv in enumerate(selected_DGE):
+            print(f'\n{DGE_csv}')
+            with open (DGE_csv) as in_file:
+                csvReader = csv.DictReader(in_file)
+                # print(csvReader)
+                for csvRow in csvReader:
+                    csvRow['dataset_index'] = index
+                    print(csvRow)
+                    # print(csvRow)
+                    arr.append(csvRow)
+
+        # print(arr)
+        return JsonResponse(arr, safe=False)
 
 
 # https://stackoverflow.com/questions/26453916/passing-data-from-django-to-d3

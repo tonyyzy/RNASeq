@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from django.urls import reverse, reverse_lazy
 from .forms import SessionSearchForm, SessionForm, SessionSubmitForm, WorkflowForm, SamplesForm, ConditionsForm, DebugForm, GenomeForm
 from analysis.models import Session, Workflow, Samples, Condition, The_Debug
@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.conf import settings
 import os
 from shutil import copyfile
+from django.http import JsonResponse
 from django.views.generic import (View,TemplateView,
                                 ListView,DetailView,
                                 CreateView,DeleteView,
@@ -294,6 +295,30 @@ class WorkflowDetailView(DetailView):
     template_name = 'analysis/workflow_detail.html'
 
 
+# mapper = ['STARAligner', 'HISAT2', 'SALMON']
+#     MAPPER_CHOICES = (
+#         ("star", "STARAligner"),
+#         ("hisat2", "HISAT2"),
+#         ('salmonquant', 'SALMON'),
+#     )
+    ASSEMLBER_CHOICES = (
+        ("stringtie", "STRINGTIE"),
+        ('cufflinks', 'CUFFLINKS'),
+        ('misorun', 'MISO'),
+        ('htseq', 'HTSEQ'),
+        ('featurecounts', 'FEATURECOUNTS'),
+        ('salmoncount', 'SALMON')
+    )
+#     ANALYSIS_CHOICES = (
+#         ('deseq2', 'DESEQ2'),
+#         ('dexseq', 'DEXSEQ'),
+#         ('misocompare', 'MISO'),
+#         ('cuffdiff', "CUFFDIFF"),
+#         ('edger', "EDGER"),
+#         ('ballgown', "BALLGOWN")
+#     )
+
+
 class WorkflowCreateView(CreateView):
     template_name = 'analysis/workflow_form.html'
 
@@ -303,13 +328,67 @@ class WorkflowCreateView(CreateView):
         return render(request, self.template_name, context)
 
     def post(self, request, session_slug):
-        form = WorkflowForm(request.POST, request.FILES)
+        form = WorkflowForm(request.POST)
+        valid_check = form.is_valid()
+        print(f'\n{valid_check}')
+
         if form.is_valid():
             post = form.save(commit=False)
             post.session = Session.objects.get(identifier=session_slug)
             post.save()
             return redirect('analysis:session_detail', session_slug)
         return render(request, self.template_name, {'form':form})
+
+
+
+def filterAssembler(request, session_slug, mapper_slug):
+# def filterAssembler(request, *args):
+
+    assembler = {'star':[['stringtie', 'STRINGTIE'], ['cufflinks', 'CUFFLINKS'], ['misorun', 'MISO'], ['htseq', 'HTSEQ'], ['featurecounts', 'FEATURECOUNTS']],
+                  'hisat2':[['stringtie', 'STRINGTIE'], ['cufflinks', 'CUFFLINKS'], ['misorun', 'MISO'], ['htseq', 'HTSEQ'], ['featurecounts', 'FEATURECOUNTS']],
+                  'salmonquant':[['salmoncount','SALMON']]}
+
+    filtered_assembler = assembler[mapper_slug]
+    print(f'\n{filtered_assembler}')
+    return JsonResponse(filtered_assembler, safe=False)
+
+
+def filterAnalysis(request, session_slug, assembler_slug):
+    analysis = {'stringtie':[['deseq2', 'DESEQ2'], ['edger', 'EDGER'], ['ballgown', 'BALLGOWN']],
+                  'cufflinks':[['cuffdiff', 'CUFFDIFF'], ['ballgown', 'BALLGOWN'], ['edger', 'EDGER']],
+                  'misorun':[['misocompare', 'MISO']],
+                  'htseq':[['dexseq', 'DEXSEQ']],
+                  'featurecounts':[['salmoncount','SALMON'], ['edger', 'EDGER']],
+                  'salmoncount':[['edger', 'EDGER'], ['deseq2', 'DESEQ2']]
+                  }
+
+    filtered_analysis = analysis[assembler_slug]
+    return JsonResponse(filtered_analysis, safe=False)
+
+def filterAssemblerUpdate(request, session_slug, workflow_pk, mapper_slug):
+# def filterAssembler(request, *args):
+
+    assembler = {'star':[['stringtie', 'STRINGTIE'], ['cufflinks', 'CUFFLINKS'], ['misorun', 'MISO'], ['htseq', 'HTSEQ'], ['featurecounts', 'FEATURECOUNTS']],
+                  'hisat2':[['stringtie', 'STRINGTIE'], ['cufflinks', 'CUFFLINKS'], ['misorun', 'MISO'], ['htseq', 'HTSEQ'], ['featurecounts', 'FEATURECOUNTS']],
+                  'salmonquant':[['salmoncount','SALMON']]}
+
+    filtered_assembler = assembler[mapper_slug]
+    print(f'\n{filtered_assembler}')
+    return JsonResponse(filtered_assembler, safe=False)
+
+
+def filterAnalysisUpdate(request, session_slug, workflow_pk, assembler_slug):
+    analysis = {'stringtie':[['deseq2', 'DESEQ2'], ['edger', 'EDGER'], ['ballgown', 'BALLGOWN']],
+                  'cufflinks':[['cuffdiff', 'CUFFDIFF'], ['ballgown', 'BALLGOWN'], ['edger', 'EDGER']],
+                  'misorun':[['misocompare', 'MISO']],
+                  'htseq':[['dexseq', 'DEXSEQ']],
+                  'featurecounts':[['salmoncount','SALMON'], ['edger', 'EDGER']],
+                  'salmoncount':[['edger', 'EDGER'], ['deseq2', 'DESEQ2']]
+                  }
+
+    filtered_analysis = analysis[assembler_slug]
+    return JsonResponse(filtered_analysis, safe=False)
+
 
 
 class WorkflowUpdateView(UpdateView):
