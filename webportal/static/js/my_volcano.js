@@ -122,7 +122,7 @@ function newPlot(){
       // console.log(width)
       // console.log(height)
 
-      var margin = {top: 40, right: 20, bottom: 20, left: 40};
+      var margin = {top: 40, right: 20, bottom: 50, left: 60};
 
       //Width and height
 
@@ -171,10 +171,19 @@ function newPlot(){
       .attr("class", "axis") //Assign "axis" class
       .call(yAxis)
       svg.append("text")
-      .attr("x", xScale(w/2))
-      .attr("y", yScale(h + margin.top))
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.right - 40)
+      .attr("x", 0 - (height / 2))
+      .attr("dy", "1em")
+      .attr("font-size", "1.5rem")
       .style("text-anchor", "middle")
-      .text("Date");
+      .text("- Log 10 of P adjusted");
+      svg.append("text")
+      .attr("x", w/2 )
+      .attr("y", h + margin.top)
+      .style("text-anchor", "middle")
+      .attr("font-size", "1.5rem")
+      .text("Log 2 Fold Change");
       circles()
       hLines()
       vLines()
