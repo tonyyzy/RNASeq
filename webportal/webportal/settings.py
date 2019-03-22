@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # third party
     'crispy_forms',
-    'smart_selects',
+    # 'smart_selects',
     #local
     'analysis',
     'users',
@@ -100,14 +100,14 @@ WSGI_APPLICATION = 'webportal.wsgi.application'
 
 DATABASES = {
     'default': {
-         'ENGINE': 'django.db.backends.sqlite3',
-         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'rnaseq',
-        # 'USER': 'rnasequser',
-        # 'PASSWORD': 'RnaSeq123!',
-        # 'HOST': 'bmmbackup',
-        # 'PORT': '3306',
+         # 'ENGINE': 'django.db.backends.sqlite3',
+         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'rnaseq',
+        'USER': 'rnasequser',
+        'PASSWORD': 'RnaSeq123!',
+        'HOST': 'bmmbackup',
+        'PORT': '3306',
     }
 }
 

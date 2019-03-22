@@ -28,40 +28,35 @@
                 <label for="">{{form.label.label_tag}}</label>
                 {{form.label}}
               </div>
-              <div id='id_mapper' class='create_form_element'>
+              <div id='id_mapper' onchange='filterAssembler()' class='create_form_element'>
                 <label for="">{{form.mapper.label_tag}}</label>
-                <!-- {{form.mapper}} -->
-                <select onchange='fireAjax()'class="form-control" name="">
-                  <option value="">---------</option>
+                {{form.mapper}}
+                <!-- <select onchange='fireAjax()' class="form-control" name="">
+                  <option value="">- empty -</option>
                   {% for mapper in mapper %}
-                    <option value="{{mapper}}">{{mapper}}</option>
+                    <option value='{{mapper}}' name="{{mapper}}">{{mapper}}</option>
                   {% endfor %}
-                </select>
+                </select> -->
               </div>
-                <div id='id_assembler' class='create_form_element'>
+                <div id='id_assembler' onchange="filterAnalysis()" class='create_form_element'>
                   <label for="">{{form.assembler.label_tag}}</label>
-                  <!-- {{form.assembler}} -->
-                  <select id='id_assembler_select' onchange="" class="form-control" name="">
-                    <option value="">---------</option>
-                    <!-- {% for assembler in ajax_assembler %}
+                  {{form.assembler}}
+                  <!-- <select id='id_assembler_select' onchange="" class="form-control" name="">
+                    <option value="">-</option>
+                    {% for assembler in ajax_assembler %}
                       <option value="{{assembler}}">{{assembler}}</option>
-                    {% endfor %} -->
-                  </select>
+                    {% endfor %}
+                  </select> -->
                 </div>
                 <div id='id_analysis' class='create_form_element'>
                   <label for="">{{form.analysis.label_tag}}</label>
                   {{form.analysis}}
                 </div>
-                <div id='id_status' class='create_form_element'>
+                <!-- <div id='id_status' class='create_form_element'>
                   <label for="">{{form.status.label_tag}}</label>
                   {{form.status}}
-                </div>
-                <div id='id_status' class='create_form_element'>
-                  <label for="">{{form.status.label_tag}}</label>
-                  {{form.status}}
-                </div>
+                </div> -->
                 <input type="submit" class='create_btn' value="Submit">
-
             </form>
           </div>
           </div>
@@ -71,26 +66,41 @@
 // $('#id_mapper option:selected').val()
 
 
-
-  function fireAjax(){
-    var mapper = $('#id_mapper option:selected').val()
-    var endpoint = 'axaj_test/'+mapper
-    console.log(endpoint)
+  function filterAnalysis(){
+    console.log('filterAnalysis executed')
+    var assembler = $('#id_assembler option:selected').val()
+    var endpoint = 'filtered_analysis/'+assembler
 
     $.ajax({
       method: 'GET',
       url: endpoint,
       success: function(data){
         console.log(data)
-        options = ''
-        blank_option = '<option value="">---------</option>'
-        $('#id_assembler_select option:not(:first)').remove()
-        $.each(data, function () {
-            console.log(this)
-            options += "<option value='" + this + "'>" + this + "</option>";
+      },
+      error: function(error_data){
+        console.log('error')
+        console.log(error_data)
+      }
+    })
+  }
+
+  function filterAssembler(){
+    var mapper = $('#id_mapper option:selected').val()
+    var endpoint = 'filtered_assembler/'+mapper
+    console.log(endpoint)
+
+    $.ajax({
+      method: 'GET',
+      url: endpoint,
+      success: function(data){
+        console.log('ajax fired')
+        console.log(data)
+        $('#id_assembler option:not(:first)').remove()
+        $.each(data, function (i,item) {
+            console.log(item[0])
+            option = "<option value=" + item[0] +">" + item[1] + "</option>";
+            $('#id_assembler select').append(option)
         });
-        $('#id_assembler_select').append(options)
-        // data = "{{ajax_assembler}}"
       },
       error: function(error_data){
         console.log('error')
@@ -103,3 +113,9 @@
     {% endblock %}
   </body>
 </html>
+$('#id_assembler option:not(:first)').remove()
+$.each(data, function (i,item) {
+    console.log(item[0])
+    option = "<option value=" + item[0] +">" + item[1] + "</option>";
+    $('#id_assembler select').append(option)
+});

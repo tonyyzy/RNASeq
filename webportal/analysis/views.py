@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from django.urls import reverse, reverse_lazy
 from .forms import SessionSearchForm, SessionForm, SessionSubmitForm, WorkflowForm, SamplesForm, ConditionsForm, DebugForm, GenomeForm
 from analysis.models import Session, Workflow, Samples, Condition, The_Debug
@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.conf import settings
 import os
 from shutil import copyfile
+from django.http import JsonResponse
 from django.views.generic import (View,TemplateView,
                                 ListView,DetailView,
                                 CreateView,DeleteView,
@@ -323,25 +324,29 @@ class WorkflowCreateView(CreateView):
 
     def get(self, request, session_slug):
         form = WorkflowForm
-        mapper = {'STARAligner', 'HISAT2', 'SALMON'}
-        assembler = {'STRINGTIE', 'CUFFLINKS', 'MISO', 'HTSEQ', 'FEATURECOUNTS', 'SALMON'}
+        # mapper = {'star':'STARAligner','hisat2': 'HISAT2','salmonquant': 'SALMON'}
+        assembler = {'stringtie', 'cufflinks', 'misorun', 'htseq', 'featurecounts', 'salmoncount'}
+        # assembler = {'STRINGTIE', 'CUFFLINKS', 'MISO', 'HTSEQ', 'FEATURECOUNTS', 'SALMON'}
         # assembler = {
         #                 'STARAligner':{'STRINGTIE', 'CUFFLINKS', 'MISO', 'HTSEQ', 'FEATURECOUNTS'},
         #                 'HISAT2':{'STRINGTIE', 'CUFFLINKS', 'MISO', 'HTSEQ', 'FEATURECOUNTS'},
         #                 'SALMON':{'SALMON'}
         #             }
-        context = {'form':form, 'mapper': mapper}
+        mapper = ["star", "hisat2", "salmonquant"]
+
+
+
+        context = {'form':form}
         return render(request, self.template_name, context)
 
     def post(self, request, session_slug):
         form = WorkflowForm(request.POST)
         valid_check = form.is_valid()
         print(f'\n{valid_check}')
-        print(request.POST.get('label'))
-        print(request.POST.get('mapper'))
-        print(request.POST.get('assembler'))
-        print(request.POST.get('analysis'))
-        print(f'\n{valid_check}')
+        # print(request.POST.get('label'))
+        # print(request.POST.get('mapper'))
+        # print(request.POST.get('assembler'))
+        # print(request.POST.get('analysis'))
         if form.is_valid():
             post = form.save(commit=False)
             post.session = Session.objects.get(identifier=session_slug)
@@ -349,23 +354,48 @@ class WorkflowCreateView(CreateView):
             return redirect('analysis:session_detail', session_slug)
         return render(request, self.template_name, {'form':form})
 
-from django.http import JsonResponse
-def AjaxTest(request, session_slug, mapper_slug):
-    template_name = 'analysis/workflow_form_assembler.html'
-    assembler = {'STARAligner':['STRINGTIE', 'CUFFLINKS', 'MISO', 'HTSEQ', 'FEATURECOUNTS'],
-                  'HISAT2':['STRINGTIE', 'CUFFLINKS', 'MISO', 'HTSEQ', 'FEATURECOUNTS'],
-                  'SALMON':['SALMON']}
+
+def filterAssembler(request, session_slug, mapper_slug):
+    assembler = {'star':[['stringtie', 'STRINGTIE'], ['cufflinks', 'CUFFLINKS'], ['misorun', 'MISO'], ['htseq', 'HTSEQ'], ['featurecounts', 'FEATURECOUNTS']],
+                  'hisat2':[['stringtie', 'STRINGTIE'], ['cufflinks', 'CUFFLINKS'], ['misorun', 'MISO'], ['htseq', 'HTSEQ'], ['featurecounts', 'FEATURECOUNTS']],
+                  'salmonquant':[['salmoncount','SALMON']]}
 
     filtered_assembler = assembler[mapper_slug]
     print(f'\n{filtered_assembler}')
     return JsonResponse(filtered_assembler, safe=False)
-    context = {'filtered_assembler': filtered_assembler}
-    # filtered_assembler = list(assembler[mapper_slug])
-    # return (filtered_assembler)
-    return render(request, template_name, context)
-    return render(request, self.template_name, context)
-    # return HttpResponse('success')
-    # return HttpResponse(data)
+
+
+def filterAnalysis(request, session_slug, assembler_slug):
+    analysis = {'stringtie':[['deseq2', 'DESEQ2'], ['edger', 'EDGER'], ['ballgown', 'BALLGOWN']],
+                  'cufflinks':[['cuffdiff', 'CUFFDIFF'], ['ballgown', 'BALLGOWN'], 'edger', 'EDGER'],
+                  'misorun':[['misocompare', 'MISO']],
+                  'htseq':[['dexseq', 'DEXSEQ']],
+                  'featurecounts':[['salmoncount','SALMON']],
+                  'salmoncount':[['edger', 'EDGER'], ['deseq2', 'DESEQ2']]
+                  }
+
+    filtered_analysis = analysis[assembler_slug]
+    return JsonResponse(filtered_assembler, safe=False)
+
+
+    ASSEMLBER_CHOICES = (
+        ('stringtie', 'STRINGTIE'),
+        ('cufflinks', 'CUFFLINKS'),
+        ('misorun', 'MISO'),
+        ('htseq', 'HTSEQ'),
+        ('featurecounts', 'FEATURECOUNTS'),
+        ('salmoncount', 'SALMON')
+    )
+
+    ANALYSIS_CHOICES = (
+        ('deseq2', 'DESEQ2'),
+        ('dexseq', 'DEXSEQ'),
+        ('misocompare', 'MISO'),
+        ('cuffdiff', 'CUFFDIFF'),
+        ('edger', 'EDGER'),
+        ('ballgown', 'BALLGOWN')
+    )
+
 
 class WorkflowUpdateView(UpdateView):
     template_name = 'analysis/workflow_form.html'
