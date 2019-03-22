@@ -6,8 +6,6 @@ app_name = 'analysis'
 
 urlpatterns = [
 
-
-
     path('', views.SessionIndexView.as_view(), name='session_index'),
     path('debug/', views.DebugView.as_view(), name='debug_view'),
     path('genome_create/', views.GenomeCreateView.as_view(), name='genome_view'),

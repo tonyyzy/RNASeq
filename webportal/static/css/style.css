@@ -170,29 +170,49 @@ html,body{
 
 
 /* SESSION DETAIL STYLE */
-.session_detail_one{
-  margin: 20px;
-  /* background-color: #e4d7e8; */
-  /* background: rgba(90, 100, 100, 0.1); */
-  /* border: 2px solid black; */
-  padding: 10px;
 
+.container {
+    max-width: 90%;
+    max-width: 80%;
 }
 
-#id_conditions_div{
-  /* display: none; */
+.nav {
+  background-color: #040405;
+  opacity: 0.8;
 }
 
-#id_samples_div{
-  /* display: none; */
+.nav-item{
+  /* border: 2px yellow solid; */
+  /* text-decoration: none; */
 }
 
-#id_workflow_div{
-  /* display: none; */
+.nav-link{
+  color: #dbdbdb;
 }
 
-#session_upload{
-  display: none;
+
+.nav-item :hover{
+  background: #fff;
+  color: black;
+  /* border: 2px yellow solid; */
+}
+
+.tab-content {
+    width: 90%;
+    height: 70%;
+    margin-left: 50px;
+    margin-top: 26px;
+}
+
+.user_select{
+  margin-top:40px;
+}
+
+
+.table_head{
+  background-color: #040405;
+  opacity: 0.7;
+  color: #ededed;
 }
 
 
@@ -202,6 +222,7 @@ html,body{
 .unhidden{
   display:block;
 }
+
 
 /* SIDEBAR */
 #sidebar_wrapper{
@@ -297,30 +318,12 @@ html,body{
   cursor: pointer;
 }
 
-/* #the_svg: {
-    background: red;
-}
-
-svg:hover path {
-  cursor: pointer;
-  fill: red;
-} */
 
 .svg{
   /* background: yellow; */
   width:100%;
   height: 100%;
 }
-
-.svg:{
-  fill:red;
-}
-
-/*
-.svg_modal {
-  width: 750px;
-  margin: auto;
-} */
 
 
 /* MODAL STYLE */
@@ -336,18 +339,13 @@ svg:hover path {
   margin-left: 48%;
 }
 
-.tab-content{
+/* .tab-content{
   width: 800px;
   height: 800px;
   margin: auto;
-}
+} */
 
 #id_volcano{
-  width: 100%;
-  height: 100%;
-}
-
-#id_barplot{
   width: 100%;
   height: 100%;
 }

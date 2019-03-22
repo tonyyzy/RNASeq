@@ -72,6 +72,7 @@ class SessionDetailView(View):
         instance = get_object_or_404(Session, identifier=session_slug)
         form = SessionSubmitForm(request.POST or None, instance = instance)
         session_data_dir = os.path.join(settings.DATA_DIR, session_slug)
+        print('lookout below')
         print(f'\n{session_data_dir}')
         try:
             session = Session.objects.get(identifier=session_slug)
@@ -355,10 +356,10 @@ def filterAssembler(request, session_slug, mapper_slug):
 
 def filterAnalysis(request, session_slug, assembler_slug):
     analysis = {'stringtie':[['deseq2', 'DESEQ2'], ['edger', 'EDGER'], ['ballgown', 'BALLGOWN']],
-                  'cufflinks':[['cuffdiff', 'CUFFDIFF'], ['ballgown', 'BALLGOWN'], ['edger', 'EDGER']],
+                  'cufflinks':[['cuffdiff', 'CUFFDIFF'], ['ballgown', 'BALLGOWN']],
                   'misorun':[['misocompare', 'MISO']],
                   'htseq':[['dexseq', 'DEXSEQ']],
-                  'featurecounts':[['salmoncount','SALMON'], ['edger', 'EDGER']],
+                  'featurecounts':[['dexseq', 'DEXSEQ'], ['edger', 'EDGER']],
                   'salmoncount':[['edger', 'EDGER'], ['deseq2', 'DESEQ2']]
                   }
 
@@ -379,10 +380,10 @@ def filterAssemblerUpdate(request, session_slug, workflow_pk, mapper_slug):
 
 def filterAnalysisUpdate(request, session_slug, workflow_pk, assembler_slug):
     analysis = {'stringtie':[['deseq2', 'DESEQ2'], ['edger', 'EDGER'], ['ballgown', 'BALLGOWN']],
-                  'cufflinks':[['cuffdiff', 'CUFFDIFF'], ['ballgown', 'BALLGOWN'], ['edger', 'EDGER']],
+                  'cufflinks':[['cuffdiff', 'CUFFDIFF'], ['ballgown', 'BALLGOWN']],
                   'misorun':[['misocompare', 'MISO']],
                   'htseq':[['dexseq', 'DEXSEQ']],
-                  'featurecounts':[['salmoncount','SALMON'], ['edger', 'EDGER']],
+                  'featurecounts':[['dexseq', 'DEXSEQ'], ['edger', 'EDGER']],
                   'salmoncount':[['edger', 'EDGER'], ['deseq2', 'DESEQ2']]
                   }
 
