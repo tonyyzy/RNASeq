@@ -220,7 +220,7 @@ function circles(){
           .attr("fill", "orange");
           svg.append("text")
             .attr("id", "label")
-            .attr("y", h + 35 )
+            .attr("y", h)
             .text("Gene: " + d.name + " L2fc: " + d.log2foldchange + " p adj: " + d.p_adj);
         })
         .on("mouseout", function(d){
