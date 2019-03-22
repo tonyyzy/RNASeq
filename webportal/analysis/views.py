@@ -383,7 +383,7 @@ def filterAnalysisUpdate(request, session_slug, workflow_pk, assembler_slug):
                   'cufflinks':[['cuffdiff', 'CUFFDIFF'], ['ballgown', 'BALLGOWN']],
                   'misorun':[['misocompare', 'MISO']],
                   'htseq':[['dexseq', 'DEXSEQ']],
-                  'featurecounts':[['salmoncount','SALMON'], ['edger', 'EDGER']],
+                  'featurecounts':[['dexseq', 'DEXSEQ'], ['edger', 'EDGER']],
                   'salmoncount':[['edger', 'EDGER'], ['deseq2', 'DESEQ2']]
                   }
 
