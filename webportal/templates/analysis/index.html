@@ -42,17 +42,15 @@
               </thead>
               <tbody>
                   <tr>
-                    <td>{{session_query.organism|default_if_none:""}}{{session_query.select_genome.organism}} </td>
+                    <td>{{session_query.organism|default_if_none:""}}{{session_query.genome.organism}} </td>
                     <td>{{session_query.genome_index}}</td>
                     <td><a class='btn btn-success' href="{% url 'analysis:session_detail' session_slug=session_query.identifier %}">Details</a></td>
                   </tr>
               </tbody>
           </table>
-
           </div>
         </div>
       </div>
-
       {% endif %}
       {% if invalid_query %}
       <div class="jumbotron warning">

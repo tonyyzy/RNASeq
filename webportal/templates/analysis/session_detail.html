@@ -12,50 +12,38 @@
   <body>
     {% block body %}
     <div id='wrapper'>
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-{{message.tags}}">
-            <p>{{message}}</p>
-            {{condition}}
-          </div>
-        {% endfor %}
-      {% endif %}
-
-      <div id='sidebar_wrapper'>
-        <ul class='sidebar-nav'>
-        <li><a id='id_upload_btn' href="#">Add Condition</a></li>
-        <li><a id='id_upload_btn' href="#">Add Sample</a></li>
-        <li><a id='id_upload_btn' href="#">Add Workflow</a></li>
-        <li><a href="#">test</a></li>
-        </ul>
-      </div>
 
       <!-- NAV PANE SELECTION -->
       <div id='page_content_wrapper'>
-        <!-- <div id='sidebar_toggle' class="toggle_btn">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div> -->
-        <br>
         <ul class="nav nav-tabs nav-justified" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="#session">Session Info</a>
+            <a class="nav-link" href="{% url 'analysis:session_index' %}">HOME</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#condition">Conditions</a>
+            <a class="nav-link active" data-toggle="tab" href="#session">SESSION INFO</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#sample">Samples</a>
+            <a class="nav-link" data-toggle="tab" href="#condition">CONDITION</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#workflow">Workflows</a>
+            <a class="nav-link" data-toggle="tab" href="#sample">SAMPLE</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#session_submit">Submit</a>
+            <a class="nav-link" data-toggle="tab" href="#workflow">WORKFLOW</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#session_submit">SUBMIT</a>
           </li>
         </ul>
 
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{message.tags}}">
+              <p>{{message}}</p>
+              {{condition}}
+            </div>
+          {% endfor %}
+        {% endif %}
         <!-- SESSION -->
         <div class="tab-content">
           <div id="session" class="container tab-pane active"><br>
@@ -65,6 +53,24 @@
                 <p>Identifier: {{session_detail.identifier}}</p>
                 <p>Index: {{session_detail.genome_index}}</p>
                 <p>Organism: {{ session_detail.organism|default_if_none:"" }} {{session_detail.genome.organism}}</p>
+                {% if session_detail.status %}
+                  {{no_svg}}
+                  <!-- {{session_wf}} -->
+                  <!-- static/images/{{session_detail.identifier}}/workflow.svg -->
+                  {% if session_wf %}
+                    <h5>Workflow Schematic</h5>
+                    <object data="{% static 'images/' %}{{session_detail.identifier}}/workflow.svg" type="image/svg+xml" id='id_demo_wf' style='width:100%; padding:10px;'>
+                    </object>
+                    <a class='btn btn-sm btn-info' href="{% url 'visualization:visualization_index' session_slug=session_detail.identifier %}">Visualization</a>
+                  {% else %}
+                    <h3>workflow being generated</h3>
+                    <div class="spinner-border spinner" role="status">
+                      <span class="sr-only">Loading wf</span>
+                    </div>
+                  {% endif %}
+                {% else %}
+                  <h3>Please upload files and select workflows prior to submitting.</h3>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -74,9 +80,10 @@
             <div id='id_conditions_div'>
             <h4>Upload New Condition: <a class='btn btn-sm btn-success' href="{% url 'analysis:conditions_create' session_detail.identifier %}">Add Condition</a></h4>
             {% if session_detail.conditions_fk.all %}
+            <div class="user_select">
               <div class='lead'>Session Conditions:</div>
               <table class="table table-bordered bm-2">
-                <thead class=''>
+                <thead class='table_head'>
                   <tr>
                     <!-- <th>Key</th> -->
                     <th>Count</th>
@@ -101,6 +108,7 @@
                   {% endfor %}
                 </tbody>
               </table>
+            </div>
             {% endif %}
             {% if not session_detail.conditions_fk.all %}
               <!-- <h3>No conditions defined.</h3> -->
@@ -112,9 +120,10 @@
             <div id='id_samples_div'>
             <!-- <h4>Upload Sample:</h4>  WILL REQUIRE MODEL FORMSET TO REDEFINE THE QUERY SET-->
             {% if session_detail.samples_fk.all %}
+            <div class="user_select">
             <div class='lead'>Session Samples:</div>
             <table class="table table-bordered mb-1">
-              <thead>
+              <thead class='table_head'>
                 <tr>
                   <!-- <th>Key</th> -->
                   <th>Count</th>
@@ -148,6 +157,7 @@
                 {% endfor %}
               </tbody>
             </table>
+          </div>
             {% endif %}
             {% if not session_detail.samples_fk.all %}
                   <!-- <h3>{{'No samples defined.'}}</h3> -->
@@ -159,9 +169,10 @@
             <div id='id_workflow_div'>
             <h4>Upload New Workflow: <a class='btn btn-sm btn-success' href="{% url 'analysis:workflow_create' session_detail.identifier %}">Add Workflow</a></h4>
             {% if session_detail.workflow_fk.all %}
+            <div class="user_select">
             <div class='lead'>Session Workflow:</div>
             <table class="table table-bordered mb-1">
-              <thead>
+              <thead class='table_head'>
                 <tr>
                   <!-- <th>Key</th> -->
                   <th>Count</th>
@@ -190,6 +201,7 @@
               {% endfor %}
               </tbody>
             </table>
+          </div>
             {% endif %}
             {% if not session_detail.workflow_fk.all %}
               <!-- <h3>No Workflows defined.</h3> -->
@@ -198,23 +210,6 @@
           </div>
           </div>
           <div id="session_submit" class="container tab-pane fade"><br>
-            {% if session_detail.status %}
-              {{no_svg}}
-              <!-- {{session_wf}} -->
-              <!-- static/images/{{session_detail.identifier}}/workflow.svg -->
-              {% if session_wf %}
-                <object data="{% static 'images/' %}{{session_detail.identifier}}/workflow.svg" type="image/svg+xml" id='id_demo_wf' class='svg'>
-                </object>
-                <a class='btn btn-sm btn-info' href="{% url 'visualization:visualization_index' session_slug=session_detail.identifier %}">Visualization</a>
-              {% else %}
-                <h3>workflow being generated</h3>
-                <div class="spinner-border spinner" role="status">
-                  <span class="sr-only">Loading wf</span>
-                </div>
-              {% endif %}
-            {% else %}
-              <h2>not submitted</h2>
-            {% endif %}
 
             <!-- FORM TO CHANGE STATUS OF SESSION TO TRUE -->
             <form method="POST"  enctype="multipart/form-data" id='id_session_submit_btn' class='hidden'>
