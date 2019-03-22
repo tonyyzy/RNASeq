@@ -359,7 +359,7 @@ def filterAnalysis(request, session_slug, assembler_slug):
                   'cufflinks':[['cuffdiff', 'CUFFDIFF'], ['ballgown', 'BALLGOWN']],
                   'misorun':[['misocompare', 'MISO']],
                   'htseq':[['dexseq', 'DEXSEQ']],
-                  'featurecounts':[['dexseq', 'DEXSEQ'], ['edger', 'EDGER']],
+                  'featurecounts':[['deseq2', 'DESEQ2'], ['edger', 'EDGER']],
                   'salmoncount':[['edger', 'EDGER'], ['deseq2', 'DESEQ2']]
                   }
 
