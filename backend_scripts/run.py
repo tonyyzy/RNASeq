@@ -39,14 +39,16 @@ if __name__ == "__main__":
         q.status = 0
         q.result = "submitted"
         session.commit()
+        cwl = q.cwl
+        yml = q.yml
         session.close()
         proc = subprocess.run(["cwl-runner",
                                 f"--outdir={outdir}",
                                 "--timestamp",
                                 "--tmpdir-prefix=/tmp/",
                                 "--tmp-outdir-prefix=/tmp/",
-                                q.cwl,
-                                q.yml],
+                                cwl,
+                                yml],
                                 stdout=logfile, stderr=logfile)
 
         Base = automap_base()
