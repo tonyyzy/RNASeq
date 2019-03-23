@@ -29,8 +29,8 @@ urlpatterns = [
     path('visualization/<slug:session_slug>/', include('visualization.urls'))
 ]
 
-# if settings.DEBUG:
-#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.IMG_URL, document_root=settings.IMG_ROOT)
 
 # https://github.com/digi604/django-smart-selects
 # https://stackoverflow.com/questions/29460078/how-to-use-django-smart-select

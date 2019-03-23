@@ -14,7 +14,8 @@ urlpatterns = [
 
     path('session_list', views.SessionListView.as_view(), name='session_list'),
     path('session_detail/<slug:session_slug>/', views.SessionDetailView.as_view(), name='session_detail'),
-    # path('session_detail/<slug:session_slug>/', views.SessionDetailView.as_view(), name='session_detail'), # not sure how to customize the slug variable name. has to be passed as "slug" currently
+    path('session_detail/<slug:session_slug>/svg_download', views.SVGDownload, name='svg_download'),
+
     path('session_create', views.SessionCreateView.as_view(), name='session_create'),
     path('session_update/<slug:session_slug>/', views.SessionUpdateView.as_view(), name='session_update'),
     path('session_delete/<int:pk>/', views.SessionDeleteView.as_view(), name='session_delete'),
