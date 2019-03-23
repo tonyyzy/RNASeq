@@ -253,7 +253,7 @@ class SamplesCreateView(CreateView):
             bound_post.condition = Condition.objects.get(pk=conditions_pk)
             bound_post.save()
             return redirect('analysis:session_detail', session_slug=session_slug)
-        return render(request, self.template_name, {'form':form})
+        return render(request, self.template_name, {'form':bound_form})
 
 
 class SamplesUpdateView(UpdateView):
