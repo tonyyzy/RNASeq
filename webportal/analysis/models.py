@@ -11,15 +11,16 @@ genome_index_root = FileSystemStorage(location=settings.GENOME_INDEX_DIR)
 
 
 class Genome(models.Model):
-    organism = models.CharField(max_length=500)
-    source = models.CharField(max_length=500)
-    version = models.CharField(max_length=500)
-    fasta_dna_file = models.CharField(max_length=500, blank=False, null=False)
-    fasta_cdna_file = models.CharField(max_length=500, blank=False, null=False)
-    gtf_file = models.CharField(max_length=500, blank=False, null=False)
-    star = models.CharField(max_length=500)
-    salmon = models.CharField(max_length=500)
-    hisat2 = models.CharField(max_length=500)
+    organism = models.CharField(max_length=200)
+    source = models.CharField(max_length=200)
+    version = models.CharField(max_length=200)
+    fasta_dna_file = models.CharField(max_length=200, blank=False, null=False)
+    fasta_cdna_file = models.CharField(max_length=200, blank=False, null=False)
+    gtf_file = models.CharField(max_length=200, blank=False, null=False)
+    star = models.CharField(max_length=200)
+    salmon = models.CharField(max_length=200)
+    hisat2 = models.CharField(max_length=200)
+    # reactome = models.CharField(max_length=200)
 
     def __str__(self):
         return self.organism

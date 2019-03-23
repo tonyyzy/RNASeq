@@ -9,7 +9,7 @@ function unhide(divID) {
     console.log(div)
     var item = document.getElementById(div);
     if (item) {
-        item.className = 'unhidden' ;
+        item.className = 'unhidden create_form_element' ;
     }
   }
 };

@@ -133,8 +133,8 @@ html,body{
 }
 
 .create_form_element{
-  margin-bottom: 28px;
-  margin-top: -10px;
+  margin-bottom: 20px;
+  /* margin-top: -10px; */
   /* background:yellow; */
 }
 

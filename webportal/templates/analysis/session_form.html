@@ -24,52 +24,53 @@
               <hr class="my-4">
 
               <div id='id_genome_index' class='create_form_element'>
-              <label for="">{{form.genome_index.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Use our pre-index organisms or upload your own files.">&#9432;</a>
+              <label for="">{{form.genome_index.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Use our pre-index organisms or upload your own files." style='text-decoration:none;'>&#9432;</a>
                 {{form.genome_index}}
               </div>
 
-              <div id='id_reactome' class='create_form_element'>
-                <label for="">{{form.reactome.label_tag}}</label>
-                <div class='create_form_element'>
-                  {{form.reactome}}
-                </div>
-              </div>
-
-              <div id='id_genome' class='create_form_element hidden'>
+              <div id='id_genome' class='create_form_element hidden '>
               <label for="">{{form.genome.label_tag}}</label>
                 {{form.genome}}
               </div>
 
-              <div id='id_organism' class='create_form_element hidden'>
+              <div id='id_organism' class='create_form_element hidden '>
               <label for="">{{form.organism.label_tag}}</label>
                 {{form.organism}}
               </div>
 
-              <div id='id_salmon' class='create_form_element hidden'>
-              <label for="">{{form.salmon.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Will you be using salmon in your down stream analysis?">&#9432;</a>
+              <div id='id_salmon' class='create_form_element hidden '>
+              <label for="">{{form.salmon.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Will you be using salmon in your down stream analysis?" style='text-decoration:none;' >&#9432;</a>
                 {{form.salmon}}
               </div>
 
-              <div id='id_fasta_dna_file' class='hidden'>
+              <div id='id_fasta_dna_file' class='create_form_element hidden'>
                 <label for="">{{form.fasta_dna_file.label_tag}}</label>
-                <div class='create_form_element'>
+                <div class=''>
                   {{form.fasta_dna_file}}
                 </div>
               </div>
 
-              <div id='id_fasta_cdna_file' class='hidden'>
+              <div id='id_fasta_cdna_file' class='create_form_element hidden'>
                 <label for="">{{form.fasta_cdna_file.label_tag}}</label>
-                <div class='create_form_element'>
+                <div class=''>
                   {{form.fasta_cdna_file}}
                 </div>
               </div>
 
-              <div id='id_gtf_file' class='hidden'>
+              <div id='id_gtf_file' class='create_form_element hidden'>
                 <label for="">{{form.gtf_file.label_tag}}</label>
-                <div class='create_form_element'>
+                <div class=''>
                   {{form.gtf_file}}
                 </div>
               </div>
+
+              <div id='id_reactome' class='create_form_element hidden'>
+                <label for="">{{form.reactome.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="required for FGSEA... I think." style='text-decoration:none;' >&#9432;</a>
+                <div class=''>
+                  {{form.reactome}}
+                </div>
+              </div>
+
               <input type="submit" class='create_btn' value="Submit">
             </form>
         </div>
@@ -89,7 +90,7 @@
 
         $('#id_genome_index').on('click', function(){
           if ($('#id_genome_index option:selected').val() == 'pre_index'){
-            hide(['id_organism','id_salmon','id_fasta_dna_file','id_fasta_cdna_file','id_gtf_file']) & unhide(['id_genome'])
+            hide(['id_organism','id_salmon','id_fasta_dna_file','id_fasta_cdna_file','id_gtf_file', 'id_reactome']) & unhide(['id_genome'])
           }
           if ($('#id_genome_index option:selected').val() == 'user_provided'){
             unhide(['id_organism','id_salmon']) & hide(['id_genome'])
@@ -98,10 +99,10 @@
 
       $('#id_salmon').on('click', function(){
         if ($('#id_salmon option:selected').val() == 2){ // salmon analysis required
-          unhide(['id_fasta_dna_file','id_fasta_cdna_file', 'id_gtf_file'])
+          unhide(['id_fasta_dna_file','id_fasta_cdna_file', 'id_gtf_file', 'id_reactome'])
         }
         if ($('#id_salmon option:selected').val() == 1 || $('#id_salmon option:selected').val() == 3){ // salmon analysis not required or not known
-          unhide(['id_fasta_dna_file','id_gtf_file']) & hide(['id_fasta_cdna_file'])
+          unhide(['id_fasta_dna_file','id_gtf_file', 'id_reactome']) & hide(['id_fasta_cdna_file'])
         }
       });
 

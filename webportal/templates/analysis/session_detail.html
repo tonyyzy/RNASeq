@@ -61,7 +61,7 @@
                   <!-- static/images/{{session_detail.identifier}}/workflow.svg -->
                   {% if session_wf %}
                     <h5>Workflow Schematic</h5>
-                    <object data="{% static 'images/' %}{{session_detail.identifier}}/workflow.svg" type="image/svg+xml" id='id_demo_wf' style='width:100%; padding:10px;'>
+                    <object data="{% static 'images/' %}{{session_detail.identifier}}/workflow.svg" type="image/svg+xml" id='id_demo_wf' style='width:90%; padding:10px;'>
                     </object>
                     <a href="{% url 'analysis:svg_download' session_slug=session_detail.identifier %}">Download</a>
                   {% else %}
@@ -71,7 +71,7 @@
                     </div>
                   {% endif %}
                 {% else %}
-                  <h3>Please upload files and select workflows prior to submitting.</h3>
+                  <!-- <h3>Please upload files and select workflows prior to submitting.</h3> -->
                 {% endif %}
               </div>
               {% if session_wf %}
