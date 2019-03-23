@@ -59,6 +59,7 @@ for(x in de.file.sep){
   
   print("step 4")
   colnames(gsea.Results) <- c("name","p_value","p_adj","ES","NES","nMoreExtreme","size","leadingEdge")
+  gsea.Results <- gsea.Results[,c("name","p_value","p_adj","ES","NES","nMoreExtreme","size")]
   name <- sub("DGE_res.csv","", x)
   name <- basename(name)
   write.csv(gsea.Results, paste0(name,"gsea_res.csv"), row.names = FALSE)
