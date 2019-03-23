@@ -36,6 +36,9 @@ if __name__ == "__main__":
             logpath = f"{root}/Data/{identifier}/workflow.log"
             outdir = f"{root}/Data/{identifier}/output"
         logfile = open(logpath, "a+")
+        q.status = 0
+        q.result = "submitted"
+        session.commit()
         session.close()
         proc = subprocess.run(["cwl-runner",
                                 f"--outdir={outdir}",
@@ -45,7 +48,11 @@ if __name__ == "__main__":
                                 q.cwl,
                                 q.yml],
                                 stdout=logfile, stderr=logfile)
-        
+
+        Base = automap_base()
+        engine = create_engine(database)
+        Base.prepare(engine, reflect=True)
+        Queue = Base.classes.analysis_queue
         session = Session(engine)
         q = session.query(Queue).filter(Queue.id == queue_id).first()
         if proc.returncode == 0:
