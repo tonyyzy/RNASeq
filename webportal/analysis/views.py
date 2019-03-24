@@ -245,7 +245,7 @@ class SamplesCreateView(CreateView):
 
     def post(self, request, session_slug, conditions_pk):
         bound_form = SamplesForm(request.POST, request.FILES)
-        # print(bound_form.is_valid())
+        print(bound_form.is_valid())
         if bound_form.is_valid():
             # print(bound_form.cleaned_data)
             bound_post = bound_form.save(commit=False)
