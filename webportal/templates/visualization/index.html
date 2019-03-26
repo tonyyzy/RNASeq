@@ -6,28 +6,40 @@
     <meta charset="utf-8">
     {% block head %}
     {% load static %}
-      <title>D3 Page Template</title>
+      <title>Visualization</title>
+      <link rel="stylesheet" href="{% static 'css/style_visualization.css' %}">
     {% endblock %}
   </head>
   <body>
 {%block body%}
-
-<input type="submit" class='btn btn-success' onclick='wf_select()' value="run" />
 
 
 <div id='wrapper'>
 <div id='sidebar_wrapper'>
   <ul class='sidebar-nav'>
     <fieldset>
-      <li>
-        {% for workflow in workflows %}
-          <input  type="checkbox"  name="" class='checkbox_wf' value="{{forloop.counter}}" checked>
-          <label  for="">{{workflow.label}}</label><br>
+      {% for key, value in wf_dict.items %}
+        <h5>{{ key }}</h5>
+        {% for csv in value %}
+        <li>
+          <input  type="checkbox"  name="" class='checkbox_wf' value="{{forloop.counter}}">
+          <label  for="">{{ csv }}</label><br>
+        </li>
         {% endfor %}
-      </li>
+      {% endfor %}
     </fieldset>
   </ul>
+  <!-- {{workflow.label}}
+  <input  type="checkbox"  name="" class='checkbox_wf' value="{{forloop.counter}}">
+  <label  for="">{{comparison_file}}</label><br> -->
 </div>
+
+<!-- {% for path in path %}
+<li>
+  <input  type="checkbox"  name="" class='checkbox_wf' value="{{forloop.counter}}">
+  <label  for=""></label>{{path}}<br>
+</li>
+{% endfor %} -->
 
 <div id='page_content_wrapper'>
   <div id='sidebar_toggle' class="toggle_btn">
@@ -35,10 +47,7 @@
     <span></span>
     <span></span>
   </div>
-
-
 <ul class="nav nav-tabs nav-justified" role="tablist">
-
   <li class="nav-item">
     <a id='id_volcano_tab' class="nav-link active" data-toggle="tab" href="#id_volcano">Volcano Plot</a>
   </li>
@@ -47,38 +56,32 @@
   </li>
 </ul>
 
-<div id="id_tab" class="tab-content">
-  <div id="id_volcano" class="container tab-pane active">
-    <div class="row">
-      <div class="col-2">
-        <label for="">P Value</label>
-        <input type="range" min="1" max="50" class="slider" id="id_p_threshold">
-        <p>Value: <span id="id_p_threshold_out"></span></p>
-        <br>
-        <label for="">Logfold change</label>
-        <input type="range" min="1" max="9" class="slider" id="id_log2_threshold">
-        <p>Value: <span id="id_log2_threshold_out"></span></p>
-      </div>
-      <div class="col-10">col<svg id='id_painting_volcano'></svg></div>
-    </div>
+
+<div class="row">
+  <div class="col-md-1">
+    <label for="">P Value</label>
+    <input type="range" min="1" max="50" class="slider" class="p_threshold">
+    <p>Value: <span class="p_threshold_out"></span></p>
+    <br>
+    <label for="">Logfold change</label>
+    <input type="range" min="1" max="9" class="slider" class="log2_threshold">
+    <p>Value: <span class="log2_threshold_out"></span></p>
   </div>
-  <div id="id_barplot" class="container tab-pane fade">
-    bar
-      <svg id='id_painting_barplot'></svg>
+  <div class="col-md-11">
+    <div id="id_tab" class="tab-content" onclick='set_threshold'>
+      <div id="id_volcano" class="container tab-pane active">
+          <div class="plotting_column" id="id_plotting_column_volcano"><svg id='id_painting_volcano'></svg></div>
+      </div>
+
+      <div id="id_barplot" class="container tab-pane fade">
+          <div class="plotting_column" id="id_plotting_column_barplot" ><svg id='id_painting_barplot'></svg></div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- <div class="dataFilterControls">
-  <div class="slidecontainer jumbotron">
-    <label for="">P Value</label>
-    <input type="range" min="1" max="50" class="slider" id="id_p_threshold">
-    <p>Value: <span id="id_p_threshold_out"></span></p>
-    <br>
-    <label for="">Log Fold Change</label>
-    <input type="range" min="1" max="9" class="slider" id="id_log2_threshold">
-    <p>Value: <span id="id_log2_threshold_out"></span></p>
-  </div>
-</div> -->
+
+
 
 </div>
 </div> <!-- END WRAPPER -->
@@ -121,10 +124,27 @@
     // alert( "Handler for .click() called." );
     console.log('loading volcano')
   });
+  $( "#id_volcano_tab" ).click(function() {
+    wf_select_volcano()
+    console.log('loading barplot')
+  });
   $( "#id_barplot_tab" ).click(function() {
     wf_select_barplot()
     console.log('loading barplot')
   });
+
+
+$( document ).ready(function() {
+  log2_threshold = 2;
+  p_val = 0.05
+  for(var i = 0; i < p_out.length; i++){
+    console.log(i)
+    p_out = $('.p_threshold_out')[i]
+    lfc = $('.log2_threshold_out')[i]
+    p_out.innerHTML = p_val;
+    lfc.innerHTML = log2_threshold
+   }
+});
 
 
   </script>

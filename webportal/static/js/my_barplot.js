@@ -1,3 +1,14 @@
+$( document ).ready(function() {
+   p_val = 0.05
+   p_threshold = - Math.log10(p_val);
+   log2_threshold = 2;
+  // console.log(p_threshold)
+   p_out = document.getElementsByClassName("p_threshold_out");
+  p_out.innerHTML = p_val;
+   lfc = document.getElementsByClassName("log2_threshold_out");
+  lfc.innerHTML = log2_threshold;
+});
+
 colours = [
   "#000000",
   "#009292",
@@ -71,8 +82,8 @@ var newPlot_Barplot = function(){
 
     // d3.select("#painting").selectAll("*").remove();
 
-    var width = d3.select('#id_tab').node().getBoundingClientRect().width;
-    var height = d3.select('#id_tab').node().getBoundingClientRect().height;
+    var width = d3.select('#id_plotting_column_barplot').node().getBoundingClientRect().width;
+    var height = d3.select('#id_plotting_column_barplot').node().getBoundingClientRect().height;
     console.log(width)
     console.log(height)
 
@@ -133,7 +144,7 @@ var newPlot_Barplot = function(){
       d3.select("#label").remove();
       svg.append("text")
         .attr("id", "label")
-        .attr("x", width/2)
+        .attr("x", w / 2 )
         .attr("y", h + 25)
         .text("Significant genes: " + d);
     })

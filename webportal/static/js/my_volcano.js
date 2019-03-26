@@ -5,9 +5,9 @@ $( document ).ready(function() {
    p_threshold = - Math.log10(p_val);
    log2_threshold = 2;
   // console.log(p_threshold)
-   p_out = document.getElementById("id_p_threshold_out");
+   p_out = document.getElementsByClassName("p_threshold_out")[0];
   p_out.innerHTML = p_val;
-   lfc = document.getElementById("id_log2_threshold_out");
+   lfc = document.getElementsByClassName("log2_threshold_out");
   lfc.innerHTML = log2_threshold;
 });
 
@@ -15,7 +15,7 @@ $("#id_p_threshold").change(function() {
   d3.select("#id_painting_volcano").selectAll("line").remove()
   p_val = $("#id_p_threshold").val()/100
   p_threshold = - Math.log10(p_val);
-  var output = document.getElementById("id_p_threshold_out");
+  var output = document.getElementsByClassName("p_threshold_out");
   output.innerHTML = p_val;
   // console.log(p_threshold)
   all_circles.attr("fill", function(d){
@@ -35,7 +35,7 @@ $("#id_log2_threshold").change(function() {
   d3.select("#id_painting_volcano").selectAll("line").remove()
   log2_threshold = $("#id_log2_threshold").val()
   console.log(log2_threshold)
-  var output = document.getElementById("id_log2_threshold_out");
+  var output = document.getElementsByClassName("log2_threshold_out");
   output.innerHTML = log2_threshold;
   all_circles.attr("fill", function(d){
           if(- Math.log10(d.p_adj) > p_threshold && (d.log2foldchange > log2_threshold || d.log2foldchange <  - log2_threshold)){
@@ -68,7 +68,8 @@ colours = [
   "#FFFF6D"];
 
 
-function wf_select(param){
+
+function wf_select_volcano(param){
   dataset = []
   result = []
   var all_checkboxes = $('.checkbox_wf')
@@ -116,13 +117,13 @@ function newPlot(){
 
       // console.log(dataset);
 
-      var width = d3.select('#id_tab').node().getBoundingClientRect().width;
-      var height = d3.select('#id_tab').node().getBoundingClientRect().height;
+      var width = d3.select('#id_plotting_column_volcano').node().getBoundingClientRect().width;
+      var height = d3.select('#id_plotting_column_volcano').node().getBoundingClientRect().height;
 
       // console.log(width)
       // console.log(height)
 
-      var margin = {top: 40, right: 20, bottom: 50, left: 60};
+      var margin = {top: 40, right: 20, bottom: 20, left: 60};
 
       //Width and height
 
@@ -179,8 +180,8 @@ function newPlot(){
       .style("text-anchor", "middle")
       .text("- Log 10 of P adjusted");
       svg.append("text")
-      .attr("x", w/2 )
-      .attr("y", h + margin.top)
+      .attr("x", w - 120)
+      .attr("y", h + margin.top - 5)
       .style("text-anchor", "middle")
       .attr("font-size", "1.5rem")
       .text("Log 2 Fold Change");

@@ -247,11 +247,11 @@ html,body{
 }
 
 #wrapper.menuDisplayed #sidebar_wrapper{
-  width: 250px;
+  width: 360px;
 }
 
 #wrapper.menuDisplayed #page_content_wrapper{
-  padding-left: 250px;
+  padding-left: 360px;
   /* margin-top: -300px; */
 }
 #sidebar_wrapper{
@@ -259,22 +259,22 @@ html,body{
 
 }
 .sidebar-nav{
-  padding: 1px;
   list-style: 0;
+  min-height: 100%;
 }
 
 .sidebar-nav li{
+  padding: 10px;
+  margin: 8px
   /* text-indent: 10px; */
-  margin-left: 10px;
   /* line-height: 30px; */
   /* border-bottom: 1px solid; */
   color: #000000;
   display: block;
-  padding: 20px;
 }
 
 .sidebar-nav label{
-  padding-bottom: 10px;
+  /* padding-bottom: 10px; */
 }
 
 .checkbox_wf{
@@ -283,11 +283,6 @@ html,body{
   color: #ddd;
 }
 
-.checkbox_wf{
-  /* display: block; */
-  text-decoration: none;
-  color: #ddd;
-}
 
 .sidebar-nav li a:hover{
   background: #363647;
@@ -299,6 +294,7 @@ html,body{
 }
 
 .toggle_btn{
+  z-index: 2;
   position: absolute;
 }
 
@@ -339,11 +335,6 @@ html,body{
   margin-left: 48%;
 }
 
-/* .tab-content{
-  width: 800px;
-  height: 800px;
-  margin: auto;
-} */
 
 #id_volcano{
   width: 100%;
@@ -352,4 +343,9 @@ html,body{
 
 .row{
   height:100%;
+}
+
+.plotting_column{
+  height: 100%;
+  width: 100%;
 }

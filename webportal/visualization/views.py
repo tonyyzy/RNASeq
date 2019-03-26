@@ -17,9 +17,38 @@ class VisualizationIndexView(View):
     def get(self, request, session_slug):
         session = Session.objects.get(identifier = session_slug)
         workflows = session.workflow_fk.all()
+        # workflow = workflows[0]
 
+        wf_dict = {}
+        labels = []
+        for wf in workflows:
+            labels.append(wf.label)
+            print(f'\n workflow analysis: {wf.analysis}')
+            if wf.analysis == 'dexseq':
+                path = eval(wf.paths)
+                DGE_list = path['DEE']
+
+                DGE_csv_list = []
+                for DGE_csv in DGE_list:
+                    csv_name = DGE_csv.split('/')[-1]
+                    DGE_csv_list.append(csv_name)
+                wf_dict[wf.label] = DGE_csv_list
+            else:
+                path = eval(wf.paths)
+                print(path)
+                DEE_list = path['DGE']
+                DEE_csv_list = []
+                for DEE_csv in DEE_list:
+                    csv_name = DEE_csv.split('/')[-1]
+                    DEE_csv_list.append(csv_name)
+                wf_dict[wf.label] = DEE_csv_list
+
+
+        # print(wf_dict)
+        # for workflow in workflows:
+            # path = workflow.paths
         # workflow_detail = [workflows[0]]
-        context = {'session': session, 'workflows': workflows}
+        context = {'session': session, 'workflows': workflows, 'labels':labels, 'wf_dict': wf_dict}
         return render(request, 'visualization/index.html', context)
 
 def WorkflowData(request, session_slug, workflow_slug):
@@ -27,13 +56,24 @@ def WorkflowData(request, session_slug, workflow_slug):
     workflows = session.workflow_fk.all()
     selected_wf_list = workflow_slug[:-1].split("_")
     selected_wf = {workflows[int(i)-1] for i in selected_wf_list} # adds user selected workflow OBJECTS(s) to list
+    print(f'\n{selected_wf}')
     selected_DGE = []
+
     for wf in selected_wf:
         wf_path = wf.paths
-        wf_path = eval(wf_path) # only required if workflow path has been manually added to database in which case it is stored as a string
-        wf_csv = wf_path['DGE'][0] # pulling out first here. Would need to loop if more than two sample conditions are defined.
-        selected_DGE.append(wf_csv)
+        wf_path = eval(wf_path)
+        print(f'\n{wf_path}')
 
+        print(f'workflow analysis: {wf.analysis}')
+        if wf.analysis == 'deseq2':
+            DGE_csv_list = wf_path['DGE']
+
+            print(f'\DGE_csv_list: {DGE_csv_list}')
+            for DGE_csv in DGE_csv_list:
+                selected_DGE.append(DGE_csv)
+
+        if wf.analysis == 'dexseq':
+            pass
 
     arr = []
     for index, DGE_csv in enumerate(selected_DGE):
