@@ -19,7 +19,7 @@
   <ul class='sidebar-nav'>
     <fieldset>
       {% for key, value in wf_dict.items %}
-        <h5>{{ key }}</h5>
+        <div value="{{forloop.counter}}">{{ key }}</div>
         {% for csv in value %}
         <li>
           <input  type="checkbox"  name="" class='checkbox_wf' value="{{forloop.counter}}">
@@ -29,17 +29,7 @@
       {% endfor %}
     </fieldset>
   </ul>
-  <!-- {{workflow.label}}
-  <input  type="checkbox"  name="" class='checkbox_wf' value="{{forloop.counter}}">
-  <label  for="">{{comparison_file}}</label><br> -->
 </div>
-
-<!-- {% for path in path %}
-<li>
-  <input  type="checkbox"  name="" class='checkbox_wf' value="{{forloop.counter}}">
-  <label  for=""></label>{{path}}<br>
-</li>
-{% endfor %} -->
 
 <div id='page_content_wrapper'>
   <div id='sidebar_toggle' class="toggle_btn">
@@ -56,7 +46,7 @@
   </li>
 </ul>
 
-
+{{wf_dict}}
 <div class="row">
   <div class="col-md-1">
     <label for="">P Value</label>
@@ -79,10 +69,7 @@
     </div>
   </div>
 </div>
-
-
-
-
+<button id='id_load_data' type="button" name="button">Load Data</button>
 </div>
 </div> <!-- END WRAPPER -->
 
@@ -95,6 +82,7 @@
   <script src= "{% static 'js/my_barplot.js' %}"></script>
   <script>
   {% block jquery %}
+
 
   // var endpoint = 'api/data' $.ajax({
   //   method: 'GET',
@@ -119,7 +107,6 @@
     $('#wrapper').toggleClass('menuDisplayed')
   });
   $( "#id_volcano_tab" ).click(function() {
-
     console.log('called wf_select')
     // alert( "Handler for .click() called." );
     console.log('loading volcano')
@@ -131,6 +118,11 @@
   $( "#id_barplot_tab" ).click(function() {
     wf_select_barplot()
     console.log('loading barplot')
+  });
+
+  $('#id_load_data').click(function(e){
+    // e.preventDefault();
+    console.log('hi')
   });
 
 

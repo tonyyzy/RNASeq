@@ -26,23 +26,24 @@ class VisualizationIndexView(View):
             print(f'\n workflow analysis: {wf.analysis}')
             if wf.analysis == 'dexseq':
                 path = eval(wf.paths)
-                DGE_list = path['DEE']
-
-                DGE_csv_list = []
-                for DGE_csv in DGE_list:
-                    csv_name = DGE_csv.split('/')[-1]
-                    DGE_csv_list.append(csv_name)
-                wf_dict[wf.label] = DGE_csv_list
-            else:
-                path = eval(wf.paths)
-                print(path)
-                DEE_list = path['DGE']
+                DEE_list = path['DEE']
                 DEE_csv_list = []
                 for DEE_csv in DEE_list:
                     csv_name = DEE_csv.split('/')[-1]
                     DEE_csv_list.append(csv_name)
                 wf_dict[wf.label] = DEE_csv_list
 
+            else:
+                try:
+                    path = eval(wf.paths)
+                    DGE_list = path['DGE']
+                    DGE_csv_list = []
+                    for DGE_csv in DGE_list:
+                        csv_name = DGE_csv.split('/')[-1]
+                        DGE_csv_list.append(csv_name)
+                    wf_dict[wf.label] = DGE_csv_list
+                except:
+                    pass
 
         # print(wf_dict)
         # for workflow in workflows:
@@ -98,17 +99,6 @@ def WorkflowData(request, session_slug, workflow_slug):
     # return render(final, safe=False)
     # print(arr)
     # return JsonResponse(final, safe=False)
-
-
-
-# 128bf2d4-a9d1-4cf4-91ed-c897099467f8
-# {"norm": "/project/home18/ph2417/gitWorkspace/Data/128bf2d4-a9d1-4cf4-91ed-c897099467f8/hisat_samtools_cufflinks_prepde_deseq/DGE_results_1.csv", "DGE": ["/project/home18/ph2417/gitWorkspace/Data/128bf2d4-a9d1-4cf4-91ed-c897099467f8/hisat_samtools_cufflinks_prepde_deseq/DGE_results_1.csv"]}
-
-# {"norm": "/project/home18/ph2417/gitWorkspace/Data/128bf2d4-a9d1-4cf4-91ed-c897099467f8/star_samtools_stringtie_prepde_deseq/norm_count.csv", "DGE": ["/project/home18/ph2417/gitWorkspace/Data/128bf2d4-a9d1-4cf4-91ed-c897099467f8/star_samtools_stringtie_prepde_deseq/DGE_results_1.csv"]}
-
-
-
-
 
 
 class DebugView(View):
