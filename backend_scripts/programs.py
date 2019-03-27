@@ -979,8 +979,7 @@ class cwl_writer():
 
         # paths
         files = {}
-        files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
-                        f"/norm_count.csv"
+        files["norm"] = []
         files["DGE"] = []
         for condition_pair in combinations(self.conditions.keys(), 2):
             files["DGE"].append(
@@ -988,6 +987,11 @@ class cwl_writer():
                 f"/Data/{self.identifier}/output//" + 
                 self.name +
                 f"/{condition_pair[0]}-{condition_pair[1]}_DGE_res.csv")
+            files["norm"].append(
+                self.root + 
+                f"/Data/{self.identifier}/output/" + 
+                self.name +
+                f"/{condition_pair[0]}-{condition_pair[1]}_norm_count.csv")
 
         self.sql_session.query(self.Workflow)\
                         .filter(self.Workflow.id == self.analysis_id[self.name])\
@@ -1040,11 +1044,19 @@ class cwl_writer():
 
         # paths
         files = {}
-        files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
-                        f"/norm_count.csv"
-
-        files["DEE"] = [self.root + f"/Data/{self.identifier}/output/" + self.name + \
-                        f"/DEE_results.csv"]
+        files["norm"] = []
+        files["DEE"] = []
+        for condition_pair in combinations(self.conditions.keys(), 2):
+            files["DEE"].append(
+                self.root + 
+                f"/Data/{self.identifier}/output/" + 
+                self.name +
+                f"/{condition_pair[0]}-{condition_pair[1]}_DEE_res.csv")
+            files["norm"].append(
+                self.root + 
+                f"/Data/{self.identifier}/output/" + 
+                self.name +
+                f"/{condition_pair[0]}-{condition_pair[1]}_norm_count.csv")
 
         self.sql_session.query(self.Workflow)\
                         .filter(self.Workflow.id == self.analysis_id[self.name])\
@@ -1204,8 +1216,14 @@ class cwl_writer():
         self.add_gene_count()
 
 
-        self.files["DGE"] = [self.root + f"/Data/{self.identifier}/output/" + self.name + \
-                        f"/DGE_res.csv"]
+        self.files["DGE"] = []
+
+        for condition_pair in combinations(self.conditions.keys(), 2):
+            files["DGE"].append(
+                self.root + 
+                f"/Data/{self.identifier}/output/" + 
+                self.name +
+                f"/{condition_pair[0]}-{condition_pair[1]}_DGE_res.csv")
 
         self.sql_session.query(self.Workflow)\
                         .filter(self.Workflow.id == self.analysis_id[self.name])\
@@ -1301,12 +1319,25 @@ class cwl_writer():
         self.add_metadata()
 
         files = {}
-        files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
-                        f"/norm_count.csv"
-        files["DGE"] = [self.root + f"/Data/{self.identifier}/output/" + self.name + \
-                        f"/DGE_res.csv"]
-        files["DTE"] = [self.root + f"/Data/{self.identifier}/output/" + self.name + \
-                        f"/DTE_res.csv"]
+        files["norm"] = []
+        files["DGE"] = []
+        files["DTE"] = []
+        for condition_pair in combinations(self.conditions.keys(), 2):
+            files["DGE"].append(
+                self.root + 
+                f"/Data/{self.identifier}/output/" + 
+                self.name +
+                f"/{condition_pair[0]}-{condition_pair[1]}_DGE_res.csv")
+            files["norm"].append(
+                self.root + 
+                f"/Data/{self.identifier}/output/" + 
+                self.name +
+                f"/{condition_pair[0]}-{condition_pair[1]}_norm_count.csv")
+            files["DTE"].append(
+                self.root + 
+                f"/Data/{self.identifier}/output/" + 
+                self.name +
+                f"/{condition_pair[0]}-{condition_pair[1]}_DTE_res.csv")
 
         self.sql_session.query(self.Workflow)\
                         .filter(self.Workflow.id == self.analysis_id[self.name])\
@@ -1364,8 +1395,7 @@ class cwl_writer():
         self.add_metadata()
 
         files = {}
-        files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
-                        f"/norm_count.csv"
+        files["norm"] = []
         files["DGE"] = []
         for condition_pair in combinations(self.conditions.keys(), 2):
             files["DGE"].append(
@@ -1373,6 +1403,11 @@ class cwl_writer():
                 f"/Data/{self.identifier}/output/" + 
                 self.name +
                 f"/{condition_pair[0]}-{condition_pair[1]}_DGE_res.csv")
+            files["norm"].append(
+                self.root + 
+                f"/Data/{self.identifier}/output/" + 
+                self.name +
+                f"/{condition_pair[0]}-{condition_pair[1]}_norm_count.csv")
 
         self.sql_session.query(self.Workflow)\
                         .filter(self.Workflow.id == self.analysis_id[self.name])\
