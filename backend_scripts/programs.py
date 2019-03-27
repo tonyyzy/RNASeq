@@ -1159,8 +1159,15 @@ class cwl_writer():
         self.add_edge()
         self.add_norm()
         self.files = {}
-        self.files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
-                        f"/genes.fpkm_table"
+        # self.files["norm"] = self.root + f"/Data/{self.identifier}/output/" + self.name + \
+        #                 f"/genes.fpkm_table"
+        self.files["norm"] = []
+        for condition_pair in combinations(self.conditions.keys(), 2):
+            self.files["norm"].append(
+                self.root + 
+                f"/Data/{self.identifier}/output/" + 
+                self.name +
+                f"/{condition_pair[0]}-{condition_pair[1]}/norm_count.csv")
 
 
     def cuffdiff(self):
@@ -1219,11 +1226,11 @@ class cwl_writer():
         self.files["DGE"] = []
 
         for condition_pair in combinations(self.conditions.keys(), 2):
-            files["DGE"].append(
+            self.files["DGE"].append(
                 self.root + 
                 f"/Data/{self.identifier}/output/" + 
                 self.name +
-                f"/{condition_pair[0]}-{condition_pair[1]}_DGE_res.csv")
+                f"/{condition_pair[0]}-{condition_pair[1]}/{condition_pair[0]}-{condition_pair[1]}DGE_res.csv")
 
         self.sql_session.query(self.Workflow)\
                         .filter(self.Workflow.id == self.analysis_id[self.name])\
