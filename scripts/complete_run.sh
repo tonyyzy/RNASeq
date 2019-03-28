@@ -19,6 +19,11 @@ then
   sd=$(awk 'NR == 4 {print $2}' log)
   rm -rf log.txt log
 
+
+  echo $mean
+  echo $len
+  echo $sd
+  
   miso --run indexed_gtf sorted.bam --output-dir $4 --read-len $len --paired-end $mean $sd
 fi
 if [ $3 = "SG" ]
@@ -26,6 +31,8 @@ then
   miso --run indexed_gtf sorted.bam --output-dir $4 --read-len $len
 fi
 
-summarize_miso --summarize $4/ $4/summary
+summarize_miso --summarize $4 summary
+
+mv summary $4
 
 rm -rf $4/batch-logs/*

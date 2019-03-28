@@ -39,9 +39,13 @@ if( "--condition" %in% args ){
 comb <- combn(unique(as.character(metadata[,"condition"])), 2)
 for(i in 1:ncol(comb)){
   metadata.f <- metadata[metadata$condition %in% comb[,i],]
+  metadata.f <- droplevels(metadata.f)
   sample_full_path <- paste(data_dir, metadata.f[,1], sep = "/")
+  print("step1")
+  print(as.vector(sample_full_path))
+  print(metadata.f)
   bg <- ballgown(samples = as.vector(sample_full_path), pData = metadata.f)
-  
+  print("step2")
   # Filter out transcripts with low variance
   bg_filt <- subset (bg,"rowVars(texpr(bg)) > 1", genomesubset=TRUE)
   
