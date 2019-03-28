@@ -6,9 +6,10 @@ app_name = 'visualization'
 
 urlpatterns = [
     path('', views.VisualizationIndexView.as_view(), name='visualization_index'),
-    path('debug/<slug:workflow_slug>/', views.DebugView.as_view(), name='debug_view'),
-    path('wf_data/<slug:workflow_slug>/', views.WorkflowData, name='wf_data'),
+    # path('wf_data/<slug:workflow_slug>/', views.WorkflowData, name='wf_data'),cd
+    path('wf_data_mod/<slug:workflow_slug>/', views.WorkflowDataMod, name='wf_data_mod'),
+    path('debug/', views.debugFunction, name='debug_func'),
+
     # path('wf_one/<slug:workflow_slug>/', views.WorkFlowOneView, name='wf_one'),
     # path('wf_two/', views.WorkFlowTwoView, name='wf_two'),
 ]
-#test

@@ -130,6 +130,9 @@ class Workflow(models.Model):
     status = models.BooleanField(default=False, null=False)
     paths = models.TextField(null=False)
 
+    def __str__(self):
+        return 'workflow_' + str(self.pk)
+
     def get_absolute_url(self):
         return reverse('analysis:session_detail', kwargs={'pk':self.pk})
 
