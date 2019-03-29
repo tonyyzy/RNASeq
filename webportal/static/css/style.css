@@ -170,7 +170,6 @@ html,body{
 
 
 /* SESSION DETAIL STYLE */
-
 .container {
     max-width: 90%;
     max-width: 80%;
@@ -224,69 +223,8 @@ html,body{
 }
 
 
-/* SIDEBAR */
-#sidebar_wrapper{
-  z-index: 1;
-  position: absolute;
-  width: 0px;
-  height: 100%;
-  overflow-y: hidden;
-  border: 2px, yellow, solid;
-  background-color: #040405;
-  /* border: 2px solid yellow; */
-  opacity: 0.9;
-  transition: all 250ms linear;
-}
-
-#page_content_wrapper{
-  width: 100%;
-  position: absolute;
-  padding: 15px;
-  /* border: 2px solid green; */
-  padding: 0px;
-}
-
-#wrapper.menuDisplayed #sidebar_wrapper{
-  width: 360px;
-}
-
-#wrapper.menuDisplayed #page_content_wrapper{
-  padding-left: 360px;
-  /* margin-top: -300px; */
-}
-#sidebar_wrapper{
-  background-color: #E9ECEF;
-
-}
-.sidebar-nav{
-  list-style: 0;
-  min-height: 100%;
-}
-
-.sidebar-nav li{
-  padding: 10px;
-  margin: 8px
-  /* text-indent: 10px; */
-  /* line-height: 30px; */
-  /* border-bottom: 1px solid; */
-  color: #000000;
-  display: block;
-}
-
-.sidebar-nav label{
-  /* padding-bottom: 10px; */
-}
-
-.checkbox_wf{
-  /* display: block; */
-  text-decoration: none;
-  color: #ddd;
-}
 
 
-.sidebar-nav li a:hover{
-  background: #363647;
-}
 
 #id_upload_btn:hover{
   background: #28a745;

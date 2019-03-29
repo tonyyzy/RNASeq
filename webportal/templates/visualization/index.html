@@ -17,23 +17,12 @@
 <div id='wrapper'>
 <div id='sidebar_wrapper'>
   <ul class='sidebar-nav'>
-    <!-- <fieldset>
+    <fieldset>
       {% for key, value in wf_dict.items %}
         <div value="{{forloop.counter}}">{{ key }}</div>
         {% for csv in value %}
         <li>
-          <input  type="checkbox"  name="" class='checkbox_wf' value="{{forloop.parentloop.counter}}-{{forloop.counter}}">
-          <label  for="">{{ csv }}</label><br>
-        </li>
-        {% endfor %}
-      {% endfor %}
-    </fieldset> -->
-    <fieldset>
-      {% for key, value in wf_dict.items %}
-        <div value="{{key}}">{{key.label}}</div>
-        {% for csv in value %}
-        <li>
-          <input  type="checkbox"  name="" class='checkbox_wf' value="{{key}}-{{forloop.counter}}">
+          <input  type="checkbox"  name="" class='checkbox_wf' value="{{forloop.counter}}">
           <label  for="">{{ csv }}</label><br>
         </li>
         {% endfor %}
@@ -41,7 +30,6 @@
     </fieldset>
   </ul>
 </div>
-
 
 <div id='page_content_wrapper'>
   <div id='sidebar_toggle' class="toggle_btn">
@@ -58,12 +46,11 @@
   </li>
 </ul>
 
-
-
-
-
+{{wf_dict}}
 <div class="row">
   <div class="col-md-1">
+    test
+    hi patrick
     <label for="">P Value</label>
     <input type="range" min="1" max="50" class="slider" class="p_threshold">
     <p>Value: <span class="p_threshold_out"></span></p>
@@ -117,33 +104,28 @@
 });
 
   $('#sidebar_toggle').click(function(e){
+    // e.preventDefault();
+    console.log('hi')
     $('#wrapper').toggleClass('menuDisplayed')
   });
   $( "#id_volcano_tab" ).click(function() {
+    console.log('called wf_select')
+    // alert( "Handler for .click() called." );
+    console.log('loading volcano')
+  });
+  $( "#id_volcano_tab" ).click(function() {
     wf_select_volcano()
+    console.log('loading barplot')
   });
   $( "#id_barplot_tab" ).click(function() {
     wf_select_barplot()
+    console.log('loading barplot')
   });
 
   $('#id_load_data').click(function(e){
-    checkbox_selected = []
-    var all_checkboxes = $('.checkbox_wf')
-    for(var i = 0; i < all_checkboxes.length; i++){
-      if (all_checkboxes[i].checked) {
-        checkbox_selected.push(all_checkboxes[i].value)
-       }
-    }
-    var endpoint = 'wf_data_mod/';
-    for(var i = 0; i < checkbox_selected.length; i++){
-      endpoint += checkbox_selected[i]
-      endpoint += '_'
-    }
-    console.log(endpoint)
+    // e.preventDefault();
+    console.log('hi')
   });
-
-
-
 
 
 $( document ).ready(function() {

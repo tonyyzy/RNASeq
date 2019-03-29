@@ -65,27 +65,29 @@ def WorkflowDataMod(request, session_slug, workflow_slug):
     selected_wf = []
     selected_file = {}
     for wf in selected_wf_list:
-        selected_wf.append(wf[:1])
-        if wf[:1] in selected_file.keys():
-            selected_file[wf[:1]].append(wf[-1])
-        else:
-            selected_file[wf[:1]] = []
-            selected_file[wf[:1]].append(wf[-1])
+        wf, wf_file = wf.split('-')
 
-    print(f'\n{selected_wf}')
-    print(f'\n{selected_file}')
+        selected_wf.append(wf)
+        if wf in selected_file.keys():
+            selected_file[wf].append(wf_file)
+        else:
+            selected_file[wf] = []
+            selected_file[wf].append(wf_file)
+
+    print(f'\nselected wf: {selected_wf}')
+    print(f'\nselected file: {selected_file}')
 
     selected_csv = []
     selected_wf = list(set(selected_wf))
 
     for i in selected_wf:
         workflow = workflows.get(id=i)
-        print(f'\n{workflow}')
+        # print(f'\nTHE WORKFLOW: {workflow}')
         paths = workflow.paths
         paths = eval(paths)
         paths = paths['DGE']
-        print(paths)
-        print(paths[0])
+        # print(paths)
+        # print(paths[0])
         # print(i)
         # print([selected_file[i]])
         for e in selected_file[i]:
@@ -93,7 +95,7 @@ def WorkflowDataMod(request, session_slug, workflow_slug):
             selected_csv.append(paths[int(e) - 1])
 
     # selected_csv = selected_csv[0]
-    print(f'\n the selected csv: {selected_csv}')
+    # print(f'\n the selected csv: {selected_csv}')
 
     arr = []
     for index, DGE_csv in enumerate(selected_csv):

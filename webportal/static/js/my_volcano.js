@@ -1,15 +1,15 @@
 var all_circles;
 
-$( document ).ready(function() {
-   p_val = 0.05
-   p_threshold = - Math.log10(p_val);
-   log2_threshold = 2;
-  // console.log(p_threshold)
-   p_out = document.getElementsByClassName("p_threshold_out")[0];
-  p_out.innerHTML = p_val;
-   lfc = document.getElementsByClassName("log2_threshold_out");
-  lfc.innerHTML = log2_threshold;
-});
+// $( document ).ready(function() {
+//    p_val = 0.05
+//    p_threshold = - Math.log10(p_val);
+//    log2_threshold = 2;
+//   // console.log(p_threshold)
+//    p_out = document.getElementsByClassName("p_threshold_out")[0];
+//   p_out.innerHTML = p_val;
+//    lfc = document.getElementsByClassName("log2_threshold_out");
+//   lfc.innerHTML = log2_threshold;
+// });
 
 $("#id_p_threshold").change(function() {
   d3.select("#id_painting_volcano").selectAll("line").remove()
@@ -83,14 +83,14 @@ function wf_select_volcano(param){
     endpoint += '_'
   }
   console.log(endpoint)
-  d3_run(endpoint)
+  d3_run_volcano(endpoint)
 }
 
 dataset = []
-function d3_run(endpoint){
+function d3_run_volcano(endpoint){
   console.log('the endpoint selected: ' + endpoint)
   d3.json(endpoint).then(function(data) {
-    console.log('d3_run called')
+    console.log('d3_run_volcano called')
     dataset.push(data)
     dataFilter_volcano()
   });

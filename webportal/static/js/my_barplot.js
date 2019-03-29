@@ -45,18 +45,16 @@ colours = [
   };
 
   function wf_select_barplot(param){
-    dataset = []
-    result = []
+    checkbox_selected = []
     var all_checkboxes = $('.checkbox_wf')
     for(var i = 0; i < all_checkboxes.length; i++){
       if (all_checkboxes[i].checked) {
-        result.push(all_checkboxes[i].value)
+        checkbox_selected.push(all_checkboxes[i].value)
        }
     }
-    // console.log(result)
-    var endpoint = 'wf_data/';
-    for(var i = 0; i < result.length; i++){
-      endpoint += result[i]
+    var endpoint = 'wf_data_mod/';
+    for(var i = 0; i < checkbox_selected.length; i++){
+      endpoint += checkbox_selected[i]
       endpoint += '_'
     }
     console.log(endpoint)
