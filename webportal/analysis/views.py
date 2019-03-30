@@ -10,6 +10,7 @@ from django.conf import settings
 import os
 from shutil import copyfile
 from django.core.files.storage import FileSystemStorage
+from wsgiref.util import FileWrapper
 from django.http import JsonResponse
 from django.views.generic import (View,TemplateView,
                                 ListView,DetailView,
@@ -112,8 +113,7 @@ class SessionDetailView(View):
             return redirect('analysis:session_detail', session_slug)
         return redirect('analysis:session_detail', session_slug)
 
-# from mimetypes import MimeTypes
-from wsgiref.util import FileWrapper
+
 def SVGDownload(request, session_slug):
     print(f'\n SVG Downlod called')
     img_path = os.path.join(settings.BASE_DIR, 'static/images', session_slug, 'workflow.svg')

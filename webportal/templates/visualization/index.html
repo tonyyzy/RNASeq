@@ -17,19 +17,33 @@
 <div id='wrapper'>
 <div id='sidebar_wrapper'>
   <ul class='sidebar-nav'>
-    <fieldset>
+    <!-- <fieldset>
       {% for key, value in wf_dict.items %}
         <div value="{{forloop.counter}}">{{ key }}</div>
         {% for csv in value %}
         <li>
-          <input  type="checkbox"  name="" class='checkbox_wf' value="{{forloop.counter}}">
+          <input  type="checkbox"  name="" class='checkbox_wf' value="{{forloop.parentloop.counter}}-{{forloop.counter}}">
           <label  for="">{{ csv }}</label><br>
         </li>
         {% endfor %}
       {% endfor %}
+    </fieldset> -->
+    <fieldset>
+      {% for key, value in wf_dict.items %}
+        <div class='accordion sidebar-nav' value="{{key}}">{{key.label}}</div>
+        <div class='panel'>
+        {% for csv in value %}
+          <li class='sidebar-nav'>
+            <input  type="checkbox"  name="" class='checkbox_wf' value="{{key}}-{{forloop.counter}}">
+            <label  for="">{{ csv }}</label><br>
+          </li>
+        {% endfor %}
+      </div>
+      {% endfor %}
     </fieldset>
   </ul>
 </div>
+
 
 <div id='page_content_wrapper'>
   <div id='sidebar_toggle' class="toggle_btn">
@@ -46,21 +60,21 @@
   </li>
 </ul>
 
-{{wf_dict}}
+
+
+
 <div class="row">
   <div class="col-md-1">
-    test
-    hi patrick
     <label for="">P Value</label>
-    <input type="range" min="1" max="50" class="slider" class="p_threshold">
-    <p>Value: <span class="p_threshold_out"></span></p>
+    <input id='id_p_threshold' type="range" min="1" max="50" class="slider" class="p_threshold">
+    <p>Value: <span id="id_p_threshold_out">test</span></p>
     <br>
     <label for="">Logfold change</label>
-    <input type="range" min="1" max="9" class="slider" class="log2_threshold">
-    <p>Value: <span class="log2_threshold_out"></span></p>
+    <input id='id_log2_threshold' type="range" min="1" max="50" class="slider" class="log2_threshold">
+    <p>Value: <span id="id_log2_threshold_out"></span></p>
   </div>
   <div class="col-md-11">
-    <div id="id_tab" class="tab-content" onclick='set_threshold'>
+    <div id="id_tab" class="tab-content">
       <div id="id_volcano" class="container tab-pane active">
           <div class="plotting_column" id="id_plotting_column_volcano"><svg id='id_painting_volcano'></svg></div>
       </div>
@@ -71,7 +85,6 @@
     </div>
   </div>
 </div>
-<button id='id_load_data' type="button" name="button">Load Data</button>
 </div>
 </div> <!-- END WRAPPER -->
 
@@ -104,41 +117,47 @@
 });
 
   $('#sidebar_toggle').click(function(e){
-    // e.preventDefault();
-    console.log('hi')
     $('#wrapper').toggleClass('menuDisplayed')
   });
   $( "#id_volcano_tab" ).click(function() {
-    console.log('called wf_select')
-    // alert( "Handler for .click() called." );
-    console.log('loading volcano')
-  });
-  $( "#id_volcano_tab" ).click(function() {
     wf_select_volcano()
-    console.log('loading barplot')
   });
   $( "#id_barplot_tab" ).click(function() {
     wf_select_barplot()
-    console.log('loading barplot')
   });
 
   $('#id_load_data').click(function(e){
-    // e.preventDefault();
-    console.log('hi')
+    checkbox_selected = []
+    var all_checkboxes = $('.checkbox_wf')
+    for(var i = 0; i < all_checkboxes.length; i++){
+      if (all_checkboxes[i].checked) {
+        checkbox_selected.push(all_checkboxes[i].value)
+       }
+    }
+    var endpoint = 'wf_data_mod/';
+    for(var i = 0; i < checkbox_selected.length; i++){
+      endpoint += checkbox_selected[i]
+      endpoint += '_'
+    }
+    console.log(endpoint)
   });
 
 
-$( document ).ready(function() {
-  log2_threshold = 2;
-  p_val = 0.05
-  for(var i = 0; i < p_out.length; i++){
-    console.log(i)
-    p_out = $('.p_threshold_out')[i]
-    lfc = $('.log2_threshold_out')[i]
-    p_out.innerHTML = p_val;
-    lfc.innerHTML = log2_threshold
-   }
-});
+  var acc = $('.accordion');
+  var i;
+
+  for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var panel = this.nextElementSibling;
+      if (panel.style.display === "block") {
+        panel.style.display = "none";
+      } else {
+        panel.style.display = "block";
+      }
+    });
+  }
+
 
 
   </script>

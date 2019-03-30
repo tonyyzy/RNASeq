@@ -1,23 +1,21 @@
 var all_circles;
 
-// $( document ).ready(function() {
-//    p_val = 0.05
-//    p_threshold = - Math.log10(p_val);
-//    log2_threshold = 2;
-//   // console.log(p_threshold)
-//    p_out = document.getElementsByClassName("p_threshold_out")[0];
-//   p_out.innerHTML = p_val;
-//    lfc = document.getElementsByClassName("log2_threshold_out");
-//   lfc.innerHTML = log2_threshold;
-// });
+$( document ).ready(function() {
+   p_val = 0.05
+   p_threshold = - Math.log10(p_val);
+   log2_threshold = 2.5;
+   p_out = $("#id_p_threshold_out")
+   p_out.html(p_val);
+   lfc = $("#id_log2_threshold_out")
+   lfc.html(log2_threshold);
+});
+
 
 $("#id_p_threshold").change(function() {
   d3.select("#id_painting_volcano").selectAll("line").remove()
   p_val = $("#id_p_threshold").val()/100
+  $('#id_p_threshold_out').html(p_val)
   p_threshold = - Math.log10(p_val);
-  var output = document.getElementsByClassName("p_threshold_out");
-  output.innerHTML = p_val;
-  // console.log(p_threshold)
   all_circles.attr("fill", function(d){
           if(- Math.log10(d.p_adj) > p_threshold && (d.log2foldchange > log2_threshold || d.log2foldchange <  - log2_threshold)){
             return colours[d.dataset_index];
@@ -33,10 +31,9 @@ $("#id_p_threshold").change(function() {
 
 $("#id_log2_threshold").change(function() {
   d3.select("#id_painting_volcano").selectAll("line").remove()
-  log2_threshold = $("#id_log2_threshold").val()
-  console.log(log2_threshold)
-  var output = document.getElementsByClassName("log2_threshold_out");
-  output.innerHTML = log2_threshold;
+  log2_threshold = $("#id_log2_threshold").val()/10
+  $('#id_log2_threshold_out').html(log2_threshold)
+  // console.log(p_threshold)
   all_circles.attr("fill", function(d){
           if(- Math.log10(d.p_adj) > p_threshold && (d.log2foldchange > log2_threshold || d.log2foldchange <  - log2_threshold)){
             return colours[d.dataset_index];
