@@ -13,29 +13,18 @@
   <body>
 {%block body%}
 
-
 <div id='wrapper'>
 <div id='sidebar_wrapper'>
   <ul class='sidebar-nav'>
-    <!-- <fieldset>
-      {% for key, value in wf_dict.items %}
-        <div value="{{forloop.counter}}">{{ key }}</div>
-        {% for csv in value %}
-        <li>
-          <input  type="checkbox"  name="" class='checkbox_wf' value="{{forloop.parentloop.counter}}-{{forloop.counter}}">
-          <label  for="">{{ csv }}</label><br>
-        </li>
-        {% endfor %}
-      {% endfor %}
-    </fieldset> -->
     <fieldset>
       {% for key, value in wf_dict.items %}
-        <div class='accordion sidebar-nav' value="{{key}}">{{key.label}}</div>
+        <h5 class='accordion sidebar-nav' value="{{key}}">{{key.label}}</h5>
         <div class='panel'>
         {% for csv in value %}
           <li class='sidebar-nav'>
             <input  type="checkbox"  name="" class='checkbox_wf' value="{{key}}-{{forloop.counter}}">
-            <label  for="">{{ csv }}</label><br>
+            <label  for="{{key}}-{{forloop.counter}}">{{ csv }}</label><br>
+
           </li>
         {% endfor %}
       </div>
@@ -43,6 +32,7 @@
     </fieldset>
   </ul>
 </div>
+
 
 
 <div id='page_content_wrapper'>
@@ -59,7 +49,6 @@
     <a  id='id_barplot_tab' class="nav-link" data-toggle="tab" href="#id_barplot">Bar Plot</a>
   </li>
 </ul>
-
 
 
 
@@ -88,8 +77,6 @@
 </div>
 </div> <!-- END WRAPPER -->
 
-
-
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.1/d3.min.js" integrity="sha256-RtVUDWfx0vF5nrvHDYcQoWSPaOuQ0R8Rq9kUG2kSvH8=" crossorigin="anonymous"></script> -->
   <script src= "{% static 'js/d3.js' %}"></script>
@@ -97,19 +84,6 @@
   <script src= "{% static 'js/my_barplot.js' %}"></script>
   <script>
   {% block jquery %}
-
-
-  // var endpoint = 'api/data' $.ajax({
-  //   method: 'GET',
-  //   url: endpoint,
-  //   success: function(data){
-  //     // console.log(data)
-  //   },
-  //   error: function(error_data){
-  //     console.log('error')
-  //     console.log(error_data)
-  //   }
-  // })
 
   {% endblock %}
   $( document ).ready(function() {
@@ -158,11 +132,9 @@
     });
   }
 
-
-
   </script>
-
-
   {% endblock %}
   </body>
 </html>
+
+<!-- <a href="{% url 'visualization:wf_file_download' session_slug=session.identifier workflow_slug="add:csv" %}">Download</a> -->

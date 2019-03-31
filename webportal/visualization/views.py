@@ -113,6 +113,24 @@ def WorkflowDataMod(request, session_slug, workflow_slug):
     # return JsonResponse(arr, safe=False)
 
 
+def wfDownload(request, session_slug, workflow_slug):
+        session = Session.objects.get(identifier = session_slug)
+        workflows = Workflow.objects.all()
+        return HttpResponse(workflow_slug)
+        print(f'\nworkflow slug: {workflow_slug}')
+        # print(f'\n{workflows.values}')
+        selected_wf_list = workflow_slug[:-1].split('_')
+        # selected_wf_list = [wf for wf in selected_wf_list if wf % 2 == 1]
+        selected_wf_list = selected_wf_list[1::2]
+        print(f'\n{selected_wf_list}')
+    # print(f'\n SVG Downlod called')
+    # img_path = os.path.join(settings.BASE_DIR, 'static/images', session_slug, 'workflow.svg')
+    # img_wrapper = FileWrapper(open(img_path,'rb'))
+    # response = HttpResponse(img_wrapper)
+    # response['X-Sendfile'] = img_path
+    # response['Content-Length'] = os.stat(img_path).st_size
+    # response['Content-Disposition'] = 'attachment; filename=workflow.svg'
+    # return response
 
 #     with open (DGE_csv) as in_file:
 #         csvReader = pandas.read_csv(in_file)
