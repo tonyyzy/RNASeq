@@ -3,21 +3,19 @@ var all_circles;
 $( document ).ready(function() {
    p_val = 0.05
    p_threshold = - Math.log10(p_val);
-   log2_threshold = 2;
-  // console.log(p_threshold)
-   p_out = document.getElementById("id_p_threshold_out");
-  p_out.innerHTML = p_val;
-   lfc = document.getElementById("id_log2_threshold_out");
-  lfc.innerHTML = log2_threshold;
+   log2_threshold = 2.5;
+   p_out = $("#id_p_threshold_out")
+   p_out.html(p_val);
+   lfc = $("#id_log2_threshold_out")
+   lfc.html(log2_threshold);
 });
+
 
 $("#id_p_threshold").change(function() {
   d3.select("#id_painting_volcano").selectAll("line").remove()
   p_val = $("#id_p_threshold").val()/100
+  $('#id_p_threshold_out').html(p_val)
   p_threshold = - Math.log10(p_val);
-  var output = document.getElementById("id_p_threshold_out");
-  output.innerHTML = p_val;
-  // console.log(p_threshold)
   all_circles.attr("fill", function(d){
           if(- Math.log10(d.p_adj) > p_threshold && (d.log2foldchange > log2_threshold || d.log2foldchange <  - log2_threshold)){
             return colours[d.dataset_index];
@@ -33,10 +31,9 @@ $("#id_p_threshold").change(function() {
 
 $("#id_log2_threshold").change(function() {
   d3.select("#id_painting_volcano").selectAll("line").remove()
-  log2_threshold = $("#id_log2_threshold").val()
-  console.log(log2_threshold)
-  var output = document.getElementById("id_log2_threshold_out");
-  output.innerHTML = log2_threshold;
+  log2_threshold = $("#id_log2_threshold").val()/10
+  $('#id_log2_threshold_out').html(log2_threshold)
+  // console.log(p_threshold)
   all_circles.attr("fill", function(d){
           if(- Math.log10(d.p_adj) > p_threshold && (d.log2foldchange > log2_threshold || d.log2foldchange <  - log2_threshold)){
             return colours[d.dataset_index];
@@ -68,30 +65,29 @@ colours = [
   "#FFFF6D"];
 
 
-function wf_select(param){
-  dataset = []
-  result = []
+
+function wf_select_volcano(param){
+  checkbox_selected = []
   var all_checkboxes = $('.checkbox_wf')
   for(var i = 0; i < all_checkboxes.length; i++){
     if (all_checkboxes[i].checked) {
-      result.push(all_checkboxes[i].value)
+      checkbox_selected.push(all_checkboxes[i].value)
      }
   }
-  // console.log(result)
-  var endpoint = 'wf_data/';
-  for(var i = 0; i < result.length; i++){
-    endpoint += result[i]
+  var endpoint = 'wf_data_mod/';
+  for(var i = 0; i < checkbox_selected.length; i++){
+    endpoint += checkbox_selected[i]
     endpoint += '_'
   }
-  // console.log(endpoint)
-  // console.log('hi there old sport')
-  d3_run(endpoint)
+  console.log(endpoint)
+  d3_run_volcano(endpoint)
 }
 
-function d3_run(endpoint){
+dataset = []
+function d3_run_volcano(endpoint){
   console.log('the endpoint selected: ' + endpoint)
   d3.json(endpoint).then(function(data) {
-    console.log('d3_run called')
+    console.log('d3_run_volcano called')
     dataset.push(data)
     dataFilter_volcano()
   });
@@ -116,13 +112,13 @@ function newPlot(){
 
       // console.log(dataset);
 
-      var width = d3.select('#id_tab').node().getBoundingClientRect().width;
-      var height = d3.select('#id_tab').node().getBoundingClientRect().height;
+      var width = d3.select('#id_plotting_column_volcano').node().getBoundingClientRect().width;
+      var height = d3.select('#id_plotting_column_volcano').node().getBoundingClientRect().height;
 
       // console.log(width)
       // console.log(height)
 
-      var margin = {top: 40, right: 20, bottom: 50, left: 60};
+      var margin = {top: 40, right: 20, bottom: 20, left: 60};
 
       //Width and height
 
@@ -179,8 +175,8 @@ function newPlot(){
       .style("text-anchor", "middle")
       .text("- Log 10 of P adjusted");
       svg.append("text")
-      .attr("x", w/2 )
-      .attr("y", h + margin.top)
+      .attr("x", w - 120)
+      .attr("y", h + margin.top - 5)
       .style("text-anchor", "middle")
       .attr("font-size", "1.5rem")
       .text("Log 2 Fold Change");

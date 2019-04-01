@@ -9,6 +9,8 @@ from django.contrib import messages
 from django.conf import settings
 import os
 from shutil import copyfile
+from django.core.files.storage import FileSystemStorage
+from wsgiref.util import FileWrapper
 from django.http import JsonResponse
 from django.views.generic import (View,TemplateView,
                                 ListView,DetailView,
@@ -72,7 +74,7 @@ class SessionDetailView(View):
         instance = get_object_or_404(Session, identifier=session_slug)
         form = SessionSubmitForm(request.POST or None, instance = instance)
         session_data_dir = os.path.join(settings.DATA_DIR, session_slug)
-        print('lookout below')
+        print('greate gastby')
         print(f'\n{session_data_dir}')
         try:
             session = Session.objects.get(identifier=session_slug)
@@ -82,14 +84,17 @@ class SessionDetailView(View):
         if os.path.isfile(session_data_dir + '/workflow.svg'): # check if workflow.svg has been generated
             session_wf = session_data_dir + '/workflow.svg'
             image_dir = os.path.join(settings.BASE_DIR, 'static/images', session_slug)
-            image_dir_path = os.path.join(image_dir, 'workflow.svg')
+            image_path = os.path.join(image_dir, 'workflow.svg')
+            fs = FileSystemStorage()
+            svg_url = fs.url(image_path)
+            print(f'\n the fs url: {svg_url}')
             try:
                 os.makedirs(image_dir)
             except FileExistsError:
                 print('\nFile exists already')
-            copyfile(session_wf, image_dir_path)
+            copyfile(session_wf, image_path)
             session = Session.objects.get(identifier=session_slug)
-            context = {'session_detail':session, 'form':form, 'session_data_dir': session_data_dir, 'session_wf': session_wf}
+            context = {'session_detail':session, 'form':form, 'session_data_dir': session_data_dir, 'session_wf': session_wf, 'svg_url':svg_url}
             return render(request, self.template_name, context)
 
         context = {'session_detail':session,'form':form, 'session_data_dir': session_data_dir, 'no_svg':'no_svg'}
@@ -107,6 +112,17 @@ class SessionDetailView(View):
             print(f'\n{post}')
             return redirect('analysis:session_detail', session_slug)
         return redirect('analysis:session_detail', session_slug)
+
+
+def SVGDownload(request, session_slug):
+    print(f'\n SVG Downlod called')
+    img_path = os.path.join(settings.BASE_DIR, 'static/images', session_slug, 'workflow.svg')
+    img_wrapper = FileWrapper(open(img_path,'rb'))
+    response = HttpResponse(img_wrapper)
+    response['X-Sendfile'] = img_path
+    response['Content-Length'] = os.stat(img_path).st_size
+    response['Content-Disposition'] = 'attachment; filename=workflow.svg'
+    return response
 
 
 class SessionCreateView(CreateView):
@@ -296,30 +312,6 @@ class WorkflowDetailView(DetailView):
     template_name = 'analysis/workflow_detail.html'
 
 
-# mapper = ['STARAligner', 'HISAT2', 'SALMON']
-#     MAPPER_CHOICES = (
-#         ("star", "STARAligner"),
-#         ("hisat2", "HISAT2"),
-#         ('salmonquant', 'SALMON'),
-#     )
-    ASSEMLBER_CHOICES = (
-        ("stringtie", "STRINGTIE"),
-        ('cufflinks', 'CUFFLINKS'),
-        ('misorun', 'MISO'),
-        ('htseq', 'HTSEQ'),
-        ('featurecounts', 'FEATURECOUNTS'),
-        ('salmoncount', 'SALMON')
-    )
-#     ANALYSIS_CHOICES = (
-#         ('deseq2', 'DESEQ2'),
-#         ('dexseq', 'DEXSEQ'),
-#         ('misocompare', 'MISO'),
-#         ('cuffdiff', "CUFFDIFF"),
-#         ('edger', "EDGER"),
-#         ('ballgown', "BALLGOWN")
-#     )
-
-
 class WorkflowCreateView(CreateView):
     template_name = 'analysis/workflow_form.html'
 
@@ -339,7 +331,6 @@ class WorkflowCreateView(CreateView):
             post.save()
             return redirect('analysis:session_detail', session_slug)
         return render(request, self.template_name, {'form':form})
-
 
 
 def filterAssembler(request, session_slug, mapper_slug):
@@ -366,6 +357,21 @@ def filterAnalysis(request, session_slug, assembler_slug):
     filtered_analysis = analysis[assembler_slug]
     return JsonResponse(filtered_analysis, safe=False)
 
+
+class WorkflowUpdateView(UpdateView):
+    template_name = 'analysis/workflow_form.html'
+    form_class = WorkflowForm
+
+    def get_object(self):
+        workflow_pk = self.kwargs.get('workflow_pk')
+        return get_object_or_404(Workflow, pk=workflow_pk)
+
+    def form_valid(self, form):
+        session_slug = self.kwargs.get('session_slug')
+        form.save()
+        return redirect('analysis:session_detail', session_slug=session_slug)
+
+
 def filterAssemblerUpdate(request, session_slug, workflow_pk, mapper_slug):
 # def filterAssembler(request, *args):
 
@@ -389,21 +395,6 @@ def filterAnalysisUpdate(request, session_slug, workflow_pk, assembler_slug):
 
     filtered_analysis = analysis[assembler_slug]
     return JsonResponse(filtered_analysis, safe=False)
-
-
-
-class WorkflowUpdateView(UpdateView):
-    template_name = 'analysis/workflow_form.html'
-    form_class = WorkflowForm
-
-    def get_object(self):
-        workflow_pk = self.kwargs.get('workflow_pk')
-        return get_object_or_404(Workflow, pk=workflow_pk)
-
-    def form_valid(self, form):
-        session_slug = self.kwargs.get('session_slug')
-        form.save()
-        return redirect('analysis:session_detail', session_slug=session_slug)
 
 
 class WorkflowDeleteView(DeleteView):
@@ -439,20 +430,3 @@ class DebugView(CreateView):
             # print(f'\n{post}')
             return redirect('analysis:debug_view')
         return redirect('analysis:debug_view')
-
-
-#
-# class SessionCreateView(CreateView):
-#     template_name = 'analysis/session_form.html'
-#
-#     def get(self, request):
-#         form = SessionForm
-#         return render(request, self.template_name, {'form':form})
-#
-#     def post(self, request):
-#         form = SessionForm
-#         bound_form = SessionForm(request.POST, request.FILES)
-#         if bound_form.is_valid():
-#             post = bound_form.save()
-#             return redirect('analysis:session_detail', session_slug=post.identifier)
-#         return render(request, self.template_name, {'form':form})

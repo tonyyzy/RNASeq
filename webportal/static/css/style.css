@@ -133,8 +133,8 @@ html,body{
 }
 
 .create_form_element{
-  margin-bottom: 28px;
-  margin-top: -10px;
+  margin-bottom: 20px;
+  /* margin-top: -10px; */
   /* background:yellow; */
 }
 
@@ -170,7 +170,6 @@ html,body{
 
 
 /* SESSION DETAIL STYLE */
-
 .container {
     max-width: 90%;
     max-width: 80%;
@@ -224,74 +223,8 @@ html,body{
 }
 
 
-/* SIDEBAR */
-#sidebar_wrapper{
-  z-index: 1;
-  position: absolute;
-  width: 0px;
-  height: 100%;
-  overflow-y: hidden;
-  border: 2px, yellow, solid;
-  background-color: #040405;
-  /* border: 2px solid yellow; */
-  opacity: 0.9;
-  transition: all 250ms linear;
-}
 
-#page_content_wrapper{
-  width: 100%;
-  position: absolute;
-  padding: 15px;
-  /* border: 2px solid green; */
-  padding: 0px;
-}
 
-#wrapper.menuDisplayed #sidebar_wrapper{
-  width: 250px;
-}
-
-#wrapper.menuDisplayed #page_content_wrapper{
-  padding-left: 250px;
-  /* margin-top: -300px; */
-}
-#sidebar_wrapper{
-  background-color: #E9ECEF;
-
-}
-.sidebar-nav{
-  padding: 1px;
-  list-style: 0;
-}
-
-.sidebar-nav li{
-  /* text-indent: 10px; */
-  margin-left: 10px;
-  /* line-height: 30px; */
-  /* border-bottom: 1px solid; */
-  color: #000000;
-  display: block;
-  padding: 20px;
-}
-
-.sidebar-nav label{
-  padding-bottom: 10px;
-}
-
-.checkbox_wf{
-  /* display: block; */
-  text-decoration: none;
-  color: #ddd;
-}
-
-.checkbox_wf{
-  /* display: block; */
-  text-decoration: none;
-  color: #ddd;
-}
-
-.sidebar-nav li a:hover{
-  background: #363647;
-}
 
 #id_upload_btn:hover{
   background: #28a745;
@@ -299,6 +232,7 @@ html,body{
 }
 
 .toggle_btn{
+  z-index: 2;
   position: absolute;
 }
 
@@ -339,11 +273,6 @@ html,body{
   margin-left: 48%;
 }
 
-/* .tab-content{
-  width: 800px;
-  height: 800px;
-  margin: auto;
-} */
 
 #id_volcano{
   width: 100%;
@@ -352,4 +281,9 @@ html,body{
 
 .row{
   height:100%;
+}
+
+.plotting_column{
+  height: 100%;
+  width: 100%;
 }

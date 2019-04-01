@@ -100,14 +100,14 @@ WSGI_APPLICATION = 'webportal.wsgi.application'
 
 DATABASES = {
     'default': {
-         'ENGINE': 'django.db.backends.sqlite3',
-         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'rnaseq',
-        # 'USER': 'rnasequser',
-        # 'PASSWORD': 'RnaSeq123!',
-        # 'HOST': 'bmmbackup',
-        # 'PORT': '3306',
+         # 'ENGINE': 'django.db.backends.sqlite3',
+         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'rnaseq',
+        'USER': 'rnasequser',
+        'PASSWORD': 'RnaSeq123!',
+        'HOST': 'bmmbackup',
+        'PORT': '3306',
     }
 }
 
@@ -156,9 +156,8 @@ STATICFILES_DIRS = [
     STATIC_DIR,
 ]
 
-# DATA_ROOT = os.path.join(BASE_DIR,'data')
-# print(DATA_ROOT)
-# DATA_URL = '/data/'
+IMG_ROOT = os.path.join(STATIC_DIR,'images')
+IMG_URL = '/images/'
 
 
 DATA_DIR = os.path.abspath(os.path.join(BASE_DIR, '../../Data'))

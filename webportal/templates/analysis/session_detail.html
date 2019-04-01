@@ -46,6 +46,8 @@
         {% endif %}
         <!-- SESSION -->
         <div class="tab-content">
+
+          <!-- <a href="{{svg_url}}">test</a> -->
           <div id="session" class="container tab-pane active"><br>
             <div class="card mb-3">
               <h5 class="card-header">Session Details</h5>
@@ -59,9 +61,9 @@
                   <!-- static/images/{{session_detail.identifier}}/workflow.svg -->
                   {% if session_wf %}
                     <h5>Workflow Schematic</h5>
-                    <object data="{% static 'images/' %}{{session_detail.identifier}}/workflow.svg" type="image/svg+xml" id='id_demo_wf' style='width:100%; padding:10px;'>
+                    <object data="{% static 'images/' %}{{session_detail.identifier}}/workflow.svg" type="image/svg+xml" id='id_demo_wf' style='width:90%; padding:10px;'>
                     </object>
-                    <a class='btn btn-sm btn-info' href="{% url 'visualization:visualization_index' session_slug=session_detail.identifier %}">Visualization</a>
+                    <a href="{% url 'analysis:svg_download' session_slug=session_detail.identifier %}">Download</a>
                   {% else %}
                     <h3>workflow being generated</h3>
                     <div class="spinner-border spinner" role="status">
@@ -69,9 +71,12 @@
                     </div>
                   {% endif %}
                 {% else %}
-                  <h3>Please upload files and select workflows prior to submitting.</h3>
+                  <!-- <h3>Please upload files and select workflows prior to submitting.</h3> -->
                 {% endif %}
               </div>
+              {% if session_wf %}
+                <a class='btn btn-sm btn-info' href="{% url 'visualization:visualization_index' session_slug=session_detail.identifier %}">Visualization</a>
+              {% endif %}
             </div>
           </div>
 
@@ -256,6 +261,28 @@
         }
 
     });
+
+
+
+    $('#id_svg_download').click(function(e){
+      console.log('svg download executed')
+      var endpoint = 'svg_download'
+      console.log(endpoint)
+      $.ajax({
+        method: 'GET',
+        url: endpoint,
+        success: function(data){
+          console.log('ajax fired')
+          return data
+          // console.log(data)
+        },
+        error: function(error_data){
+          console.log('error')
+          console.log(error_data)
+        }
+      })
+    });
+
 
 
 

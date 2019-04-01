@@ -1,3 +1,14 @@
+$( document ).ready(function() {
+   p_val = 0.05
+   p_threshold = - Math.log10(p_val);
+   log2_threshold = 2;
+  // console.log(p_threshold)
+   p_out = document.getElementsByClassName("p_threshold_out");
+  p_out.innerHTML = p_val;
+   lfc = document.getElementsByClassName("log2_threshold_out");
+  lfc.innerHTML = log2_threshold;
+});
+
 colours = [
   "#000000",
   "#009292",
@@ -34,18 +45,16 @@ colours = [
   };
 
   function wf_select_barplot(param){
-    dataset = []
-    result = []
+    checkbox_selected = []
     var all_checkboxes = $('.checkbox_wf')
     for(var i = 0; i < all_checkboxes.length; i++){
       if (all_checkboxes[i].checked) {
-        result.push(all_checkboxes[i].value)
+        checkbox_selected.push(all_checkboxes[i].value)
        }
     }
-    // console.log(result)
-    var endpoint = 'wf_data/';
-    for(var i = 0; i < result.length; i++){
-      endpoint += result[i]
+    var endpoint = 'wf_data_mod/';
+    for(var i = 0; i < checkbox_selected.length; i++){
+      endpoint += checkbox_selected[i]
       endpoint += '_'
     }
     console.log(endpoint)
@@ -71,8 +80,8 @@ var newPlot_Barplot = function(){
 
     // d3.select("#painting").selectAll("*").remove();
 
-    var width = d3.select('#id_tab').node().getBoundingClientRect().width;
-    var height = d3.select('#id_tab').node().getBoundingClientRect().height;
+    var width = d3.select('#id_plotting_column_barplot').node().getBoundingClientRect().width;
+    var height = d3.select('#id_plotting_column_barplot').node().getBoundingClientRect().height;
     console.log(width)
     console.log(height)
 
@@ -133,7 +142,7 @@ var newPlot_Barplot = function(){
       d3.select("#label").remove();
       svg.append("text")
         .attr("id", "label")
-        .attr("x", width/2)
+        .attr("x", w / 2 )
         .attr("y", h + 25)
         .text("Significant genes: " + d);
     })
