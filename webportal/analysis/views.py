@@ -74,7 +74,6 @@ class SessionDetailView(View):
         instance = get_object_or_404(Session, identifier=session_slug)
         form = SessionSubmitForm(request.POST or None, instance = instance)
         session_data_dir = os.path.join(settings.DATA_DIR, session_slug)
-        print('greate gastby')
         print(f'\n{session_data_dir}')
         try:
             session = Session.objects.get(identifier=session_slug)
@@ -103,6 +102,12 @@ class SessionDetailView(View):
 
     def post(self, request, session_slug):
         instance = get_object_or_404(Session, identifier=session_slug)
+        # conditions = instance.conditions_fk.all() # returns queryset of session instance conditions
+        # print(f'\n{conditions}')
+        # print(f'\nfirst condition{conditions[0]}')
+        # con_1_samples = conditions[0].samples_fk.all()
+        # print(f'\ncondition samples{con_1_samples}')
+
         bound_form = SessionSubmitForm(request.POST or None, instance = instance)
         if bound_form.is_valid():
             post = bound_form.save(commit=False)

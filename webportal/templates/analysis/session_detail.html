@@ -23,11 +23,11 @@
             <a class="nav-link active" data-toggle="tab" href="#session">SESSION INFO</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#condition">CONDITION</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#sample">SAMPLE</a>
           </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#sample">SAMPLE</a>
+          </li> -->
           <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#workflow">WORKFLOW</a>
           </li>
@@ -80,13 +80,13 @@
             </div>
           </div>
 
-          <!-- CONDITIONS -->
-          <div id="condition" class="container tab-pane fade"><br>
+          <!-- SAMPLE -->
+          <div id="sample" class="container tab-pane fade"><br>
             <div id='id_conditions_div'>
-            <h4>Upload New Condition: <a class='btn btn-sm btn-success' href="{% url 'analysis:conditions_create' session_detail.identifier %}">Add Condition</a></h4>
+            <h4>Define Sample Condition: <a class='btn btn-sm btn-success' href="{% url 'analysis:conditions_create' session_detail.identifier %}">Add Condition</a></h4>
             {% if session_detail.conditions_fk.all %}
             <div class="user_select">
-              <div class='lead'>Session Conditions:</div>
+              <!-- <div class='lead'>Sample Conditions:</div> -->
               <table class="table table-bordered bm-2">
                 <thead class='table_head'>
                   <tr>
@@ -119,14 +119,11 @@
               <!-- <h3>No conditions defined.</h3> -->
             {% endif %}
             </div>
-          </div>
-          <!-- SAMPLES -->
-          <div id="sample" class="container tab-pane fade"><br>
             <div id='id_samples_div'>
             <!-- <h4>Upload Sample:</h4>  WILL REQUIRE MODEL FORMSET TO REDEFINE THE QUERY SET-->
             {% if session_detail.samples_fk.all %}
             <div class="user_select">
-            <div class='lead'>Session Samples:</div>
+            <!-- <div class='lead'>Session Samples:</div> -->
             <table class="table table-bordered mb-1">
               <thead class='table_head'>
                 <tr>
@@ -169,13 +166,17 @@
             {% endif %}
           </div>
           </div>
+
+          <!-- SAMPLES -->
+          <!-- <div id="sample" class="container tab-pane fade"></div> -->
+
           <!-- WORKFLOWS -->
           <div id="workflow" class="container tab-pane fade"><br>
             <div id='id_workflow_div'>
-            <h4>Upload New Workflow: <a class='btn btn-sm btn-success' href="{% url 'analysis:workflow_create' session_detail.identifier %}">Add Workflow</a></h4>
-            {% if session_detail.workflow_fk.all %}
+            <h4>Select Workflow: <a class='btn btn-sm btn-success' href="{% url 'analysis:workflow_create' session_detail.identifier %}">Add Workflow</a></h4>
+            {% if session_detail.workflows_fk.all %}
             <div class="user_select">
-            <div class='lead'>Session Workflow:</div>
+            <!-- <div class='lead'>Session Workflow:</div> -->
             <table class="table table-bordered mb-1">
               <thead class='table_head'>
                 <tr>
@@ -185,13 +186,12 @@
                   <th>Mapper</th>
                   <th>Assembler</th>
                   <th>Analysis</th>
-                  <th>Status</th>
                   <th>Update</th>
                   <th>Delete</th>
                 </tr>
               </thead>
               <tbody>
-                {% for workflow in session_detail.workflow_fk.all %}
+                {% for workflow in session_detail.workflows_fk.all %}
                 <tr>
                   <!-- <td>{{workflow.pk}}</td> -->
                   <td class='td_workflow_counter'>{{forloop.counter}}</td>
@@ -199,7 +199,6 @@
                   <td>{{ workflow.mapper }}</td>
                   <td>{{ workflow.assembler }}</td>
                   <td>{{ workflow.analysis }}</td>
-                  <td>{{ workflow.status }}</td>
                   <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:workflow_update' session_slug=workflow.session.identifier workflow_pk=workflow.pk %}">Update</a></td>
                   <td><a class='btn btn-sm btn-danger' href="{% url 'analysis:workflow_delete' session_slug=workflow.session.identifier workflow_pk=workflow.pk %}">Delete</a></td>
                 </tr>
@@ -208,7 +207,7 @@
             </table>
           </div>
             {% endif %}
-            {% if not session_detail.workflow_fk.all %}
+            {% if not session_detail.workflows_fk.all %}
               <!-- <h3>No Workflows defined.</h3> -->
             {% endif %}
 

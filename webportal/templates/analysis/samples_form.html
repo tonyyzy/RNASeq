@@ -25,7 +25,10 @@
               </div>
               <hr class="my-4">
               <!-- {{form|crispy}} -->
-
+              <div id='id_accession' class='create_form_element'>
+              <label for="">{{form.accession.label_tag}}</label>
+                {{form.accession}}
+              </div>
               <div id='id_libtype' class='create_form_element'>
               <label for="">{{form.libtype.label_tag}}</label>
                 {{form.libtype}}
@@ -41,12 +44,7 @@
                 <div class="create_form_element">
                   {{form.read_2}}
                 </div>
-                </div>
-              <div id='id_accession' class='create_form_element hidden'>
-              <label for="">{{form.accession.label_tag}}</label>
-                {{form.accession}}
               </div>
-              <br>
               <input type="submit" class='create_btn' value="Submit">
             </form>
           </div>
@@ -66,7 +64,6 @@
                unhide(['id_validate_library'])
                return false;
             }
-
           }
         });
         $('#id_libtype').on('click', function(){

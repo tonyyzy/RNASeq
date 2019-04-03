@@ -63,17 +63,11 @@ class SamplesForm(forms.ModelForm):
         # fields = ['condition', 'libtype', 'read_1']
         fields = ['libtype', 'read_1', 'read_2', 'accession']
 
-        # fields = ['session', 'condition', 'libtype', 'read_1', 'read_2', 'accession']
-        # fields='__all__'
-
-        # def __init__(self, session_id, *args, **kwargs):
-        #     print(f'\n{session_id}')
-        #     super(SamplesForm, self).__init__(*args, **kwargs)
-        #     self.fields['condition'].queryset = Conditions.objects.filter(session_id = session_id)
-
-        # widgets={
-            # 'condition': forms.ModelChoiceField(queryset=Session.objects.filter(Session.identifier)
-        # )}
+        widgets={
+            'accession': forms.TextInput(attrs={
+                'placeholder': 'label sample here...'
+                }),
+        }
 
 
 class WorkflowForm(forms.ModelForm):

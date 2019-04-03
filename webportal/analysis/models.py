@@ -79,7 +79,7 @@ class Samples(models.Model):
         # return os.path.join(self.identifier.hex, filename) # version without dash
 
     session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='samples_fk')
-    condition = models.ForeignKey(Condition, on_delete=models.PROTECT)
+    condition = models.ForeignKey(Condition, on_delete=models.PROTECT, related_name='condition_samples_fk')
     libtype = models.CharField(max_length=200, choices=LIBTYPE_CHOICES, blank=False, null=False)
     read_1 = models.FileField(storage=data_root, upload_to=get_fastq_path, blank=False, null=False)
     read_2 = models.FileField(storage=data_root, upload_to=get_fastq_path, blank=True, null=True)
@@ -120,7 +120,7 @@ class Workflow(models.Model):
     def get_gene_set_path(self, filename):
         return os.path.join(str(self.session.identifier), 'gene_set', filename) # version with dash
 
-    session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='workflow_fk')
+    session = models.ForeignKey(Session, on_delete=models.PROTECT, related_name='workflows_fk')
     # index = models.CharField(max_length=200, choices=INDEX_CHOICES)
     label = models.CharField(max_length=50, blank=False, null=False)
     mapper = models.CharField(max_length=200, choices=MAPPER_CHOICES)
