@@ -2,13 +2,15 @@
 
 # sh complete_run.sh sam exon_size lib_type out_dir
 
+samtools view $1 | head -n 1000000 | cut -f 10 | perl -ne 'chomp;print length($
+_) . "\n"' | sort | uniq -c | tee log2.txt
+
+cat log2.txt
+len=$(awk 'NR == 1 {print $2}' log2.txt)
+
 python /usr/local/misopy-0.5.3/misopy/index_gff.py --index $5 indexed_gtf
 samtools sort $1 sorted
 samtools index sorted.bam
-
-samtools view ./tests/test_untreated.star_miso.sorted.bam | head -n 1000000 | cut -f 10 | perl -ne 'chomp;print length($_) . "\n"' | sort | uniq -c | tee log.txt
-len=$(awk 'NR == 1 {print $2}' log.txt)
-rm log.txt
 
 if [ $3 = "PE" ]
 then
