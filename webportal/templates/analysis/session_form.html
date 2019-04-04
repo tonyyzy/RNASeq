@@ -24,7 +24,7 @@
               <hr class="my-4">
 
               <div id='id_genome_index' class='create_form_element'>
-              <label for="">{{form.genome_index.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Use our pre-index organisms or upload your own files." style='text-decoration:none;'>&#9432;</a>
+              <label for="">{{form.genome_index.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="Selection a Pre-indexed genome to access RAWG's list of available genomes." style='text-decoration:none;'>&#9432;</a>
                 {{form.genome_index}}
               </div>
 
@@ -65,7 +65,7 @@
               </div>
 
               <div id='id_reactome' class='create_form_element hidden'>
-                <label for="">{{form.reactome.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="required for FGSEA... I think." style='text-decoration:none;' >&#9432;</a>
+                <label for="">{{form.reactome.label_tag}}</label> <a href="#" data-toggle="tooltip" data-placement="top" title="required if FGSEA will be used during analysis." style='text-decoration:none;' >&#9432;</a>
                 <div class=''>
                   {{form.reactome}}
                 </div>
@@ -102,7 +102,7 @@
           unhide(['id_fasta_dna_file','id_fasta_cdna_file', 'id_gtf_file', 'id_reactome'])
         }
         // if ($('#id_salmon option:selected').val() == 1 || $('#id_salmon option:selected').val() == 3){ // salmon analysis not required or not known
-        if ($('#id_salmon option:selected').val() == 1 ){ // salmon analysis not required
+        if ($('#id_salmon option:selected').val() == 3 ){ // salmon analysis not required
           unhide(['id_fasta_dna_file','id_gtf_file', 'id_reactome']) & hide(['id_fasta_cdna_file'])
         }
       });

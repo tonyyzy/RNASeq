@@ -7,6 +7,7 @@
     {% block head %}
     {% load static %}
       <title>Session Detail</title>
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     {% endblock %}
   </head>
   <body>
@@ -51,9 +52,15 @@
           <!-- <a href="{{svg_url}}">test</a> -->
           <div id="session" class="container tab-pane active"><br>
             <div class="card mb-3">
-              <h5 class="card-header">Session Details</h5>
+              <div class="card-header">
+                <h5>
+                  Session Details
+                </h5>
+              </div>
               <div class="card-body">
-                <p>Identifier: {{session_detail.identifier}}</p>
+                <p>
+                  Identifier: <input type="text" value="{{session_detail.identifier}}" id="id_copy_identifier"> <button onclick="copyIdentifier()" class='btn btn-sm btn-info' style='margin:5px;'><i class="far fa-clipboard"></i></button>
+                </p>
                 <p>Index: {{session_detail.genome_index}}</p>
                 <p>Organism: {{ session_detail.organism|default_if_none:"" }} {{session_detail.genome.organism}}</p>
                 {% if session_detail.status %}
@@ -224,8 +231,6 @@
               <br>
               <input type="submit" class='create_btn' value="SUBMIT FOR ANALYSIS">
             </form>
-
-
         </div>
  </div> <!-- page-content -->
 </div> <!-- wrapper -->
@@ -262,8 +267,19 @@
 
     });
 
+// function copyIdentifier(){
+//   var newId = $('#id_copy_identifier').val()
+//   console.log(newId)
+//   newId.select();
+//   document.execCommand("copy");
+// }
 
-
+function copyIdentifier() {
+  /* Get the text field */
+  var copyText = $("#id_copy_identifier");
+  copyText.select();
+  document.execCommand("copy");
+}
     $('#id_svg_download').click(function(e){
       console.log('svg download executed')
       var endpoint = 'svg_download'
