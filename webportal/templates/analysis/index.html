@@ -17,10 +17,8 @@
         <!-- <p>{{message}}</p> -->
       {% endfor %}
     {% endif %}
-    <p>navbar has been depreciated.</p>
-    <p>To view all sessions please append /session_list to the url</p>
     <div class="content alert alert-{{message.tags}}">
-      <h1>SESSION DATABASE</h1>
+      <h1>RAWG DATABASE</h1>
       <form action="" method="GET">
         <input id="search_field_1" type="text" name="q" placeholder="enter session ID", value={{ request.GET.q }}>
         <br>

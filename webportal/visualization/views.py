@@ -16,7 +16,7 @@ from collections import OrderedDict, defaultdict
 class VisualizationIndexView(View):
     def get(self, request, session_slug):
         session = Session.objects.get(identifier = session_slug)
-        workflows = session.workflow_fk.all()
+        workflows = session.workflows_fk.all()
         # workflow = workflows[0]
 
         wf_dict = {}

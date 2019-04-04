@@ -7,10 +7,12 @@
     {% block head %}
     {% load static %}
       <title>Session Detail</title>
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     {% endblock %}
   </head>
   <body>
     {% block body %}
+    {% load analysis_filters %}
     <div id='wrapper'>
 
       <!-- NAV PANE SELECTION -->
@@ -23,11 +25,11 @@
             <a class="nav-link active" data-toggle="tab" href="#session">SESSION INFO</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#condition">CONDITION</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#sample">SAMPLE</a>
           </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#sample">SAMPLE</a>
+          </li> -->
           <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#workflow">WORKFLOW</a>
           </li>
@@ -50,9 +52,15 @@
           <!-- <a href="{{svg_url}}">test</a> -->
           <div id="session" class="container tab-pane active"><br>
             <div class="card mb-3">
-              <h5 class="card-header">Session Details</h5>
+              <div class="card-header">
+                <h5>
+                  Session Details
+                </h5>
+              </div>
               <div class="card-body">
-                <p>Identifier: {{session_detail.identifier}}</p>
+                <p>
+                  Identifier: <input type="text" value="{{session_detail.identifier}}" id="id_copy_identifier"> <button onclick="copyIdentifier()" class='btn btn-sm btn-info' style='margin:5px;'><i class="far fa-clipboard"></i></button>
+                </p>
                 <p>Index: {{session_detail.genome_index}}</p>
                 <p>Organism: {{ session_detail.organism|default_if_none:"" }} {{session_detail.genome.organism}}</p>
                 {% if session_detail.status %}
@@ -80,13 +88,13 @@
             </div>
           </div>
 
-          <!-- CONDITIONS -->
-          <div id="condition" class="container tab-pane fade"><br>
+          <!-- SAMPLE -->
+          <div id="sample" class="container tab-pane fade"><br>
             <div id='id_conditions_div'>
-            <h4>Upload New Condition: <a class='btn btn-sm btn-success' href="{% url 'analysis:conditions_create' session_detail.identifier %}">Add Condition</a></h4>
+            <h4>Define Sample Condition: <a class='btn btn-sm btn-success' href="{% url 'analysis:conditions_create' session_detail.identifier %}">Add Condition</a></h4>
             {% if session_detail.conditions_fk.all %}
             <div class="user_select">
-              <div class='lead'>Session Conditions:</div>
+              <!-- <div class='lead'>Sample Conditions:</div> -->
               <table class="table table-bordered bm-2">
                 <thead class='table_head'>
                   <tr>
@@ -119,14 +127,11 @@
               <!-- <h3>No conditions defined.</h3> -->
             {% endif %}
             </div>
-          </div>
-          <!-- SAMPLES -->
-          <div id="sample" class="container tab-pane fade"><br>
             <div id='id_samples_div'>
             <!-- <h4>Upload Sample:</h4>  WILL REQUIRE MODEL FORMSET TO REDEFINE THE QUERY SET-->
             {% if session_detail.samples_fk.all %}
             <div class="user_select">
-            <div class='lead'>Session Samples:</div>
+            <!-- <div class='lead'>Session Samples:</div> -->
             <table class="table table-bordered mb-1">
               <thead class='table_head'>
                 <tr>
@@ -148,9 +153,9 @@
                     <td class='td_samples_counter'>{{forloop.counter}}</td>
                     <td class="td_libtype">{{ sample.libtype }}</td>
                     <td>{{ sample.condition }}</td>
-                    <td>{{ sample.read_1 }}</td>
+                    <td>{{ sample.read_1 | readable }}</td>
                     {% if sample.read_2 %}
-                      <td>{{ sample.read_2 }}</td>
+                      <td>{{ sample.read_2 | readable }}</td>
                     {% endif %}
                     {% if not sample.read_2 %}
                       <td>N/a</td>
@@ -169,13 +174,17 @@
             {% endif %}
           </div>
           </div>
+
+          <!-- SAMPLES -->
+          <!-- <div id="sample" class="container tab-pane fade"></div> -->
+
           <!-- WORKFLOWS -->
           <div id="workflow" class="container tab-pane fade"><br>
             <div id='id_workflow_div'>
-            <h4>Upload New Workflow: <a class='btn btn-sm btn-success' href="{% url 'analysis:workflow_create' session_detail.identifier %}">Add Workflow</a></h4>
-            {% if session_detail.workflow_fk.all %}
+            <h4>Select Workflow: <a class='btn btn-sm btn-success' href="{% url 'analysis:workflow_create' session_detail.identifier %}">Add Workflow</a></h4>
+            {% if session_detail.workflows_fk.all %}
             <div class="user_select">
-            <div class='lead'>Session Workflow:</div>
+            <!-- <div class='lead'>Session Workflow:</div> -->
             <table class="table table-bordered mb-1">
               <thead class='table_head'>
                 <tr>
@@ -185,13 +194,12 @@
                   <th>Mapper</th>
                   <th>Assembler</th>
                   <th>Analysis</th>
-                  <th>Status</th>
                   <th>Update</th>
                   <th>Delete</th>
                 </tr>
               </thead>
               <tbody>
-                {% for workflow in session_detail.workflow_fk.all %}
+                {% for workflow in session_detail.workflows_fk.all %}
                 <tr>
                   <!-- <td>{{workflow.pk}}</td> -->
                   <td class='td_workflow_counter'>{{forloop.counter}}</td>
@@ -199,7 +207,6 @@
                   <td>{{ workflow.mapper }}</td>
                   <td>{{ workflow.assembler }}</td>
                   <td>{{ workflow.analysis }}</td>
-                  <td>{{ workflow.status }}</td>
                   <td><a class='btn btn-sm btn-warning' href="{% url 'analysis:workflow_update' session_slug=workflow.session.identifier workflow_pk=workflow.pk %}">Update</a></td>
                   <td><a class='btn btn-sm btn-danger' href="{% url 'analysis:workflow_delete' session_slug=workflow.session.identifier workflow_pk=workflow.pk %}">Delete</a></td>
                 </tr>
@@ -208,7 +215,7 @@
             </table>
           </div>
             {% endif %}
-            {% if not session_detail.workflow_fk.all %}
+            {% if not session_detail.workflows_fk.all %}
               <!-- <h3>No Workflows defined.</h3> -->
             {% endif %}
 
@@ -224,8 +231,6 @@
               <br>
               <input type="submit" class='create_btn' value="SUBMIT FOR ANALYSIS">
             </form>
-
-
         </div>
  </div> <!-- page-content -->
 </div> <!-- wrapper -->
@@ -262,8 +267,19 @@
 
     });
 
+// function copyIdentifier(){
+//   var newId = $('#id_copy_identifier').val()
+//   console.log(newId)
+//   newId.select();
+//   document.execCommand("copy");
+// }
 
-
+function copyIdentifier() {
+  /* Get the text field */
+  var copyText = $("#id_copy_identifier");
+  copyText.select();
+  document.execCommand("copy");
+}
     $('#id_svg_download').click(function(e){
       console.log('svg download executed')
       var endpoint = 'svg_download'
