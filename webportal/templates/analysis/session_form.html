@@ -101,7 +101,8 @@
         if ($('#id_salmon option:selected').val() == 2){ // salmon analysis required
           unhide(['id_fasta_dna_file','id_fasta_cdna_file', 'id_gtf_file', 'id_reactome'])
         }
-        if ($('#id_salmon option:selected').val() == 1 || $('#id_salmon option:selected').val() == 3){ // salmon analysis not required or not known
+        // if ($('#id_salmon option:selected').val() == 1 || $('#id_salmon option:selected').val() == 3){ // salmon analysis not required or not known
+        if ($('#id_salmon option:selected').val() == 1 ){ // salmon analysis not required
           unhide(['id_fasta_dna_file','id_gtf_file', 'id_reactome']) & hide(['id_fasta_cdna_file'])
         }
       });
