@@ -97,7 +97,7 @@
           }
       });
 
-      $('#id_salmon').on('click', function(){
+      $('#id_salmon').on('change', function(){
         if ($('#id_salmon option:selected').val() == 2){ // salmon analysis required
           unhide(['id_fasta_dna_file','id_fasta_cdna_file', 'id_gtf_file', 'id_reactome'])
         }
