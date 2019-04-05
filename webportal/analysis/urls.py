@@ -15,7 +15,6 @@ urlpatterns = [
     path('session_list', views.SessionListView.as_view(), name='session_list'),
     path('session_detail/<slug:session_slug>/', views.SessionDetailView.as_view(), name='session_detail'),
     path('session_detail/<slug:session_slug>/svg_download', views.SVGDownload, name='svg_download'),
-
     path('session_create', views.SessionCreateView.as_view(), name='session_create'),
     path('session_update/<slug:session_slug>/', views.SessionUpdateView.as_view(), name='session_update'),
     path('session_delete/<int:pk>/', views.SessionDeleteView.as_view(), name='session_delete'),
@@ -37,12 +36,9 @@ urlpatterns = [
     path('session_detail/<slug:session_slug>/workflow_create/', views.WorkflowCreateView.as_view(), name='workflow_create'),
     path('session_detail/<slug:session_slug>/workflow_create/filtered_assembler/<slug:mapper_slug>', views.filterAssembler, name='filtered_assembler'),
     path('session_detail/<slug:session_slug>/workflow_create/filtered_analysis/<slug:assembler_slug>', views.filterAnalysis, name='filtered_analysis'),
-
     path('session_detail/<slug:session_slug>/workflow_update/<int:workflow_pk>/', views.WorkflowUpdateView.as_view(), name='workflow_update'),
     path('session_detail/<slug:session_slug>/workflow_update/<int:workflow_pk>/filtered_assembler/<slug:mapper_slug>', views.filterAssemblerUpdate, name='filtered_assembler'),
     path('session_detail/<slug:session_slug>/workflow_update/<int:workflow_pk>/filtered_analysis/<slug:assembler_slug>', views.filterAnalysisUpdate, name='filtered_analysis'),
-
     path('session_detail/<slug:session_slug>/workflow_delete/<int:workflow_pk>/', views.WorkflowDeleteView.as_view(), name='workflow_delete'),
 
 ]
-# 04a2d270-2d00-4370-8538-08dc33fbba6e

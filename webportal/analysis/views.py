@@ -102,12 +102,6 @@ class SessionDetailView(View):
 
     def post(self, request, session_slug):
         instance = get_object_or_404(Session, identifier=session_slug)
-        # conditions = instance.conditions_fk.all() # returns queryset of session instance conditions
-        # print(f'\n{conditions}')
-        # print(f'\nfirst condition{conditions[0]}')
-        # con_1_samples = conditions[0].samples_fk.all()
-        # print(f'\ncondition samples{con_1_samples}')
-
         bound_form = SessionSubmitForm(request.POST or None, instance = instance)
         if bound_form.is_valid():
             post = bound_form.save(commit=False)
@@ -273,6 +267,7 @@ class SamplesCreateView(CreateView):
             bound_post.session = Session.objects.get(identifier=session_slug)
             bound_post.condition = Condition.objects.get(pk=conditions_pk)
             bound_post.save()
+
             return redirect('analysis:session_detail', session_slug=session_slug)
         return render(request, self.template_name, {'form':bound_form})
 
